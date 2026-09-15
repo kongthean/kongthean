@@ -230,9 +230,9 @@
             border-radius: 10px;
         }
 
-        .instruction-box strong {
+        .instruction-title {
             color: #1a1a1a;
-            display: block;
+            font-weight: 700;
             margin-bottom: 6px;
             font-size: 13px;
         }
@@ -243,11 +243,15 @@
         }
 
         .instruction-box li {
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .instruction-box li:last-child {
             margin-bottom: 0;
+        }
+
+        .instruction-box strong {
+            color: #1a1a1a;
         }
 
         .info-section {
@@ -337,11 +341,11 @@
                 <button type="submit" class="submit-btn">Continue to Mail App</button>
 
                 <div class="instruction-box">
-                    <strong>How to send your message:</strong>
+                    <div class="instruction-title">How to send your message:</div>
                     <ol>
                         <li>Fill out the subject and email message above.</li>
                         <li>Click <strong>Continue to Mail App</strong> to open your default email program.</li>
-                        <li>Attach any photos, documents, or files directly within your mail application if needed.</li>
+                        <li>Attach any photos, documents, or files directly inside your email app if needed.</li>
                         <li>Review your message and click <strong>Send</strong> in your email app to deliver it.</li>
                     </ol>
                 </div>
@@ -362,7 +366,7 @@
                 <h3>Social Channels</h3>
                 <div><strong>Facebook:</strong> <a href="https://facebook.com/fb.thean" target="_blank">facebook.com/fb.thean</a></div>
                 <div><strong>TikTok:</strong> <a href="https://tiktok.com/@tt.thean" target="_blank">tiktok.com/@tt.thean</a></div>
-                <div><strong>Telegram:</strong> <a href="https://t.me/tg.thean" target="_blank">t.me/tg.thean</a></div>
+                <div><strong>Telegram:</strong> <a href="https://t.me/tg_thean" target="_blank">t.me/tg_thean</a></div>
                 <div><strong>YouTube:</strong> <a href="https://youtube.com/@theancambodia" target="_blank">youtube.com/@theancambodia</a></div>
             </div>
         </div>
