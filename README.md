@@ -341,7 +341,7 @@
                 <button type="submit" class="submit-btn">Continue to Mail App</button>
 
                 <div class="instruction-box">
-                    <div class="instruction-title">How to send your message:</div>
+                    <div class="instruction-title">How to send your email:</div>
                     <ol>
                         <li>Fill out the subject and email message above.</li>
                         <li>Click <strong>Continue to Mail App</strong> to open your default email program.</li>
