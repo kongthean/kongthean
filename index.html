@@ -317,7 +317,7 @@
                 <button type="submit" class="submit-btn">Continue to Mail App</button>
 
                 <div class="attachment-note">
-                    📌 <strong>Note:</strong> If you need to attach photos, documents, or other files, please add them directly inside your email app after clicking <strong>Continue to Mail App</strong>.
+                    <strong>Note:</strong> If you need to attach photos, documents, or other files, please add them directly inside your email app after clicking <strong>Continue to Mail App</strong>.
                 </div>
             </form>
         </div>
