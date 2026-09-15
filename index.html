@@ -3,128 +3,382 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kong Thean</title>
+    <title>KONG THEAN | Head Office</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body {
-            background-color: #0f172a;
-            color: #f8fafc;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
-            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px 40px 20px;
+            color: #2c2c2c;
+            overflow-x: hidden;
+            position: relative;
+            background: linear-gradient(-45deg, #f5efe6, #e8d5c4, #fdfbf7, #f3e5d8);
+            background-size: 400% 400%;
+            animation: sunriseGradient 15s ease infinite;
         }
-        .card {
-            background-color: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 16px;
-            max-width: 480px;
+
+        @keyframes sunriseGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Waves Animation */
+        .wave-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
             width: 100%;
-            padding: 32px 24px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            height: 25vh;
+            z-index: 1;
+            pointer-events: none;
         }
+
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 100' preserveAspectRatio='none'%3E%3Cpath d='M0,50 C150,100 350,0 500,50 C650,100 750,20 800,50 L800,100 L0,100 Z' fill='rgba(255, 255, 255, 0.45)'%3E%3C/path%3E%3C/svg%3E") repeat-x;
+            animation: waveMove 12s linear infinite;
+        }
+
+        .wave:nth-child(2) {
+            bottom: 5px;
+            opacity: 0.6;
+            animation: waveMove 8s linear infinite reverse;
+        }
+
+        @keyframes waveMove {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Top Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .brand-name {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #333;
+        }
+
+        .hamburger {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            padding: 5px;
+        }
+
+        .hamburger div {
+            width: 24px;
+            height: 3px;
+            background-color: #333;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        /* Navigation Drawer Overlay */
+        .nav-menu {
+            position: fixed;
+            top: 60px;
+            right: -100%;
+            width: 260px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 0 0 0 16px;
+            box-shadow: -4px 10px 25px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            transition: right 0.3s ease;
+            z-index: 99;
+        }
+
+        .nav-menu.active {
+            right: 0;
+        }
+
+        .nav-menu a {
+            padding: 16px 24px;
+            text-decoration: none;
+            color: #444;
+            font-weight: 600;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+
+        .nav-menu a:hover {
+            background-color: #f7f3ed;
+            color: #000;
+        }
+
+        /* Main Card Container */
+        .card {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            max-width: 520px;
+            width: 100%;
+            padding: 36px 28px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        }
+
         .profile {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
+
         .profile h1 {
             font-size: 24px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 6px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: #1a1a1a;
+            margin-bottom: 4px;
         }
+
         .profile p {
             font-size: 14px;
-            color: #94a3b8;
+            font-weight: 500;
+            color: #777;
         }
+
+        /* Form Inputs */
         .form-group {
-            margin-bottom: 16px;
-            text-align: left;
+            margin-bottom: 18px;
         }
+
         label {
             display: block;
             font-size: 13px;
-            color: #cbd5e1;
+            font-weight: 600;
+            color: #555;
             margin-bottom: 6px;
-            font-weight: 500;
         }
+
         input, textarea {
             width: 100%;
-            padding: 12px;
-            background-color: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            color: #ffffff;
+            padding: 12px 14px;
+            background-color: rgba(250, 248, 245, 0.8);
+            border: 1px solid #e2d9cf;
+            border-radius: 10px;
+            color: #333;
             font-size: 14px;
             outline: none;
+            transition: border-color 0.2s, background-color 0.2s;
         }
+
         input:focus, textarea:focus {
-            border-color: #38bdf8;
+            border-color: #cbb298;
+            background-color: #ffffff;
         }
+
         textarea {
             resize: vertical;
-            min-height: 100px;
+            min-height: 110px;
         }
-        button {
+
+        button.submit-btn {
             width: 100%;
             padding: 14px;
-            background-color: #0284c7;
+            background-color: #2c2b29;
             color: #ffffff;
             font-weight: 600;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 15px;
-            transition: background 0.2s;
+            letter-spacing: 0.5px;
+            transition: background 0.2s, transform 0.1s;
         }
-        button:hover {
-            background-color: #0369a1;
+
+        button.submit-btn:hover {
+            background-color: #44423e;
         }
-        .direct-email {
+
+        /* Contact Details Section */
+        .info-section {
+            display: none;
+            line-height: 1.6;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .info-section.active {
+            display: block;
+        }
+
+        .info-block {
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #f0e8df;
+        }
+
+        .info-block h3 {
+            font-size: 16px;
+            color: #1a1a1a;
+            margin-bottom: 6px;
+        }
+
+        .info-block a {
+            color: #8c6d4f;
+            text-decoration: none;
+            word-break: break-word;
+        }
+
+        .social-links div {
+            margin-bottom: 8px;
+        }
+
+        /* Footer Info */
+        .footer-info {
+            margin-top: 26px;
+            padding-top: 20px;
+            border-top: 1px solid #e8ded3;
+            font-size: 12px;
+            color: #666;
             text-align: center;
-            margin-top: 20px;
-            font-size: 13px;
-            color: #64748b;
+            line-height: 1.6;
         }
-        .direct-email a {
-            color: #38bdf8;
+
+        .footer-info a {
+            color: #7a5c3e;
             text-decoration: none;
         }
     </style>
 </head>
 <body>
 
+    <!-- Header Navbar -->
+    <div class="navbar">
+        <div class="brand-name">KONG THEAN</div>
+        <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
+            <div></div>
+            <div></div>
+            <div></div>
+        </button>
+    </div>
+
+    <!-- Dropdown Navigation -->
+    <div class="nav-menu" id="navMenu">
+        <a onclick="showTab('contact')">Contact Form</a>
+        <a onclick="showTab('other')">Other Contact</a>
+    </div>
+
+    <!-- Main Card -->
     <div class="card">
         <div class="profile">
-            <h1>Kong Thean</h1>
-            <p>Official Contact & Communication Portal</p>
+            <h1>KONG THEAN</h1>
+            <p>Head Office | Office Contact</p>
         </div>
 
-        <form action="mailto:info@kongthean.com" method="post" enctype="text/plain">
-            <div class="form-group">
-                <label for="name">Your Name</label>
-                <input type="text" id="name" name="Name" placeholder="Enter your full name" required>
+        <!-- Contact Form Tab -->
+        <div id="contactTab">
+            <form action="mailto:info@kongthean.com" method="post" enctype="text/plain">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="Name" placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="Phone" placeholder="Enter your phone number">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="Email" placeholder="name@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Message *</label>
+                    <textarea id="message" name="Message" placeholder="Write your message here..." required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+        </div>
+
+        <!-- Other Contact Info Tab -->
+        <div id="otherTab" class="info-section">
+            <div class="info-block">
+                <h3>Kong Thean | Head Office</h3>
+                <p><strong>Address:</strong> No. 33, Damnak Changer District, Kep Province, Cambodia</p>
+                <p><strong>Contact:</strong> <a href="tel:+85592203203">+855 (92) 203 203</a> | <a href="tel:+85593203000">+855 (93) 203 000</a></p>
+                <p><strong>Email:</strong> <a href="mailto:info@kongthean.com">info@kongthean.com</a></p>
+                <p><strong>Website:</strong> <a href="https://www.kongthean.com">www.kongthean.com</a></p>
             </div>
 
-            <div class="form-group">
-                <label for="email">Your Email Address</label>
-                <input type="email" id="email" name="Reply-To" placeholder="name@example.com" required>
+            <div class="info-block social-links">
+                <h3>Social Channels</h3>
+                <div><strong>Facebook:</strong> <a href="https://facebook.com/fb.thean" target="_blank">facebook.com/fb.thean</a></div>
+                <div><strong>TikTok:</strong> <a href="https://tiktok.com/@tt.thean" target="_blank">tiktok.com/@tt.thean</a></div>
+                <div><strong>Telegram:</strong> <a href="https://t.me/tg.thean" target="_blank">t.me/tg.thean</a></div>
+                <div><strong>YouTube:</strong> <a href="https://youtube.com/@theancambodia" target="_blank">youtube.com/@theancambodia</a></div>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label for="message">Message</label>
-                <textarea id="message" name="Message" placeholder="How can we help you?" required></textarea>
-            </div>
-
-            <button type="submit">Send Message</button>
-        </form>
-
-        <div class="direct-email">
-            Or email directly to <a href="mailto:info@kongthean.com">info@kongthean.com</a>
+        <!-- Footer Contact Info -->
+        <div class="footer-info">
+            <strong>Kong Thean | Head Office</strong><br>
+            Address: No. 33, Damnak Changer District, Kep Province, Cambodia<br>
+            Contact: <a href="tel:+85592203203">+855 (92) 203 203</a> | <a href="tel:+85593203000">+855 (93) 203 000</a><br>
+            <a href="mailto:info@kongthean.com">info@kongthean.com</a> | <a href="https://www.kongthean.com">www.kongthean.com</a>
         </div>
     </div>
 
+    <!-- Live Animated Waves Background -->
+    <div class="wave-container">
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById('navMenu');
+            menu.classList.toggle('active');
+        }
+
+        function showTab(tabName) {
+            var contactTab = document.getElementById('contactTab');
+            var otherTab = document.getElementById('otherTab');
+            var menu = document.getElementById('navMenu');
+
+            if (tabName === 'contact') {
+                contactTab.style.display = 'block';
+                otherTab.classList.remove('active');
+            } else if (tabName === 'other') {
+                contactTab.style.display = 'none';
+                otherTab.classList.add('active');
+            }
+            menu.classList.remove('active');
+        }
+    </script>
 </body>
 </html>
