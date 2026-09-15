@@ -29,7 +29,6 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Waves Animation */
         .wave-container {
             position: fixed;
             bottom: 0;
@@ -61,7 +60,6 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* Top Navigation Bar */
         .navbar {
             position: fixed;
             top: 0;
@@ -102,7 +100,6 @@
             transition: 0.3s;
         }
 
-        /* Navigation Drawer Overlay */
         .nav-menu {
             position: fixed;
             top: 60px;
@@ -136,7 +133,6 @@
             color: #000;
         }
 
-        /* Main Card Container */
         .card {
             position: relative;
             z-index: 10;
@@ -169,7 +165,6 @@
             color: #777;
         }
 
-        /* Form Inputs */
         .form-group {
             margin-bottom: 18px;
         }
@@ -182,7 +177,7 @@
             margin-bottom: 6px;
         }
 
-        input, textarea {
+        input[type="text"], textarea {
             width: 100%;
             padding: 12px 14px;
             background-color: rgba(250, 248, 245, 0.8);
@@ -194,6 +189,17 @@
             transition: border-color 0.2s, background-color 0.2s;
         }
 
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(250, 248, 245, 0.8);
+            border: 1px dashed #cbb298;
+            border-radius: 10px;
+            font-size: 13px;
+            color: #555;
+            cursor: pointer;
+        }
+
         input:focus, textarea:focus {
             border-color: #cbb298;
             background-color: #ffffff;
@@ -201,7 +207,7 @@
 
         textarea {
             resize: vertical;
-            min-height: 110px;
+            min-height: 120px;
         }
 
         button.submit-btn {
@@ -215,14 +221,25 @@
             cursor: pointer;
             font-size: 15px;
             letter-spacing: 0.5px;
-            transition: background 0.2s, transform 0.1s;
+            transition: background 0.2s;
+            margin-top: 10px;
         }
 
         button.submit-btn:hover {
             background-color: #44423e;
         }
 
-        /* Contact Details Section */
+        .safety-note {
+            margin-top: 14px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            line-height: 1.5;
+            background: rgba(245, 239, 230, 0.5);
+            padding: 10px 12px;
+            border-radius: 8px;
+        }
+
         .info-section {
             display: none;
             line-height: 1.6;
@@ -256,7 +273,6 @@
             margin-bottom: 8px;
         }
 
-        /* Footer Info */
         .footer-info {
             margin-top: 26px;
             padding-top: 20px;
@@ -275,7 +291,6 @@
 </head>
 <body>
 
-    <!-- Header Navbar -->
     <div class="navbar">
         <div class="brand-name">KONG THEAN</div>
         <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
@@ -285,43 +300,40 @@
         </button>
     </div>
 
-    <!-- Dropdown Navigation -->
     <div class="nav-menu" id="navMenu">
         <a onclick="showTab('contact')">Contact Form</a>
         <a onclick="showTab('other')">Other Contact</a>
     </div>
 
-    <!-- Main Card -->
     <div class="card">
         <div class="profile">
             <h1>KONG THEAN</h1>
-            <p>Head Office | Office Contact</p>
+            <p>Head Office | Email Form Service</p>
         </div>
 
         <!-- Contact Form Tab -->
         <div id="contactTab">
-            <form action="mailto:info@kongthean.com" method="post" enctype="text/plain">
+            <form id="emailForm" onsubmit="handleMailto(event)">
                 <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" name="Name" placeholder="Enter your full name">
+                    <label for="subject">Subject *</label>
+                    <input type="text" id="subject" placeholder="Enter email subject" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="Phone" placeholder="Enter your phone number">
+                    <label for="message">Compose Email *</label>
+                    <textarea id="message" placeholder="Write your email content here..." required></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Email *</label>
-                    <input type="email" id="email" name="Email" placeholder="name@example.com" required>
+                    <label for="file">Attach (Optional)</label>
+                    <input type="file" id="file" accept="image/*,video/*,application/pdf,.doc,.docx" capture="environment">
                 </div>
 
-                <div class="form-group">
-                    <label for="message">Message *</label>
-                    <textarea id="message" name="Message" placeholder="Write your message here..." required></textarea>
-                </div>
+                <button type="submit" class="submit-btn">Continue to Mail App</button>
 
-                <button type="submit" class="submit-btn">Submit</button>
+                <div class="safety-note">
+                    After filling all information please click continue to mail app to finish send email, and rest assured that it is safe
+                </div>
             </form>
         </div>
 
@@ -344,7 +356,6 @@
             </div>
         </div>
 
-        <!-- Footer Contact Info -->
         <div class="footer-info">
             <strong>Kong Thean | Head Office</strong><br>
             Address: No. 33, Damnak Changer District, Kep Province, Cambodia<br>
@@ -353,7 +364,6 @@
         </div>
     </div>
 
-    <!-- Live Animated Waves Background -->
     <div class="wave-container">
         <div class="wave"></div>
         <div class="wave"></div>
@@ -378,6 +388,15 @@
                 otherTab.classList.add('active');
             }
             menu.classList.remove('active');
+        }
+
+        function handleMailto(event) {
+            event.preventDefault();
+            var subject = encodeURIComponent(document.getElementById('subject').value);
+            var body = encodeURIComponent(document.getElementById('message').value);
+            
+            var mailtoUrl = "mailto:info@kongthean.com?subject=" + subject + "&body=" + body;
+            window.location.href = mailtoUrl;
         }
     </script>
 </body>
