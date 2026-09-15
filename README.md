@@ -210,6 +210,12 @@
             min-height: 120px;
         }
 
+        .file-hint {
+            font-size: 11px;
+            color: #888;
+            margin-top: 4px;
+        }
+
         button.submit-btn {
             width: 100%;
             padding: 14px;
@@ -325,8 +331,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="file">Attach (Optional)</label>
-                    <input type="file" id="file" accept="image/*,video/*,application/pdf,.doc,.docx" capture="environment">
+                    <label for="file">Attach Photos / Files (Optional, up to 10)</label>
+                    <input type="file" id="file" multiple onchange="limitFiles(this)">
+                    <div class="file-hint">Choose existing photos/files or use camera. (Maximum 10 items)</div>
                 </div>
 
                 <button type="submit" class="submit-btn">Continue to Mail App</button>
@@ -388,6 +395,13 @@
                 otherTab.classList.add('active');
             }
             menu.classList.remove('active');
+        }
+
+        function limitFiles(input) {
+            if (input.files.length > 10) {
+                alert("You can only select up to 10 files.");
+                input.value = "";
+            }
         }
 
         function handleMailto(event) {
