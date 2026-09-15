@@ -218,16 +218,36 @@
             background-color: #44423e;
         }
 
-        .attachment-note {
+        .instruction-box {
             margin-top: 16px;
             font-size: 12.5px;
-            color: #555;
-            text-align: center;
-            line-height: 1.5;
+            color: #444;
+            text-align: left;
+            line-height: 1.6;
             background: rgba(245, 239, 230, 0.6);
             border: 1px solid rgba(226, 217, 207, 0.8);
-            padding: 12px 16px;
+            padding: 14px 18px;
             border-radius: 10px;
+        }
+
+        .instruction-box strong {
+            color: #1a1a1a;
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+
+        .instruction-box ol {
+            padding-left: 18px;
+            margin: 0;
+        }
+
+        .instruction-box li {
+            margin-bottom: 4px;
+        }
+
+        .instruction-box li:last-child {
+            margin-bottom: 0;
         }
 
         .info-section {
@@ -316,8 +336,14 @@
 
                 <button type="submit" class="submit-btn">Continue to Mail App</button>
 
-                <div class="attachment-note">
-                    <strong>Note:</strong> If you need to attach photos, documents, or other files, please add them directly inside your email app after clicking <strong>Continue to Mail App</strong>.
+                <div class="instruction-box">
+                    <strong>How to send your message:</strong>
+                    <ol>
+                        <li>Fill out the subject and email message above.</li>
+                        <li>Click <strong>Continue to Mail App</strong> to open your default email program.</li>
+                        <li>Attach any photos, documents, or files directly within your mail application if needed.</li>
+                        <li>Review your message and click <strong>Send</strong> in your email app to deliver it.</li>
+                    </ol>
                 </div>
             </form>
         </div>
