@@ -189,17 +189,6 @@
             transition: border-color 0.2s, background-color 0.2s;
         }
 
-        input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            background-color: rgba(250, 248, 245, 0.8);
-            border: 1px dashed #cbb298;
-            border-radius: 10px;
-            font-size: 13px;
-            color: #555;
-            cursor: pointer;
-        }
-
         input:focus, textarea:focus {
             border-color: #cbb298;
             background-color: #ffffff;
@@ -207,13 +196,7 @@
 
         textarea {
             resize: vertical;
-            min-height: 120px;
-        }
-
-        .file-hint {
-            font-size: 11px;
-            color: #888;
-            margin-top: 4px;
+            min-height: 140px;
         }
 
         button.submit-btn {
@@ -235,15 +218,16 @@
             background-color: #44423e;
         }
 
-        .safety-note {
-            margin-top: 14px;
-            font-size: 12px;
-            color: #666;
+        .attachment-note {
+            margin-top: 16px;
+            font-size: 12.5px;
+            color: #555;
             text-align: center;
             line-height: 1.5;
-            background: rgba(245, 239, 230, 0.5);
-            padding: 10px 12px;
-            border-radius: 8px;
+            background: rgba(245, 239, 230, 0.6);
+            border: 1px solid rgba(226, 217, 207, 0.8);
+            padding: 12px 16px;
+            border-radius: 10px;
         }
 
         .info-section {
@@ -330,16 +314,10 @@
                     <textarea id="message" placeholder="Write your email content here..." required></textarea>
                 </div>
 
-                <div class="form-group">
-                    <label for="file">Attach Photos / Files (Optional, up to 10)</label>
-                    <input type="file" id="file" multiple onchange="limitFiles(this)">
-                    <div class="file-hint">Choose existing photos/files or use camera. (Maximum 10 items)</div>
-                </div>
-
                 <button type="submit" class="submit-btn">Continue to Mail App</button>
 
-                <div class="safety-note">
-                    After filling all information please click continue to mail app to finish send email, and rest assured that it is safe
+                <div class="attachment-note">
+                    📌 <strong>Note:</strong> If you need to attach photos, documents, or other files, please add them directly inside your email app after clicking <strong>Continue to Mail App</strong>.
                 </div>
             </form>
         </div>
@@ -395,13 +373,6 @@
                 otherTab.classList.add('active');
             }
             menu.classList.remove('active');
-        }
-
-        function limitFiles(input) {
-            if (input.files.length > 10) {
-                alert("You can only select up to 10 files.");
-                input.value = "";
-            }
         }
 
         function handleMailto(event) {
