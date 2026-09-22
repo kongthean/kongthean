@@ -190,8 +190,8 @@
     <div class="dropzone" id="dropzone">
       <div class="icon">📂</div>
       <div><strong>Click to choose files</strong> or drag & drop them here</div>
-      <div class="hint">Accepts multiple .xlsx files at once</div>
-      <input type="file" id="fileInput" multiple accept=".xlsx,.xls">
+      <div class="hint">Accepts multiple .xlsx, .xls, or .ods files at once</div>
+      <input type="file" id="fileInput" multiple accept=".xlsx,.xls,.ods,application/vnd.oasis.opendocument.spreadsheet,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
     </div>
     <div class="filelist" id="fileList"></div>
     <div class="actions">
@@ -239,7 +239,7 @@ downloadBtn.addEventListener("click", downloadSummary);
 
 function addFiles(fileArr) {
   for (const f of fileArr) {
-    if (/\.(xlsx|xls)$/i.test(f.name)) selectedFiles.push(f);
+    if (/\.(xlsx|xls|ods)$/i.test(f.name)) selectedFiles.push(f);
   }
   renderFileList();
 }
