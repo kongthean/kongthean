@@ -274,6 +274,17 @@ function norm(v) {
   return String(v).replace(/\s+/g, "").trim();
 }
 
+// Normalizes time-header cells so "7:00", the full-width-colon "7：00"
+// (common when files are typed with Chinese/Khmer input), and the
+// zero-padded "07：00" all compare equal.
+function normTime(v) {
+  if (v === null || v === undefined) return "";
+  let s = String(v).trim().replace(/：/g, ":").replace(/\s+/g, "");
+  const m = s.match(/^(\d{1,2}):00$/);
+  if (m) return `${parseInt(m[1], 10)}:00`;
+  return s;
+}
+
 function findSheet(wb, name) {
   const found = wb.SheetNames.find(s => s.trim().toUpperCase() === name.toUpperCase());
   return found ? wb.Sheets[found] : null;
@@ -296,7 +307,7 @@ function sheetToGrid(ws) {
 function findHeaderRow(grid, maxRow = 10) {
   for (let r = 0; r < Math.min(maxRow, grid.length); r++) {
     for (let c = 0; c < grid[r].length; c++) {
-      if (norm(grid[r][c]) === "7:00") return r;
+      if (normTime(grid[r][c]) === "7:00") return r;
     }
   }
   return null;
@@ -306,7 +317,7 @@ function findSevenColumns(grid, headerRow) {
   const cols = [];
   const row = grid[headerRow];
   for (let c = 0; c < row.length; c++) {
-    if (norm(row[c]) === "7:00") cols.push(c);
+    if (normTime(row[c]) === "7:00") cols.push(c);
   }
   return cols;
 }
