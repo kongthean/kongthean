@@ -189,15 +189,25 @@
   <div class="card">
     <div class="dropzone" id="dropzone">
       <div class="icon">📂</div>
-      <div><strong>Click to choose files</strong> or drag & drop them here</div>
-      <div class="hint">Accepts multiple .xlsx, .xls, or .ods files at once</div>
+      <div><strong>Click to choose files</strong>, use "Select a whole folder" below, or drag & drop</div>
+      <div class="hint">Accepts .xlsx, .xls, or .ods — any number of files at once</div>
       <input type="file" id="fileInput" multiple accept=".xlsx,.xls,.ods,application/vnd.oasis.opendocument.spreadsheet,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+    </div>
+    <div class="actions">
+      <button class="secondary" id="folderBtn">📁 Select a whole folder (incl. subfolders)</button>
+      <input type="file" id="folderInput" webkitdirectory directory multiple style="display:none;">
     </div>
     <div class="filelist" id="fileList"></div>
     <div class="actions">
       <button id="runBtn" disabled>Extract MWH</button>
       <button class="secondary" id="downloadBtn" disabled>Download summary (.xlsx)</button>
       <button class="secondary" id="clearBtn">Clear</button>
+    </div>
+    <div id="progressWrap" style="display:none;">
+      <div style="background:var(--border); border-radius:6px; height:8px; overflow:hidden; margin-top:10px;">
+        <div id="progressBar" style="background:var(--accent); height:100%; width:0%; transition:width 0.15s;"></div>
+      </div>
+      <div id="progressText" style="font-size:0.82rem; color:var(--muted); margin-top:6px;"></div>
     </div>
     <div id="messages"></div>
   </div>
@@ -216,6 +226,8 @@ let resultRows = [];
 
 const dropzone = document.getElementById("dropzone");
 const fileInput = document.getElementById("fileInput");
+const folderBtn = document.getElementById("folderBtn");
+const folderInput = document.getElementById("folderInput");
 const fileListEl = document.getElementById("fileList");
 const runBtn = document.getElementById("runBtn");
 const downloadBtn = document.getElementById("downloadBtn");
@@ -223,6 +235,9 @@ const clearBtn = document.getElementById("clearBtn");
 const messagesEl = document.getElementById("messages");
 const resultsCard = document.getElementById("resultsCard");
 const resultsTable = document.getElementById("resultsTable");
+const progressWrap = document.getElementById("progressWrap");
+const progressBar = document.getElementById("progressBar");
+const progressText = document.getElementById("progressText");
 
 dropzone.addEventListener("click", () => fileInput.click());
 dropzone.addEventListener("dragover", (e) => { e.preventDefault(); dropzone.classList.add("dragover"); });
@@ -232,40 +247,92 @@ dropzone.addEventListener("drop", (e) => {
   dropzone.classList.remove("dragover");
   addFiles(e.dataTransfer.files);
 });
-fileInput.addEventListener("change", (e) => addFiles(e.target.files));
+fileInput.addEventListener("change", (e) => { addFiles(e.target.files); fileInput.value = ""; });
+folderBtn.addEventListener("click", () => folderInput.click());
+folderInput.addEventListener("change", (e) => { addFiles(e.target.files); folderInput.value = ""; });
 clearBtn.addEventListener("click", resetAll);
 runBtn.addEventListener("click", runExtraction);
 downloadBtn.addEventListener("click", downloadSummary);
 
+// Track what's already selected (by relative path) so picking a folder
+// twice, or a folder plus some loose files, doesn't duplicate entries.
+const seenKeys = new Set();
+
 function addFiles(fileArr) {
+  let added = 0;
   for (const f of fileArr) {
-    if (/\.(xlsx|xls|ods)$/i.test(f.name)) selectedFiles.push(f);
+    const path = f.webkitRelativePath || f.name;
+    if (!/\.(xlsx|xls|ods)$/i.test(f.name)) continue;
+    const key = `${path}|${f.size}`;
+    if (seenKeys.has(key)) continue;
+    seenKeys.add(key);
+    selectedFiles.push(f);
+    added++;
   }
   renderFileList();
 }
 
 function renderFileList() {
-  fileListEl.textContent = selectedFiles.length
-    ? `${selectedFiles.length} file(s) selected: ` + selectedFiles.map(f => f.name).join(", ")
-    : "";
+  if (!selectedFiles.length) {
+    fileListEl.textContent = "";
+  } else if (selectedFiles.length <= 8) {
+    fileListEl.textContent = `${selectedFiles.length} file(s) selected: ` + selectedFiles.map(f => f.name).join(", ");
+  } else {
+    fileListEl.textContent = `${selectedFiles.length} file(s) selected (${selectedFiles.slice(0,5).map(f=>f.name).join(", ")}, …)`;
+  }
   runBtn.disabled = selectedFiles.length === 0;
 }
 
 function resetAll() {
   selectedFiles = [];
   resultRows = [];
+  seenKeys.clear();
   fileInput.value = "";
+  folderInput.value = "";
   renderFileList();
   messagesEl.innerHTML = "";
   resultsCard.style.display = "none";
   downloadBtn.disabled = true;
+  progressWrap.style.display = "none";
 }
 
-function extractDate(filename) {
-  let m = filename.match(/(\d{4})[.\-_](\d{1,2})[.\-_](\d{1,2})/);
-  if (m) return { y: +m[1], mo: +m[2], d: +m[3] };
-  m = filename.match(/(\d{1,2})[.\-_](\d{1,2})[.\-_](\d{4})/);
-  if (m) return { y: +m[3], mo: +m[2], d: +m[1] };
+// Looks for a date first anywhere in the file's own name, then anywhere
+// in its full folder path (handles a Year/Month/Day.xlsx folder layout
+// where the filename alone might just be "01.xlsx" or "05.ods").
+function extractDate(file) {
+  const name = file.name;
+  const fullPath = file.webkitRelativePath || file.name;
+
+  const tryPatterns = (s) => {
+    let m = s.match(/(\d{4})[.\-_\/](\d{1,2})[.\-_\/](\d{1,2})/);
+    if (m) return { y: +m[1], mo: +m[2], d: +m[3] };
+    m = s.match(/(\d{1,2})[.\-_](\d{1,2})[.\-_](\d{4})/);
+    if (m) return { y: +m[3], mo: +m[2], d: +m[1] };
+    return null;
+  };
+
+  let result = tryPatterns(name) || tryPatterns(fullPath);
+  if (result) return result;
+
+  // Fallback for a Year/Month/Day folder structure where the filename is
+  // just a day number, e.g. "2025/01/05.xlsx" or "2025/January/5.ods".
+  const MONTH_NAMES = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
+  const segments = fullPath.split(/[\/\\]/).filter(Boolean);
+  let year = null, month = null;
+  for (const seg of segments) {
+    const ym = seg.match(/^(20\d{2})$/);
+    if (ym) year = +ym[1];
+    const mm = seg.match(/^(\d{1,2})$/);
+    if (mm && +mm[1] >= 1 && +mm[1] <= 12 && month === null) month = +mm[1];
+    const lower = seg.toLowerCase();
+    for (let i = 0; i < 12; i++) {
+      if (lower.startsWith(MONTH_NAMES[i])) month = i + 1;
+    }
+  }
+  const dayMatch = name.match(/(\d{1,2})/);
+  if (year && month && dayMatch) {
+    return { y: year, mo: month, d: +dayMatch[1] };
+  }
   return null;
 }
 
@@ -324,26 +391,38 @@ function findSevenColumns(grid, headerRow) {
 
 function findFirstMwhRow(grid, headerRow) {
   for (let r = headerRow + 1; r < grid.length; r++) {
-    for (let c = 0; c < Math.min(4, grid[r].length); c++) {
+    for (let c = 0; c < Math.min(6, grid[r].length); c++) {
       if (norm(grid[r][c]).toUpperCase() === "MWH") return r;
     }
   }
   return null;
 }
 
+// Returns both the extracted values AND where exactly it found them
+// (row/column positions). Since every file is supposed to be the same
+// template, those positions should be identical across all 700+ files —
+// the caller uses this to flag any file that landed somewhere different,
+// which is the case a silent wrong-number bug would hide in otherwise.
 function processSheet(ws) {
   const grid = sheetToGrid(ws);
   const headerRow = findHeaderRow(grid);
-  if (headerRow === null) return [null, null];
+  if (headerRow === null) return { startVal: null, endVal: null, pos: null };
   const sevenCols = findSevenColumns(grid, headerRow);
-  if (sevenCols.length < 2) return [null, null];
+  if (sevenCols.length < 2) return { startVal: null, endVal: null, pos: null };
   const mwhRow = findFirstMwhRow(grid, headerRow);
-  if (mwhRow === null) return [null, null];
+  if (mwhRow === null) return { startVal: null, endVal: null, pos: null };
   const startCol = sevenCols[0];
   const endCol = sevenCols[sevenCols.length - 1];
   const startVal = grid[mwhRow][startCol];
   const endVal = grid[mwhRow][endCol];
-  return [startVal, endVal];
+  const pos = {
+    headerRow,
+    mwhOffset: mwhRow - headerRow,
+    startCol,
+    endCol,
+    sevenColsCount: sevenCols.length,
+  };
+  return { startVal, endVal, pos };
 }
 
 function readFileAsArrayBuffer(file) {
@@ -360,11 +439,31 @@ async function runExtraction() {
   messagesEl.innerHTML = "";
   resultRows = [];
   const warnings = [];
+  const total = selectedFiles.length;
+  // Collects, per sheet, every position the extractor actually used
+  // ("headerRow=2, mwhOffset=5, cols=2..27") across all files, so we can
+  // catch a file whose layout silently drifted from the rest afterward.
+  const positionsBySheet = { MPA: {}, MPB: {}, MPC: {} };
 
+  progressWrap.style.display = "block";
+  progressBar.style.width = "0%";
+  progressText.textContent = `Processing 0 / ${total}...`;
+
+  let i = 0;
   for (const file of selectedFiles) {
-    const date = extractDate(file.name);
+    i++;
+    // Yield to the browser periodically so the page stays responsive and
+    // the progress bar actually updates on large batches (hundreds of
+    // files across a year or two).
+    if (i % 5 === 0 || i === total) {
+      progressBar.style.width = `${Math.round((i / total) * 100)}%`;
+      progressText.textContent = `Processing ${i} / ${total}: ${file.name}`;
+      await new Promise((r) => setTimeout(r, 0));
+    }
+
+    const date = extractDate(file);
     if (!date) {
-      warnings.push(`Skipped "${file.name}": no date found in filename.`);
+      warnings.push(`Skipped "${file.webkitRelativePath || file.name}": no date found in filename or folder path.`);
       continue;
     }
     let wb;
@@ -376,7 +475,7 @@ async function runExtraction() {
       continue;
     }
 
-    const row = { dateObj: date, Date: `${date.y}-${String(date.mo).padStart(2,"0")}-${String(date.d).padStart(2,"0")}` };
+    const row = { dateObj: date, Date: `${date.y}-${String(date.mo).padStart(2,"0")}-${String(date.d).padStart(2,"0")}`, _file: file.webkitRelativePath || file.name };
     for (const sheetName of SHEETS) {
       const ws = findSheet(wb, sheetName);
       if (!ws) {
@@ -386,19 +485,83 @@ async function runExtraction() {
         row[`${sheetName}_MWH`] = null;
         continue;
       }
-      const [startVal, endVal] = processSheet(ws);
+      const { startVal, endVal, pos } = processSheet(ws);
       if (startVal === null || endVal === null) {
         warnings.push(`"${file.name}": could not read MWH row on sheet "${sheetName}".`);
+      }
+      if (pos) {
+        const key = `header${pos.headerRow}_mwh+${pos.mwhOffset}_cols${pos.startCol}-${pos.endCol}_n${pos.sevenColsCount}`;
+        row[`${sheetName}_posKey`] = key;
+        (positionsBySheet[sheetName][key] ||= []).push(file.webkitRelativePath || file.name);
       }
       row[`${sheetName}_Start7`] = startVal;
       row[`${sheetName}_End7`] = endVal;
       const s = parseFloat(startVal), e = parseFloat(endVal);
-      row[`${sheetName}_MWH`] = (!isNaN(s) && !isNaN(e)) ? (e - s) : null;
+      const diff = (!isNaN(s) && !isNaN(e)) ? (e - s) : null;
+      row[`${sheetName}_MWH`] = diff;
+      // Sanity check: this MWH row is a rising cumulative counter, so the
+      // end reading should never be lower than the start reading. If it
+      // is, the meter likely reset/rolled over, or the wrong row/column
+      // was picked up — flag it instead of silently reporting a number.
+      if (diff !== null && diff < 0) {
+        row[`${sheetName}_flag`] = "negative";
+        warnings.push(`"${file.name}" (${sheetName}): end value (${endVal}) is LOWER than start value (${startVal}) — check this file manually, do not trust this number as-is.`);
+      }
     }
     resultRows.push(row);
   }
 
+  progressWrap.style.display = "none";
+
   resultRows.sort((a, b) => (a.dateObj.y - b.dateObj.y) || (a.dateObj.mo - b.dateObj.mo) || (a.dateObj.d - b.dateObj.d));
+
+  // Catch duplicate dates (two files mapped to the same day — likely a
+  // naming mixup) and gaps in the date range (a missing day's file) so
+  // you find out now, not after the report is already sent.
+  const dateCounts = {};
+  for (const r of resultRows) dateCounts[r.Date] = (dateCounts[r.Date] || []).concat(r._file);
+  for (const [d, files] of Object.entries(dateCounts)) {
+    if (files.length > 1) {
+      warnings.push(`Duplicate date ${d}: found in ${files.length} files (${files.join(", ")}) — check these are not the same day counted twice.`);
+    }
+  }
+  if (resultRows.length > 1) {
+    const seenDates = new Set(resultRows.map(r => r.Date));
+    const start = resultRows[0].dateObj, end = resultRows[resultRows.length - 1].dateObj;
+    const cur = new Date(start.y, start.mo - 1, start.d);
+    const endDate = new Date(end.y, end.mo - 1, end.d);
+    const missing = [];
+    while (cur <= endDate) {
+      const key = `${cur.getFullYear()}-${String(cur.getMonth()+1).padStart(2,"0")}-${String(cur.getDate()).padStart(2,"0")}`;
+      if (!seenDates.has(key)) missing.push(key);
+      cur.setDate(cur.getDate() + 1);
+    }
+    if (missing.length) {
+      warnings.push(`Missing ${missing.length} day(s) in the range ${resultRows[0].Date} to ${resultRows[resultRows.length-1].Date}: ${missing.slice(0,20).join(", ")}${missing.length>20 ? ", ..." : ""}`);
+    }
+  }
+
+  // Structure-drift check: every file is supposed to be the same template,
+  // so the row/column position used to pull MPA/MPB/MPC's MWH values
+  // should be identical across every file. If one file landed on a
+  // different position than the rest, that's exactly the case where a
+  // shifted row or column could silently produce a plausible-looking but
+  // wrong number — flag it instead of trusting it.
+  for (const sheetName of SHEETS) {
+    const keyGroups = positionsBySheet[sheetName];
+    const keys = Object.keys(keyGroups);
+    if (keys.length <= 1) continue; // every file agreed - nothing to flag
+    keys.sort((a, b) => keyGroups[b].length - keyGroups[a].length);
+    const majorityKey = keys[0];
+    for (const key of keys.slice(1)) {
+      const files = keyGroups[key];
+      warnings.push(
+        `Layout mismatch on sheet "${sheetName}": ${files.length} file(s) (${files.slice(0,5).join(", ")}${files.length>5?", ...":""}) ` +
+        `used a different row/column position than the rest of your files. This usually means that file's layout is slightly ` +
+        `different (an inserted row, a shifted column) — please open it and check the ${sheetName} number by hand before trusting it.`
+      );
+    }
+  }
 
   renderResults();
   if (warnings.length) {
@@ -426,7 +589,14 @@ function renderResults() {
 
   let html = "<thead><tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr></thead><tbody>";
   for (const row of resultRows) {
-    html += "<tr>" + headers.map(h => `<td>${h === "Date" ? row.Date : fmt(row[h])}</td>`).join("") + "</tr>";
+    html += "<tr>" + headers.map(h => {
+      const isMwhCol = h.endsWith("_MWH");
+      const sheetName = h.split("_")[0];
+      const flagged = isMwhCol && row[`${sheetName}_flag`] === "negative";
+      const style = flagged ? ' style="background:var(--warn-bg);color:var(--warn-text);font-weight:700;"' : "";
+      const title = flagged ? ' title="End value is lower than start value — check this file manually"' : "";
+      return `<td${style}${title}>${h === "Date" ? row.Date : fmt(row[h])}${flagged ? " ⚠" : ""}</td>`;
+    }).join("") + "</tr>";
   }
   html += "</tbody>";
   resultsTable.innerHTML = html;
