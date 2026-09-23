@@ -217,6 +217,20 @@
       <table id="resultsTable"></table>
     </div>
   </div>
+
+  <div class="card" id="templateCard" style="display:none;">
+    <h2 style="font-size:1.05rem; margin:0 0 6px;">Fill your yearly report template</h2>
+    <p class="sub" style="margin-bottom:12px;">Upload your existing yearly report file (the one with days 1–31 across the top and months 1–12 down the side). This drops the extracted numbers directly into the matching day/month cells — nothing else in the file is touched.</p>
+    <div class="dropzone" id="templateDropzone" style="padding:20px;">
+      <div>📄 <strong>Click to choose your report file</strong> (.xlsx or .ods)</div>
+      <input type="file" id="templateInput" accept=".xlsx,.xls,.ods,application/vnd.oasis.opendocument.spreadsheet,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+    </div>
+    <div class="filelist" id="templateFileName"></div>
+    <div class="actions">
+      <button id="fillBtn" disabled>Fill template & download</button>
+    </div>
+    <div id="templateMessages"></div>
+  </div>
 </div>
 
 <script>
@@ -571,6 +585,7 @@ async function runExtraction() {
   }
   downloadBtn.disabled = resultRows.length === 0;
   runBtn.disabled = false;
+  templateCard.style.display = resultRows.length ? "block" : "none";
 }
 
 function fmt(v) {
@@ -614,6 +629,165 @@ function downloadSummary() {
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Summary");
   XLSX.writeFile(wb, "MWH_Summary.xlsx");
+}
+
+// ===================== Fill the yearly report template =====================
+// Your report file has days 1-31 across the top (3 columns each: start,
+// end, usage) and months 1-12 down the side (a "棟別" header row + MPA/MPB/
+// MPC data rows, repeating). Rather than hard-coding row/column numbers
+// (which would silently break if next year's file shifts by even one row),
+// this finds that layout by reading the file's own labels every time.
+
+const templateDropzone = document.getElementById("templateDropzone");
+const templateInput = document.getElementById("templateInput");
+const templateFileNameEl = document.getElementById("templateFileName");
+const templateCard = document.getElementById("templateCard");
+const fillBtn = document.getElementById("fillBtn");
+const templateMessagesEl = document.getElementById("templateMessages");
+
+let templateFile = null;
+
+templateDropzone.addEventListener("click", () => templateInput.click());
+templateInput.addEventListener("change", (e) => {
+  const f = e.target.files[0];
+  if (!f) return;
+  templateFile = f;
+  templateFileNameEl.textContent = `Selected: ${f.name}`;
+  fillBtn.disabled = false;
+});
+
+fillBtn.addEventListener("click", fillTemplateAndDownload);
+
+// Scans the sheet for every "棟別" label (the month-block header marker),
+// works out which month each block belongs to from the month number
+// already printed in column A, verifies MPA/MPB/MPC appear in order right
+// below it, and reads the day-number row (one row above the first "棟別")
+// to map day 1..31 to its starting column. Returns null with a reason if
+// the file doesn't look like the expected template at all.
+function detectTemplateLayout(grid) {
+  const headerRows = [];
+  for (let r = 0; r < grid.length; r++) {
+    const row = grid[r];
+    for (let c = 0; c < Math.min(4, row.length); c++) {
+      if (norm(row[c]) === "棟別") { headerRows.push(r); break; }
+    }
+  }
+  if (headerRows.length === 0) {
+    return { error: `Couldn't find any "棟別" header in this file — it doesn't look like the expected report template.` };
+  }
+
+  const monthRows = {};
+  const issues = [];
+  for (const hr of headerRows) {
+    const mpaRow = hr + 1;
+    if (mpaRow + 2 >= grid.length) continue;
+    const monthVal = parseInt(grid[mpaRow]?.[0], 10);
+    const labels = [grid[mpaRow]?.[1], grid[mpaRow+1]?.[1], grid[mpaRow+2]?.[1]].map(v => norm(v).toUpperCase());
+    if (!monthVal || monthVal < 1 || monthVal > 12) {
+      issues.push(`Row ${hr+1}'s "棟別" block doesn't have a valid month number (1-12) in column A — skipped that block.`);
+      continue;
+    }
+    if (labels[0] !== "MPA" || labels[1] !== "MPB" || labels[2] !== "MPC") {
+      issues.push(`Month ${monthVal}'s block (row ${mpaRow+1}) doesn't have MPA/MPB/MPC in that order (found: ${labels.join(", ")}) — skipped, please check that block by hand.`);
+      continue;
+    }
+    monthRows[monthVal] = mpaRow;
+  }
+
+  const dayRow = headerRows[0] - 1;
+  const dayCols = {};
+  if (dayRow >= 0) {
+    const row = grid[dayRow];
+    for (let c = 2; c < row.length; c++) {
+      const n = parseInt(row[c], 10);
+      if (!isNaN(n) && n >= 1 && n <= 31 && !(n in dayCols)) dayCols[n] = c;
+    }
+  }
+  if (Object.keys(dayCols).length === 0) {
+    return { error: `Found month blocks but couldn't find the day-number row (1-31) above them — the file's layout doesn't match what this tool expects.` };
+  }
+
+  return { monthRows, dayCols, issues };
+}
+
+function setCellValue(ws, r, c, value) {
+  if (value === null || value === undefined || value === "") return;
+  const ref = XLSX.utils.encode_cell({ r, c });
+  const existing = ws[ref] || {};
+  const cell = { ...existing };
+  const num = typeof value === "number" ? value : parseFloat(value);
+  if (!isNaN(num)) {
+    cell.t = "n";
+    cell.v = num;
+    delete cell.f; // this cell now holds our extracted value, not a formula
+  } else {
+    cell.t = "s";
+    cell.v = String(value);
+  }
+  ws[ref] = cell;
+}
+
+async function fillTemplateAndDownload() {
+  if (!templateFile || !resultRows.length) return;
+  fillBtn.disabled = true;
+  templateMessagesEl.innerHTML = `<div class="msg ok">Reading template...</div>`;
+
+  let wb;
+  try {
+    const buf = await readFileAsArrayBuffer(templateFile);
+    wb = XLSX.read(buf, { type: "array", cellStyles: true });
+  } catch (e) {
+    templateMessagesEl.innerHTML = `<div class="msg warn">Could not open "${templateFile.name}": ${e.message}</div>`;
+    fillBtn.disabled = false;
+    return;
+  }
+
+  const sheetName = wb.SheetNames[0];
+  const ws = wb.Sheets[sheetName];
+  const grid = sheetToGrid(ws);
+
+  const layout = detectTemplateLayout(grid);
+  if (layout.error) {
+    templateMessagesEl.innerHTML = `<div class="msg warn">${layout.error}</div>`;
+    fillBtn.disabled = false;
+    return;
+  }
+
+  const fillWarnings = [...(layout.issues || [])];
+  const monthsFound = Object.keys(layout.monthRows).length;
+  let filledCount = 0;
+
+  for (const row of resultRows) {
+    const mo = row.dateObj.mo, d = row.dateObj.d;
+    const mpaRow = layout.monthRows[mo];
+    const dayCol = layout.dayCols[d];
+    if (mpaRow === undefined) {
+      fillWarnings.push(`${row.Date}: template has no valid block for month ${mo} — skipped.`);
+      continue;
+    }
+    if (dayCol === undefined) {
+      fillWarnings.push(`${row.Date}: template has no column for day ${d} — skipped.`);
+      continue;
+    }
+    const rowFor = { MPA: mpaRow, MPB: mpaRow + 1, MPC: mpaRow + 2 };
+    for (const sheet of SHEETS) {
+      const r = rowFor[sheet];
+      setCellValue(ws, r, dayCol, row[`${sheet}_Start7`]);
+      setCellValue(ws, r, dayCol + 1, row[`${sheet}_End7`]);
+      setCellValue(ws, r, dayCol + 2, row[`${sheet}_MWH`]);
+    }
+    filledCount++;
+  }
+
+  const outName = templateFile.name.replace(/\.(xlsx|xls|ods)$/i, "") + "_filled.xlsx";
+  XLSX.writeFile(wb, outName);
+
+  let msg = `<div class="msg ok">Filled ${filledCount} day(s) into ${monthsFound} month block(s) found in the template. Downloaded as "${outName}".</div>`;
+  if (fillWarnings.length) {
+    msg += `<div class="msg warn"><strong>${fillWarnings.length} note(s):</strong><br>${fillWarnings.join("<br>")}</div>`;
+  }
+  templateMessagesEl.innerHTML = msg;
+  fillBtn.disabled = false;
 }
 </script>
 </body>
