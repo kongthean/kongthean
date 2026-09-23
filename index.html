@@ -677,6 +677,7 @@ function detectTemplateLayout(grid) {
   }
 
   const monthRows = {};
+  const totalRows = {};
   const issues = [];
   for (const hr of headerRows) {
     const mpaRow = hr + 1;
@@ -692,6 +693,11 @@ function detectTemplateLayout(grid) {
       continue;
     }
     monthRows[monthVal] = mpaRow;
+    // The row right below MPC is this month's daily total (MPA+MPB+MPC
+    // usage summed together) — only used if it exists within the sheet.
+    if (mpaRow + 3 < grid.length) {
+      totalRows[monthVal] = mpaRow + 3;
+    }
   }
 
   const dayRow = headerRows[0] - 1;
@@ -707,22 +713,52 @@ function detectTemplateLayout(grid) {
     return { error: `Found month blocks but couldn't find the day-number row (1-31) above them — the file's layout doesn't match what this tool expects.` };
   }
 
-  return { monthRows, dayCols, issues };
+  return { monthRows, totalRows, dayCols, issues };
 }
 
-function setCellValue(ws, r, c, value) {
-  if (value === null || value === undefined || value === "") return;
+// Writes the start/end reading through EXACTLY as it came from the source
+// file — no parseFloat, no re-typing as a number. Some of your source
+// cells store these as text ("28.210") specifically to keep the trailing
+// zero; converting that to a JS number and back would silently turn it
+// into 28.21. Whatever type and text the source had, this keeps it
+// identical, and returns the cell's address (e.g. "D4") for the formula
+// below to reference.
+function setCellRaw(ws, r, c, value) {
+  const ref = XLSX.utils.encode_cell({ r, c });
+  if (value === null || value === undefined || value === "") return ref;
+  const existing = ws[ref] || {};
+  const cell = { ...existing };
+  if (typeof value === "number") {
+    cell.t = "n";
+    cell.v = value;
+  } else {
+    // Keep as text so the exact original digits/decimals are preserved
+    // character-for-character. Excel still does arithmetic on text that
+    // looks like a number, so the formula below works fine against it.
+    cell.t = "s";
+    cell.v = String(value);
+  }
+  delete cell.f;
+  ws[ref] = cell;
+  return ref;
+}
+
+// Writes a real Excel formula (e.g. "=D4-C4") into the usage cell instead
+// of a pre-computed number, so opening the file and clicking that cell
+// shows the formula in the formula bar and Excel recalculates it itself
+// — matching how the rest of your report already works. `cachedValue` is
+// only a fallback shown before Excel recalculates; the formula is what
+// actually determines the number.
+function setCellFormula(ws, r, c, formula, cachedValue) {
   const ref = XLSX.utils.encode_cell({ r, c });
   const existing = ws[ref] || {};
   const cell = { ...existing };
-  const num = typeof value === "number" ? value : parseFloat(value);
-  if (!isNaN(num)) {
-    cell.t = "n";
-    cell.v = num;
-    delete cell.f; // this cell now holds our extracted value, not a formula
+  cell.t = "n";
+  cell.f = formula;
+  if (cachedValue !== null && cachedValue !== undefined && !isNaN(cachedValue)) {
+    cell.v = cachedValue;
   } else {
-    cell.t = "s";
-    cell.v = String(value);
+    delete cell.v;
   }
   ws[ref] = cell;
 }
@@ -770,11 +806,27 @@ async function fillTemplateAndDownload() {
       continue;
     }
     const rowFor = { MPA: mpaRow, MPB: mpaRow + 1, MPC: mpaRow + 2 };
+    let firstUsageRef = null, lastUsageRef = null, cachedTotal = 0, anyMissing = false;
     for (const sheet of SHEETS) {
       const r = rowFor[sheet];
-      setCellValue(ws, r, dayCol, row[`${sheet}_Start7`]);
-      setCellValue(ws, r, dayCol + 1, row[`${sheet}_End7`]);
-      setCellValue(ws, r, dayCol + 2, row[`${sheet}_MWH`]);
+      const startRef = setCellRaw(ws, r, dayCol, row[`${sheet}_Start7`]);
+      const endRef = setCellRaw(ws, r, dayCol + 1, row[`${sheet}_End7`]);
+      // Usage = end - start, written as an actual formula referencing the
+      // two cells we just filled, so it shows and recalculates as a real
+      // formula in Excel — the cached value is only there as a fallback.
+      const usageRef = XLSX.utils.encode_cell({ r, c: dayCol + 2 });
+      setCellFormula(ws, r, dayCol + 2, `${endRef}-${startRef}`, row[`${sheet}_MWH`]);
+      if (firstUsageRef === null) firstUsageRef = usageRef;
+      lastUsageRef = usageRef;
+      const mwh = row[`${sheet}_MWH`];
+      if (mwh === null || mwh === undefined || isNaN(mwh)) anyMissing = true;
+      else cachedTotal += mwh;
+    }
+    // The row right below MPC is this day's MPA+MPB+MPC total, also as a
+    // live formula (=SUM(...)) rather than a pre-computed number.
+    const totalRow = layout.totalRows[mo];
+    if (totalRow !== undefined) {
+      setCellFormula(ws, totalRow, dayCol + 2, `SUM(${firstUsageRef}:${lastUsageRef})`, anyMissing ? undefined : cachedTotal);
     }
     filledCount++;
   }
