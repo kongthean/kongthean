@@ -106,6 +106,16 @@
   @keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
 
   .exit-corner{position:fixed;top:0;left:0;width:60px;height:60px;opacity:0}
+  .pair-box{margin-top:18px;padding:14px;border-radius:14px;background:#F6F7F9;border:1px solid var(--line);text-align:center}
+  .pair-box h4{margin:0 0 4px;font-size:15px}
+  .pair-box .code{font-family:ui-monospace,Menlo,monospace;font-size:22px;font-weight:700;letter-spacing:2px;margin:8px 0}
+  .pair-box .small{font-size:12px;color:var(--muted)}
+  .pair-box #pairQr{display:flex;justify-content:center;margin:8px 0}
+  .net{position:fixed;right:12px;bottom:10px;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+  .net i{width:9px;height:9px;border-radius:50%;background:#9CA3AF;display:inline-block}
+  .net.ok i{background:var(--green)} .net.bad i{background:var(--red)}
+  .pair-enter{margin-top:26px;display:flex;gap:8px;justify-content:center}
+  .pair-enter input{padding:12px;border-radius:12px;border:1px solid var(--line);font-size:18px;width:190px;text-align:center;font-family:ui-monospace,Menlo,monospace}
   .toast{position:fixed;left:50%;top:16px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;z-index:50}
 </style>
 </head>
@@ -194,6 +204,15 @@
     <label>Quick amounts USD (comma separated)</label>
     <input id="sQuickUSD" placeholder="1,2.5,5,10">
 
+    <div class="pair-box">
+      <h4>Customer display on another device</h4>
+      <div class="small">On the customer tablet/phone, scan this with the camera, or open the POS → Customer display and type the code.</div>
+      <div id="pairQr"></div>
+      <div class="code" id="pairCodeView"></div>
+      <div class="small" id="pairLinkView" style="word-break:break-all"></div>
+      <button class="btn btn-grey" style="margin-top:10px;padding:10px 14px;font-size:14px" onclick="resetPair()">New code</button>
+    </div>
+
     <div class="row">
       <button class="btn btn-grey" onclick="closeSettings()">Close</button>
       <button class="btn btn-red" onclick="saveSettings()">Save</button>
@@ -209,6 +228,13 @@
     <div class="logo">៛</div>
     <div class="shop" id="cShop">Welcome</div>
     <div class="sub">Scan KHQR with any Cambodian banking app</div>
+    <div id="cPairEnter" class="hidden">
+      <div class="pair-enter">
+        <input id="cPairInput" placeholder="pairing code" autocapitalize="off" autocorrect="off">
+        <button class="btn btn-red" style="padding:12px 18px" onclick="enterPair()">Connect</button>
+      </div>
+      <div class="sub" style="font-size:14px;margin-top:8px">Find the code on the Seller screen → ⚙︎</div>
+    </div>
   </div>
 
   <div id="cPay" class="hidden">
@@ -232,6 +258,8 @@
     <h2>Payment received</h2>
     <p>Thank you! / អរគុណ!</p>
   </div>
+
+  <div class="net" id="cNet"><i></i><span>connecting…</span></div>
 
   <div id="cExpired" class="paid hidden">
     <div class="tick" style="background:#9CA3AF">⏱</div>
@@ -296,24 +324,58 @@ function asciiOnly(t) { return String(t || '').replace(/[^\x20-\x7E]/g, '').trim
    ========================================================= */
 const DEFAULTS = {
   bakongId: '', name: 'My Shop', city: 'Phnom Penh', currency: 'KHR',
-  expiry: 10, quickKHR: '5000,10000,20000,50000', quickUSD: '1,2.5,5,10'
+  expiry: 10, pair: '', quickKHR: '5000,10000,20000,50000', quickUSD: '1,2.5,5,10'
 };
 function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
 let cfg = Object.assign({}, DEFAULTS, JSON.parse(store('khqr_cfg') || '{}'));
 
 /* =========================================================
    Sync between Seller and Customer screens
-   (same browser/device: two windows, second monitor, etc.)
+   1) Same device (second monitor / two windows): BroadcastChannel + storage
+   2) Different devices: internet relay (ntfy.sh), paired by a private code
    ========================================================= */
+const RELAY = 'https://ntfy.sh';
 const chan = ('BroadcastChannel' in window) ? new BroadcastChannel('khqr-pos') : null;
+
+function newCode() {
+  const a = 'abcdefghjkmnpqrstuvwxyz23456789'; let c = '';
+  crypto.getRandomValues(new Uint8Array(10)).forEach(x => c += a[x % a.length]);
+  return c;
+}
+function pairCode() {
+  if (!cfg.pair) { cfg.pair = newCode(); store('khqr_cfg', JSON.stringify(cfg)); }
+  return cfg.pair;
+}
+function topicUrl(code) { return RELAY + '/khqrpos-' + code; }
+
 function publish(state) {
   state.ts = Date.now();
   store('khqr_state', JSON.stringify(state));
   if (chan) chan.postMessage(state);
+  fetch(topicUrl(pairCode()), { method: 'POST', body: JSON.stringify(state) })
+    .then(r => { if (!r.ok) throw 0; })
+    .catch(() => { if (state.status === 'pay') toast('Could not reach customer display on other devices – check internet'); });
 }
 function onState(fn) {
   if (chan) chan.onmessage = e => fn(e.data);
   window.addEventListener('storage', e => { if (e.key === 'khqr_state' && e.newValue) fn(JSON.parse(e.newValue)); });
+}
+
+/* customer side: listen to relay */
+let es = null;
+function subscribe(code) {
+  if (es) es.close();
+  setNet('', 'connecting…');
+  es = new EventSource(topicUrl(code) + '/sse?since=1h');
+  es.onopen = () => setNet('ok', 'connected');
+  es.onerror = () => setNet('bad', 'reconnecting…');
+  es.onmessage = e => {
+    try { const m = JSON.parse(e.data); if (m.message) handleState(JSON.parse(m.message)); } catch (_) {}
+  };
+}
+function setNet(cls, text) {
+  const n = document.getElementById('cNet');
+  n.className = 'net ' + cls; n.querySelector('span').textContent = text;
 }
 
 /* =========================================================
@@ -324,7 +386,14 @@ function go(mode) {
   render();
 }
 function render() {
-  const mode = location.hash.replace('#', '') || 'home';
+  const parts = location.hash.replace('#', '').split('/');
+  let mode = parts[0] || 'home';
+  if (!['home','seller','customer'].includes(mode)) mode = 'home';
+  if (mode === 'customer' && parts[1]) {
+    cfg.pair = parts[1].toLowerCase().replace(/[^a-z0-9]/g, '');
+    store('khqr_cfg', JSON.stringify(cfg));
+    history.replaceState(null, '', '#customer');
+  }
   ['home', 'seller', 'customer'].forEach(id => document.getElementById(id).classList.toggle('hidden', id !== mode));
   if (mode === 'seller') initSeller();
   if (mode === 'customer') initCustomer();
@@ -441,7 +510,20 @@ function openSettings() {
   document.getElementById('sExpiry').value = cfg.expiry;
   document.getElementById('sQuickKHR').value = cfg.quickKHR;
   document.getElementById('sQuickUSD').value = cfg.quickUSD;
+  renderPair();
   document.getElementById('settings').classList.remove('hidden');
+}
+function renderPair() {
+  const code = pairCode();
+  const link = location.origin + location.pathname + '#customer/' + code;
+  document.getElementById('pairCodeView').textContent = code;
+  document.getElementById('pairLinkView').textContent = location.protocol.startsWith('http') ? link : 'Upload this file to your website to use the link';
+  const q = document.getElementById('pairQr'); q.innerHTML = '';
+  if (location.protocol.startsWith('http')) new QRCode(q, { text: link, width: 150, height: 150, correctLevel: QRCode.CorrectLevel.M });
+}
+function resetPair() {
+  cfg.pair = newCode(); store('khqr_cfg', JSON.stringify(cfg)); renderPair();
+  toast('New code – pair the customer display again');
 }
 function closeSettings() { document.getElementById('settings').classList.add('hidden'); }
 function saveSettings() {
@@ -454,7 +536,8 @@ function saveSettings() {
     currency: document.getElementById('sCur').value,
     expiry: Math.min(60, Math.max(1, Number(document.getElementById('sExpiry').value) || 10)),
     quickKHR: document.getElementById('sQuickKHR').value || DEFAULTS.quickKHR,
-    quickUSD: document.getElementById('sQuickUSD').value || DEFAULTS.quickUSD
+    quickUSD: document.getElementById('sQuickUSD').value || DEFAULTS.quickUSD,
+    pair: cfg.pair
   };
   store('khqr_cfg', JSON.stringify(cfg));
   currency = cfg.currency;
@@ -469,16 +552,34 @@ function saveSettings() {
 let timerId = null;
 let customerReady = false;
 
+let lastTs = 0;
+function handleState(st) {
+  if (!st || !st.status) return;
+  if (st.ts && st.ts <= lastTs) return;          // ignore duplicates / older messages
+  lastTs = st.ts || Date.now();
+  if (st.status === 'pay' && st.expiresAt <= Date.now()) st = { status: 'idle', name: st.name };
+  showState(st);
+}
 function initCustomer() {
-  if (!customerReady) { onState(showState); customerReady = true; }
+  if (!customerReady) { onState(handleState); customerReady = true; }
   const last = JSON.parse(store('khqr_state') || 'null');
-  showState(last && last.status === 'pay' && last.expiresAt > Date.now() ? last : { status: 'idle', name: (last && last.name) || cfg.name });
+  showState({ status: 'idle', name: (last && last.name) || (cfg.bakongId ? cfg.name : 'Welcome') });
+  if (last) handleState(last);
+  document.getElementById('cPairEnter').classList.toggle('hidden', !!cfg.pair);
+  if (cfg.pair) subscribe(cfg.pair); else setNet('bad', 'not paired');
   keepAwake();
+}
+function enterPair() {
+  const c = document.getElementById('cPairInput').value.toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (c.length < 6) { toast('Enter the code shown on the Seller screen'); return; }
+  cfg.pair = c; store('khqr_cfg', JSON.stringify(cfg));
+  document.getElementById('cPairEnter').classList.add('hidden');
+  subscribe(c); toast('Connected');
 }
 function show(id) { ['cIdle','cPay','cPaid','cExpired'].forEach(x => document.getElementById(x).classList.toggle('hidden', x !== id)); }
 
 function showState(st) {
-  if (location.hash !== '#customer' || !st) return;
+  if (!location.hash.startsWith('#customer') || !st) return;
   clearInterval(timerId);
   if (st.status === 'pay') {
     document.getElementById('cName').textContent = st.name || '';
@@ -509,7 +610,7 @@ let wakeLock = null;
 async function keepAwake() {
   try { if ('wakeLock' in navigator && !wakeLock) { wakeLock = await navigator.wakeLock.request('screen'); wakeLock.onrelease = () => wakeLock = null; } } catch (e) {}
 }
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && location.hash === '#customer') keepAwake(); });
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && location.hash.startsWith('#customer')) keepAwake(); });
 
 function toast(msg) {
   const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
