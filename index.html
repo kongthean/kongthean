@@ -2,845 +2,521 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MWH Extractor — MPA / MPB / MPC</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#E1232E">
+<title>KHQR POS</title>
+<!-- QRCode.js (MIT, davidshimjs) embedded so the POS works offline -->
+<script>var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this.parsedData=[];for(var b=[],d=0,e=this.data.length;e>d;d++){var f=this.data.charCodeAt(d);f>65536?(b[0]=240|(1835008&f)>>>18,b[1]=128|(258048&f)>>>12,b[2]=128|(4032&f)>>>6,b[3]=128|63&f):f>2048?(b[0]=224|(61440&f)>>>12,b[1]=128|(4032&f)>>>6,b[2]=128|63&f):f>128?(b[0]=192|(1984&f)>>>6,b[1]=128|63&f):b[0]=f,this.parsedData=this.parsedData.concat(b)}this.parsedData.length!=this.data.length&&(this.parsedData.unshift(191),this.parsedData.unshift(187),this.parsedData.unshift(239))}function b(a,b){this.typeNumber=a,this.errorCorrectLevel=b,this.modules=null,this.moduleCount=0,this.dataCache=null,this.dataList=[]}function i(a,b){if(void 0==a.length)throw new Error(a.length+"/"+b);for(var c=0;c<a.length&&0==a[c];)c++;this.num=new Array(a.length-c+b);for(var d=0;d<a.length-c;d++)this.num[d]=a[d+c]}function j(a,b){this.totalCount=a,this.dataCount=b}function k(){this.buffer=[],this.length=0}function m(){return"undefined"!=typeof CanvasRenderingContext2D}function n(){var a=!1,b=navigator.userAgent;return/android/i.test(b)&&(a=!0,aMat=b.toString().match(/android ([0-9]\.[0-9])/i),aMat&&aMat[1]&&(a=parseFloat(aMat[1]))),a}function r(a,b){for(var c=1,e=s(a),f=0,g=l.length;g>=f;f++){var h=0;switch(b){case d.L:h=l[f][0];break;case d.M:h=l[f][1];break;case d.Q:h=l[f][2];break;case d.H:h=l[f][3]}if(h>=e)break;c++}if(c>l.length)throw new Error("Too long data");return c}function s(a){var b=encodeURI(a).toString().replace(/\%[0-9a-fA-F]{2}/g,"a");return b.length+(b.length!=a?3:0)}a.prototype={getLength:function(){return this.parsedData.length},write:function(a){for(var b=0,c=this.parsedData.length;c>b;b++)a.put(this.parsedData[b],8)}},b.prototype={addData:function(b){var c=new a(b);this.dataList.push(c),this.dataCache=null},isDark:function(a,b){if(0>a||this.moduleCount<=a||0>b||this.moduleCount<=b)throw new Error(a+","+b);return this.modules[a][b]},getModuleCount:function(){return this.moduleCount},make:function(){this.makeImpl(!1,this.getBestMaskPattern())},makeImpl:function(a,c){this.moduleCount=4*this.typeNumber+17,this.modules=new Array(this.moduleCount);for(var d=0;d<this.moduleCount;d++){this.modules[d]=new Array(this.moduleCount);for(var e=0;e<this.moduleCount;e++)this.modules[d][e]=null}this.setupPositionProbePattern(0,0),this.setupPositionProbePattern(this.moduleCount-7,0),this.setupPositionProbePattern(0,this.moduleCount-7),this.setupPositionAdjustPattern(),this.setupTimingPattern(),this.setupTypeInfo(a,c),this.typeNumber>=7&&this.setupTypeNumber(a),null==this.dataCache&&(this.dataCache=b.createData(this.typeNumber,this.errorCorrectLevel,this.dataList)),this.mapData(this.dataCache,c)},setupPositionProbePattern:function(a,b){for(var c=-1;7>=c;c++)if(!(-1>=a+c||this.moduleCount<=a+c))for(var d=-1;7>=d;d++)-1>=b+d||this.moduleCount<=b+d||(this.modules[a+c][b+d]=c>=0&&6>=c&&(0==d||6==d)||d>=0&&6>=d&&(0==c||6==c)||c>=2&&4>=c&&d>=2&&4>=d?!0:!1)},getBestMaskPattern:function(){for(var a=0,b=0,c=0;8>c;c++){this.makeImpl(!0,c);var d=f.getLostPoint(this);(0==c||a>d)&&(a=d,b=c)}return b},createMovieClip:function(a,b,c){var d=a.createEmptyMovieClip(b,c),e=1;this.make();for(var f=0;f<this.modules.length;f++)for(var g=f*e,h=0;h<this.modules[f].length;h++){var i=h*e,j=this.modules[f][h];j&&(d.beginFill(0,100),d.moveTo(i,g),d.lineTo(i+e,g),d.lineTo(i+e,g+e),d.lineTo(i,g+e),d.endFill())}return d},setupTimingPattern:function(){for(var a=8;a<this.moduleCount-8;a++)null==this.modules[a][6]&&(this.modules[a][6]=0==a%2);for(var b=8;b<this.moduleCount-8;b++)null==this.modules[6][b]&&(this.modules[6][b]=0==b%2)},setupPositionAdjustPattern:function(){for(var a=f.getPatternPosition(this.typeNumber),b=0;b<a.length;b++)for(var c=0;c<a.length;c++){var d=a[b],e=a[c];if(null==this.modules[d][e])for(var g=-2;2>=g;g++)for(var h=-2;2>=h;h++)this.modules[d+g][e+h]=-2==g||2==g||-2==h||2==h||0==g&&0==h?!0:!1}},setupTypeNumber:function(a){for(var b=f.getBCHTypeNumber(this.typeNumber),c=0;18>c;c++){var d=!a&&1==(1&b>>c);this.modules[Math.floor(c/3)][c%3+this.moduleCount-8-3]=d}for(var c=0;18>c;c++){var d=!a&&1==(1&b>>c);this.modules[c%3+this.moduleCount-8-3][Math.floor(c/3)]=d}},setupTypeInfo:function(a,b){for(var c=this.errorCorrectLevel<<3|b,d=f.getBCHTypeInfo(c),e=0;15>e;e++){var g=!a&&1==(1&d>>e);6>e?this.modules[e][8]=g:8>e?this.modules[e+1][8]=g:this.modules[this.moduleCount-15+e][8]=g}for(var e=0;15>e;e++){var g=!a&&1==(1&d>>e);8>e?this.modules[8][this.moduleCount-e-1]=g:9>e?this.modules[8][15-e-1+1]=g:this.modules[8][15-e-1]=g}this.modules[this.moduleCount-8][8]=!a},mapData:function(a,b){for(var c=-1,d=this.moduleCount-1,e=7,g=0,h=this.moduleCount-1;h>0;h-=2)for(6==h&&h--;;){for(var i=0;2>i;i++)if(null==this.modules[d][h-i]){var j=!1;g<a.length&&(j=1==(1&a[g]>>>e));var k=f.getMask(b,d,h-i);k&&(j=!j),this.modules[d][h-i]=j,e--,-1==e&&(g++,e=7)}if(d+=c,0>d||this.moduleCount<=d){d-=c,c=-c;break}}}},b.PAD0=236,b.PAD1=17,b.createData=function(a,c,d){for(var e=j.getRSBlocks(a,c),g=new k,h=0;h<d.length;h++){var i=d[h];g.put(i.mode,4),g.put(i.getLength(),f.getLengthInBits(i.mode,a)),i.write(g)}for(var l=0,h=0;h<e.length;h++)l+=e[h].dataCount;if(g.getLengthInBits()>8*l)throw new Error("code length overflow. ("+g.getLengthInBits()+">"+8*l+")");for(g.getLengthInBits()+4<=8*l&&g.put(0,4);0!=g.getLengthInBits()%8;)g.putBit(!1);for(;;){if(g.getLengthInBits()>=8*l)break;if(g.put(b.PAD0,8),g.getLengthInBits()>=8*l)break;g.put(b.PAD1,8)}return b.createBytes(g,e)},b.createBytes=function(a,b){for(var c=0,d=0,e=0,g=new Array(b.length),h=new Array(b.length),j=0;j<b.length;j++){var k=b[j].dataCount,l=b[j].totalCount-k;d=Math.max(d,k),e=Math.max(e,l),g[j]=new Array(k);for(var m=0;m<g[j].length;m++)g[j][m]=255&a.buffer[m+c];c+=k;var n=f.getErrorCorrectPolynomial(l),o=new i(g[j],n.getLength()-1),p=o.mod(n);h[j]=new Array(n.getLength()-1);for(var m=0;m<h[j].length;m++){var q=m+p.getLength()-h[j].length;h[j][m]=q>=0?p.get(q):0}}for(var r=0,m=0;m<b.length;m++)r+=b[m].totalCount;for(var s=new Array(r),t=0,m=0;d>m;m++)for(var j=0;j<b.length;j++)m<g[j].length&&(s[t++]=g[j][m]);for(var m=0;e>m;m++)for(var j=0;j<b.length;j++)m<h[j].length&&(s[t++]=h[j][m]);return s};for(var c={MODE_NUMBER:1,MODE_ALPHA_NUM:2,MODE_8BIT_BYTE:4,MODE_KANJI:8},d={L:1,M:0,Q:3,H:2},e={PATTERN000:0,PATTERN001:1,PATTERN010:2,PATTERN011:3,PATTERN100:4,PATTERN101:5,PATTERN110:6,PATTERN111:7},f={PATTERN_POSITION_TABLE:[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],G15:1335,G18:7973,G15_MASK:21522,getBCHTypeInfo:function(a){for(var b=a<<10;f.getBCHDigit(b)-f.getBCHDigit(f.G15)>=0;)b^=f.G15<<f.getBCHDigit(b)-f.getBCHDigit(f.G15);return(a<<10|b)^f.G15_MASK},getBCHTypeNumber:function(a){for(var b=a<<12;f.getBCHDigit(b)-f.getBCHDigit(f.G18)>=0;)b^=f.G18<<f.getBCHDigit(b)-f.getBCHDigit(f.G18);return a<<12|b},getBCHDigit:function(a){for(var b=0;0!=a;)b++,a>>>=1;return b},getPatternPosition:function(a){return f.PATTERN_POSITION_TABLE[a-1]},getMask:function(a,b,c){switch(a){case e.PATTERN000:return 0==(b+c)%2;case e.PATTERN001:return 0==b%2;case e.PATTERN010:return 0==c%3;case e.PATTERN011:return 0==(b+c)%3;case e.PATTERN100:return 0==(Math.floor(b/2)+Math.floor(c/3))%2;case e.PATTERN101:return 0==b*c%2+b*c%3;case e.PATTERN110:return 0==(b*c%2+b*c%3)%2;case e.PATTERN111:return 0==(b*c%3+(b+c)%2)%2;default:throw new Error("bad maskPattern:"+a)}},getErrorCorrectPolynomial:function(a){for(var b=new i([1],0),c=0;a>c;c++)b=b.multiply(new i([1,g.gexp(c)],0));return b},getLengthInBits:function(a,b){if(b>=1&&10>b)switch(a){case c.MODE_NUMBER:return 10;case c.MODE_ALPHA_NUM:return 9;case c.MODE_8BIT_BYTE:return 8;case c.MODE_KANJI:return 8;default:throw new Error("mode:"+a)}else if(27>b)switch(a){case c.MODE_NUMBER:return 12;case c.MODE_ALPHA_NUM:return 11;case c.MODE_8BIT_BYTE:return 16;case c.MODE_KANJI:return 10;default:throw new Error("mode:"+a)}else{if(!(41>b))throw new Error("type:"+b);switch(a){case c.MODE_NUMBER:return 14;case c.MODE_ALPHA_NUM:return 13;case c.MODE_8BIT_BYTE:return 16;case c.MODE_KANJI:return 12;default:throw new Error("mode:"+a)}}},getLostPoint:function(a){for(var b=a.getModuleCount(),c=0,d=0;b>d;d++)for(var e=0;b>e;e++){for(var f=0,g=a.isDark(d,e),h=-1;1>=h;h++)if(!(0>d+h||d+h>=b))for(var i=-1;1>=i;i++)0>e+i||e+i>=b||(0!=h||0!=i)&&g==a.isDark(d+h,e+i)&&f++;f>5&&(c+=3+f-5)}for(var d=0;b-1>d;d++)for(var e=0;b-1>e;e++){var j=0;a.isDark(d,e)&&j++,a.isDark(d+1,e)&&j++,a.isDark(d,e+1)&&j++,a.isDark(d+1,e+1)&&j++,(0==j||4==j)&&(c+=3)}for(var d=0;b>d;d++)for(var e=0;b-6>e;e++)a.isDark(d,e)&&!a.isDark(d,e+1)&&a.isDark(d,e+2)&&a.isDark(d,e+3)&&a.isDark(d,e+4)&&!a.isDark(d,e+5)&&a.isDark(d,e+6)&&(c+=40);for(var e=0;b>e;e++)for(var d=0;b-6>d;d++)a.isDark(d,e)&&!a.isDark(d+1,e)&&a.isDark(d+2,e)&&a.isDark(d+3,e)&&a.isDark(d+4,e)&&!a.isDark(d+5,e)&&a.isDark(d+6,e)&&(c+=40);for(var k=0,e=0;b>e;e++)for(var d=0;b>d;d++)a.isDark(d,e)&&k++;var l=Math.abs(100*k/b/b-50)/5;return c+=10*l}},g={glog:function(a){if(1>a)throw new Error("glog("+a+")");return g.LOG_TABLE[a]},gexp:function(a){for(;0>a;)a+=255;for(;a>=256;)a-=255;return g.EXP_TABLE[a]},EXP_TABLE:new Array(256),LOG_TABLE:new Array(256)},h=0;8>h;h++)g.EXP_TABLE[h]=1<<h;for(var h=8;256>h;h++)g.EXP_TABLE[h]=g.EXP_TABLE[h-4]^g.EXP_TABLE[h-5]^g.EXP_TABLE[h-6]^g.EXP_TABLE[h-8];for(var h=0;255>h;h++)g.LOG_TABLE[g.EXP_TABLE[h]]=h;i.prototype={get:function(a){return this.num[a]},getLength:function(){return this.num.length},multiply:function(a){for(var b=new Array(this.getLength()+a.getLength()-1),c=0;c<this.getLength();c++)for(var d=0;d<a.getLength();d++)b[c+d]^=g.gexp(g.glog(this.get(c))+g.glog(a.get(d)));return new i(b,0)},mod:function(a){if(this.getLength()-a.getLength()<0)return this;for(var b=g.glog(this.get(0))-g.glog(a.get(0)),c=new Array(this.getLength()),d=0;d<this.getLength();d++)c[d]=this.get(d);for(var d=0;d<a.getLength();d++)c[d]^=g.gexp(g.glog(a.get(d))+b);return new i(c,0).mod(a)}},j.RS_BLOCK_TABLE=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],[4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],[2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],[4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],[3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],[5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12],[5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],[1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],[5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],[3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],[3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],[4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],[2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],[4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],[6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],[8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],[10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],[8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],[3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],[7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],[5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],[13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],[17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],[17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],[13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],[12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],[6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],[17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],[4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],[20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],[19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]],j.getRSBlocks=function(a,b){var c=j.getRsBlockTable(a,b);if(void 0==c)throw new Error("bad rs block @ typeNumber:"+a+"/errorCorrectLevel:"+b);for(var d=c.length/3,e=[],f=0;d>f;f++)for(var g=c[3*f+0],h=c[3*f+1],i=c[3*f+2],k=0;g>k;k++)e.push(new j(h,i));return e},j.getRsBlockTable=function(a,b){switch(b){case d.L:return j.RS_BLOCK_TABLE[4*(a-1)+0];case d.M:return j.RS_BLOCK_TABLE[4*(a-1)+1];case d.Q:return j.RS_BLOCK_TABLE[4*(a-1)+2];case d.H:return j.RS_BLOCK_TABLE[4*(a-1)+3];default:return void 0}},k.prototype={get:function(a){var b=Math.floor(a/8);return 1==(1&this.buffer[b]>>>7-a%8)},put:function(a,b){for(var c=0;b>c;c++)this.putBit(1==(1&a>>>b-c-1))},getLengthInBits:function(){return this.length},putBit:function(a){var b=Math.floor(this.length/8);this.buffer.length<=b&&this.buffer.push(0),a&&(this.buffer[b]|=128>>>this.length%8),this.length++}};var l=[[17,14,11,7],[32,26,20,14],[53,42,32,24],[78,62,46,34],[106,84,60,44],[134,106,74,58],[154,122,86,64],[192,152,108,84],[230,180,130,98],[271,213,151,119],[321,251,177,137],[367,287,203,155],[425,331,241,177],[458,362,258,194],[520,412,292,220],[586,450,322,250],[644,504,364,280],[718,560,394,310],[792,624,442,338],[858,666,482,382],[929,711,509,403],[1003,779,565,439],[1091,857,611,461],[1171,911,661,511],[1273,997,715,535],[1367,1059,751,593],[1465,1125,805,625],[1528,1190,868,658],[1628,1264,908,698],[1732,1370,982,742],[1840,1452,1030,790],[1952,1538,1112,842],[2068,1628,1168,898],[2188,1722,1228,958],[2303,1809,1283,983],[2431,1911,1351,1051],[2563,1989,1423,1093],[2699,2099,1499,1139],[2809,2213,1579,1219],[2953,2331,1663,1273]],o=function(){var a=function(a,b){this._el=a,this._htOption=b};return a.prototype.draw=function(a){function g(a,b){var c=document.createElementNS("http://www.w3.org/2000/svg",a);for(var d in b)b.hasOwnProperty(d)&&c.setAttribute(d,b[d]);return c}var b=this._htOption,c=this._el,d=a.getModuleCount();Math.floor(b.width/d),Math.floor(b.height/d),this.clear();var h=g("svg",{viewBox:"0 0 "+String(d)+" "+String(d),width:"100%",height:"100%",fill:b.colorLight});h.setAttributeNS("http://www.w3.org/2000/xmlns/","xmlns:xlink","http://www.w3.org/1999/xlink"),c.appendChild(h),h.appendChild(g("rect",{fill:b.colorDark,width:"1",height:"1",id:"template"}));for(var i=0;d>i;i++)for(var j=0;d>j;j++)if(a.isDark(i,j)){var k=g("use",{x:String(i),y:String(j)});k.setAttributeNS("http://www.w3.org/1999/xlink","href","#template"),h.appendChild(k)}},a.prototype.clear=function(){for(;this._el.hasChildNodes();)this._el.removeChild(this._el.lastChild)},a}(),p="svg"===document.documentElement.tagName.toLowerCase(),q=p?o:m()?function(){function a(){this._elImage.src=this._elCanvas.toDataURL("image/png"),this._elImage.style.display="block",this._elCanvas.style.display="none"}function d(a,b){var c=this;if(c._fFail=b,c._fSuccess=a,null===c._bSupportDataURI){var d=document.createElement("img"),e=function(){c._bSupportDataURI=!1,c._fFail&&_fFail.call(c)},f=function(){c._bSupportDataURI=!0,c._fSuccess&&c._fSuccess.call(c)};return d.onabort=e,d.onerror=e,d.onload=f,d.src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==",void 0}c._bSupportDataURI===!0&&c._fSuccess?c._fSuccess.call(c):c._bSupportDataURI===!1&&c._fFail&&c._fFail.call(c)}if(this._android&&this._android<=2.1){var b=1/window.devicePixelRatio,c=CanvasRenderingContext2D.prototype.drawImage;CanvasRenderingContext2D.prototype.drawImage=function(a,d,e,f,g,h,i,j){if("nodeName"in a&&/img/i.test(a.nodeName))for(var l=arguments.length-1;l>=1;l--)arguments[l]=arguments[l]*b;else"undefined"==typeof j&&(arguments[1]*=b,arguments[2]*=b,arguments[3]*=b,arguments[4]*=b);c.apply(this,arguments)}}var e=function(a,b){this._bIsPainted=!1,this._android=n(),this._htOption=b,this._elCanvas=document.createElement("canvas"),this._elCanvas.width=b.width,this._elCanvas.height=b.height,a.appendChild(this._elCanvas),this._el=a,this._oContext=this._elCanvas.getContext("2d"),this._bIsPainted=!1,this._elImage=document.createElement("img"),this._elImage.style.display="none",this._el.appendChild(this._elImage),this._bSupportDataURI=null};return e.prototype.draw=function(a){var b=this._elImage,c=this._oContext,d=this._htOption,e=a.getModuleCount(),f=d.width/e,g=d.height/e,h=Math.round(f),i=Math.round(g);b.style.display="none",this.clear();for(var j=0;e>j;j++)for(var k=0;e>k;k++){var l=a.isDark(j,k),m=k*f,n=j*g;c.strokeStyle=l?d.colorDark:d.colorLight,c.lineWidth=1,c.fillStyle=l?d.colorDark:d.colorLight,c.fillRect(m,n,f,g),c.strokeRect(Math.floor(m)+.5,Math.floor(n)+.5,h,i),c.strokeRect(Math.ceil(m)-.5,Math.ceil(n)-.5,h,i)}this._bIsPainted=!0},e.prototype.makeImage=function(){this._bIsPainted&&d.call(this,a)},e.prototype.isPainted=function(){return this._bIsPainted},e.prototype.clear=function(){this._oContext.clearRect(0,0,this._elCanvas.width,this._elCanvas.height),this._bIsPainted=!1},e.prototype.round=function(a){return a?Math.floor(1e3*a)/1e3:a},e}():function(){var a=function(a,b){this._el=a,this._htOption=b};return a.prototype.draw=function(a){for(var b=this._htOption,c=this._el,d=a.getModuleCount(),e=Math.floor(b.width/d),f=Math.floor(b.height/d),g=['<table style="border:0;border-collapse:collapse;">'],h=0;d>h;h++){g.push("<tr>");for(var i=0;d>i;i++)g.push('<td style="border:0;border-collapse:collapse;padding:0;margin:0;width:'+e+"px;height:"+f+"px;background-color:"+(a.isDark(h,i)?b.colorDark:b.colorLight)+';"></td>');g.push("</tr>")}g.push("</table>"),c.innerHTML=g.join("");var j=c.childNodes[0],k=(b.width-j.offsetWidth)/2,l=(b.height-j.offsetHeight)/2;k>0&&l>0&&(j.style.margin=l+"px "+k+"px")},a.prototype.clear=function(){this._el.innerHTML=""},a}();QRCode=function(a,b){if(this._htOption={width:256,height:256,typeNumber:4,colorDark:"#000000",colorLight:"#ffffff",correctLevel:d.H},"string"==typeof b&&(b={text:b}),b)for(var c in b)this._htOption[c]=b[c];"string"==typeof a&&(a=document.getElementById(a)),this._android=n(),this._el=a,this._oQRCode=null,this._oDrawing=new q(this._el,this._htOption),this._htOption.text&&this.makeCode(this._htOption.text)},QRCode.prototype.makeCode=function(a){this._oQRCode=new b(r(a,this._htOption.correctLevel),this._htOption.correctLevel),this._oQRCode.addData(a),this._oQRCode.make(),this._el.title=a,this._oDrawing.draw(this._oQRCode),this.makeImage()},QRCode.prototype.makeImage=function(){"function"==typeof this._oDrawing.makeImage&&(!this._android||this._android>=3)&&this._oDrawing.makeImage()},QRCode.prototype.clear=function(){this._oDrawing.clear()},QRCode.CorrectLevel=d}();</script>
 <style>
-  :root {
-    --bg: #f7f7f8;
-    --card: #ffffff;
-    --text: #1a1a1a;
-    --muted: #6b7280;
-    --border: #e5e7eb;
-    --accent: #2563eb;
-    --accent-hover: #1d4ed8;
-    --warn-bg: #fff7ed;
-    --warn-border: #fdba74;
-    --warn-text: #9a3412;
-    --ok-bg: #f0fdf4;
-    --ok-border: #86efac;
+  :root{
+    --red:#E1232E; --red-dark:#B81A23; --ink:#1B1B1F; --muted:#6B6F76;
+    --bg:#F4F5F7; --card:#FFFFFF; --line:#E3E5E8; --green:#16A34A;
   }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #0f1115;
-      --card: #1a1d24;
-      --text: #e8e8ea;
-      --muted: #9ca3af;
-      --border: #2b2f38;
-      --accent: #3b82f6;
-      --accent-hover: #60a5fa;
-      --warn-bg: #2a1d10;
-      --warn-border: #92400e;
-      --warn-text: #fdba74;
-      --ok-bg: #0f2417;
-      --ok-border: #166534;
-    }
-  }
-  :root[data-theme="dark"] {
-    --bg: #0f1115;
-    --card: #1a1d24;
-    --text: #e8e8ea;
-    --muted: #9ca3af;
-    --border: #2b2f38;
-    --accent: #3b82f6;
-    --accent-hover: #60a5fa;
-    --warn-bg: #2a1d10;
-    --warn-border: #92400e;
-    --warn-text: #fdba74;
-    --ok-bg: #0f2417;
-    --ok-border: #166534;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    padding: 16px;
-  }
-  .wrap {
-    max-width: 880px;
-    margin: 0 auto;
-  }
-  h1 {
-    font-size: 1.4rem;
-    margin: 8px 0 4px;
-  }
-  p.sub {
-    color: var(--muted);
-    margin: 0 0 20px;
-    font-size: 0.95rem;
-  }
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 16px;
-  }
-  .dropzone {
-    border: 2px dashed var(--border);
-    border-radius: 12px;
-    padding: 36px 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
-  }
-  .dropzone:hover, .dropzone.dragover {
-    border-color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 6%, transparent);
-  }
-  .dropzone .icon {
-    font-size: 2rem;
-    margin-bottom: 8px;
-  }
-  .dropzone .hint {
-    color: var(--muted);
-    font-size: 0.85rem;
-    margin-top: 6px;
-  }
-  input[type="file"] { display: none; }
-  button {
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 18px;
-    font-size: 0.95rem;
-    cursor: pointer;
-    font-weight: 600;
-  }
-  button:hover { background: var(--accent-hover); }
-  button:disabled {
-    background: var(--border);
-    color: var(--muted);
-    cursor: not-allowed;
-  }
-  button.secondary {
-    background: transparent;
-    color: var(--accent);
-    border: 1px solid var(--border);
-  }
-  button.secondary:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
-  .actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 14px;
-    flex-wrap: wrap;
-  }
-  .filelist {
-    margin-top: 14px;
-    font-size: 0.88rem;
-    color: var(--muted);
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.85rem;
-    margin-top: 12px;
-  }
-  th, td {
-    border: 1px solid var(--border);
-    padding: 6px 8px;
-    text-align: right;
-    white-space: nowrap;
-  }
-  th:first-child, td:first-child { text-align: left; }
-  th {
-    background: color-mix(in srgb, var(--accent) 8%, var(--card));
-    font-weight: 600;
-  }
-  tr:nth-child(even) td { background: color-mix(in srgb, var(--text) 3%, var(--card)); }
-  .table-wrap {
-    overflow-x: auto;
-    border-radius: 8px;
-  }
-  .msg {
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 0.85rem;
-    margin-top: 12px;
-  }
-  .msg.warn {
-    background: var(--warn-bg);
-    border: 1px solid var(--warn-border);
-    color: var(--warn-text);
-  }
-  .msg.ok {
-    background: var(--ok-bg);
-    border: 1px solid var(--ok-border);
-  }
-  .settings {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-top: 14px;
-    font-size: 0.85rem;
-    color: var(--muted);
-  }
-  .settings label { display: flex; align-items: center; gap: 6px; }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans Khmer",sans-serif}
+  button{font:inherit;cursor:pointer;border:0}
+  .hidden{display:none!important}
+  .screen{min-height:100%;display:flex;flex-direction:column}
+
+  /* ---------- Home ---------- */
+  #home{align-items:center;justify-content:center;padding:24px;gap:16px}
+  #home h1{margin:0 0 4px;font-size:28px}
+  #home p{margin:0 0 12px;color:var(--muted);text-align:center}
+  .mode-btn{width:100%;max-width:360px;padding:22px;border-radius:18px;background:var(--card);
+    border:2px solid var(--line);text-align:left;display:flex;gap:16px;align-items:center}
+  .mode-btn:active{transform:scale(.98)}
+  .mode-btn .ic{width:52px;height:52px;border-radius:14px;background:var(--red);color:#fff;
+    display:grid;place-items:center;font-size:26px;flex:none}
+  .mode-btn b{display:block;font-size:19px}
+  .mode-btn span{color:var(--muted);font-size:14px}
+
+  /* ---------- Seller ---------- */
+  #seller{max-width:520px;margin:0 auto;width:100%;padding:12px 16px 16px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:4px 0 10px}
+  .topbar .title{font-weight:700;font-size:18px}
+  .icon-btn{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px;font-size:15px}
+  .cur-toggle{display:flex;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:3px}
+  .cur-toggle button{background:none;padding:7px 14px;border-radius:9px;font-weight:600;color:var(--muted)}
+  .cur-toggle button.on{background:var(--ink);color:#fff}
+  .amount-box{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;text-align:right;margin-bottom:10px}
+  .amount-box .lbl{font-size:13px;color:var(--muted);text-align:left}
+  .amount-box .val{font-size:44px;font-weight:700;letter-spacing:-.5px;word-break:break-all;line-height:1.15}
+  .amount-box .val small{font-size:22px;color:var(--muted);font-weight:600;margin-right:6px}
+  .bill-row{display:flex;gap:8px;margin-bottom:10px}
+  .bill-row input{flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);font-size:15px;background:var(--card)}
+  .quick{display:flex;gap:8px;margin-bottom:10px;overflow-x:auto}
+  .quick button{flex:1;min-width:64px;padding:10px 6px;border-radius:12px;background:#FDECEC;color:var(--red-dark);font-weight:600;white-space:nowrap}
+  .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;flex:1}
+  .pad button{background:var(--card);border:1px solid var(--line);border-radius:16px;font-size:28px;font-weight:600;min-height:62px}
+  .pad button:active{background:#EDEEF0}
+  .pad .fn{font-size:18px;color:var(--muted)}
+  .actions{display:grid;grid-template-columns:1fr 2fr;gap:8px;margin-top:10px}
+  .btn{padding:18px;border-radius:16px;font-size:18px;font-weight:700}
+  .btn-red{background:var(--red);color:#fff}
+  .btn-red:disabled{background:#F2A7AB}
+  .btn-grey{background:#E4E6E9;color:var(--ink)}
+  .btn-green{background:var(--green);color:#fff}
+
+  /* Seller: waiting panel */
+  #sellerWait{position:fixed;inset:0;background:rgba(20,20,24,.55);display:flex;align-items:flex-end;justify-content:center;z-index:20}
+  #sellerWait .sheet{background:var(--bg);width:100%;max-width:520px;border-radius:22px 22px 0 0;padding:18px 16px 22px}
+  #sellerWait .sheet h3{margin:0 0 4px;font-size:18px}
+  #sellerWait .sheet p{margin:0 0 12px;color:var(--muted);font-size:14px}
+  #sellerWait .row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+  .mini-qr-wrap{display:flex;justify-content:center}
+
+  /* Settings */
+  #settings{position:fixed;inset:0;background:rgba(20,20,24,.55);display:flex;align-items:center;justify-content:center;z-index:30;padding:16px}
+  #settings .panel{background:var(--card);border-radius:20px;padding:20px;width:100%;max-width:440px;max-height:92vh;overflow:auto}
+  #settings h3{margin:0 0 12px}
+  #settings label{display:block;font-size:13px;color:var(--muted);margin:12px 0 4px}
+  #settings input,#settings select{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;font-size:16px;background:#fff}
+  #settings .hint{font-size:12px;color:var(--muted);margin-top:4px}
+  #settings .row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}
+
+  /* ---------- Customer display ---------- */
+  #customer{align-items:center;justify-content:center;padding:20px;background:#EEF0F3}
+  .idle{text-align:center}
+  .idle .shop{font-size:34px;font-weight:800;margin-bottom:6px}
+  .idle .sub{color:var(--muted);font-size:18px}
+  .idle .logo{width:96px;height:96px;border-radius:26px;background:var(--red);color:#fff;display:grid;place-items:center;font-size:44px;margin:0 auto 18px}
+
+  .khqr-card{background:#fff;border-radius:22px;width:min(92vw,380px);overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.12)}
+  .khqr-head{background:var(--red);height:62px;display:flex;align-items:center;justify-content:center;position:relative}
+  .khqr-head span{color:#fff;font-weight:800;letter-spacing:3px;font-size:22px}
+  .khqr-head::after{content:"";position:absolute;right:0;bottom:-18px;border-left:18px solid transparent;border-top:18px solid var(--red)}
+  .khqr-info{padding:22px 26px 10px}
+  .khqr-info .name{font-size:16px;color:#333;font-weight:500}
+  .khqr-info .amt{font-size:34px;font-weight:800;margin-top:2px;letter-spacing:-.3px}
+  .khqr-info .amt small{font-size:16px;font-weight:600;color:var(--muted);margin-left:4px}
+  .khqr-dash{border-top:2px dashed #D7D9DD;margin:8px 0 0}
+  .khqr-qr{padding:22px;display:flex;justify-content:center}
+  .khqr-qr #qr img,.khqr-qr #qr canvas{width:min(70vw,290px)!important;height:auto!important}
+  .khqr-foot{text-align:center;padding:0 16px 18px;color:var(--muted);font-size:14px}
+  .khqr-foot b{color:var(--ink)}
+  .timer{font-variant-numeric:tabular-nums}
+
+  .paid{text-align:center}
+  .paid .tick{width:120px;height:120px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:64px;margin:0 auto 18px;animation:pop .35s ease}
+  .paid h2{font-size:34px;margin:0 0 6px}
+  .paid p{color:var(--muted);font-size:18px;margin:0}
+  @keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+
+  .exit-corner{position:fixed;top:0;left:0;width:60px;height:60px;opacity:0}
+  .toast{position:fixed;left:50%;top:16px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;z-index:50}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>MWH Extractor</h1>
-  <p class="sub">Drop in your daily Excel files. This reads the MPA / MPB / MPC sheets, pulls the MWH value at the first and last "7:00" column, and builds one summary table — all in your browser, nothing uploaded anywhere.</p>
 
-  <div class="card">
-    <div class="dropzone" id="dropzone">
-      <div class="icon">📂</div>
-      <div><strong>Click to choose files</strong>, use "Select a whole folder" below, or drag & drop</div>
-      <div class="hint">Accepts .xlsx, .xls, or .ods — any number of files at once</div>
-      <input type="file" id="fileInput" multiple accept=".xlsx,.xls,.ods,application/vnd.oasis.opendocument.spreadsheet,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+<!-- ================= HOME ================= -->
+<div id="home" class="screen hidden">
+  <h1>KHQR POS</h1>
+  <p>Choose how this screen will be used</p>
+  <button class="mode-btn" onclick="go('seller')">
+    <div class="ic">🧾</div>
+    <div><b>Seller</b><span>Enter amount and send KHQR to customer</span></div>
+  </button>
+  <button class="mode-btn" onclick="go('customer')">
+    <div class="ic">📱</div>
+    <div><b>Customer display</b><span>Shows KHQR for the customer to scan</span></div>
+  </button>
+</div>
+
+<!-- ================= SELLER ================= -->
+<div id="seller" class="screen hidden">
+  <div class="topbar">
+    <button class="icon-btn" onclick="go('home')">‹ Home</button>
+    <div class="cur-toggle">
+      <button id="curKHR" onclick="setCurrency('KHR')">៛ KHR</button>
+      <button id="curUSD" onclick="setCurrency('USD')">$ USD</button>
     </div>
-    <div class="actions">
-      <button class="secondary" id="folderBtn">📁 Select a whole folder (incl. subfolders)</button>
-      <input type="file" id="folderInput" webkitdirectory directory multiple style="display:none;">
+    <button class="icon-btn" onclick="openSettings()">⚙︎</button>
+  </div>
+
+  <div class="amount-box">
+    <div class="lbl">Amount to charge</div>
+    <div class="val" id="amountView">0</div>
+  </div>
+
+  <div class="bill-row">
+    <input id="billInput" placeholder="Bill / order no. (optional)" maxlength="25">
+  </div>
+
+  <div class="quick" id="quickRow"></div>
+
+  <div class="pad" id="pad"></div>
+
+  <div class="actions">
+    <button class="btn btn-grey" onclick="clearAmount()">Clear</button>
+    <button class="btn btn-red" id="chargeBtn" onclick="charge()">Show KHQR</button>
+  </div>
+</div>
+
+<!-- Seller waiting sheet -->
+<div id="sellerWait" class="hidden">
+  <div class="sheet">
+    <h3 id="waitAmount">Waiting for payment</h3>
+    <p>KHQR is showing on the customer display. Check your ABA app for the payment notification, then tap Paid.</p>
+    <div class="mini-qr-wrap"><div id="miniQr"></div></div>
+    <div class="row">
+      <button class="btn btn-grey" onclick="cancelCharge()">Cancel</button>
+      <button class="btn btn-green" onclick="markPaid()">✓ Paid</button>
     </div>
-    <div class="filelist" id="fileList"></div>
-    <div class="actions">
-      <button id="runBtn" disabled>Extract MWH</button>
-      <button class="secondary" id="downloadBtn" disabled>Download summary (.xlsx)</button>
-      <button class="secondary" id="clearBtn">Clear</button>
+  </div>
+</div>
+
+<!-- Settings -->
+<div id="settings" class="hidden">
+  <div class="panel">
+    <h3>Shop settings</h3>
+
+    <label>Bakong account ID (from your ABA account)</label>
+    <input id="sBakong" placeholder="e.g. yourname@aba" autocapitalize="off" autocorrect="off">
+    <div class="hint">Find it in ABA Mobile → your account → "Bakong ID / KHQR". It looks like <b>name@bank</b>.</div>
+
+    <label>Shop name (shown in the QR, English letters, max 25)</label>
+    <input id="sName" maxlength="25" placeholder="My Coffee Shop">
+
+    <label>City (max 15)</label>
+    <input id="sCity" maxlength="15" placeholder="Phnom Penh">
+
+    <label>Default currency</label>
+    <select id="sCur"><option value="KHR">KHR (៛)</option><option value="USD">USD ($)</option></select>
+
+    <label>QR valid for (minutes)</label>
+    <input id="sExpiry" type="number" min="1" max="60" placeholder="10">
+
+    <label>Quick amounts KHR (comma separated)</label>
+    <input id="sQuickKHR" placeholder="5000,10000,20000,50000">
+    <label>Quick amounts USD (comma separated)</label>
+    <input id="sQuickUSD" placeholder="1,2.5,5,10">
+
+    <div class="row">
+      <button class="btn btn-grey" onclick="closeSettings()">Close</button>
+      <button class="btn btn-red" onclick="saveSettings()">Save</button>
     </div>
-    <div id="progressWrap" style="display:none;">
-      <div style="background:var(--border); border-radius:6px; height:8px; overflow:hidden; margin-top:10px;">
-        <div id="progressBar" style="background:var(--accent); height:100%; width:0%; transition:width 0.15s;"></div>
+  </div>
+</div>
+
+<!-- ================= CUSTOMER DISPLAY ================= -->
+<div id="customer" class="screen hidden">
+  <div class="exit-corner" ondblclick="go('home')" title="Double-tap to exit"></div>
+
+  <div id="cIdle" class="idle">
+    <div class="logo">៛</div>
+    <div class="shop" id="cShop">Welcome</div>
+    <div class="sub">Scan KHQR with any Cambodian banking app</div>
+  </div>
+
+  <div id="cPay" class="hidden">
+    <div class="khqr-card">
+      <div class="khqr-head"><span>KHQR</span></div>
+      <div class="khqr-info">
+        <div class="name" id="cName"></div>
+        <div class="amt" id="cAmt"></div>
       </div>
-      <div id="progressText" style="font-size:0.82rem; color:var(--muted); margin-top:6px;"></div>
-    </div>
-    <div id="messages"></div>
-  </div>
-
-  <div class="card" id="resultsCard" style="display:none;">
-    <div class="table-wrap">
-      <table id="resultsTable"></table>
+      <div class="khqr-dash"></div>
+      <div class="khqr-qr"><div id="qr"></div></div>
+      <div class="khqr-foot">
+        <div id="cBill"></div>
+        Valid for <b class="timer" id="cTimer">--:--</b>
+      </div>
     </div>
   </div>
 
-  <div class="card" id="templateCard" style="display:none;">
-    <h2 style="font-size:1.05rem; margin:0 0 6px;">Fill your yearly report template</h2>
-    <p class="sub" style="margin-bottom:12px;">Upload your existing yearly report file (the one with days 1–31 across the top and months 1–12 down the side). This drops the extracted numbers directly into the matching day/month cells — nothing else in the file is touched.</p>
-    <div class="dropzone" id="templateDropzone" style="padding:20px;">
-      <div>📄 <strong>Click to choose your report file</strong> (.xlsx or .ods)</div>
-      <input type="file" id="templateInput" accept=".xlsx,.xls,.ods,application/vnd.oasis.opendocument.spreadsheet,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-    </div>
-    <div class="filelist" id="templateFileName"></div>
-    <div class="actions">
-      <button id="fillBtn" disabled>Fill template & download</button>
-    </div>
-    <div id="templateMessages"></div>
+  <div id="cPaid" class="paid hidden">
+    <div class="tick">✓</div>
+    <h2>Payment received</h2>
+    <p>Thank you! / អរគុណ!</p>
+  </div>
+
+  <div id="cExpired" class="paid hidden">
+    <div class="tick" style="background:#9CA3AF">⏱</div>
+    <h2>QR expired</h2>
+    <p>Please ask the seller for a new code</p>
   </div>
 </div>
 
 <script>
-const SHEETS = ["MPA", "MPB", "MPC"];
-let selectedFiles = [];
-let resultRows = [];
-
-const dropzone = document.getElementById("dropzone");
-const fileInput = document.getElementById("fileInput");
-const folderBtn = document.getElementById("folderBtn");
-const folderInput = document.getElementById("folderInput");
-const fileListEl = document.getElementById("fileList");
-const runBtn = document.getElementById("runBtn");
-const downloadBtn = document.getElementById("downloadBtn");
-const clearBtn = document.getElementById("clearBtn");
-const messagesEl = document.getElementById("messages");
-const resultsCard = document.getElementById("resultsCard");
-const resultsTable = document.getElementById("resultsTable");
-const progressWrap = document.getElementById("progressWrap");
-const progressBar = document.getElementById("progressBar");
-const progressText = document.getElementById("progressText");
-
-dropzone.addEventListener("click", () => fileInput.click());
-dropzone.addEventListener("dragover", (e) => { e.preventDefault(); dropzone.classList.add("dragover"); });
-dropzone.addEventListener("dragleave", () => dropzone.classList.remove("dragover"));
-dropzone.addEventListener("drop", (e) => {
-  e.preventDefault();
-  dropzone.classList.remove("dragover");
-  addFiles(e.dataTransfer.files);
-});
-fileInput.addEventListener("change", (e) => { addFiles(e.target.files); fileInput.value = ""; });
-folderBtn.addEventListener("click", () => folderInput.click());
-folderInput.addEventListener("change", (e) => { addFiles(e.target.files); folderInput.value = ""; });
-clearBtn.addEventListener("click", resetAll);
-runBtn.addEventListener("click", runExtraction);
-downloadBtn.addEventListener("click", downloadSummary);
-
-// Track what's already selected (by relative path) so picking a folder
-// twice, or a folder plus some loose files, doesn't duplicate entries.
-const seenKeys = new Set();
-
-function addFiles(fileArr) {
-  let added = 0;
-  for (const f of fileArr) {
-    const path = f.webkitRelativePath || f.name;
-    if (!/\.(xlsx|xls|ods)$/i.test(f.name)) continue;
-    const key = `${path}|${f.size}`;
-    if (seenKeys.has(key)) continue;
-    seenKeys.add(key);
-    selectedFiles.push(f);
-    added++;
-  }
-  renderFileList();
+/* =========================================================
+   KHQR generator (EMVCo / NBC Bakong KHQR format)
+   ========================================================= */
+/*KHQR_START*/
+function tlv(tag, value) {
+  value = String(value);
+  return tag + String(value.length).padStart(2, '0') + value;
 }
-
-function renderFileList() {
-  if (!selectedFiles.length) {
-    fileListEl.textContent = "";
-  } else if (selectedFiles.length <= 8) {
-    fileListEl.textContent = `${selectedFiles.length} file(s) selected: ` + selectedFiles.map(f => f.name).join(", ");
-  } else {
-    fileListEl.textContent = `${selectedFiles.length} file(s) selected (${selectedFiles.slice(0,5).map(f=>f.name).join(", ")}, …)`;
-  }
-  runBtn.disabled = selectedFiles.length === 0;
-}
-
-function resetAll() {
-  selectedFiles = [];
-  resultRows = [];
-  seenKeys.clear();
-  fileInput.value = "";
-  folderInput.value = "";
-  renderFileList();
-  messagesEl.innerHTML = "";
-  resultsCard.style.display = "none";
-  downloadBtn.disabled = true;
-  progressWrap.style.display = "none";
-}
-
-// Looks for a date first anywhere in the file's own name, then anywhere
-// in its full folder path (handles a Year/Month/Day.xlsx folder layout
-// where the filename alone might just be "01.xlsx" or "05.ods").
-function extractDate(file) {
-  const name = file.name;
-  const fullPath = file.webkitRelativePath || file.name;
-
-  const tryPatterns = (s) => {
-    let m = s.match(/(\d{4})[.\-_\/](\d{1,2})[.\-_\/](\d{1,2})/);
-    if (m) return { y: +m[1], mo: +m[2], d: +m[3] };
-    m = s.match(/(\d{1,2})[.\-_](\d{1,2})[.\-_](\d{4})/);
-    if (m) return { y: +m[3], mo: +m[2], d: +m[1] };
-    return null;
-  };
-
-  let result = tryPatterns(name) || tryPatterns(fullPath);
-  if (result) return result;
-
-  // Fallback for a Year/Month/Day folder structure where the filename is
-  // just a day number, e.g. "2025/01/05.xlsx" or "2025/January/5.ods".
-  const MONTH_NAMES = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
-  const segments = fullPath.split(/[\/\\]/).filter(Boolean);
-  let year = null, month = null;
-  for (const seg of segments) {
-    const ym = seg.match(/^(20\d{2})$/);
-    if (ym) year = +ym[1];
-    const mm = seg.match(/^(\d{1,2})$/);
-    if (mm && +mm[1] >= 1 && +mm[1] <= 12 && month === null) month = +mm[1];
-    const lower = seg.toLowerCase();
-    for (let i = 0; i < 12; i++) {
-      if (lower.startsWith(MONTH_NAMES[i])) month = i + 1;
+function crc16(str) {
+  let crc = 0xFFFF;
+  for (let i = 0; i < str.length; i++) {
+    crc ^= str.charCodeAt(i) << 8;
+    for (let j = 0; j < 8; j++) {
+      crc = (crc & 0x8000) ? ((crc << 1) ^ 0x1021) : (crc << 1);
+      crc &= 0xFFFF;
     }
   }
-  const dayMatch = name.match(/(\d{1,2})/);
-  if (year && month && dayMatch) {
-    return { y: year, mo: month, d: +dayMatch[1] };
+  return crc.toString(16).toUpperCase().padStart(4, '0');
+}
+function formatKhqrAmount(amount, currency) {
+  if (currency === 'USD') {
+    // up to 2 decimals, no trailing zeros required
+    return String(Math.round(Number(amount) * 100) / 100);
   }
-  return null;
+  return String(Math.round(Number(amount)));
 }
-
-function norm(v) {
-  if (v === null || v === undefined) return "";
-  return String(v).replace(/\s+/g, "").trim();
-}
-
-// Normalizes time-header cells so "7:00", the full-width-colon "7：00"
-// (common when files are typed with Chinese/Khmer input), and the
-// zero-padded "07：00" all compare equal.
-function normTime(v) {
-  if (v === null || v === undefined) return "";
-  let s = String(v).trim().replace(/：/g, ":").replace(/\s+/g, "");
-  const m = s.match(/^(\d{1,2}):00$/);
-  if (m) return `${parseInt(m[1], 10)}:00`;
-  return s;
-}
-
-function findSheet(wb, name) {
-  const found = wb.SheetNames.find(s => s.trim().toUpperCase() === name.toUpperCase());
-  return found ? wb.Sheets[found] : null;
-}
-
-function sheetToGrid(ws) {
-  const range = XLSX.utils.decode_range(ws['!ref']);
-  const grid = [];
-  for (let r = range.s.r; r <= range.e.r; r++) {
-    const row = [];
-    for (let c = range.s.c; c <= range.e.c; c++) {
-      const cell = ws[XLSX.utils.encode_cell({ r, c })];
-      row.push(cell ? cell.v : null);
-    }
-    grid.push(row);
+function buildKHQR(o) {
+  const dynamic = Number(o.amount) > 0;
+  let s = '';
+  s += tlv('00', '01');                          // payload format
+  s += tlv('01', dynamic ? '12' : '11');         // 12 = dynamic (has amount)
+  s += tlv('29', tlv('00', o.bakongId));         // individual Bakong account
+  s += tlv('52', '5999');                        // merchant category
+  s += tlv('53', o.currency === 'USD' ? '840' : '116');
+  if (dynamic) s += tlv('54', formatKhqrAmount(o.amount, o.currency));
+  s += tlv('58', 'KH');
+  s += tlv('59', asciiOnly(o.name).slice(0, 25) || 'Merchant');
+  s += tlv('60', asciiOnly(o.city).slice(0, 15) || 'Phnom Penh');
+  if (o.bill) s += tlv('62', tlv('01', asciiOnly(o.bill).slice(0, 25)));
+  if (dynamic) {
+    const now = o.now || Date.now();
+    const exp = now + (o.expiryMin || 10) * 60000;
+    s += tlv('99', tlv('00', String(now)) + tlv('01', String(exp)));
   }
-  return grid;
+  s += '6304';
+  return s + crc16(s);
+}
+function asciiOnly(t) { return String(t || '').replace(/[^\x20-\x7E]/g, '').trim(); }
+/*KHQR_END*/
+
+/* =========================================================
+   Settings (saved on this device)
+   ========================================================= */
+const DEFAULTS = {
+  bakongId: '', name: 'My Shop', city: 'Phnom Penh', currency: 'KHR',
+  expiry: 10, quickKHR: '5000,10000,20000,50000', quickUSD: '1,2.5,5,10'
+};
+function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+let cfg = Object.assign({}, DEFAULTS, JSON.parse(store('khqr_cfg') || '{}'));
+
+/* =========================================================
+   Sync between Seller and Customer screens
+   (same browser/device: two windows, second monitor, etc.)
+   ========================================================= */
+const chan = ('BroadcastChannel' in window) ? new BroadcastChannel('khqr-pos') : null;
+function publish(state) {
+  state.ts = Date.now();
+  store('khqr_state', JSON.stringify(state));
+  if (chan) chan.postMessage(state);
+}
+function onState(fn) {
+  if (chan) chan.onmessage = e => fn(e.data);
+  window.addEventListener('storage', e => { if (e.key === 'khqr_state' && e.newValue) fn(JSON.parse(e.newValue)); });
 }
 
-function findHeaderRow(grid, maxRow = 10) {
-  for (let r = 0; r < Math.min(maxRow, grid.length); r++) {
-    for (let c = 0; c < grid[r].length; c++) {
-      if (normTime(grid[r][c]) === "7:00") return r;
-    }
+/* =========================================================
+   Navigation
+   ========================================================= */
+function go(mode) {
+  location.hash = mode === 'home' ? '' : mode;
+  render();
+}
+function render() {
+  const mode = location.hash.replace('#', '') || 'home';
+  ['home', 'seller', 'customer'].forEach(id => document.getElementById(id).classList.toggle('hidden', id !== mode));
+  if (mode === 'seller') initSeller();
+  if (mode === 'customer') initCustomer();
+}
+window.addEventListener('hashchange', render);
+
+/* =========================================================
+   SELLER
+   ========================================================= */
+let amountStr = '';
+let currency = cfg.currency;
+let sellerReady = false;
+
+function initSeller() {
+  if (!sellerReady) {
+    const keys = ['1','2','3','4','5','6','7','8','9','.','0','⌫'];
+    const pad = document.getElementById('pad');
+    keys.forEach(k => {
+      const b = document.createElement('button');
+      b.textContent = k;
+      if (k === '⌫' || k === '.') b.className = 'fn';
+      b.onclick = () => press(k);
+      pad.appendChild(b);
+    });
+    sellerReady = true;
   }
-  return null;
+  setCurrency(currency);
+  if (!cfg.bakongId) openSettings();
 }
-
-function findSevenColumns(grid, headerRow) {
-  const cols = [];
-  const row = grid[headerRow];
-  for (let c = 0; c < row.length; c++) {
-    if (normTime(row[c]) === "7:00") cols.push(c);
-  }
-  return cols;
+function setCurrency(c) {
+  currency = c;
+  document.getElementById('curKHR').classList.toggle('on', c === 'KHR');
+  document.getElementById('curUSD').classList.toggle('on', c === 'USD');
+  amountStr = '';
+  buildQuick();
+  updateAmount();
 }
-
-function findFirstMwhRow(grid, headerRow) {
-  for (let r = headerRow + 1; r < grid.length; r++) {
-    for (let c = 0; c < Math.min(6, grid[r].length); c++) {
-      if (norm(grid[r][c]).toUpperCase() === "MWH") return r;
-    }
-  }
-  return null;
-}
-
-// Returns both the extracted values AND where exactly it found them
-// (row/column positions). Since every file is supposed to be the same
-// template, those positions should be identical across all 700+ files —
-// the caller uses this to flag any file that landed somewhere different,
-// which is the case a silent wrong-number bug would hide in otherwise.
-function processSheet(ws) {
-  const grid = sheetToGrid(ws);
-  const headerRow = findHeaderRow(grid);
-  if (headerRow === null) return { startVal: null, endVal: null, pos: null };
-  const sevenCols = findSevenColumns(grid, headerRow);
-  if (sevenCols.length < 2) return { startVal: null, endVal: null, pos: null };
-  const mwhRow = findFirstMwhRow(grid, headerRow);
-  if (mwhRow === null) return { startVal: null, endVal: null, pos: null };
-  const startCol = sevenCols[0];
-  const endCol = sevenCols[sevenCols.length - 1];
-  const startVal = grid[mwhRow][startCol];
-  const endVal = grid[mwhRow][endCol];
-  const pos = {
-    headerRow,
-    mwhOffset: mwhRow - headerRow,
-    startCol,
-    endCol,
-    sevenColsCount: sevenCols.length,
-  };
-  return { startVal, endVal, pos };
-}
-
-function readFileAsArrayBuffer(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsArrayBuffer(file);
+function buildQuick() {
+  const row = document.getElementById('quickRow');
+  row.innerHTML = '';
+  const list = (currency === 'USD' ? cfg.quickUSD : cfg.quickKHR).split(',').map(x => x.trim()).filter(Boolean);
+  list.forEach(v => {
+    const b = document.createElement('button');
+    b.textContent = fmt(Number(v), currency);
+    b.onclick = () => { amountStr = String(Number(v)); updateAmount(); };
+    row.appendChild(b);
   });
 }
-
-async function runExtraction() {
-  runBtn.disabled = true;
-  messagesEl.innerHTML = "";
-  resultRows = [];
-  const warnings = [];
-  const total = selectedFiles.length;
-  // Collects, per sheet, every position the extractor actually used
-  // ("headerRow=2, mwhOffset=5, cols=2..27") across all files, so we can
-  // catch a file whose layout silently drifted from the rest afterward.
-  const positionsBySheet = { MPA: {}, MPB: {}, MPC: {} };
-
-  progressWrap.style.display = "block";
-  progressBar.style.width = "0%";
-  progressText.textContent = `Processing 0 / ${total}...`;
-
-  let i = 0;
-  for (const file of selectedFiles) {
-    i++;
-    // Yield to the browser periodically so the page stays responsive and
-    // the progress bar actually updates on large batches (hundreds of
-    // files across a year or two).
-    if (i % 5 === 0 || i === total) {
-      progressBar.style.width = `${Math.round((i / total) * 100)}%`;
-      progressText.textContent = `Processing ${i} / ${total}: ${file.name}`;
-      await new Promise((r) => setTimeout(r, 0));
-    }
-
-    const date = extractDate(file);
-    if (!date) {
-      warnings.push(`Skipped "${file.webkitRelativePath || file.name}": no date found in filename or folder path.`);
-      continue;
-    }
-    let wb;
-    try {
-      const buf = await readFileAsArrayBuffer(file);
-      wb = XLSX.read(buf, { type: "array" });
-    } catch (e) {
-      warnings.push(`Could not open "${file.name}": ${e.message}`);
-      continue;
-    }
-
-    const row = { dateObj: date, Date: `${date.y}-${String(date.mo).padStart(2,"0")}-${String(date.d).padStart(2,"0")}`, _file: file.webkitRelativePath || file.name };
-    for (const sheetName of SHEETS) {
-      const ws = findSheet(wb, sheetName);
-      if (!ws) {
-        warnings.push(`"${file.name}": sheet "${sheetName}" not found.`);
-        row[`${sheetName}_Start7`] = null;
-        row[`${sheetName}_End7`] = null;
-        row[`${sheetName}_MWH`] = null;
-        continue;
-      }
-      const { startVal, endVal, pos } = processSheet(ws);
-      if (startVal === null || endVal === null) {
-        warnings.push(`"${file.name}": could not read MWH row on sheet "${sheetName}".`);
-      }
-      if (pos) {
-        const key = `header${pos.headerRow}_mwh+${pos.mwhOffset}_cols${pos.startCol}-${pos.endCol}_n${pos.sevenColsCount}`;
-        row[`${sheetName}_posKey`] = key;
-        (positionsBySheet[sheetName][key] ||= []).push(file.webkitRelativePath || file.name);
-      }
-      row[`${sheetName}_Start7`] = startVal;
-      row[`${sheetName}_End7`] = endVal;
-      const s = parseFloat(startVal), e = parseFloat(endVal);
-      const diff = (!isNaN(s) && !isNaN(e)) ? (e - s) : null;
-      row[`${sheetName}_MWH`] = diff;
-      // Sanity check: this MWH row is a rising cumulative counter, so the
-      // end reading should never be lower than the start reading. If it
-      // is, the meter likely reset/rolled over, or the wrong row/column
-      // was picked up — flag it instead of silently reporting a number.
-      if (diff !== null && diff < 0) {
-        row[`${sheetName}_flag`] = "negative";
-        warnings.push(`"${file.name}" (${sheetName}): end value (${endVal}) is LOWER than start value (${startVal}) — check this file manually, do not trust this number as-is.`);
-      }
-    }
-    resultRows.push(row);
-  }
-
-  progressWrap.style.display = "none";
-
-  resultRows.sort((a, b) => (a.dateObj.y - b.dateObj.y) || (a.dateObj.mo - b.dateObj.mo) || (a.dateObj.d - b.dateObj.d));
-
-  // Catch duplicate dates (two files mapped to the same day — likely a
-  // naming mixup) and gaps in the date range (a missing day's file) so
-  // you find out now, not after the report is already sent.
-  const dateCounts = {};
-  for (const r of resultRows) dateCounts[r.Date] = (dateCounts[r.Date] || []).concat(r._file);
-  for (const [d, files] of Object.entries(dateCounts)) {
-    if (files.length > 1) {
-      warnings.push(`Duplicate date ${d}: found in ${files.length} files (${files.join(", ")}) — check these are not the same day counted twice.`);
-    }
-  }
-  if (resultRows.length > 1) {
-    const seenDates = new Set(resultRows.map(r => r.Date));
-    const start = resultRows[0].dateObj, end = resultRows[resultRows.length - 1].dateObj;
-    const cur = new Date(start.y, start.mo - 1, start.d);
-    const endDate = new Date(end.y, end.mo - 1, end.d);
-    const missing = [];
-    while (cur <= endDate) {
-      const key = `${cur.getFullYear()}-${String(cur.getMonth()+1).padStart(2,"0")}-${String(cur.getDate()).padStart(2,"0")}`;
-      if (!seenDates.has(key)) missing.push(key);
-      cur.setDate(cur.getDate() + 1);
-    }
-    if (missing.length) {
-      warnings.push(`Missing ${missing.length} day(s) in the range ${resultRows[0].Date} to ${resultRows[resultRows.length-1].Date}: ${missing.slice(0,20).join(", ")}${missing.length>20 ? ", ..." : ""}`);
-    }
-  }
-
-  // Structure-drift check: every file is supposed to be the same template,
-  // so the row/column position used to pull MPA/MPB/MPC's MWH values
-  // should be identical across every file. If one file landed on a
-  // different position than the rest, that's exactly the case where a
-  // shifted row or column could silently produce a plausible-looking but
-  // wrong number — flag it instead of trusting it.
-  for (const sheetName of SHEETS) {
-    const keyGroups = positionsBySheet[sheetName];
-    const keys = Object.keys(keyGroups);
-    if (keys.length <= 1) continue; // every file agreed - nothing to flag
-    keys.sort((a, b) => keyGroups[b].length - keyGroups[a].length);
-    const majorityKey = keys[0];
-    for (const key of keys.slice(1)) {
-      const files = keyGroups[key];
-      warnings.push(
-        `Layout mismatch on sheet "${sheetName}": ${files.length} file(s) (${files.slice(0,5).join(", ")}${files.length>5?", ...":""}) ` +
-        `used a different row/column position than the rest of your files. This usually means that file's layout is slightly ` +
-        `different (an inserted row, a shifted column) — please open it and check the ${sheetName} number by hand before trusting it.`
-      );
-    }
-  }
-
-  renderResults();
-  if (warnings.length) {
-    messagesEl.innerHTML = `<div class="msg warn"><strong>${warnings.length} note(s):</strong><br>${warnings.join("<br>")}</div>`;
-  } else if (resultRows.length) {
-    messagesEl.innerHTML = `<div class="msg ok">Processed ${resultRows.length} file(s) with no issues.</div>`;
-  }
-  downloadBtn.disabled = resultRows.length === 0;
-  runBtn.disabled = false;
-  templateCard.style.display = resultRows.length ? "block" : "none";
-}
-
-function fmt(v) {
-  if (v === null || v === undefined || v === "") return "";
-  const n = Number(v);
-  return isNaN(n) ? String(v) : n.toFixed(4).replace(/\.?0+$/, "");
-}
-
-function renderResults() {
-  if (!resultRows.length) {
-    resultsCard.style.display = "none";
-    return;
-  }
-  const headers = ["Date"];
-  for (const s of SHEETS) headers.push(`${s}_Start7`, `${s}_End7`, `${s}_MWH`);
-
-  let html = "<thead><tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr></thead><tbody>";
-  for (const row of resultRows) {
-    html += "<tr>" + headers.map(h => {
-      const isMwhCol = h.endsWith("_MWH");
-      const sheetName = h.split("_")[0];
-      const flagged = isMwhCol && row[`${sheetName}_flag`] === "negative";
-      const style = flagged ? ' style="background:var(--warn-bg);color:var(--warn-text);font-weight:700;"' : "";
-      const title = flagged ? ' title="End value is lower than start value — check this file manually"' : "";
-      return `<td${style}${title}>${h === "Date" ? row.Date : fmt(row[h])}${flagged ? " ⚠" : ""}</td>`;
-    }).join("") + "</tr>";
-  }
-  html += "</tbody>";
-  resultsTable.innerHTML = html;
-  resultsCard.style.display = "block";
-}
-
-function downloadSummary() {
-  const headers = ["Date"];
-  for (const s of SHEETS) headers.push(`${s}_Start7`, `${s}_End7`, `${s}_MWH`);
-  const aoa = [headers];
-  for (const row of resultRows) {
-    aoa.push(headers.map(h => h === "Date" ? row.Date : row[h]));
-  }
-  const ws = XLSX.utils.aoa_to_sheet(aoa);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Summary");
-  XLSX.writeFile(wb, "MWH_Summary.xlsx");
-}
-
-// ===================== Fill the yearly report template =====================
-// Your report file has days 1-31 across the top (3 columns each: start,
-// end, usage) and months 1-12 down the side (a "棟別" header row + MPA/MPB/
-// MPC data rows, repeating). Rather than hard-coding row/column numbers
-// (which would silently break if next year's file shifts by even one row),
-// this finds that layout by reading the file's own labels every time.
-
-const templateDropzone = document.getElementById("templateDropzone");
-const templateInput = document.getElementById("templateInput");
-const templateFileNameEl = document.getElementById("templateFileName");
-const templateCard = document.getElementById("templateCard");
-const fillBtn = document.getElementById("fillBtn");
-const templateMessagesEl = document.getElementById("templateMessages");
-
-let templateFile = null;
-
-templateDropzone.addEventListener("click", () => templateInput.click());
-templateInput.addEventListener("change", (e) => {
-  const f = e.target.files[0];
-  if (!f) return;
-  templateFile = f;
-  templateFileNameEl.textContent = `Selected: ${f.name}`;
-  fillBtn.disabled = false;
-});
-
-fillBtn.addEventListener("click", fillTemplateAndDownload);
-
-// Scans the sheet for every "棟別" label (the month-block header marker),
-// works out which month each block belongs to from the month number
-// already printed in column A, verifies MPA/MPB/MPC appear in order right
-// below it, and reads the day-number row (one row above the first "棟別")
-// to map day 1..31 to its starting column. Returns null with a reason if
-// the file doesn't look like the expected template at all.
-function detectTemplateLayout(grid) {
-  const headerRows = [];
-  for (let r = 0; r < grid.length; r++) {
-    const row = grid[r];
-    for (let c = 0; c < Math.min(4, row.length); c++) {
-      if (norm(row[c]) === "棟別") { headerRows.push(r); break; }
-    }
-  }
-  if (headerRows.length === 0) {
-    return { error: `Couldn't find any "棟別" header in this file — it doesn't look like the expected report template.` };
-  }
-
-  const monthRows = {};
-  const totalRows = {};
-  const issues = [];
-  for (const hr of headerRows) {
-    const mpaRow = hr + 1;
-    if (mpaRow + 2 >= grid.length) continue;
-    const monthVal = parseInt(grid[mpaRow]?.[0], 10);
-    const labels = [grid[mpaRow]?.[1], grid[mpaRow+1]?.[1], grid[mpaRow+2]?.[1]].map(v => norm(v).toUpperCase());
-    if (!monthVal || monthVal < 1 || monthVal > 12) {
-      issues.push(`Row ${hr+1}'s "棟別" block doesn't have a valid month number (1-12) in column A — skipped that block.`);
-      continue;
-    }
-    if (labels[0] !== "MPA" || labels[1] !== "MPB" || labels[2] !== "MPC") {
-      issues.push(`Month ${monthVal}'s block (row ${mpaRow+1}) doesn't have MPA/MPB/MPC in that order (found: ${labels.join(", ")}) — skipped, please check that block by hand.`);
-      continue;
-    }
-    monthRows[monthVal] = mpaRow;
-    // The row right below MPC is this month's daily total (MPA+MPB+MPC
-    // usage summed together) — only used if it exists within the sheet.
-    if (mpaRow + 3 < grid.length) {
-      totalRows[monthVal] = mpaRow + 3;
-    }
-  }
-
-  const dayRow = headerRows[0] - 1;
-  const dayCols = {};
-  if (dayRow >= 0) {
-    const row = grid[dayRow];
-    for (let c = 2; c < row.length; c++) {
-      const n = parseInt(row[c], 10);
-      if (!isNaN(n) && n >= 1 && n <= 31 && !(n in dayCols)) dayCols[n] = c;
-    }
-  }
-  if (Object.keys(dayCols).length === 0) {
-    return { error: `Found month blocks but couldn't find the day-number row (1-31) above them — the file's layout doesn't match what this tool expects.` };
-  }
-
-  return { monthRows, totalRows, dayCols, issues };
-}
-
-// Writes the start/end reading through EXACTLY as it came from the source
-// file — no parseFloat, no re-typing as a number. Some of your source
-// cells store these as text ("28.210") specifically to keep the trailing
-// zero; converting that to a JS number and back would silently turn it
-// into 28.21. Whatever type and text the source had, this keeps it
-// identical, and returns the cell's address (e.g. "D4") for the formula
-// below to reference.
-function setCellRaw(ws, r, c, value) {
-  const ref = XLSX.utils.encode_cell({ r, c });
-  if (value === null || value === undefined || value === "") return ref;
-  const existing = ws[ref] || {};
-  const cell = { ...existing };
-  if (typeof value === "number") {
-    cell.t = "n";
-    cell.v = value;
+function press(k) {
+  if (k === '⌫') amountStr = amountStr.slice(0, -1);
+  else if (k === '.') {
+    if (currency === 'KHR' || amountStr.includes('.')) return;
+    amountStr = (amountStr || '0') + '.';
   } else {
-    // Keep as text so the exact original digits/decimals are preserved
-    // character-for-character. Excel still does arithmetic on text that
-    // looks like a number, so the formula below works fine against it.
-    cell.t = "s";
-    cell.v = String(value);
+    if (currency === 'USD' && amountStr.includes('.') && amountStr.split('.')[1].length >= 2) return;
+    if (amountStr.replace('.', '').length >= 10) return;
+    if (amountStr === '0') amountStr = '';
+    amountStr += k;
   }
-  delete cell.f;
-  ws[ref] = cell;
-  return ref;
+  updateAmount();
 }
-
-// Writes a real Excel formula (e.g. "=D4-C4") into the usage cell instead
-// of a pre-computed number, so opening the file and clicking that cell
-// shows the formula in the formula bar and Excel recalculates it itself
-// — matching how the rest of your report already works. `cachedValue` is
-// only a fallback shown before Excel recalculates; the formula is what
-// actually determines the number.
-function setCellFormula(ws, r, c, formula, cachedValue) {
-  const ref = XLSX.utils.encode_cell({ r, c });
-  const existing = ws[ref] || {};
-  const cell = { ...existing };
-  cell.t = "n";
-  cell.f = formula;
-  if (cachedValue !== null && cachedValue !== undefined && !isNaN(cachedValue)) {
-    cell.v = cachedValue;
+function clearAmount() { amountStr = ''; updateAmount(); }
+function amountNum() { return Number(amountStr || 0); }
+function fmt(n, c) {
+  if (c === 'USD') return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return n.toLocaleString('en-US') + ' ៛';
+}
+function updateAmount() {
+  const v = document.getElementById('amountView');
+  let shown;
+  if (currency === 'USD') {
+    const [i, d] = (amountStr || '0').split('.');
+    shown = '<small>$</small>' + Number(i || 0).toLocaleString('en-US') + (d !== undefined ? '.' + d : '');
   } else {
-    delete cell.v;
+    shown = Number(amountStr || 0).toLocaleString('en-US') + ' <small>៛</small>';
   }
-  ws[ref] = cell;
+  v.innerHTML = shown;
+  const min = currency === 'USD' ? 0.01 : 100;
+  document.getElementById('chargeBtn').disabled = amountNum() < min;
+}
+function charge() {
+  if (!cfg.bakongId) { openSettings(); return; }
+  const amt = amountNum();
+  const bill = document.getElementById('billInput').value.trim();
+  const now = Date.now();
+  const qr = buildKHQR({ bakongId: cfg.bakongId, name: cfg.name, city: cfg.city,
+    amount: amt, currency, bill, expiryMin: Number(cfg.expiry) || 10, now });
+  publish({ status: 'pay', qr, amount: amt, currency, bill, name: cfg.name,
+    expiresAt: now + (Number(cfg.expiry) || 10) * 60000 });
+
+  document.getElementById('waitAmount').textContent = 'Waiting for ' + fmt(amt, currency);
+  const mini = document.getElementById('miniQr');
+  mini.innerHTML = '';
+  new QRCode(mini, { text: qr, width: 170, height: 170, correctLevel: QRCode.CorrectLevel.M });
+  document.getElementById('sellerWait').classList.remove('hidden');
+}
+function cancelCharge() {
+  publish({ status: 'idle', name: cfg.name });
+  document.getElementById('sellerWait').classList.add('hidden');
+}
+function markPaid() {
+  publish({ status: 'paid', name: cfg.name });
+  document.getElementById('sellerWait').classList.add('hidden');
+  amountStr = ''; document.getElementById('billInput').value = ''; updateAmount();
+  setTimeout(() => publish({ status: 'idle', name: cfg.name }), 4000);
 }
 
-async function fillTemplateAndDownload() {
-  if (!templateFile || !resultRows.length) return;
-  fillBtn.disabled = true;
-  templateMessagesEl.innerHTML = `<div class="msg ok">Reading template...</div>`;
-
-  let wb;
-  try {
-    const buf = await readFileAsArrayBuffer(templateFile);
-    wb = XLSX.read(buf, { type: "array", cellStyles: true });
-  } catch (e) {
-    templateMessagesEl.innerHTML = `<div class="msg warn">Could not open "${templateFile.name}": ${e.message}</div>`;
-    fillBtn.disabled = false;
-    return;
-  }
-
-  const sheetName = wb.SheetNames[0];
-  const ws = wb.Sheets[sheetName];
-  const grid = sheetToGrid(ws);
-
-  const layout = detectTemplateLayout(grid);
-  if (layout.error) {
-    templateMessagesEl.innerHTML = `<div class="msg warn">${layout.error}</div>`;
-    fillBtn.disabled = false;
-    return;
-  }
-
-  const fillWarnings = [...(layout.issues || [])];
-  const monthsFound = Object.keys(layout.monthRows).length;
-  let filledCount = 0;
-
-  for (const row of resultRows) {
-    const mo = row.dateObj.mo, d = row.dateObj.d;
-    const mpaRow = layout.monthRows[mo];
-    const dayCol = layout.dayCols[d];
-    if (mpaRow === undefined) {
-      fillWarnings.push(`${row.Date}: template has no valid block for month ${mo} — skipped.`);
-      continue;
-    }
-    if (dayCol === undefined) {
-      fillWarnings.push(`${row.Date}: template has no column for day ${d} — skipped.`);
-      continue;
-    }
-    const rowFor = { MPA: mpaRow, MPB: mpaRow + 1, MPC: mpaRow + 2 };
-    let firstUsageRef = null, lastUsageRef = null, cachedTotal = 0, anyMissing = false;
-    for (const sheet of SHEETS) {
-      const r = rowFor[sheet];
-      const startRef = setCellRaw(ws, r, dayCol, row[`${sheet}_Start7`]);
-      const endRef = setCellRaw(ws, r, dayCol + 1, row[`${sheet}_End7`]);
-      // Usage = end - start, written as an actual formula referencing the
-      // two cells we just filled, so it shows and recalculates as a real
-      // formula in Excel — the cached value is only there as a fallback.
-      const usageRef = XLSX.utils.encode_cell({ r, c: dayCol + 2 });
-      setCellFormula(ws, r, dayCol + 2, `${endRef}-${startRef}`, row[`${sheet}_MWH`]);
-      if (firstUsageRef === null) firstUsageRef = usageRef;
-      lastUsageRef = usageRef;
-      const mwh = row[`${sheet}_MWH`];
-      if (mwh === null || mwh === undefined || isNaN(mwh)) anyMissing = true;
-      else cachedTotal += mwh;
-    }
-    // The row right below MPC is this day's MPA+MPB+MPC total, also as a
-    // live formula (=SUM(...)) rather than a pre-computed number.
-    const totalRow = layout.totalRows[mo];
-    if (totalRow !== undefined) {
-      setCellFormula(ws, totalRow, dayCol + 2, `SUM(${firstUsageRef}:${lastUsageRef})`, anyMissing ? undefined : cachedTotal);
-    }
-    filledCount++;
-  }
-
-  const outName = templateFile.name.replace(/\.(xlsx|xls|ods)$/i, "") + "_filled.xlsx";
-  XLSX.writeFile(wb, outName);
-
-  let msg = `<div class="msg ok">Filled ${filledCount} day(s) into ${monthsFound} month block(s) found in the template. Downloaded as "${outName}".</div>`;
-  if (fillWarnings.length) {
-    msg += `<div class="msg warn"><strong>${fillWarnings.length} note(s):</strong><br>${fillWarnings.join("<br>")}</div>`;
-  }
-  templateMessagesEl.innerHTML = msg;
-  fillBtn.disabled = false;
+/* Settings panel */
+function openSettings() {
+  document.getElementById('sBakong').value = cfg.bakongId;
+  document.getElementById('sName').value = cfg.name;
+  document.getElementById('sCity').value = cfg.city;
+  document.getElementById('sCur').value = cfg.currency;
+  document.getElementById('sExpiry').value = cfg.expiry;
+  document.getElementById('sQuickKHR').value = cfg.quickKHR;
+  document.getElementById('sQuickUSD').value = cfg.quickUSD;
+  document.getElementById('settings').classList.remove('hidden');
 }
+function closeSettings() { document.getElementById('settings').classList.add('hidden'); }
+function saveSettings() {
+  const id = document.getElementById('sBakong').value.trim();
+  if (!/^[^@\s]+@[^@\s]+$/.test(id)) { toast('Bakong ID should look like name@bank'); return; }
+  cfg = {
+    bakongId: id,
+    name: asciiOnly(document.getElementById('sName').value) || 'My Shop',
+    city: asciiOnly(document.getElementById('sCity').value) || 'Phnom Penh',
+    currency: document.getElementById('sCur').value,
+    expiry: Math.min(60, Math.max(1, Number(document.getElementById('sExpiry').value) || 10)),
+    quickKHR: document.getElementById('sQuickKHR').value || DEFAULTS.quickKHR,
+    quickUSD: document.getElementById('sQuickUSD').value || DEFAULTS.quickUSD
+  };
+  store('khqr_cfg', JSON.stringify(cfg));
+  currency = cfg.currency;
+  closeSettings(); setCurrency(currency);
+  publish({ status: 'idle', name: cfg.name });
+  toast('Saved');
+}
+
+/* =========================================================
+   CUSTOMER DISPLAY
+   ========================================================= */
+let timerId = null;
+let customerReady = false;
+
+function initCustomer() {
+  if (!customerReady) { onState(showState); customerReady = true; }
+  const last = JSON.parse(store('khqr_state') || 'null');
+  showState(last && last.status === 'pay' && last.expiresAt > Date.now() ? last : { status: 'idle', name: (last && last.name) || cfg.name });
+  keepAwake();
+}
+function show(id) { ['cIdle','cPay','cPaid','cExpired'].forEach(x => document.getElementById(x).classList.toggle('hidden', x !== id)); }
+
+function showState(st) {
+  if (location.hash !== '#customer' || !st) return;
+  clearInterval(timerId);
+  if (st.status === 'pay') {
+    document.getElementById('cName').textContent = st.name || '';
+    document.getElementById('cAmt').innerHTML = st.currency === 'USD'
+      ? Number(st.amount).toLocaleString('en-US', { minimumFractionDigits: 2 }) + '<small>USD</small>'
+      : Number(st.amount).toLocaleString('en-US') + '<small>KHR</small>';
+    document.getElementById('cBill').textContent = st.bill ? 'Bill: ' + st.bill : '';
+    const q = document.getElementById('qr'); q.innerHTML = '';
+    new QRCode(q, { text: st.qr, width: 320, height: 320, correctLevel: QRCode.CorrectLevel.M });
+    show('cPay');
+    const tick = () => {
+      const left = Math.max(0, st.expiresAt - Date.now());
+      const m = Math.floor(left / 60000), s = Math.floor(left % 60000 / 1000);
+      document.getElementById('cTimer').textContent = m + ':' + String(s).padStart(2, '0');
+      if (left <= 0) { clearInterval(timerId); show('cExpired'); }
+    };
+    tick(); timerId = setInterval(tick, 1000);
+  } else if (st.status === 'paid') {
+    show('cPaid');
+  } else {
+    document.getElementById('cShop').textContent = st.name || 'Welcome';
+    show('cIdle');
+  }
+}
+
+/* keep customer screen on (supported browsers) */
+let wakeLock = null;
+async function keepAwake() {
+  try { if ('wakeLock' in navigator && !wakeLock) { wakeLock = await navigator.wakeLock.request('screen'); wakeLock.onrelease = () => wakeLock = null; } } catch (e) {}
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && location.hash === '#customer') keepAwake(); });
+
+function toast(msg) {
+  const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
+  document.body.appendChild(t); setTimeout(() => t.remove(), 2000);
+}
+
+render();
 </script>
 </body>
 </html>
