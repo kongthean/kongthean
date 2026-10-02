@@ -332,6 +332,14 @@ body.admin footer .wrap{padding-bottom:170px}
 .slr{display:grid;grid-template-columns:110px 1fr;gap:12px;border:1px solid var(--line);border-radius:14px;padding:10px}
 .slr img{width:110px;height:74px;object-fit:cover;border-radius:8px}
 .slr .ctl{grid-column:1/-1;display:flex;gap:6px;flex-wrap:wrap}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin:12px 0}
+.galb{border:0;padding:0;border-radius:10px;overflow:hidden;aspect-ratio:1;cursor:zoom-in;background:var(--mist1)}
+.galb img{width:100%;height:100%;object-fit:cover;display:block}
+.galed{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px}
+.galed span{position:relative;width:72px;height:72px;border-radius:10px;overflow:hidden;display:block}
+.galed span img{width:100%;height:100%;object-fit:cover}
+.galed span button{position:absolute;top:2px;right:2px;width:22px;height:22px;border-radius:50%;border:0;background:rgba(0,0,0,.65);color:#fff;font-size:.7rem;cursor:pointer}
+.feature .edbtn{z-index:4}
 .toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%);z-index:90;background:var(--char);color:var(--char-ink);padding:10px 18px;border-radius:99px;font-size:.9rem;box-shadow:var(--shadow);max-width:calc(100vw - 32px);text-align:center}
 html[lang="km"] .emb,html[lang="km"] .kick,html[lang="km"] small,html[lang="km"] .fact b,html[lang="km"] footer h4{letter-spacing:0;text-transform:none}
 html[lang="km"] body{line-height:1.8}
@@ -426,10 +434,11 @@ var app=document.getElementById('app');
 
 /* ---------- UI words ---------- */
 var UI={
-en:{home:'Home',explore:'Explore',menuSub:'Everything on this site, one tap away',followers:'Followers',postsN:'Posts',provinces:'Provinces',temples:'Temples & sites',featured:'Featured places',featuredSub:'Where to go next',seeAll:'See all',season:'When to visit',seasonSub:'Cambodia has three seasons',cool:'Cool & dry',hot:'Hot',wet:'Green / rainy',bestTime:'Best time',gettingThere:'Getting there',region:'Province',built:'Built',openMap:'Open in Google Maps',tip:'Our tip',related:'You may also like',watch:'Watch video',videos:'Videos',map:'Cambodia map',mapSub:'Tap a province to open it on the map',tribute:'A message of gratitude',stories:'Temple stories',chatTitle:'Chat with us',chatSub:'Online · our team usually replies within hours',chatPick:'What do you want to talk about?',chatHow:'Choose where to continue the conversation:',copy:'Copy',copied:'Copied',empty:'Nothing here yet.',back:'Back',all:'All',name:'Your name',message:'Message',sendEmail:'Send by email',sendMsgr:'Copy & open Messenger',rate:'How was your experience?',thanks:'Thank you!',menu:'Menu',close:'Close',readMore:'Read more',joinTrip:'Plan a trip with us',joinTripSub:'Ask about routes, places to stay or collaborations.',startChat:'Start a chat',exploreBtn:'Explore destinations',watchBtn:'Watch videos',quickLinks:'Pages',follow:'Follow',aboutShort:'A Cambodian travel team sharing scenic routes, travel spots and peaceful places.',rights:'All rights reserved.',festivals:'Festivals through the year',arts:'Arts & living traditions',areas:'Where to stay, by area',picks:'Our picks',support:'Ways to support',payInfo:'Scan to support',giveWell:'Give responsibly',whatIDo:'What we share',collab:'Work with us',contactWays:'Reach us',writeMe:'Write to us',facebook:'Facebook',messenger:'Messenger',telegram:'Telegram',tiktok:'TikTok',youtube:'YouTube',instagram:'Instagram',email:'Email',phone:'Phone',address:'Address',website:'Website',topicTrip:'Plan a trip',topicCollab:'Collaboration',topicHotel:'Hotels',topicOther:'Something else',accountName:'Account name',accountNo:'Account number',latest:'Latest',filter:'Filter'},
-km:{home:'ទំព័រដើម',explore:'ស្វែងយល់',menuSub:'គ្រប់យ៉ាងនៅលើគេហទំព័រនេះ ក្នុងមួយចុច',followers:'អ្នកតាមដាន',postsN:'ការបង្ហោះ',provinces:'ខេត្ត-រាជធានី',temples:'ប្រាសាទ និងរមណីយដ្ឋាន',featured:'កន្លែងពិសេស',featuredSub:'ទៅណាបន្ទាប់?',seeAll:'មើលទាំងអស់',season:'ពេលល្អសម្រាប់ទស្សនា',seasonSub:'កម្ពុជាមានបីរដូវ',cool:'រដូវត្រជាក់',hot:'រដូវក្ដៅ',wet:'រដូវវស្សា',bestTime:'ពេលល្អបំផុត',gettingThere:'របៀបធ្វើដំណើរ',region:'ខេត្ត',built:'កសាងឡើង',openMap:'បើកក្នុង Google Maps',tip:'គន្លឹះពីយើង',related:'កន្លែងផ្សេងទៀត',watch:'មើលវីដេអូ',videos:'វីដេអូ',map:'ផែនទីកម្ពុជា',mapSub:'ចុចលើខេត្ត ដើម្បីបើកលើផែនទី',tribute:'សារដឹងគុណ',stories:'រឿងរ៉ាវប្រាសាទ',chatTitle:'ជជែកជាមួយយើង',chatSub:'អនឡាញ · ជាធម្មតាឆ្លើយតបក្នុងរយៈពេលប៉ុន្មានម៉ោង',chatPick:'តើអ្នកចង់និយាយអំពីអ្វី?',chatHow:'ជ្រើសរើសកន្លែងបន្តការសន្ទនា៖',copy:'ចម្លង',copied:'បានចម្លង',empty:'មិនទាន់មានអ្វីនៅទីនេះទេ។',back:'ត្រឡប់',all:'ទាំងអស់',name:'ឈ្មោះរបស់អ្នក',message:'សារ',sendEmail:'ផ្ញើតាមអ៊ីមែល',sendMsgr:'ចម្លង ហើយបើក Messenger',rate:'តើបទពិសោធន៍របស់អ្នកយ៉ាងដូចម្ដេច?',thanks:'អរគុណ!',menu:'ម៉ឺនុយ',close:'បិទ',readMore:'អានបន្ត',joinTrip:'រៀបចំដំណើរជាមួយយើង',joinTripSub:'សួរយើងអំពីផ្លូវធ្វើដំណើរ កន្លែងស្នាក់នៅ ឬការសហការ។',startChat:'ចាប់ផ្ដើមជជែក',exploreBtn:'ស្វែងរកគោលដៅ',watchBtn:'មើលវីដេអូ',quickLinks:'ទំព័រ',follow:'តាមដាន',aboutShort:'ក្រុមការងារធ្វើដំណើរកម្ពុជា ចែករំលែកផ្លូវទេសភាព កន្លែងទេសចរណ៍ និងទីកន្លែងស្ងប់ស្ងាត់។',rights:'រក្សាសិទ្ធិគ្រប់យ៉ាង។',festivals:'ពិធីបុណ្យពេញមួយឆ្នាំ',arts:'សិល្បៈ និងប្រពៃណីរស់',areas:'កន្លែងស្នាក់នៅតាមតំបន់',picks:'ជម្រើសរបស់យើង',support:'វិធីគាំទ្រ',payInfo:'ស្កេនដើម្បីគាំទ្រ',giveWell:'បរិច្ចាគឱ្យបានត្រឹមត្រូវ',whatIDo:'អ្វីដែលយើងចែករំលែក',collab:'សហការជាមួយយើង',contactWays:'ទាក់ទងយើង',writeMe:'សរសេរមកយើង',facebook:'Facebook',messenger:'Messenger',telegram:'Telegram',tiktok:'TikTok',youtube:'YouTube',instagram:'Instagram',email:'អ៊ីមែល',phone:'ទូរស័ព្ទ',address:'អាសយដ្ឋាន',website:'គេហទំព័រ',topicTrip:'រៀបចំដំណើរ',topicCollab:'ការសហការ',topicHotel:'សណ្ឋាគារ',topicOther:'ផ្សេងៗ',accountName:'ឈ្មោះគណនី',accountNo:'លេខគណនី',latest:'ថ្មីៗ',filter:'តម្រង'}
+en:{storiesKick:'Angkor',latestKick:'News & stories',home:'Home',explore:'Explore',menuSub:'Everything on this site, one tap away',followers:'Followers',postsN:'Posts',provinces:'Provinces',temples:'Temples & sites',featured:'Featured places',featuredSub:'Where to go next',seeAll:'See all',season:'When to visit',seasonSub:'Cambodia has three seasons',cool:'Cool & dry',hot:'Hot',wet:'Green / rainy',bestTime:'Best time',gettingThere:'Getting there',region:'Province',built:'Built',openMap:'Open in Google Maps',tip:'Our tip',related:'You may also like',watch:'Watch video',videos:'Videos',map:'Cambodia map',mapSub:'Tap a province to open it on the map',tribute:'A message of gratitude',stories:'Temple stories',chatTitle:'Chat with us',chatSub:'Online · our team usually replies within hours',chatPick:'What do you want to talk about?',chatHow:'Choose where to continue the conversation:',copy:'Copy',copied:'Copied',empty:'Nothing here yet.',back:'Back',all:'All',name:'Your name',message:'Message',sendEmail:'Send by email',sendMsgr:'Copy & open Messenger',rate:'How was your experience?',thanks:'Thank you!',menu:'Menu',close:'Close',readMore:'Read more',joinTrip:'Plan a trip with us',joinTripSub:'Ask about routes, places to stay or collaborations.',startChat:'Start a chat',exploreBtn:'Explore destinations',watchBtn:'Watch videos',quickLinks:'Pages',follow:'Follow',aboutShort:'A Cambodian travel team sharing scenic routes, travel spots and peaceful places.',rights:'All rights reserved.',festivals:'Festivals through the year',arts:'Arts & living traditions',areas:'Where to stay, by area',picks:'Our picks',support:'Ways to support',payInfo:'Scan to support',giveWell:'Give responsibly',whatIDo:'What we share',collab:'Work with us',contactWays:'Reach us',writeMe:'Write to us',facebook:'Facebook',messenger:'Messenger',telegram:'Telegram',tiktok:'TikTok',youtube:'YouTube',instagram:'Instagram',email:'Email',phone:'Phone',address:'Address',website:'Website',topicTrip:'Plan a trip',topicCollab:'Collaboration',topicHotel:'Hotels',topicOther:'Something else',accountName:'Account name',accountNo:'Account number',latest:'Latest',filter:'Filter'},
+km:{storiesKick:'អង្គរ',latestKick:'ព័ត៌មាន និងរឿងរ៉ាវ',home:'ទំព័រដើម',explore:'ស្វែងយល់',menuSub:'គ្រប់យ៉ាងនៅលើគេហទំព័រនេះ ក្នុងមួយចុច',followers:'អ្នកតាមដាន',postsN:'ការបង្ហោះ',provinces:'ខេត្ត-រាជធានី',temples:'ប្រាសាទ និងរមណីយដ្ឋាន',featured:'កន្លែងពិសេស',featuredSub:'ទៅណាបន្ទាប់?',seeAll:'មើលទាំងអស់',season:'ពេលល្អសម្រាប់ទស្សនា',seasonSub:'កម្ពុជាមានបីរដូវ',cool:'រដូវត្រជាក់',hot:'រដូវក្ដៅ',wet:'រដូវវស្សា',bestTime:'ពេលល្អបំផុត',gettingThere:'របៀបធ្វើដំណើរ',region:'ខេត្ត',built:'កសាងឡើង',openMap:'បើកក្នុង Google Maps',tip:'គន្លឹះពីយើង',related:'កន្លែងផ្សេងទៀត',watch:'មើលវីដេអូ',videos:'វីដេអូ',map:'ផែនទីកម្ពុជា',mapSub:'ចុចលើខេត្ត ដើម្បីបើកលើផែនទី',tribute:'សារដឹងគុណ',stories:'រឿងរ៉ាវប្រាសាទ',chatTitle:'ជជែកជាមួយយើង',chatSub:'អនឡាញ · ជាធម្មតាឆ្លើយតបក្នុងរយៈពេលប៉ុន្មានម៉ោង',chatPick:'តើអ្នកចង់និយាយអំពីអ្វី?',chatHow:'ជ្រើសរើសកន្លែងបន្តការសន្ទនា៖',copy:'ចម្លង',copied:'បានចម្លង',empty:'មិនទាន់មានអ្វីនៅទីនេះទេ។',back:'ត្រឡប់',all:'ទាំងអស់',name:'ឈ្មោះរបស់អ្នក',message:'សារ',sendEmail:'ផ្ញើតាមអ៊ីមែល',sendMsgr:'ចម្លង ហើយបើក Messenger',rate:'តើបទពិសោធន៍របស់អ្នកយ៉ាងដូចម្ដេច?',thanks:'អរគុណ!',menu:'ម៉ឺនុយ',close:'បិទ',readMore:'អានបន្ត',joinTrip:'រៀបចំដំណើរជាមួយយើង',joinTripSub:'សួរយើងអំពីផ្លូវធ្វើដំណើរ កន្លែងស្នាក់នៅ ឬការសហការ។',startChat:'ចាប់ផ្ដើមជជែក',exploreBtn:'ស្វែងរកគោលដៅ',watchBtn:'មើលវីដេអូ',quickLinks:'ទំព័រ',follow:'តាមដាន',aboutShort:'ក្រុមការងារធ្វើដំណើរកម្ពុជា ចែករំលែកផ្លូវទេសភាព កន្លែងទេសចរណ៍ និងទីកន្លែងស្ងប់ស្ងាត់។',rights:'រក្សាសិទ្ធិគ្រប់យ៉ាង។',festivals:'ពិធីបុណ្យពេញមួយឆ្នាំ',arts:'សិល្បៈ និងប្រពៃណីរស់',areas:'កន្លែងស្នាក់នៅតាមតំបន់',picks:'ជម្រើសរបស់យើង',support:'វិធីគាំទ្រ',payInfo:'ស្កេនដើម្បីគាំទ្រ',giveWell:'បរិច្ចាគឱ្យបានត្រឹមត្រូវ',whatIDo:'អ្វីដែលយើងចែករំលែក',collab:'សហការជាមួយយើង',contactWays:'ទាក់ទងយើង',writeMe:'សរសេរមកយើង',facebook:'Facebook',messenger:'Messenger',telegram:'Telegram',tiktok:'TikTok',youtube:'YouTube',instagram:'Instagram',email:'អ៊ីមែល',phone:'ទូរស័ព្ទ',address:'អាសយដ្ឋាន',website:'គេហទំព័រ',topicTrip:'រៀបចំដំណើរ',topicCollab:'ការសហការ',topicHotel:'សណ្ឋាគារ',topicOther:'ផ្សេងៗ',accountName:'ឈ្មោះគណនី',accountNo:'លេខគណនី',latest:'ថ្មីៗ',filter:'តម្រង'}
 };
-function u(k){return (UI[lang]&&UI[lang][k])||UI.en[k]||k}
+function u(k){var o=S.ui&&S.ui[k];if(o&&o[lang])return o[lang];return (UI[lang]&&UI[lang][k])||UI.en[k]||k}
+function ut(k){return admin?'<span data-edit="ui.'+k+'">'+esc(u(k))+'</span>':esc(u(k))}
 function tr(o){if(o==null)return '';if(typeof o==='string')return o;return o[lang]||o.en||o.km||''}
 var MONTHS={en:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],km:['មករា','កុម្ភៈ','មីនា','មេសា','ឧសភា','មិថុនា','កក្កដា','សីហា','កញ្ញា','តុលា','វិច្ឆិកា','ធ្នូ']};
 var KMDIG='០១២៣៤៥៦៧៨៩';
@@ -559,7 +568,7 @@ function header(R){
 }
 
 function tilesHtml(){
-  return '<div class="tiles">'+S.pages.map(function(p){return '<a class="tile" href="#/p/'+p.id+'"><span class="ic">'+I(p.icon)+'</span><b>'+esc(tr(p.label))+'</b>'+(p.hint?'<small>'+esc(tr(p.hint))+'</small>':'')+'</a>'}).join('')+'</div>';
+  return '<div class="tiles">'+S.pages.map(function(p){return '<a class="tile" style="position:relative" href="#/p/'+p.id+'">'+(admin?'<button class="edbtn aonly" style="top:-6px;right:4px;width:30px;height:30px" data-ed="pages:'+p.id+'" aria-label="Edit">'+I('edit')+'</button>':'')+'<span class="ic">'+I(p.icon)+'</span><b>'+esc(tr(p.label))+'</b>'+(tr(p.hint)?'<small>'+esc(tr(p.hint))+'</small>':'')+'</a>'}).join('')+(admin?'<button class="tile aonly" data-add="pages:custom" style="border:0;background:transparent;cursor:pointer;flex-direction:column"><span class="ic" style="background:var(--bg2);color:var(--ink);box-shadow:none;border:2px dashed var(--stone)">'+I('plus')+'</span><b>Add page</b><small>New menu item</small></button>':'')+'</div>';
 }
 function drawerHtml(){
   return '<div class="drawer" role="dialog" aria-label="'+esc(u('menu'))+'"><div class="wrap"><div class="head"><div><div class="kick">'+esc(u('menuSub'))+'</div><h2 class="emb">'+esc(u('explore'))+'</h2></div><button class="ib" data-act="drawer" aria-label="'+esc(u('close'))+'">'+I('close')+'</button></div>'+
@@ -573,7 +582,7 @@ function renderHome(){
   h+='<div class="hero">';
   S.slides.forEach(function(s,i){h+='<div class="slide'+(s.fit?' fit':'')+(i===cur?' on':'')+'">'+(s.fit?'<div class="bg" style="background-image:url('+s.img+')"></div>':'')+'<img alt="" src="'+s.img+'"'+(i?' loading="lazy"':'')+'></div>'});
   var s0=S.slides[cur]||{};
-  h+='<div class="hcap"><div class="wrap"><div class="kick" id="hkick">'+esc(tr(s0.kick))+'</div><h1 class="emb" id="htitle">'+esc(tr(s0.cap))+'</h1><div class="cta"><a class="btn light" href="#/p/destinations">'+I('compass')+esc(u('exploreBtn'))+'</a><a class="btn ghost" style="color:#fff" href="#/p/videos">'+I('play')+esc(u('watchBtn'))+'</a>'+(admin?'<button class="btn soft aonly" data-act="slides">'+I('image')+' Edit slideshow</button>':'')+'</div></div></div>';
+  h+='<div class="hcap"><div class="wrap"><div class="kick" id="hkick">'+esc(tr(s0.kick))+'</div><h1 class="emb" id="htitle">'+esc(tr(s0.cap))+'</h1><div class="cta"><a class="btn light" href="#/p/destinations">'+I('compass')+ut('exploreBtn')+'</a><a class="btn ghost" style="color:#fff" href="#/p/videos">'+I('play')+ut('watchBtn')+'</a>'+(admin?'<button class="btn soft aonly" data-act="slides">'+I('image')+' Edit slideshow</button>':'')+'</div></div></div>';
   if(S.slides.length>1)h+='<button class="arw l" data-slide="-1" aria-label="Previous">'+I('left')+'</button><button class="arw r" data-slide="1" aria-label="Next">'+I('right')+'</button><div class="dots">'+S.slides.map(function(_,i){return '<button data-dot="'+i+'" class="'+(i===cur?'on':'')+'" aria-label="Slide '+(i+1)+'"></button>'}).join('')+'</div>';
   h+='</div>';
   /* notice */
@@ -581,48 +590,52 @@ function renderHome(){
   h+='<div class="notice"><div class="wrap">'+I('bell')+'<span'+E('notice')+'>'+esc(tr(S.notice))+'</span>'+(L.facebook?'<a target="_blank" rel="noopener" href="'+esc(linkOf('facebook',L.facebook))+'">Facebook</a>':'')+(L.telegram?'<a target="_blank" rel="noopener" href="'+esc(linkOf('telegram',L.telegram))+'">Telegram</a>':'')+'</div></div>';
   h+='<div class="wrap">';
   /* tiles */
-  h+='<section><div class="sh"><div><div class="kick">'+esc(u('menuSub'))+'</div><h2 class="emb">'+esc(u('explore'))+'</h2></div></div>'+tilesHtml();
+  h+='<section><div class="sh"><div><div class="kick">'+ut('menuSub')+'</div><h2 class="emb">'+ut('explore')+'</h2></div></div>'+tilesHtml();
   /* stats */
   var temples=S.places.filter(function(p){return p.cat==='temple'}).length;
-  h+='<div class="stats"><div class="stat"><b'+E('stats.followers')+'>'+esc(S.stats.followers)+'</b><span>'+esc(u('followers'))+'</span></div><div class="stat"><b'+E('stats.posts')+'>'+esc(S.stats.posts)+'</b><span>'+esc(u('postsN'))+'</span></div><div class="stat"><b>'+num(25)+'</b><span>'+esc(u('provinces'))+'</span></div><div class="stat"><b>'+num(temples)+'</b><span>'+esc(u('temples'))+'</span></div></div></section>';
+  h+='<div class="stats"><div class="stat"><b'+E('stats.followers')+'>'+esc(S.stats.followers)+'</b><span>'+ut('followers')+'</span></div><div class="stat"><b'+E('stats.posts')+'>'+esc(S.stats.posts)+'</b><span>'+ut('postsN')+'</span></div><div class="stat"><b>'+num(25)+'</b><span>'+ut('provinces')+'</span></div><div class="stat"><b>'+num(temples)+'</b><span>'+ut('temples')+'</span></div></div></section>';
   /* featured */
   var feat=S.places.filter(function(p){return p.featured}).slice(0,10);
-  h+='<section><div class="sh"><div><div class="kick">'+esc(u('featuredSub'))+'</div><h2 class="emb">'+esc(u('featured'))+'</h2></div><a class="more" href="#/p/destinations">'+esc(u('seeAll'))+' '+I('arrow')+'</a></div><div class="rail">'+feat.map(placeCard).join('')+'</div></section>';
+  h+='<section><div class="sh"><div><div class="kick">'+ut('featuredSub')+'</div><h2 class="emb">'+ut('featured')+'</h2></div><a class="more" href="#/p/destinations">'+ut('seeAll')+' '+I('arrow')+'</a></div><div class="rail">'+feat.map(placeCard).join('')+'</div></section>';
   /* seasons */
-  h+='<section><div class="sh"><div><div class="kick">'+esc(u('seasonSub'))+'</div><h2 class="emb">'+esc(u('season'))+'</h2></div><a class="more" href="#/p/tips">'+esc(u('readMore'))+' '+I('arrow')+'</a></div>'+seasonHtml()+'</section>';
+  h+='<section><div class="sh"><div><div class="kick">'+ut('seasonSub')+'</div><h2 class="emb">'+ut('season')+'</h2></div><a class="more" href="#/p/tips">'+ut('readMore')+' '+I('arrow')+'</a></div>'+seasonHtml()+'</section>';
   /* video feature */
   var v=S.videos[0];
-  if(v)h+='<section>'+videoFeature(v)+'</section>';
+  if(v)h+='<section>'+videoFeature(v)+'</section>';else if(admin)h+='<section>'+addBtn('videos','','Add video')+'</section>';
   /* stories */
   var st=S.places.filter(function(p){return p.cat==='temple'&&p.img}).slice(0,4);
-  h+='<section><div class="sh"><div><div class="kick">Angkor</div><h2 class="emb">'+esc(u('stories'))+'</h2></div><a class="more" href="#/p/temples">'+esc(u('seeAll'))+' '+I('arrow')+'</a></div><div class="grid">'+st.map(placeCard).join('')+'</div></section>';
+  h+='<section><div class="sh"><div><div class="kick">'+ut('storiesKick')+'</div><h2 class="emb">'+ut('stories')+'</h2></div><a class="more" href="#/p/temples">'+ut('seeAll')+' '+I('arrow')+'</a></div><div class="grid">'+st.map(placeCard).join('')+'</div></section>';
+  /* latest posts */
+  var np=(S.news||[]).slice(0,3);
+  if(np.length||admin)h+='<section><div class="sh"><div><div class="kick">'+ut('latestKick')+'</div><h2 class="emb">'+ut('latest')+'</h2></div><div style="display:flex;gap:8px;align-items:center">'+addBtn('news','','Add post')+'<a class="more" href="#/p/news">'+ut('seeAll')+' '+I('arrow')+'</a></div></div>'+postList(np,'news')+'</section>';
   /* tribute */
-  h+='<section><div class="sh"><h2 class="emb">'+esc(u('tribute'))+'</h2></div><div class="tribute"><p class="km" lang="km"'+E('message.km')+'>'+esc(S.message.km)+'</p><p class="en" lang="en"'+E('message.en')+'>'+esc(S.message.en)+'</p></div>'+(S.message.video?'<div style="margin-top:22px">'+videoFeature(S.message.video,true)+'</div>':'')+'</section>';
+  h+='<section><div class="sh"><h2 class="emb">'+ut('tribute')+'</h2></div><div class="tribute"><p class="km" lang="km"'+E('message.km')+'>'+esc(S.message.km)+'</p><p class="en" lang="en"'+E('message.en')+'>'+esc(S.message.en)+'</p></div>'+(S.message.video?'<div style="margin-top:22px">'+videoFeature(S.message.video,true,'msgvideo')+'</div>':(admin?'<button class="btn sm soft aonly" data-act="msgvideo" style="margin-top:16px">'+I('plus')+' Add video</button>':''))+'</section>';
   /* map */
-  h+='<section><div class="sh"><div><div class="kick">'+esc(u('mapSub'))+'</div><h2 class="emb">'+esc(u('map'))+'</h2></div>'+(admin?'<button class="btn sm soft aonly" data-act="mapimg">'+I('image')+' Map image</button>':'')+'</div><div class="mapwrap"'+(S.mapImg?'':' style="grid-template-columns:1fr"')+'>'+(S.mapImg?'<div class="mapimg"><img alt="Map of Cambodia" src="'+S.mapImg+'"></div>':'')+'<div class="chips">'+PROV.map(function(p){return '<a class="chip" target="_blank" rel="noopener" href="'+mapsQ(p[0]+', Cambodia')+'">'+I('pin')+esc(lang==='km'?p[1]:p[0])+'</a>'}).join('')+'</div></div></section>';
+  h+='<section><div class="sh"><div><div class="kick">'+ut('mapSub')+'</div><h2 class="emb">'+ut('map')+'</h2></div>'+(admin?'<button class="btn sm soft aonly" data-act="mapimg">'+I('image')+' Map image</button>':'')+'</div><div class="mapwrap"'+(S.mapImg?'':' style="grid-template-columns:1fr"')+'>'+(S.mapImg?'<div class="mapimg"><img alt="Map of Cambodia" src="'+S.mapImg+'"></div>':'')+'<div class="chips">'+PROV.map(function(p){return '<a class="chip" target="_blank" rel="noopener" href="'+mapsQ(p[0]+', Cambodia')+'">'+I('pin')+esc(lang==='km'?p[1]:p[0])+'</a>'}).join('')+'</div></div></section>';
   h+=band();
   h+='</div>';
   return h;
 }
-function band(){return '<div class="band"><div><h3 class="emb">'+esc(u('joinTrip'))+'</h3><p>'+esc(u('joinTripSub'))+'</p></div><button class="btn light" data-act="chat">'+I('chat')+esc(u('startChat'))+'</button></div>'}
+function band(){return '<div class="band"><div><h3 class="emb">'+ut('joinTrip')+'</h3><p>'+ut('joinTripSub')+'</p></div><button class="btn light" data-act="chat">'+I('chat')+ut('startChat')+'</button></div>'}
 function seasonHtml(){
   var cls=['cool','cool','hot','hot','hot','wet','wet','wet','wet','wet','cool','cool'];
   var ic={cool:'sun',hot:'sun',wet:'wave'};
-  return '<div class="season"><div class="months">'+MONTHS[lang].map(function(m,i){return '<div class="mo '+cls[i]+'">'+esc(m)+'</div>'}).join('')+'</div><div class="legend"><span><i style="background:var(--accent-soft);border:1px solid var(--accent)"></i>'+esc(u('cool'))+' · '+esc(lang==='km'?'វិច្ឆិកា–កុម្ភៈ':'Nov–Feb')+'</span><span><i style="background:#f1e2cf;border:1px solid #c79a5c"></i>'+esc(u('hot'))+' · '+esc(lang==='km'?'មីនា–ឧសភា':'Mar–May')+'</span><span><i style="background:#d9e6dc;border:1px solid #6aa37e"></i>'+esc(u('wet'))+' · '+esc(lang==='km'?'មិថុនា–តុលា':'Jun–Oct')+'</span></div></div>';
+  return '<div class="season"><div class="months">'+MONTHS[lang].map(function(m,i){return '<div class="mo '+cls[i]+'">'+esc(m)+'</div>'}).join('')+'</div><div class="legend"><span><i style="background:var(--accent-soft);border:1px solid var(--accent)"></i>'+ut('cool')+' · '+esc(lang==='km'?'វិច្ឆិកា–កុម្ភៈ':'Nov–Feb')+'</span><span><i style="background:#f1e2cf;border:1px solid #c79a5c"></i>'+ut('hot')+' · '+esc(lang==='km'?'មីនា–ឧសភា':'Mar–May')+'</span><span><i style="background:#d9e6dc;border:1px solid #6aa37e"></i>'+ut('wet')+' · '+esc(lang==='km'?'មិថុនា–តុលា':'Jun–Oct')+'</span></div></div>';
 }
 function placeCard(p){
   var kind=p.cat==='temple'?'temple':(p.art||'hills');
   return '<a class="card reveal" href="#/place/'+p.id+'">'+ed('places',p.id)+'<div class="ph">'+pic(p,tr(p.title),kind)+'<span class="badge">'+I('pin')+esc(tr(p.region))+'</span></div><div class="tx"><h3>'+esc(tr(p.title))+'</h3><p>'+esc(tr(p.sum))+'</p></div></a>';
 }
-function videoFeature(v,small){
+function videoFeature(v,small,edAct){
   var href=url(v.link);
-  var inner='<div class="ph">'+(v.img?'<img loading="lazy" alt="" src="'+v.img+'">':art('river','vid'))+'<span class="play">'+I('play')+'</span></div><div class="tx"><div class="kick">'+esc(u('videos'))+'</div><h3 class="emb" style="margin:0;font-size:clamp(1.5rem,3.4vw,2.1rem)">'+esc(tr(v.title)||u('watch'))+'</h3>'+(tr(v.text)?'<p>'+esc(tr(v.text))+'</p>':'')+'<span class="btn light sm" style="justify-self:start;align-self:flex-start">'+I('play')+esc(u('watch'))+'</span></div>';
-  return href?'<a class="feature" target="_blank" rel="noopener" href="'+esc(href)+'">'+inner+'</a>':'<div class="feature">'+inner+'</div>';
+  var inner='<div class="ph">'+(v.img?'<img loading="lazy" alt="" src="'+v.img+'">':art('river','vid'))+'<span class="play">'+I('play')+'</span></div><div class="tx"><div class="kick">'+ut('videos')+'</div><h3 class="emb" style="margin:0;font-size:clamp(1.5rem,3.4vw,2.1rem)">'+esc(tr(v.title)||u('watch'))+'</h3>'+(tr(v.text)?'<p>'+esc(tr(v.text))+'</p>':'')+'<span class="btn light sm" style="justify-self:start;align-self:flex-start">'+I('play')+ut('watch')+'</span></div>';
+  var eb=admin?(edAct?'<button class="edbtn aonly" data-act="'+edAct+'" aria-label="Edit video">'+I('edit')+'</button>':ed('videos',v.id)):'';
+  return href?'<a class="feature" target="_blank" rel="noopener" href="'+esc(href)+'">'+eb+inner+'</a>':'<div class="feature">'+eb+inner+'</div>';
 }
 
 /* ---------- PAGE ---------- */
 function banner(p,title,icon,img,kind,crumbs){
-  return '<div class="pbanner">'+(img?'<img alt="" src="'+img+'">':art(kind||'hills',p))+'<div class="wrap"><div class="crumb"><a href="#/">'+esc(u('home'))+'</a>'+(crumbs||'')+'</div>'+(icon?'<div class="pic">'+I(icon)+'</div>':'')+'<h1 class="emb">'+esc(title)+'</h1></div></div>';
+  return '<div class="pbanner">'+(img?'<img alt="" src="'+img+'">':art(kind||'hills',p))+'<div class="wrap"><div class="crumb"><a href="#/">'+ut('home')+'</a>'+(crumbs||'')+'</div>'+(icon?'<div class="pic">'+I(icon)+'</div>':'')+'<h1 class="emb">'+esc(title)+'</h1></div></div>';
 }
 function renderPage(p,R){
   var i=S.pages.indexOf(p),h='';
@@ -631,17 +644,17 @@ function renderPage(p,R){
   h+='<div class="wrap"><section style="padding-top:32px"><p class="intro"'+E('pages.'+i+'.intro')+'>'+esc(tr(p.intro))+'</p>'+(admin?'<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm soft aonly" data-pageimg="'+i+'">'+I('image')+' Banner photo</button><button class="btn sm soft aonly" data-ed="pages:'+p.id+'">'+I('edit')+' Page name & icon</button></div>':'')+'</section>';
   var k=p.kind;
   if(k==='places')h+=placesBlock(p.cat,R.sub);
-  else if(k==='culture'){h+='<section><div class="sh"><h2 class="emb">'+esc(u('festivals'))+'</h2>'+addBtn('festivals','','Add festival')+'</div>'+timeline()+'</section><section><div class="sh"><h2 class="emb">'+esc(u('arts'))+'</h2>'+addBtn('places','culture','Add')+'</div><div class="grid">'+S.places.filter(function(x){return x.cat==='culture'}).map(placeCard).join('')+'</div></section>'}
+  else if(k==='culture'){h+='<section><div class="sh"><h2 class="emb">'+ut('festivals')+'</h2>'+addBtn('festivals','','Add festival')+'</div>'+timeline()+'</section><section><div class="sh"><h2 class="emb">'+ut('arts')+'</h2>'+addBtn('places','culture','Add')+'</div><div class="grid">'+S.places.filter(function(x){return x.cat==='culture'}).map(placeCard).join('')+'</div></section>'}
   else if(k==='stay')h+=stayBlock();
-  else if(k==='tips')h+='<section><div class="sh"><h2 class="emb">'+esc(u('season'))+'</h2></div>'+seasonHtml()+'</section><section><div class="sh"><h2 class="emb">'+esc(tr(p.label))+'</h2>'+addBtn('tips','','Add tip')+'</div>'+tipsBlock()+'</section>';
+  else if(k==='tips')h+='<section><div class="sh"><h2 class="emb">'+ut('season')+'</h2></div>'+seasonHtml()+'</section><section><div class="sh"><h2 class="emb">'+esc(tr(p.label))+'</h2>'+addBtn('tips','','Add tip')+'</div>'+tipsBlock()+'</section>';
   else if(k==='videos')h+=videosBlock();
-  else if(k==='posts')h+=postsBlock(p.list);
+  else if(k==='posts'){S[p.list]=S[p.list]||[];h+=postsBlock(p.list)}
   else if(k==='donate')h+=donateBlock();
   else if(k==='contact')h+=contactBlock();
   else if(k==='feedback')h+=feedbackBlock();
   else if(k==='about')h+=aboutBlock();
   /* other pages */
-  h+='<section><div class="sh"><h2 class="emb">'+esc(u('explore'))+'</h2></div>'+tilesHtml()+'</section>';
+  h+='<section><div class="sh"><h2 class="emb">'+ut('explore')+'</h2></div>'+tilesHtml()+'</section>';
   h+=band()+'</div>';
   return h;
 }
@@ -651,61 +664,61 @@ function placesBlock(cat,filter){
   var fl=decodeURIComponent(filter||'');
   var shown=fl?list.filter(function(x){return tr(x.region)===fl}):list;
   var base='#/p/'+(cat==='temple'?'temples':'destinations');
-  var h='<section><div class="sh"><div class="subnav"><a href="'+base+'" class="'+(fl?'':'chip on')+'" style="'+(fl?'':'background:var(--char);color:var(--char-ink);border-color:var(--char)')+'">'+esc(u('all'))+' · '+num(list.length)+'</a>'+regions.map(function(r){var on=r===fl;return '<a href="'+base+'/'+encodeURIComponent(r)+'" style="'+(on?'background:var(--char);color:var(--char-ink);border-color:var(--char)':'')+'">'+I('pin')+esc(r)+'</a>'}).join('')+'</div>'+addBtn('places',cat,'Add place')+'</div>';
-  h+=shown.length?'<div class="grid">'+shown.map(placeCard).join('')+'</div>':'<div class="empty">'+esc(u('empty'))+'</div>';
+  var h='<section><div class="sh"><div class="subnav"><a href="'+base+'" class="'+(fl?'':'chip on')+'" style="'+(fl?'':'background:var(--char);color:var(--char-ink);border-color:var(--char)')+'">'+ut('all')+' · '+num(list.length)+'</a>'+regions.map(function(r){var on=r===fl;return '<a href="'+base+'/'+encodeURIComponent(r)+'" style="'+(on?'background:var(--char);color:var(--char-ink);border-color:var(--char)':'')+'">'+I('pin')+esc(r)+'</a>'}).join('')+'</div>'+addBtn('places',cat,'Add place')+'</div>';
+  h+=shown.length?'<div class="grid">'+shown.map(placeCard).join('')+'</div>':'<div class="empty">'+ut('empty')+'</div>';
   return h+'</section>';
 }
 function timeline(){
-  return S.festivals.length?'<div class="tl">'+S.festivals.map(function(f){return '<div class="ev" style="position:relative">'+(admin?'<button class="edbtn aonly" style="top:0" data-ed="festivals:'+f.id+'" aria-label="Edit">'+I('edit')+'</button>':'')+'<div class="when">'+esc(tr(f.when))+'</div><h3>'+esc(tr(f.title))+'</h3><p>'+esc(tr(f.text))+'</p></div>'}).join('')+'</div>':'<div class="empty">'+esc(u('empty'))+'</div>';
+  return S.festivals.length?'<div class="tl">'+S.festivals.map(function(f){return '<div class="ev" style="position:relative">'+(admin?'<button class="edbtn aonly" style="top:0" data-ed="festivals:'+f.id+'" aria-label="Edit">'+I('edit')+'</button>':'')+'<div class="when">'+esc(tr(f.when))+'</div><h3>'+esc(tr(f.title))+'</h3><p>'+esc(tr(f.text))+'</p></div>'}).join('')+'</div>':'<div class="empty">'+ut('empty')+'</div>';
 }
 function tipsBlock(){
   return '<div class="acc">'+S.tips.map(function(t,i){return '<details'+(i===0?' open':'')+'>'+ed('tips',t.id)+'<summary><span class="n">'+I(t.icon||'bulb')+'</span>'+esc(tr(t.title))+'</summary><div class="body">'+esc(tr(t.text))+'</div></details>'}).join('')+'</div>';
 }
 function stayBlock(){
-  var h='<section><div class="sh"><h2 class="emb">'+esc(u('areas'))+'</h2>'+addBtn('stays','','Add area')+'</div><div class="posts">'+S.stays.map(function(s){return '<div class="post">'+ed('stays',s.id)+'<div class="ph">'+pic(s,tr(s.title),s.art||'river')+'</div><div class="tx"><div class="meta"><span>'+I('pin')+esc(tr(s.region))+'</span></div><h3>'+esc(tr(s.title))+'</h3><p>'+esc(tr(s.text))+'</p><a class="more" target="_blank" rel="noopener" href="'+mapsQ('hotels in '+(s.region&&s.region.en||'')+', Cambodia')+'">'+I('bed')+' '+esc(u('openMap'))+'</a></div></div>'}).join('')+'</div></section>';
-  h+='<section><div class="sh"><h2 class="emb">'+esc(u('picks'))+'</h2>'+addBtn('hotels','','Add hotel')+'</div>'+postList(S.hotels,'hotels')+'</section>';
+  var h='<section><div class="sh"><h2 class="emb">'+ut('areas')+'</h2>'+addBtn('stays','','Add area')+'</div><div class="posts">'+S.stays.map(function(s){return '<div class="post">'+ed('stays',s.id)+'<div class="ph">'+pic(s,tr(s.title),s.art||'river')+'</div><div class="tx"><div class="meta"><span>'+I('pin')+esc(tr(s.region))+'</span></div><h3>'+esc(tr(s.title))+'</h3><p>'+esc(tr(s.text))+'</p><a class="more" target="_blank" rel="noopener" href="'+mapsQ('hotels in '+(s.region&&s.region.en||'')+', Cambodia')+'">'+I('bed')+' '+ut('openMap')+'</a></div></div>'}).join('')+'</div></section>';
+  h+='<section><div class="sh"><h2 class="emb">'+ut('picks')+'</h2>'+addBtn('hotels','','Add hotel')+'</div>'+postList(S.hotels,'hotels')+'</section>';
   return h;
 }
 function postList(list,key){
-  if(!list.length)return '<div class="empty">'+I('chat')+'<span>'+esc(u('empty'))+'</span><button class="btn sm" data-act="chat">'+esc(u('startChat'))+'</button></div>';
-  return '<div class="posts">'+list.map(function(x){var lk=url(x.link);return '<div class="post">'+ed(key,x.id)+'<div class="ph">'+pic(x,tr(x.title),'river')+'</div><div class="tx">'+(x.date?'<div class="meta"><span>'+I('calendar')+esc(x.date)+'</span></div>':'')+'<h3>'+esc(tr(x.title))+'</h3><p>'+esc(tr(x.text))+'</p>'+(lk?'<a class="more" target="_blank" rel="noopener" href="'+esc(lk)+'">'+esc(u('readMore'))+' '+I('arrow')+'</a>':'')+'</div></div>'}).join('')+'</div>';
+  if(!list.length)return '<div class="empty">'+I('chat')+'<span>'+ut('empty')+'</span><button class="btn sm" data-act="chat">'+ut('startChat')+'</button></div>';
+  return '<div class="posts">'+list.map(function(x){var lk=url(x.link);return '<div class="post">'+ed(key,x.id)+'<div class="ph">'+pic(x,tr(x.title),'river')+'</div><div class="tx">'+(x.date?'<div class="meta"><span>'+I('calendar')+esc(x.date)+'</span></div>':'')+'<h3>'+esc(tr(x.title))+'</h3><p>'+esc(tr(x.text))+'</p>'+gallery(x.gallery)+(lk?'<a class="more" target="_blank" rel="noopener" href="'+esc(lk)+'">'+ut('readMore')+' '+I('arrow')+'</a>':'')+'</div></div>'}).join('')+'</div>';
 }
-function postsBlock(key){return '<section><div class="sh"><h2 class="emb">'+esc(u('latest'))+'</h2>'+addBtn(key,'','Add post')+'</div>'+postList(S[key]||[],key)+'</section>'}
+function postsBlock(key){return '<section><div class="sh"><h2 class="emb">'+ut('latest')+'</h2>'+addBtn(key,'','Add post')+'</div>'+postList(S[key]||[],key)+'</section>'}
 function videosBlock(){
-  var h='<section><div class="sh"><h2 class="emb">'+esc(u('videos'))+'</h2>'+addBtn('videos','','Add video')+'</div><div class="grid">';
+  var h='<section><div class="sh"><h2 class="emb">'+ut('videos')+'</h2>'+addBtn('videos','','Add video')+'</div><div class="grid">';
   h+=S.videos.map(function(v){var lk=url(v.link);return '<a class="card" '+(lk?'target="_blank" rel="noopener" href="'+esc(lk)+'"':'')+'>'+ed('videos',v.id)+'<div class="ph" style="aspect-ratio:16/9">'+pic(v,tr(v.title),'river')+'<span class="play" style="width:58px;height:58px;font-size:1.4rem">'+I('play')+'</span></div><div class="tx"><h3>'+esc(tr(v.title))+'</h3>'+(tr(v.text)?'<p>'+esc(tr(v.text))+'</p>':'')+'</div></a>'}).join('');
   h+='</div></section>';
   var soc=['youtube','tiktok','facebook','instagram'].filter(function(k){return S.links[k]});
-  if(soc.length)h+='<section><div class="sh"><h2 class="emb">'+esc(u('follow'))+'</h2></div><div class="cgrid">'+soc.map(contactCard).join('')+'</div></section>';
+  if(soc.length)h+='<section><div class="sh"><h2 class="emb">'+ut('follow')+'</h2></div><div class="cgrid">'+soc.map(contactCard).join('')+'</div></section>';
   return h;
 }
 function contactCard(k){var v=S.links[k];if(!v)return '';var lk=linkOf(k,v);
-  if(k==='email'||k==='phone')return '<button class="ccard" data-copy="'+esc(v)+'"><span class="ic">'+I(k)+'</span><span style="min-width:0"><b>'+esc(u(k))+'</b><small>'+esc(v)+' · '+esc(u('copy'))+'</small></span></button>';
+  if(k==='email'||k==='phone')return '<button class="ccard" data-copy="'+esc(v)+'"><span class="ic">'+I(k)+'</span><span style="min-width:0"><b>'+esc(u(k))+'</b><small>'+esc(v)+' · '+ut('copy')+'</small></span></button>';
   return '<a class="ccard" target="_blank" rel="noopener" href="'+esc(lk)+'"><span class="ic">'+I(k)+'</span><span style="min-width:0"><b>'+esc(u(k))+'</b><small>'+esc(v)+'</small></span></a>'}
 function donateBlock(){
-  var D=S.donate,h='<section><div class="sh"><h2 class="emb">'+esc(u('support'))+'</h2></div><ul class="checks">'+D.ways.map(function(w,i){return '<li>'+I('check')+'<span'+E('donate.ways.'+i)+'>'+esc(tr(w))+'</span></li>'}).join('')+'</ul></section>';
-  h+='<section><div class="sh"><h2 class="emb">'+esc(u('payInfo'))+'</h2>'+(admin?'<button class="btn sm soft aonly" data-act="donate">'+I('edit')+' Payment details</button>':'')+'</div>';
-  h+=(D.qr||D.accName)?'<div class="qr">'+(D.qr?'<img alt="Payment QR code" src="'+D.qr+'">':'<div></div>')+'<div style="display:grid;gap:10px">'+(D.bank?'<b style="font-size:1.2rem">'+esc(D.bank)+'</b>':'')+(D.accName?'<div><small style="color:var(--muted)">'+esc(u('accountName'))+'</small><div>'+esc(D.accName)+'</div></div>':'')+(D.accNo?'<div><small style="color:var(--muted)">'+esc(u('accountNo'))+'</small><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b style="font-variant-numeric:tabular-nums;letter-spacing:.04em">'+esc(D.accNo)+'</b><button class="btn sm soft" data-copy="'+esc(D.accNo)+'">'+esc(u('copy'))+'</button></div></div>':'')+'</div></div>':'<div class="empty">'+I('donate')+'<span>'+esc(u('joinTripSub'))+'</span><button class="btn sm" data-act="chat">'+esc(u('startChat'))+'</button></div>';
-  h+='</section><section><div class="sh"><h2 class="emb">'+esc(u('giveWell'))+'</h2></div><div class="acc">'+D.tips.map(function(t,i){return '<details'+(i===0?' open':'')+'><summary><span class="n">'+I('info')+'</span><span'+E('donate.tips.'+i+'.title')+'>'+esc(tr(t.title))+'</span></summary><div class="body"'+E('donate.tips.'+i+'.text')+'>'+esc(tr(t.text))+'</div></details>'}).join('')+'</div></section>';
+  var D=S.donate,h='<section><div class="sh"><h2 class="emb">'+ut('support')+'</h2>'+(admin?'<button class="btn sm soft aonly" data-arr="donate.ways">'+I('edit')+' Edit list</button>':'')+'</div><ul class="checks">'+D.ways.map(function(w,i){return '<li>'+I('check')+'<span'+E('donate.ways.'+i)+'>'+esc(tr(w))+'</span></li>'}).join('')+'</ul></section>';
+  h+='<section><div class="sh"><h2 class="emb">'+ut('payInfo')+'</h2>'+(admin?'<button class="btn sm soft aonly" data-act="donate">'+I('edit')+' Payment details</button>':'')+'</div>';
+  h+=(D.qr||D.accName)?'<div class="qr">'+(D.qr?'<img alt="Payment QR code" src="'+D.qr+'">':'<div></div>')+'<div style="display:grid;gap:10px">'+(D.bank?'<b style="font-size:1.2rem">'+esc(D.bank)+'</b>':'')+(D.accName?'<div><small style="color:var(--muted)">'+ut('accountName')+'</small><div>'+esc(D.accName)+'</div></div>':'')+(D.accNo?'<div><small style="color:var(--muted)">'+ut('accountNo')+'</small><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b style="font-variant-numeric:tabular-nums;letter-spacing:.04em">'+esc(D.accNo)+'</b><button class="btn sm soft" data-copy="'+esc(D.accNo)+'">'+ut('copy')+'</button></div></div>':'')+'</div></div>':'<div class="empty">'+I('donate')+'<span>'+ut('joinTripSub')+'</span><button class="btn sm" data-act="chat">'+ut('startChat')+'</button></div>';
+  h+='</section><section><div class="sh"><h2 class="emb">'+ut('giveWell')+'</h2>'+(admin?'<button class="btn sm soft aonly" data-arr="donate.tips">'+I('edit')+' Edit list</button>':'')+'</div><div class="acc">'+D.tips.map(function(t,i){return '<details'+(i===0?' open':'')+'><summary><span class="n">'+I('info')+'</span><span'+E('donate.tips.'+i+'.title')+'>'+esc(tr(t.title))+'</span></summary><div class="body"'+E('donate.tips.'+i+'.text')+'>'+esc(tr(t.text))+'</div></details>'}).join('')+'</div></section>';
   return h;
 }
 function contactBlock(){
-  var h='<section><div class="sh"><h2 class="emb">'+esc(u('contactWays'))+'</h2>'+(admin?'<button class="btn sm soft aonly" data-act="links">'+I('edit')+' Edit links</button>':'')+'</div><div class="cgrid">'+LINKS.map(contactCard).join('')+'</div></section>';
-  h+='<section><div class="sh"><h2 class="emb">'+esc(u('writeMe'))+'</h2></div>'+composer('contact')+'</section>';
+  var h='<section><div class="sh"><h2 class="emb">'+ut('contactWays')+'</h2>'+(admin?'<button class="btn sm soft aonly" data-act="links">'+I('edit')+' Edit links</button>':'')+'</div><div class="cgrid">'+LINKS.map(contactCard).join('')+'</div></section>';
+  h+='<section><div class="sh"><h2 class="emb">'+ut('writeMe')+'</h2></div>'+composer('contact')+'</section>';
   return h;
 }
 function composer(kind){
-  return '<form class="form" data-form="'+kind+'" novalidate>'+(kind==='feedback'?'<div><label class="f" style="margin-bottom:6px">'+esc(u('rate'))+'</label><div class="stars" role="radiogroup">'+[1,2,3,4,5].map(function(n){return '<button type="button" data-star="'+n+'" aria-label="'+n+' stars">'+I('star')+'</button>'}).join('')+'</div></div>':'')+
-   '<label class="f">'+esc(u('name'))+'<input id="c-name-'+kind+'" autocomplete="name"></label><label class="f">'+esc(u('message'))+'<textarea id="c-msg-'+kind+'"></textarea></label>'+
-   '<div style="display:flex;gap:8px;flex-wrap:wrap">'+(S.links.email?'<button class="btn" type="submit" data-send="email">'+I('mail')+esc(u('sendEmail'))+'</button>':'')+(S.links.messenger?'<button class="btn soft" type="button" data-send="messenger">'+I('messenger')+esc(u('sendMsgr'))+'</button>':'')+'</div></form>';
+  return '<form class="form" data-form="'+kind+'" novalidate>'+(kind==='feedback'?'<div><label class="f" style="margin-bottom:6px">'+ut('rate')+'</label><div class="stars" role="radiogroup">'+[1,2,3,4,5].map(function(n){return '<button type="button" data-star="'+n+'" aria-label="'+n+' stars">'+I('star')+'</button>'}).join('')+'</div></div>':'')+
+   '<label class="f">'+ut('name')+'<input id="c-name-'+kind+'" autocomplete="name"></label><label class="f">'+ut('message')+'<textarea id="c-msg-'+kind+'"></textarea></label>'+
+   '<div style="display:flex;gap:8px;flex-wrap:wrap">'+(S.links.email?'<button class="btn" type="submit" data-send="email">'+I('mail')+ut('sendEmail')+'</button>':'')+(S.links.messenger?'<button class="btn soft" type="button" data-send="messenger">'+I('messenger')+ut('sendMsgr')+'</button>':'')+'</div></form>';
 }
 function feedbackBlock(){return '<section>'+composer('feedback')+'</section>'}
 function aboutBlock(){
   var A=S.about;
   var h='<section><div class="aboutgrid"><div class="portrait">'+(A.photo||S.brand.logo?'<img alt="Thean" src="'+(A.photo||S.brand.logo)+'">':'')+'</div><div class="prose">'+(admin?'<button class="btn sm soft aonly" data-act="aboutphoto" style="margin-bottom:12px">'+I('image')+' Photo</button>':'')+String(tr(A.bio)).split(/\n\n+/).map(function(par,i){return '<p>'+esc(par)+'</p>'}).join('')+(admin?'<button class="btn sm aonly" data-act="aboutbio">'+I('edit')+' Edit bio</button>':'')+
-   '<div class="stats" style="margin-top:18px;grid-template-columns:repeat(2,1fr)"><div class="stat"><b>'+esc(S.stats.followers)+'</b><span>'+esc(u('followers'))+'</span></div><div class="stat"><b>'+esc(S.stats.posts)+'</b><span>'+esc(u('postsN'))+'</span></div></div></div></div></section>';
-  h+='<section><div class="sh"><h2 class="emb">'+esc(u('whatIDo'))+'</h2></div><div class="grid">'+A.does.map(function(d,i){return '<div class="card" style="padding:20px;gap:8px"><span class="ccard" style="border:0;padding:0;background:transparent"><span class="ic">'+I(d.icon)+'</span><b'+E('about.does.'+i+'.title')+'>'+esc(tr(d.title))+'</b></span><p style="-webkit-line-clamp:unset"'+E('about.does.'+i+'.text')+'>'+esc(tr(d.text))+'</p></div>'}).join('')+'</div></section>';
-  h+='<section><div class="sh"><h2 class="emb">'+esc(u('collab'))+'</h2></div><ul class="checks">'+A.collab.map(function(c,i){return '<li>'+I('check')+'<span'+E('about.collab.'+i)+'>'+esc(tr(c))+'</span></li>'}).join('')+'</ul></section>';
+   '<div class="stats" style="margin-top:18px;grid-template-columns:repeat(2,1fr)"><div class="stat"><b>'+esc(S.stats.followers)+'</b><span>'+ut('followers')+'</span></div><div class="stat"><b>'+esc(S.stats.posts)+'</b><span>'+ut('postsN')+'</span></div></div></div></div></section>';
+  h+='<section><div class="sh"><h2 class="emb">'+ut('whatIDo')+'</h2>'+(admin?'<button class="btn sm soft aonly" data-arr="about.does">'+I('edit')+' Edit list</button>':'')+'</div><div class="grid">'+A.does.map(function(d,i){return '<div class="card" style="padding:20px;gap:8px"><span class="ccard" style="border:0;padding:0;background:transparent"><span class="ic">'+I(d.icon)+'</span><b'+E('about.does.'+i+'.title')+'>'+esc(tr(d.title))+'</b></span><p style="-webkit-line-clamp:unset"'+E('about.does.'+i+'.text')+'>'+esc(tr(d.text))+'</p></div>'}).join('')+'</div></section>';
+  h+='<section><div class="sh"><h2 class="emb">'+ut('collab')+'</h2>'+(admin?'<button class="btn sm soft aonly" data-arr="about.collab">'+I('edit')+' Edit list</button>':'')+'</div><ul class="checks">'+A.collab.map(function(c,i){return '<li>'+I('check')+'<span'+E('about.collab.'+i)+'>'+esc(tr(c))+'</span></li>'}).join('')+'</ul></section>';
   return h;
 }
 
@@ -715,24 +728,25 @@ function renderPlace(p){
   var h=banner(p.id,tr(p.title),null,p.img,kind,' / <a href="#/p/'+pg+'">'+esc(tr(pp&&pp.label))+'</a>');
   h+='<div class="wrap"><section style="padding-top:32px"><div class="detail"><div class="prose">'+(admin?'<button class="btn sm aonly" data-ed="places:'+p.id+'" style="margin-bottom:14px">'+I('edit')+' Edit this place</button>':'')+
     '<p style="font-size:1.2rem;font-weight:500">'+esc(tr(p.sum))+'</p>'+String(tr(p.body)).split(/\n\n+/).filter(Boolean).map(function(x){return '<p>'+esc(x)+'</p>'}).join('')+
-    (tr(p.tip)?'<div class="tipbox">'+I('bulb')+'<div><b>'+esc(u('tip'))+'</b><div>'+esc(tr(p.tip))+'</div></div></div>':'')+
-    (p.link?'<a class="btn" target="_blank" rel="noopener" href="'+esc(url(p.link))+'">'+I('play')+esc(u('watch'))+'</a>':'')+'</div>';
+    (tr(p.tip)?'<div class="tipbox">'+I('bulb')+'<div><b>'+ut('tip')+'</b><div>'+esc(tr(p.tip))+'</div></div></div>':'')+
+    gallery(p.gallery)+(p.link?'<a class="btn" target="_blank" rel="noopener" href="'+esc(url(p.link))+'">'+I('play')+ut('watch')+'</a>':'')+'</div>';
   h+='<aside class="facts">'+(p.region?fact('pin',u('region'),tr(p.region)):'')+(tr(p.built)?fact('clock',u('built'),tr(p.built)):'')+(tr(p.best)?fact('sun',u('bestTime'),tr(p.best)):'')+(tr(p.getting)?fact('car',u('gettingThere'),tr(p.getting)):'')+
-    '<div class="fact" style="grid-template-columns:1fr"><a class="btn" style="justify-content:center" target="_blank" rel="noopener" href="'+mapsQ(p.mapq||((p.title&&p.title.en)+', Cambodia'))+'">'+I('pin')+esc(u('openMap'))+'</a></div></aside></div></section>';
+    '<div class="fact" style="grid-template-columns:1fr"><a class="btn" style="justify-content:center" target="_blank" rel="noopener" href="'+mapsQ(p.mapq||((p.title&&p.title.en)+', Cambodia'))+'">'+I('pin')+ut('openMap')+'</a></div></aside></div></section>';
   var rel=S.places.filter(function(x){return x.cat===p.cat&&x.id!==p.id}).slice(0,6);
-  if(rel.length)h+='<section><div class="sh"><h2 class="emb">'+esc(u('related'))+'</h2></div><div class="rail">'+rel.map(placeCard).join('')+'</div></section>';
+  if(rel.length)h+='<section><div class="sh"><h2 class="emb">'+ut('related')+'</h2></div><div class="rail">'+rel.map(placeCard).join('')+'</div></section>';
   h+=band()+'</div>';
   return h;
 }
+function gallery(arr){if(!arr||!arr.length)return '';return '<div class="gal">'+arr.map(function(g,i){return '<button type="button" class="galb" data-zoom="'+i+'"><img loading="lazy" alt="" src="'+g+'"></button>'}).join('')+'</div>'}
 function fact(ic,k,v){return '<div class="fact"><span class="fi">'+I(ic)+'</span><div><b>'+esc(k)+'</b><span>'+esc(v)+'</span></div></div>'}
 
 /* ---------- FOOTER ---------- */
 function footer(){
   var L=S.links;
-  return '<footer><div class="wrap"><div class="fb"><div class="brand"><span class="logo">'+(S.brand.logo?'<img alt="" src="'+S.brand.logo+'">':'')+'</span><b>'+esc(S.brand.name)+'</b></div><p style="opacity:.75;max-width:24rem;font-size:.92rem">'+esc(u('aboutShort'))+'</p><div class="soc">'+['facebook','messenger','telegram','tiktok','youtube','instagram'].filter(function(k){return L[k]}).map(function(k){return '<a target="_blank" rel="noopener" aria-label="'+k+'" href="'+esc(linkOf(k,L[k]))+'">'+I(k)+'</a>'}).join('')+'</div></div>'+
-   '<div><h4>'+esc(u('quickLinks'))+'</h4>'+S.pages.slice(0,7).map(function(p){return '<a href="#/p/'+p.id+'">'+esc(tr(p.label))+'</a>'}).join('')+'</div>'+
+  return '<footer><div class="wrap"><div class="fb"><div class="brand"><span class="logo">'+(S.brand.logo?'<img alt="" src="'+S.brand.logo+'">':'')+'</span><b>'+esc(S.brand.name)+'</b></div><p style="opacity:.75;max-width:24rem;font-size:.92rem">'+ut('aboutShort')+'</p><div class="soc">'+['facebook','messenger','telegram','tiktok','youtube','instagram'].filter(function(k){return L[k]}).map(function(k){return '<a target="_blank" rel="noopener" aria-label="'+k+'" href="'+esc(linkOf(k,L[k]))+'">'+I(k)+'</a>'}).join('')+'</div></div>'+
+   '<div><h4>'+ut('quickLinks')+'</h4>'+S.pages.slice(0,7).map(function(p){return '<a href="#/p/'+p.id+'">'+esc(tr(p.label))+'</a>'}).join('')+'</div>'+
    '<div><h4>&nbsp;</h4>'+S.pages.slice(7).map(function(p){return '<a href="#/p/'+p.id+'">'+esc(tr(p.label))+'</a>'}).join('')+(L.email?'<a href="mailto:'+esc(L.email)+'">'+esc(L.email)+'</a>':'')+'</div>'+
-   '<div class="copy">© '+new Date().getFullYear()+' '+esc(S.brand.name)+(L.website?' · '+esc(L.website):'')+'. '+esc(u('rights'))+' · <a href="agent.html" style="display:inline;opacity:.7">'+(lang==='km'?'ចូលសម្រាប់ភ្នាក់ងារ':'Agent login')+'</a></div></div></footer>';
+   '<div class="copy">© '+new Date().getFullYear()+' '+esc(S.brand.name)+(L.website?' · '+esc(L.website):'')+'. '+ut('rights')+' · <a href="agent.html" style="display:inline;opacity:.7">'+(lang==='km'?'ចូលសម្រាប់ភ្នាក់ងារ':'Agent login')+'</a></div></div></footer>';
 }
 
 /* ---------- CHAT ---------- */
@@ -763,13 +777,15 @@ function copy(v){function ok(){toast(u('copied')+': '+v)}try{navigator.clipboard
 var stars=0;
 app.addEventListener('click',function(e){
   var t=e.target.closest('button,a');if(!t)return;
-  if(editing&&t.closest('[data-edit]')&&!t.hasAttribute('data-ed')){if(t.tagName==='A')e.preventDefault();return}
+  if(editing&&e.target.closest('[data-edit]')&&!t.hasAttribute('data-ed')){e.preventDefault();return}
   var d=t.dataset;
   if(d.ed){e.preventDefault();e.stopPropagation();var a=d.ed.split(':');editItem(a[0],a[1]);return}
   if(d.add!=null){var b=d.add.split(':');editItem(b[0],null,b[1]);return}
   if(d.lang){lang=d.lang;try{localStorage.setItem('thean-lang',lang)}catch(x){}render();return}
   if(d.slide){go(cur+(+d.slide));startAuto();return}
   if(d.dot!=null){go(+d.dot);startAuto();return}
+  if(d.zoom!=null){e.preventDefault();zoom(t.querySelector('img').src);return}
+  if(d.arr){editArr(d.arr);return}
   if(d.copy!=null){copy(d.copy);return}
   if(d.topic){chatTopic=d.topic;render();return}
   if(d.star){stars=+d.star;t.parentNode.querySelectorAll('button').forEach(function(x,i){x.classList.toggle('on',i<stars)});return}
@@ -784,6 +800,7 @@ app.addEventListener('click',function(e){
     case 'mapimg':pickImage(1400,function(x){S.mapImg=x;changed()});return;
     case 'aboutphoto':pickImage(800,function(x){S.about.photo=x;changed()});return;
     case 'aboutbio':bioForm();return;
+    case 'msgvideo':editObj('message.video',SCHEMA.videos,'Video under the message',true);return;
     case 'logo':pickImage(400,function(x){S.brand.logo=x;changed()});return;
     case 'edit':editing=!editing;render();return;
     case 'export':exportFile();return;
@@ -818,13 +835,13 @@ function publish(){
   .catch(function(e){render();toast('Not published: '+(e&&e.code||e&&e.message||'error')+'. Check the database rules.')});
 }
 function adminBar(){
-  return '<div class="adminbar"><button class="btn sm soft" data-act="edit">'+I(editing?'check':'edit')+(editing?' Preview':' Edit')+'</button><button class="btn sm soft" data-act="logo">'+I('image')+' Logo</button><button class="btn sm soft" data-act="links">'+I('link')+' Links</button><button class="btn sm" data-act="publish"'+(dirty?'':' disabled')+'>'+I('globe')+' Publish</button>'+(dirty?'<button class="btn sm del" data-act="discard">Discard</button>':'')+'<button class="btn sm soft" data-act="export" title="Download a backup copy of the website">'+I('download')+' Backup</button><a class="btn sm soft" href="agent">'+I('chat')+' Inbox</a><button class="btn sm soft" data-act="exit">Sign out</button><span class="st">'+(dirty?'Unpublished changes (saved in this browser) · ':'Everything is published · ')+'Editing '+(lang==='km'?'Khmer':'English')+(adminUser&&adminUser.agent?' · '+esc(adminUser.agent.name||adminUser.email):'')+'</span></div>';
+  return '<div class="adminbar"><button class="btn sm soft" data-act="edit">'+I(editing?'check':'edit')+(editing?' Preview':' Edit')+'</button><button class="btn sm soft" data-act="logo">'+I('image')+' Logo</button><button class="btn sm soft" data-act="links">'+I('link')+' Links</button><button class="btn sm" data-act="publish"'+(dirty?'':' disabled')+'>'+I('globe')+' Publish</button>'+(dirty?'<button class="btn sm del" data-act="discard">Discard</button>':'')+'<button class="btn sm soft" data-act="export" title="Download a backup copy of the website">'+I('download')+' Backup</button><a class="btn sm soft" href="agent">'+I('chat')+' Inbox</a><button class="btn sm soft" data-act="exit">Sign out</button><span class="st">'+(dirty?'Unpublished changes (saved in this browser) · ':'Everything is published · ')+'Editing '+(lang==='km'?'Khmer':'English')+(adminUser&&adminUser.agent?' · '+esc(adminUser.agent.name||adminUser.email):'')+' · '+(function(){var mb=JSON.stringify(S).length/1048576;return (mb>8?'⚠️ ':'')+mb.toFixed(1)+' MB'+(mb>8?' (large: remove some photos)':'')})()+'</span></div>';
 }
 function changed(re){dirty=true;try{localStorage.setItem(DRAFT_KEY,JSON.stringify(S))}catch(e){toast('Browser storage is full. Publish now to keep your changes.')}if(re!==false)render();else{var pb=app.querySelector('[data-act="publish"]');if(pb)pb.disabled=false;var st=app.querySelector('.adminbar .st');if(st&&st.textContent.indexOf('Unpublished')<0)st.textContent='Unpublished changes (saved in this browser) · '+st.textContent.replace('Everything is published · ','')}}
 var armDiscard=false;
 function discard(){if(!armDiscard){armDiscard=true;toast('Tap Discard again to remove all unsaved changes');setTimeout(function(){armDiscard=false},4000);return}
   try{localStorage.removeItem(DRAFT_KEY)}catch(e){}S=BASE;dirty=false;armDiscard=false;render();toast('Changes discarded')}
-function setPath(path,val){var k=path.split('.'),o=S;for(var i=0;i<k.length-1;i++)o=o[k[i]];var last=k[k.length-1];
+function setPath(path,val){var k=path.split('.'),o=S;if(k[0]==='ui'){S.ui=S.ui||{};if(!S.ui[k[1]])S.ui[k[1]]={en:UI.en[k[1]]||'',km:UI.km[k[1]]||''}}for(var i=0;i<k.length-1;i++)o=o[k[i]];var last=k[k.length-1];
   if(o[last]&&typeof o[last]==='object')o[last][lang]=val;else o[last]=val}
 app.addEventListener('input',function(e){var el=e.target.closest&&e.target.closest('[data-edit]');if(!el)return;setPath(el.dataset.edit,el.innerText.replace(/\n{3,}/g,'\n\n').trim());changed(false)});
 
@@ -835,47 +852,89 @@ function modal(title,inner){var m=document.createElement('div');m.className='mod
   m.addEventListener('click',function(e){if(e.target===m||e.target.closest('[data-close]'))m.remove()});document.body.appendChild(m);return m}
 
 /* field schemas: [key,label,type] type: bi | biarea | text | img | select:<a,b> | icon */
-var ICONS=['pin','temple','lotus','bed','compass','video','social','donate','bell','mail','thumb','user','info','sun','car','clock','bulb','calendar','globe','wave','hills','star','chat'];
+var ICONS=['pin','temple','lotus','bed','compass','video','social','donate','bell','mail','thumb','user','info','sun','car','clock','bulb','calendar','globe','wave','hills','star','chat','image','home','phone','link','play','check'];
+function schemaOf(list){return SCHEMA[list]||SCHEMA.post}
 var SCHEMA={
- places:[['title','Name','bi'],['region','Province','bi'],['cat','Section','select:destination,temple,culture'],['img','Photo','img'],['art','Drawing if no photo','select:hills,sea,river,temple,culture'],['featured','Show on home page','check'],['sum','Short summary','biarea'],['body','Full story (blank line = new paragraph)','biarea'],['built','Built / era (temples)','bi'],['best','Best time','bi'],['getting','Getting there','biarea'],['tip','Your tip','biarea'],['mapq','Google Maps search words','text'],['link','Video link','text']],
+ places:[['title','Name','bi'],['region','Province','bi'],['cat','Section','select:destination,temple,culture'],['img','Main photo','img'],['gallery','More photos','imgs'],['art','Drawing if no photo','select:hills,sea,river,temple,culture'],['featured','Show on home page','check'],['sum','Short summary','biarea'],['body','Full story (blank line = new paragraph)','biarea'],['built','Built / era (temples)','bi'],['best','Best time','bi'],['getting','Getting there','biarea'],['tip','Your tip','biarea'],['mapq','Google Maps search words','text'],['link','Video link','text']],
  festivals:[['title','Name','bi'],['when','When','bi'],['text','Description','biarea']],
  tips:[['title','Title','bi'],['icon','Icon','icon'],['text','Text','biarea']],
- stays:[['title','Area name','bi'],['region','Province','bi'],['img','Photo','img'],['art','Drawing if no photo','select:hills,sea,river,temple'],['text','Description','biarea']],
- hotels:[['title','Hotel name','bi'],['img','Photo','img'],['text','Why you like it','biarea'],['link','Booking or map link','text']],
- social:[['title','Title','bi'],['date','Date','text'],['img','Photo','img'],['text','Story','biarea'],['link','Link','text']],
- news:[['title','Title','bi'],['date','Date','text'],['img','Photo','img'],['text','Text','biarea'],['link','Link','text']],
+ stays:[['title','Area name','bi'],['region','Province','bi'],['img','Photo','img'],['gallery','More photos','imgs'],['art','Drawing if no photo','select:hills,sea,river,temple'],['text','Description','biarea']],
+ hotels:[['title','Hotel name','bi'],['img','Photo','img'],['gallery','More photos','imgs'],['text','Why you like it','biarea'],['link','Booking or map link','text']],
+ social:[['title','Title','bi'],['date','Date','text'],['img','Photo','img'],['gallery','More photos','imgs'],['text','Story','biarea'],['link','Link','text']],
+ news:[['title','Title','bi'],['date','Date','text'],['img','Photo','img'],['gallery','More photos','imgs'],['text','Text','biarea'],['link','Link','text']],
  videos:[['title','Title','bi'],['img','Cover image','img'],['text','Short description','biarea'],['link','Video link (YouTube, TikTok, Facebook)','text']],
- pages:[['label','Page name','bi'],['hint','Small line under icon','bi'],['icon','Icon','icon']]
+ pages:[['label','Page name','bi'],['hint','Small line under icon','bi'],['icon','Icon','icon'],['intro','Introduction text','biarea']],
+ post:[['title','Title','bi'],['date','Date','text'],['img','Main photo','img'],['gallery','More photos','imgs'],['text','Text','biarea'],['link','Link (video, Facebook post…)','text']]
 };
 function fieldHtml(f,v){var k=f[0],lab=f[1],t=f[2];v=v==null?'':v;
   if(t==='bi'||t==='biarea'){var a=t==='biarea';v=typeof v==='object'?v:{en:v,km:''};return '<div class="two">'+['en','km'].map(function(L){return '<label class="f">'+esc(lab)+' ('+(L==='en'?'English':'Khmer')+')'+(a?'<textarea data-k="'+k+'" data-l="'+L+'">'+esc(v[L]||'')+'</textarea>':'<input data-k="'+k+'" data-l="'+L+'" value="'+esc(v[L]||'')+'">')+'</label>'}).join('')+'</div>'}
   if(t==='img')return '<div class="imgpick"><div class="pv" data-pv="'+k+'">'+(v?'<img alt="" src="'+v+'">':'')+'</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm" type="button" data-pick="'+k+'">'+I('image')+' '+esc(lab)+'</button>'+(v?'<button class="btn sm del" type="button" data-unpick="'+k+'">Remove</button>':'')+'</div></div>';
+  if(t==='imgs'){v=Array.isArray(v)?v:[];return '<div class="f"><b style="font-size:.84rem;color:var(--muted)">'+esc(lab)+'</b><div class="galed" data-gal="'+k+'">'+v.map(function(g,i){return '<span><img alt="" src="'+g+'"><button type="button" data-gdel="'+k+':'+i+'" aria-label="Remove photo">✕</button></span>'}).join('')+'<button type="button" class="btn sm soft" data-gadd="'+k+'">'+I('plus')+' Add photos</button></div></div>'}
   if(t==='check')return '<label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-k="'+k+'" style="width:auto"'+(v?' checked':'')+'> '+esc(lab)+'</label>';
   if(t.indexOf('select:')===0)return '<label class="f">'+esc(lab)+'<select data-k="'+k+'">'+t.slice(7).split(',').map(function(o){return '<option'+(o===v?' selected':'')+'>'+o+'</option>'}).join('')+'</select></label>';
   if(t==='icon')return '<label class="f">'+esc(lab)+'<select data-k="'+k+'">'+ICONS.map(function(o){return '<option'+(o===v?' selected':'')+'>'+o+'</option>'}).join('')+'</select></label>';
   return '<label class="f">'+esc(lab)+'<input data-k="'+k+'" value="'+esc(v)+'"></label>';
 }
-function editItem(list,id,preset){
-  var arr=S[list],it=id?arr.find(function(x){return x.id===id}):null,isNew=!it;
-  var o=isNew?{id:list==='pages'?uid():(uid()),cat:preset||undefined,date:list==='news'||list==='social'?new Date().toISOString().slice(0,10):undefined}:JSON.parse(JSON.stringify(it));
-  var imgs={img:o.img||''};
-  var m=modal((isNew?'Add ':'Edit ')+list.replace(/s$/,''),SCHEMA[list].map(function(f){return fieldHtml(f,o[f[0]])}).join('')+
-    '<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">'+(isNew||list==='pages'?'':'<button class="btn del" type="button" data-del>Delete</button>')+'<button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-ok>'+(isNew?'Add':'Update')+'</button></div>');
+function pickImages(maxW,cb){var i=document.createElement('input');i.type='file';i.accept='image/*';i.multiple=true;
+  i.onchange=function(){var files=[].slice.call(i.files||[]),out=[],n=files.length;if(!n)return;files.forEach(function(f,ix){var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var sc=Math.min(1,maxW/im.width),c=document.createElement('canvas');c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);c.getContext('2d').drawImage(im,0,0,c.width,c.height);out[ix]=c.toDataURL('image/jpeg',.76);if(--n===0)cb(out.filter(Boolean))};im.onerror=function(){if(--n===0)cb(out.filter(Boolean))};im.src=r.result};r.readAsDataURL(f)})};i.click()}
+function formWire(m,o,schema){
+  var imgs={},gals={};schema.forEach(function(f){if(f[2]==='img')imgs[f[0]]=o[f[0]]||'';if(f[2]==='imgs')gals[f[0]]=(o[f[0]]||[]).slice()});
+  function redrawGal(k){var box=m.querySelector('[data-gal="'+k+'"]');var tmp=document.createElement('div');tmp.innerHTML=fieldHtml([k,'','imgs'],gals[k]);box.replaceWith(tmp.querySelector('[data-gal]'))}
   m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
     if(b.dataset.pick){var key=b.dataset.pick;pickImage(1400,function(x){imgs[key]=x;m.querySelector('[data-pv="'+key+'"]').innerHTML='<img alt="" src="'+x+'">'})}
     if(b.dataset.unpick){imgs[b.dataset.unpick]='';m.querySelector('[data-pv="'+b.dataset.unpick+'"]').innerHTML='';b.remove()}
-    if(b.hasAttribute('data-del')){if(!b.dataset.armed){b.dataset.armed=1;b.textContent='Tap again to delete';return}S[list]=arr.filter(function(x){return x.id!==id});m.remove();if(list==='places'&&route().name==='place')location.hash='#/';changed()}
-    if(b.hasAttribute('data-ok')){
-      SCHEMA[list].forEach(function(f){var k=f[0],t=f[2];
-        if(t==='bi'||t==='biarea'){o[k]={en:m.querySelector('[data-k="'+k+'"][data-l="en"]').value.trim(),km:m.querySelector('[data-k="'+k+'"][data-l="km"]').value.trim()}}
-        else if(t==='img')o[k]=imgs[k]||'';
-        else if(t==='check')o[k]=m.querySelector('[data-k="'+k+'"]').checked;
-        else o[k]=m.querySelector('[data-k="'+k+'"]').value.trim()});
-      if(o.title&&!o.title.en&&!o.title.km&&list!=='pages'){toast('Add a name first');return}
-      if(isNew)arr.unshift(o);else S[list]=arr.map(function(x){return x.id===id?o:x});
-      m.remove();changed()}
+    if(b.dataset.gadd){var gk=b.dataset.gadd;pickImages(1200,function(list){gals[gk]=gals[gk].concat(list);redrawGal(gk)})}
+    if(b.dataset.gdel){var p=b.dataset.gdel.split(':');gals[p[0]].splice(+p[1],1);redrawGal(p[0])}
+  });
+  return function collect(){var r={};schema.forEach(function(f){var k=f[0],t=f[2];
+    if(t==='bi'||t==='biarea'){r[k]={en:m.querySelector('[data-k="'+k+'"][data-l="en"]').value.trim(),km:m.querySelector('[data-k="'+k+'"][data-l="km"]').value.trim()}}
+    else if(t==='img')r[k]=imgs[k]||'';else if(t==='imgs')r[k]=gals[k]||[];
+    else if(t==='check')r[k]=m.querySelector('[data-k="'+k+'"]').checked;
+    else r[k]=m.querySelector('[data-k="'+k+'"]').value.trim()});return r};
+}
+function editItem(list,id,preset){
+  S[list]=S[list]||[];
+  var arr=S[list],schema=schemaOf(list),it=id?arr.find(function(x){return x.id===id}):null,isNew=!it;
+  var o=isNew?{id:uid(),cat:preset&&preset!=='custom'?preset:undefined,date:/news|social|^cp_/.test(list)?new Date().toISOString().slice(0,10):undefined}:JSON.parse(JSON.stringify(it));
+  if(list==='pages'&&isNew){o.custom=true;o.kind='posts';o.list='cp_'+o.id;o.icon='star';o.art='hills'}
+  var idx=arr.indexOf(it),canDel=!isNew&&(list!=='pages'||o.custom);
+  var m=modal((isNew?'Add ':'Edit ')+(list==='pages'?'page':list.replace(/^cp_.*/,'post').replace(/s$/,'')),schema.map(function(f){return fieldHtml(f,o[f[0]])}).join('')+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">'+(!isNew&&arr.length>1?'<button class="btn soft" type="button" data-mv="-1">'+I('up')+' Move earlier</button><button class="btn soft" type="button" data-mv="1">'+I('down')+' Move later</button>':'')+(canDel?'<button class="btn del" type="button" data-del>Delete</button>':'')+'<button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-ok>'+(isNew?'Add':'Update')+'</button></div>');
+  var collect=formWire(m,o,schema);
+  m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+    if(b.dataset.mv){var j=idx+(+b.dataset.mv);if(j<0||j>=arr.length)return;arr.splice(idx,1);arr.splice(j,0,it);m.remove();changed();toast('Moved')}
+    if(b.hasAttribute('data-del')){if(!b.dataset.armed){b.dataset.armed=1;b.textContent='Tap again to delete';return}S[list]=arr.filter(function(x){return x.id!==id});if(list==='pages'&&o.list)delete S[o.list];m.remove();if((list==='places'&&route().name==='place')||(list==='pages'&&route().id===id))location.hash='#/';changed()}
+    if(b.hasAttribute('data-ok')){var r=collect();Object.keys(r).forEach(function(k){o[k]=r[k]});
+      var tt=o.title||o.label;if(tt&&!tt.en&&!tt.km){toast('Add a name first');return}
+      if(isNew){if(list==='pages'){arr.push(o);S[o.list]=S[o.list]||[]}else arr.unshift(o)}else S[list]=arr.map(function(x){return x.id===id?o:x});
+      m.remove();changed();if(isNew&&list==='pages')location.hash='#/p/'+o.id}
   });
 }
+function getPath(p){return p.split('.').reduce(function(o,k){return o==null?o:o[k]},S)}
+function setObj(p,v){var k=p.split('.'),o=S;for(var i=0;i<k.length-1;i++){o[k[i]]=o[k[i]]||{};o=o[k[i]]}o[k[k.length-1]]=v}
+function editObj(path,schema,title,removable){
+  var cur=getPath(path),o=cur?JSON.parse(JSON.stringify(cur)):{id:uid()};
+  var m=modal(title,schema.map(function(f){return fieldHtml(f,o[f[0]])}).join('')+'<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">'+(removable&&cur?'<button class="btn del" type="button" data-del>Remove</button>':'')+'<button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-ok>Update</button></div>');
+  var collect=formWire(m,o,schema);
+  m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+    if(b.hasAttribute('data-del')){setObj(path,null);m.remove();changed()}
+    if(b.hasAttribute('data-ok')){var r=collect();Object.keys(r).forEach(function(k){o[k]=r[k]});setObj(path,o);m.remove();changed()}});
+}
+var ARRS={'about.does':{title:'What we share',schema:[['icon','Icon','icon'],['title','Title','bi'],['text','Text','biarea']]},'about.collab':{title:'Work with us',plain:true},'donate.ways':{title:'Ways to support',plain:true},'donate.tips':{title:'Give responsibly',schema:[['title','Title','bi'],['text','Text','biarea']]}};
+function editArr(path){
+  var cfg=ARRS[path],L=JSON.parse(JSON.stringify(getPath(path)||[]));
+  var schema=cfg.plain?[['v','Text','biarea']]:cfg.schema;
+  var m=modal(cfg.title,'<div id="al" style="display:grid;gap:12px"></div><button class="btn soft" type="button" data-aadd>'+I('plus')+' Add item</button><div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-ok>Update</button></div>');
+  function read(){var rows=m.querySelectorAll('[data-row]');L=[].map.call(rows,function(row){var o={};schema.forEach(function(f){var k=f[0];if(f[2]==='bi'||f[2]==='biarea')o[k]={en:row.querySelector('[data-k="'+k+'"][data-l="en"]').value.trim(),km:row.querySelector('[data-k="'+k+'"][data-l="km"]').value.trim()};else o[k]=row.querySelector('[data-k="'+k+'"]').value});return cfg.plain?o.v:o})}
+  function draw(){m.querySelector('#al').innerHTML=L.map(function(x,i){var o=cfg.plain?{v:x}:x;return '<div data-row style="border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:8px">'+schema.map(function(f){return fieldHtml(f,o[f[0]])}).join('')+'<div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn sm soft" type="button" data-amv="'+i+'" data-d="-1">'+I('up')+'</button><button class="btn sm soft" type="button" data-amv="'+i+'" data-d="1">'+I('down')+'</button><button class="btn sm del" type="button" data-arm="'+i+'">Remove</button></div></div>'}).join('')||'<div class="empty">No items yet.</div>'}
+  draw();
+  m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+    if(b.hasAttribute('data-aadd')){read();L.push(cfg.plain?{en:'',km:''}:{icon:'star',title:{en:'',km:''},text:{en:'',km:''}});draw()}
+    if(b.dataset.arm!=null){read();L.splice(+b.dataset.arm,1);draw()}
+    if(b.dataset.amv!=null){read();var i=+b.dataset.amv,j=i+(+b.dataset.d);if(j>=0&&j<L.length){var t=L[i];L[i]=L[j];L[j]=t;draw()}}
+    if(b.hasAttribute('data-ok')){read();setObj(path,L);m.remove();changed()}});
+}
+function zoom(src){var z=document.createElement('div');z.className='modal';z.style.background='rgba(0,0,0,.9)';z.innerHTML='<img alt="" src="'+src+'" style="max-width:100%;max-height:90vh;border-radius:10px"><button class="ib" style="position:fixed;top:calc(16px + env(safe-area-inset-top,0px));right:16px" aria-label="Close">'+I('close')+'</button>';z.onclick=function(){z.remove()};document.body.appendChild(z)}
 function slidesForm(){
   var L=S.slides.map(function(s){return JSON.parse(JSON.stringify(s))});
   var m=modal('Slideshow','<div id="sl"></div><button class="btn soft" type="button" data-addsl>'+I('plus')+' Add photo</button><div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-ok>Update slideshow</button></div>');
@@ -892,10 +951,10 @@ function linksForm(){
   var L=S.links;
   var m=modal('Links, stats & chat',LINKS.map(function(k){return fieldHtml([k,UI.en[k]+(k==='messenger'?' (page name or m.me link)':k==='telegram'?' (username or t.me link)':''),'text'],L[k])}).join('')+
     '<div class="two">'+fieldHtml(['followers','Followers number','text'],S.stats.followers)+fieldHtml(['posts','Posts number','text'],S.stats.posts)+'</div>'+
-    fieldHtml(['greet','Chat greeting','biarea'],S.chatGreet)+fieldHtml(['sub','Line under your name','bi'],S.brand.sub)+
+    fieldHtml(['greet','Chat greeting','biarea'],S.chatGreet)+fieldHtml(['bname','Website name (top left)','text'],S.brand.name)+fieldHtml(['sub','Line under the name','bi'],S.brand.sub)+
     '<div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-ok>Update</button></div>');
   m.querySelector('[data-ok]').onclick=function(){function q(k,l){return m.querySelector('[data-k="'+k+'"]'+(l?'[data-l="'+l+'"]':'')).value.trim()}
-    LINKS.forEach(function(k){L[k]=q(k)});S.stats.followers=q('followers');S.stats.posts=q('posts');S.chatGreet={en:q('greet','en'),km:q('greet','km')};S.brand.sub={en:q('sub','en'),km:q('sub','km')};m.remove();changed()};
+    LINKS.forEach(function(k){L[k]=q(k)});S.stats.followers=q('followers');S.stats.posts=q('posts');S.chatGreet={en:q('greet','en'),km:q('greet','km')};S.brand.sub={en:q('sub','en'),km:q('sub','km')};S.brand.name=q('bname')||S.brand.name;m.remove();changed()};
 }
 function donateForm(){
   var D=S.donate,qr=D.qr;
@@ -965,20 +1024,20 @@ const L = () => ((chat&&chat.lang)||T.lang)==='km'?'km':'en';
 const W = {
  en:{title:'Chat with us',bot:'Assistant · instant answers',wait:'Connecting you to an agent…',live:'live agent',ph:'Type a message…',
    welcome:'សូមស្វាគមន៍! សូមជ្រើសរើសភាសាដែលអ្នកចង់ប្រើ។\n\nWelcome! Please select your preferred language.',
-   intro:'Hello! To chat live with our team, tap «Talk to Live Agent» below, or tap «More Options» for other information. You can also type your question and our assistant will answer right away. Thank you!',
+   intro:'Hi there! 😊 Thanks for visiting. How can we help you today? You can ask about destinations, temples, the best time to travel, where to stay, or anything else.',
    hold1:'Our next available agent will assist you shortly.',hold2:'Please hold on! Our system is connecting you to an available agent. Thank you!',
-   busy:'Sorry, all our agents are busy right now. Please try again later. You can keep chatting with our assistant, or tap «Talk to Live Agent» to try again.',
-   ended:'Live chat has ended. Thank you! You can keep chatting with our assistant any time.',endedSys:'The customer ended the live chat.',
+   busy:'Sorry, all our agents are busy right now. Please try again later. You can keep chatting with me in the meantime.',
+   ended:'Your chat session has ended. Thank you for contacting us today.',endedSys:'The customer ended the live chat.',
    more:'What would you like to know?',noLive:'Live chat is not available at the moment. You can still reach our team here:',
    peek:'New message from our team',typing:'typing',assistant:'Assistant',
    bLive:'Talk to Live Agent',bMore:'More Options',bEnd:'End Live Chat',
    opts:[['dest','Destinations'],['time','Best time to visit'],['stay','Where to stay'],['tips','Travel tips'],['contact','Contact']]},
  km:{title:'ជជែកជាមួយយើង',bot:'ជំនួយការ · ឆ្លើយភ្លាមៗ',wait:'កំពុងភ្ជាប់ទៅភ្នាក់ងារ…',live:'ភ្នាក់ងារផ្ទាល់',ph:'សរសេរសារ…',
    welcome:'សូមស្វាគមន៍! សូមជ្រើសរើសភាសាដែលអ្នកចង់ប្រើ។\n\nWelcome! Please select your preferred language.',
-   intro:'សួស្ដី! ដើម្បីជជែកផ្ទាល់ជាមួយក្រុមការងាររបស់យើង សូមចុច «និយាយជាមួយភ្នាក់ងារផ្ទាល់» ខាងក្រោម ឬចុច «ជម្រើសផ្សេងៗ» សម្រាប់ព័ត៌មានផ្សេងទៀត។ អ្នកក៏អាចសរសេរសំណួររបស់អ្នក ហើយជំនួយការរបស់យើងនឹងឆ្លើយភ្លាមៗ។ អរគុណ!',
+   intro:'សួស្ដី! 😊 អរគុណដែលបានមកលេង។ តើយើងអាចជួយអ្វីបានខ្លះថ្ងៃនេះ? អ្នកអាចសួរអំពីគោលដៅ ប្រាសាទ ពេលល្អសម្រាប់ធ្វើដំណើរ កន្លែងស្នាក់នៅ ឬអ្វីផ្សេងទៀត។',
    hold1:'ភ្នាក់ងារដែលទំនេរបន្ទាប់ នឹងជួយអ្នកក្នុងពេលឆាប់ៗនេះ។',hold2:'សូមរង់ចាំបន្តិច! ប្រព័ន្ធរបស់យើងកំពុងភ្ជាប់អ្នកទៅភ្នាក់ងារដែលទំនេរ។ អរគុណ!',
-   busy:'សូមអភ័យទោស ភ្នាក់ងាររបស់យើងទាំងអស់កំពុងរវល់នៅពេលនេះ។ សូមព្យាយាមម្ដងទៀតនៅពេលក្រោយ។ អ្នកអាចបន្តជជែកជាមួយជំនួយការរបស់យើង ឬចុច «និយាយជាមួយភ្នាក់ងារផ្ទាល់» ដើម្បីព្យាយាមម្ដងទៀត។',
-   ended:'ការជជែកផ្ទាល់បានបញ្ចប់។ អរគុណ! អ្នកអាចបន្តជជែកជាមួយជំនួយការរបស់យើងបានគ្រប់ពេល។',endedSys:'អតិថិជនបានបញ្ចប់ការជជែកផ្ទាល់។',
+   busy:'សូមអភ័យទោស ភ្នាក់ងាររបស់យើងទាំងអស់កំពុងរវល់នៅពេលនេះ។ សូមព្យាយាមម្ដងទៀតនៅពេលក្រោយ។ អ្នកអាចបន្តជជែកជាមួយខ្ញុំក្នុងពេលនេះ។',
+   ended:'វគ្គជជែករបស់អ្នកបានបញ្ចប់។ អរគុណសម្រាប់ការទាក់ទងមកយើងនៅថ្ងៃនេះ។',endedSys:'អតិថិជនបានបញ្ចប់ការជជែកផ្ទាល់។',
    more:'តើអ្នកចង់ដឹងអំពីអ្វី?',noLive:'ការជជែកផ្ទាល់មិនទាន់អាចប្រើបានទេពេលនេះ។ អ្នកនៅតែអាចទាក់ទងក្រុមការងាររបស់យើងតាម៖',
    peek:'សារថ្មីពីក្រុមការងាររបស់យើង',typing:'កំពុងសរសេរ',assistant:'ជំនួយការ',
    bLive:'និយាយជាមួយភ្នាក់ងារផ្ទាល់',bMore:'ជម្រើសផ្សេងៗ',bEnd:'បញ្ចប់ការជជែកផ្ទាល់',
@@ -1018,19 +1077,20 @@ function listen(){
     msgsLoaded=true;draw(true);
   }));
 }
-async function say(m){ /* push a message from this visitor's browser */
+async function say(m){
+  if(!m.btns)delete m.btns; /* push a message from this visitor's browser */
   if(offline||!fb||!user||!chat){local.push(Object.assign({ts:Date.now(),id:'l'+Math.random()},m));draw(true);return}
   await fb.push(MP(),Object.assign({ts:TS},m));
 }
 async function touch(extra){if(fb&&user&&chat)await fb.update(CP(),Object.assign({updatedAt:TS},extra||{})).catch(()=>{})}
 
 /* ---------------- flows ---------------- */
-const btnsLM=lg=>[{l:w('bLive',lg),a:'live'},{l:w('bMore',lg),a:'more'}];
+const btnLive=lg=>[{l:w('bLive',lg),a:'live'}];
 async function pickLang(lg){
   try{T.setLang&&T.setLang(lg)}catch(e){}
   try{await ensureChat(lg);await fb.update(CP(),{lang:lg});chat.lang=lg}catch(e){offline=true}
   await say({from:'visitor',text:lg==='km'?'ភាសាខ្មែរ':'English'});
-  await say({from:'bot',text:w('intro',lg),btns:btnsLM(lg)});
+  await say({from:'bot',text:w('intro',lg)});
   await touch({lastMsg:w('intro',lg).slice(0,120),lastFrom:'bot'});
 }
 async function goLive(){
@@ -1046,7 +1106,7 @@ async function endLive(){
   const lg=L();
   await say({from:'visitor',text:w('bEnd',lg)});
   if(fb&&user&&chat){await fb.update(CP(),{status:'bot',updatedAt:TS,lastMsg:w('endedSys','en'),lastFrom:'system'});await say({from:'system',text:w('endedSys',lg)})}
-  await say({from:'bot',text:w('ended',lg),btns:btnsLM(lg)});
+  await say({from:'bot',text:w('ended',lg)});
 }
 let toBusy=false;
 async function checkTimeout(){
@@ -1054,14 +1114,14 @@ async function checkTimeout(){
   if(Date.now()-ms(chat.requestedAt)<waitMin*60000)return;
   toBusy=true;
   try{const r=await fb.tx(CP()+'/status',cur=>cur===null?null:(cur==='waiting'?'bot':undefined));
-    if(r.committed&&r.val==='bot'){const lg=L();await say({from:'bot',text:w('busy',lg),btns:btnsLM(lg)});await touch({lastMsg:'⏱ No agent answered in time',lastFrom:'bot'})}}catch(e){}
+    if(r.committed&&r.val==='bot'){const lg=L();await say({from:'bot',text:w('busy',lg),btns:btnLive(lg)});await touch({lastMsg:'⏱ No agent answered in time',lastFrom:'bot'})}}catch(e){}
   toBusy=false;
 }
 setInterval(checkTimeout,15000);
 async function more(label){
   const lg=L();
   if(label)await say({from:'visitor',text:label});
-  await say({from:'bot',text:w('more',lg),btns:w('opts',lg).map(o=>({l:o[1],a:'opt:'+o[0]})).concat([{l:w('bLive',lg),a:'live'}])});
+  await say({from:'bot',text:w('more',lg),btns:w('opts',lg).map(o=>({l:o[1],a:'opt:'+o[0]}))});
 }
 function optAnswer(key,lg){
   const S=T.S,km=lg==='km';
@@ -1076,7 +1136,7 @@ async function option(key,label){
   await say({from:'visitor',text:label});
   botTyping=true;draw(true);
   setTimeout(async()=>{botTyping=false;const r=optAnswer(key,lg)||bot(label);
-    await say({from:'bot',text:r.text,links:(r.links||[]).map(x=>({l:x[0],h:x[1]})),btns:[{l:w('bMore',lg),a:'more'},{l:w('bLive',lg),a:'live'}]});
+    await say({from:'bot',text:r.text,links:(r.links||[]).map(x=>({l:x[0],h:x[1]})),btns:r.live?btnLive(lg):undefined});
     await touch({lastMsg:r.text.slice(0,120),lastFrom:'bot'});
   },600);
 }
@@ -1090,7 +1150,7 @@ async function send(text){
   if(live)return;
   botTyping=true;draw(true);
   setTimeout(async()=>{botTyping=false;const lg=hasKm(text)?'km':L();const r=bot(text);
-    await say({from:'bot',text:r.text,links:(r.links||[]).map(x=>({l:x[0],h:x[1]})),btns:r.live?btnsLM(lg):[{l:w('bMore',lg),a:'more'}]});
+    await say({from:'bot',text:r.text,links:(r.links||[]).map(x=>({l:x[0],h:x[1]})),btns:r.live?btnLive(lg):(r.more?w('opts',lg).map(o=>({l:o[1],a:'opt:'+o[0]})):undefined)});
     await touch({lastMsg:r.text.slice(0,120),lastFrom:'bot'});
   },650+Math.min(900,text.length*12));
 }
@@ -1107,9 +1167,14 @@ function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[�
 const hasKm=s=>/[ក-៿]/.test(s);
 function tr(o,lg){if(!o)return '';if(typeof o==='string')return o;return o[lg]||o.en||o.km||''}
 const KW={
+ menu:['menu','option','options','more info','help me','what can you do','ជម្រើស','ម៉ឺនុយ','ជួយ'],
+ howru:['how are you','how r u','សុខសប្បាយ','សុខទេ'],
+ who:['who are you','are you a bot','are you human','are you real','your name','អ្នកជានរណា','អ្នកឈ្មោះអី'],
+ ok:[' ok ',' okay ',' yes ',' sure ',' cool ',' nice ',' great ',' good ','បាទ','ចាស','យល់ព្រម','ល្អ'],
+ bye:['bye','goodbye','see you','លាហើយ','លាសិនហើយ'],
  greet:['hello','hi ','hey','good morning','good afternoon','sus dey','សួស្ដី','ជម្រាបសួរ','សួស្តី'],
  thanks:['thank','thx','អរគុណ'],
- agent:['agent','human','real person','someone','talk to agent','live agent','speak','call me','មនុស្ស','ភ្នាក់ងារ','និយាយជាមួយ'],
+ agent:['agent','human','real person','someone','talk to agent','live agent','person','people','staff','representative','customer service','support team','admin','contact agent','ភ្នាក់ងារផ្ទាល់','បុគ្គលិក','និយាយផ្ទាល់','speak','call me','មនុស្ស','ភ្នាក់ងារ','និយាយជាមួយ'],
  t1:['best time','when to','season','weather','rain','month','hot','cold','climate','រដូវ','ពេលល្អ','ពេលណា','អាកាសធាតុ','ភ្លៀង'],
  t2:['visa','passport','evisa','ទិដ្ឋាការ','លិខិតឆ្លងដែន'],
  t3:['money','dollar','riel','atm','currency','cash','pay','khqr','លុយ','ប្រាក់','ដុល្លារ','រៀល'],
@@ -1138,7 +1203,7 @@ function placeAnswer(p,lg){const km=lg==='km';let s='📍 '+tr(p.title,lg)+' · 
 function listAnswer(arr,lg,head,link){return {text:head+'\n'+arr.map(p=>'• '+tr(p.title,lg)+' ('+tr(p.region,lg)+')').join('\n'),links:[link].concat(arr.slice(0,3).map(p=>[tr(p.title,lg),'#/place/'+p.id]))}}
 function bot(text){
   const lg=hasKm(text)?'km':L(),km=lg==='km',t=' '+norm(text)+' ',S=T.S,Lk=S.links||{};
-  if(has(t,KW.agent))return {text:km?'ប្រាកដណាស់! ចុចប៊ូតុង «និយាយជាមួយភ្នាក់ងារផ្ទាល់» ខាងក្រោម ហើយយើងនឹងភ្ជាប់អ្នកទៅភ្នាក់ងារ។':'Of course! Tap “Talk to Live Agent” below and we will connect you with an agent.',live:true};
+  if(has(t,KW.agent))return {text:km?'ប្រាកដណាស់! ចុចប៊ូតុង «និយាយជាមួយភ្នាក់ងារផ្ទាល់» ខាងក្រោម ហើយយើងនឹងភ្ជាប់អ្នកទៅភ្នាក់ងារ។':'Of course! Tap «Talk to Live Agent» below and we will connect you with an agent.',live:true};
   if(has(t,KW.hotel)){const st=(S.stays||[]);const m=st.find(s=>t.includes(norm(tr(s.region,'en')))||t.includes(norm(tr(s.region,'km'))));
     if(m)return {text:'🏨 '+tr(m.title,lg)+'\n'+tr(m.text,lg),links:[[km?'កន្លែងស្នាក់នៅទាំងអស់':'All areas to stay','#/p/stay']]};
     return {text:(km?'🏨 កន្លែងស្នាក់នៅតាមតំបន់៖\n':'🏨 Where we suggest staying:\n')+st.map(s=>'• '+tr(s.title,lg)).join('\n')+(km?'\n\nប្រាប់យើងពីខេត្តដែលអ្នកនឹងទៅ យើងនឹងណែនាំបន្ថែម។':'\n\nTell us which province you are going to and we can say more.'),links:[[km?'មើលទំព័រសណ្ឋាគារ':'See the hotel page','#/p/stay']]}}
@@ -1154,12 +1219,17 @@ function bot(text){
   if(has(t,KW.donate))return {text:km?'🙏 អរគុណសម្រាប់ការចង់គាំទ្រ! ព័ត៌មានទាំងអស់មាននៅទំព័រការបរិច្ចាគ។':'🙏 Thank you for wanting to help! Everything is on the Donation page.',links:[[km?'ការបរិច្ចាគ':'Donation','#/p/donate']]};
   if(has(t,KW.video))return {text:km?'🎬 វីដេអូរបស់យើងមាននៅទីនេះ៖':'🎬 You can watch our videos here:',links:[[km?'វីដេអូ':'Videos','#/p/videos']].concat(Lk.youtube?[['YouTube','https://'+String(Lk.youtube).replace(/^https?:\/\//,'')]]:[])};
   if(has(t,KW.price))return {text:km?'💵 តម្លៃខុសគ្នាតាមរដូវ និងកន្លែង។ សម្រាប់តម្លៃសណ្ឋាគារ ឬដំណើរកម្សាន្តជាក់លាក់ សូមសួរភ្នាក់ងាររបស់យើងផ្ទាល់។':'💵 Prices change with the season and the place. For a specific hotel or trip price, it is best to ask one of our agents.',live:true,links:[[km?'គន្លឹះលុយកាក់':'Money tips','#/p/tips']]};
+  if(has(t,KW.menu))return {text:km?'នេះជាប្រធានបទដែលខ្ញុំអាចជួយបាន៖':'Here are some things I can help with:',more:true};
+  if(has(t,KW.howru))return {text:km?'ខ្ញុំសុខសប្បាយ អរគុណដែលសួរ! 😊 ចុះអ្នកវិញ? តើអ្នកកំពុងគ្រោងធ្វើដំណើរទៅណា?':"I'm doing great, thanks for asking! 😊 How about you? Are you planning a trip somewhere?"};
+  if(has(t,KW.who))return {text:km?'ខ្ញុំជាជំនួយការស្វ័យប្រវត្តិរបស់ក្រុម Thean។ ខ្ញុំអាចឆ្លើយសំណួរអំពីការធ្វើដំណើរនៅកម្ពុជា។ ប្រសិនបើអ្នកចង់និយាយជាមួយមនុស្ស គ្រាន់តែប្រាប់ខ្ញុំ។':"I'm the Thean team's virtual assistant. I can answer questions about travelling in Cambodia. If you'd like to talk to a person, just tell me."};
+  if(has(t,KW.bye))return {text:km?'លាសិនហើយ! 👋 សូមឱ្យដំណើររបស់អ្នករីករាយ។':'Goodbye! 👋 Have a wonderful trip.'};
   if(has(t,KW.thanks))return {text:km?'មិនអីទេ! 😊 រីករាយនឹងដំណើររបស់អ្នក។':"You're welcome! 😊 Enjoy your trip."};
   if(has(t,KW.greet))return {text:km?'សួស្ដី! 😊 តើអ្នកកំពុងគ្រោងទៅណា?':'Hello! 😊 Where are you thinking of going?'};
   const prov=(window.TheanProv||[]).find(pr=>t.includes(norm(pr[0]))||t.includes(pr[1]));
   if(prov){const inP=(S.places||[]).filter(x=>norm(tr(x.region,'en')).includes(norm(prov[0])));if(inP.length)return listAnswer(inP,lg,(km?'📍 នៅ ':'📍 In ')+(km?prov[1]:prov[0])+':',[km?'គោលដៅ':'Destinations','#/p/destinations']);
     return {text:(km?'យើងមិនទាន់មានមគ្គុទ្ទេសក៍សម្រាប់ ':'We don\'t have a guide for ')+(km?prov[1]:prov[0])+(km?' នៅឡើយទេ ប៉ុន្តែភ្នាក់ងាររបស់យើងអាចជួយអ្នកបាន។':' yet, but our agents can help you.'),live:true,links:[[km?'បើកផែនទី':'Open map','https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(prov[0]+', Cambodia')]]}}
   if(has(t,KW.where))return listAnswer((S.places||[]).filter(x=>x.featured),lg,km?'✨ កន្លែងដែលយើងចូលចិត្តបំផុត៖':'✨ Our favourite places right now:',[km?'គោលដៅទាំងអស់':'All destinations','#/p/destinations']);
+  if(has(t,KW.ok))return {text:km?'ល្អណាស់! 😊 មានអ្វីផ្សេងទៀតដែលខ្ញុំអាចជួយបានទេ?':'Great! 😊 Is there anything else I can help you with?'};
   return {text:km?'សុំទោស ខ្ញុំមិនប្រាកដអំពីសំណួរនេះទេ។ ខ្ញុំអាចប្រាប់អ្នកអំពីគោលដៅ ប្រាសាទ ពេលល្អសម្រាប់ធ្វើដំណើរ ទិដ្ឋាការ ឬសណ្ឋាគារ។ ឬនិយាយជាមួយភ្នាក់ងារផ្ទាល់។':"I'm not sure about that one. I can help with destinations, temples, the best time to go, visas or hotels. Or you can talk to a live agent.",live:true};
 }
 
