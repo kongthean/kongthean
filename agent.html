@@ -213,6 +213,7 @@ const BUSY={en:'Sorry, all our agents are busy right now. Please try again later
 const BTN={en:{live:'Talk to Live Agent',more:'More Options'},km:{live:'និយាយជាមួយភ្នាក់ងារផ្ទាល់',more:'ជម្រើសផ្សេងៗ'}};
 const ekey=e=>String(e||'').toLowerCase().split('.').join(',');
 const isOwner=()=>!!agent&&(agent.role==='owner'||!agent.role);
+const ENDED={en:'Your chat session has ended. Thank you for contacting us today.',km:'វគ្គជជែករបស់អ្នកបានបញ្ចប់។ អរគុណសម្រាប់ការទាក់ទងមកយើងនៅថ្ងៃនេះ។'};
 const SYS={close:{en:()=>'This chat was closed. Thank you! Send a message any time if you need more help.',km:()=>'ការជជែកនេះត្រូវបានបិទ។ អរគុណ! ផ្ញើសារមកពេលណាក៏បាន ប្រសិនបើត្រូវការជំនួយបន្ថែម។'}};
 
 /* ---------- prefs ---------- */
@@ -423,10 +424,22 @@ async function sendMsg(text){
 let armClose=null;
 async function closeChat(id){
   if(armClose!==id){armClose=id;toast('Tap “Close chat” again to confirm');setTimeout(()=>{armClose=null},4000);return}
-  armClose=null;const c=chats.find(x=>x.id===id);const lg=c&&c.lang==='km'?'km':'en';
-  try{await DB.push('messages/'+id,{from:'system',text:SYS.close[lg](),ts:TS});
-    await DB.update('chats/'+id,{status:'closed',closedAt:TS,updatedAt:TS,lastMsg:'Chat closed',lastFrom:'system',unreadAgent:0});toast('Chat closed')}
-  catch(e){toast('Could not close: '+(e.code||e.message))}
+  armClose=null;const c=chats.find(x=>x.id===id)||{};const lg=c.lang==='km'?'km':'en';
+  try{
+    if(c.status==='waiting'){
+      /* never opened: be polite, tell them agents are busy and let them keep using the assistant */
+      await DB.push('messages/'+id,{from:'bot',text:BUSY[lg],btns:[{l:BTN[lg].live,a:'live'}],ts:TS});
+      await DB.update('chats/'+id,{status:'bot',updatedAt:TS,lastMsg:'Closed before opening · customer told agents are busy',lastFrom:'bot',unreadAgent:0});
+      toast('Closed. The customer was told all agents are busy.');
+    }else if(c.status==='assigned'){
+      await DB.push('messages/'+id,{from:'bot',text:ENDED[lg],ts:TS});
+      await DB.update('chats/'+id,{status:'closed',closedAt:TS,updatedAt:TS,lastMsg:'Chat closed',lastFrom:'system',unreadAgent:0});
+      toast('Chat closed');
+    }else{
+      await DB.update('chats/'+id,{status:'closed',closedAt:TS,updatedAt:TS,unreadAgent:0});
+      toast('Removed from your list. The customer was not interrupted.');
+    }
+  }catch(e){toast('Could not close: '+(e.code||e.message))}
 }
 setInterval(()=>{if(sel)drawConvHead()},3000);
 
