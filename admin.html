@@ -1161,7 +1161,7 @@ function textRows(q){q=String(q||'').toLowerCase();var keys=Object.keys(UI.en).f
   return keys.map(function(k){return '<div class="drow"><input data-tp="ui.'+k+'" data-l="en" value="'+esc(u2(k,'en'))+'" aria-label="English"><input data-tp="ui.'+k+'" data-l="km" value="'+esc(u2(k,'km'))+'" aria-label="Khmer"></div>'}).join('')||'<div class="dempty">No match.</div>'}
 function renderDash(){
   return '<div class="dash"><header class="dtop"><span class="logo">'+(S.brand.logo?'<img alt="" src="'+S.brand.logo+'">':'')+'</span><div class="dttl"><b>Website editor</b><small>'+esc((adminUser&&adminUser.agent&&adminUser.agent.name)||'')+'</small></div><span class="dpub" data-pubst>'+pubHtml()+'</span>'+
-    '<div class="dtools"><a class="btn sm soft" target="_blank" href="./">'+I('globe')+' View website</a><button class="btn sm soft" data-act="pagemode">'+I('edit')+' Edit on page</button><a class="btn sm soft" href="agent">'+I('chat')+' Inbox</a><button class="btn sm soft" data-act="exit">Sign out</button></div></header>'+
+    '<div class="dtools"><a class="btn sm soft" target="_blank" href="./">'+I('globe')+' View website</a><a class="btn sm soft" target="_blank" href="./#check">'+I('info')+' Check website</a><button class="btn sm soft" data-act="pagemode">'+I('edit')+' Edit on page</button><a class="btn sm soft" href="agent">'+I('chat')+' Inbox</a><button class="btn sm soft" data-act="exit">Sign out</button></div></header>'+
     '<div class="derr" data-puberr hidden></div>'+
     '<div class="dbody"><nav class="dnav">'+DSECS.map(function(x){return '<button class="'+(dashSec===x[0]?'on':'')+'" data-dash="'+x[0]+'">'+I(x[1])+'<span>'+esc(x[2])+'</span></button>'}).join('')+'</nav><main class="dmain">'+dashSection()+'</main></div></div>';
 }
@@ -1565,14 +1565,27 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
+const SYNC={build:'20261002-1433',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
-  const c=readCache();if(c&&c.content&&c.v)T.setState(c.content,{live:true,v:c.v});
-  try{await loadFb();const v=await fb.get('site/version');if(!v||(c&&c.v===v))return;
-    const content=await fb.get('site/content');if(!content)return;
+  const c=readCache();SYNC.cacheV=c&&c.v||null;
+  if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
+  try{SYNC.step='loading Firebase';await loadFb();
+    SYNC.step='reading version';const v=await fb.get('site/version');SYNC.serverV=v||null;
+    if(!v){SYNC.step='done: nothing published yet';return}
+    if(c&&c.v===v){SYNC.step='done: already up to date';return}
+    SYNC.step='downloading content';const content=await fb.get('site/content');if(!content){SYNC.step='done: no content on server';return}
     try{localStorage.setItem(CACHE,JSON.stringify({v,content}))}catch(e){}
-    T.setState(content,{live:true,v});
-  }catch(e){}
+    T.setState(content,{live:true,v});SYNC.applied='from the server';SYNC.step='done: latest content shown';
+  }catch(e){SYNC.error=String(e&&(e.code||e.message)||e);SYNC.step='FAILED'}
+  finally{showCheck()}
 }
+function showCheck(){
+  if(location.hash!=='#check')return;
+  let el=document.getElementById('tcheck');if(!el){el=document.createElement('div');el.id='tcheck';el.style.cssText='position:fixed;left:12px;right:12px;top:calc(76px + env(safe-area-inset-top,0px));z-index:99;background:#fff;color:#111;border:2px solid #333;border-radius:14px;padding:14px;font:14px/1.5 system-ui;box-shadow:0 10px 30px rgba(0,0,0,.3)';document.body.appendChild(el)}
+  const f=t=>t?new Date(t).toLocaleString():'—';
+  el.innerHTML='<b>Website check</b><br>Page version: <b>'+SYNC.build+'</b><br>Status: <b>'+esc(SYNC.step)+'</b>'+(SYNC.error?'<br><span style="color:#b3362f">Error: '+esc(SYNC.error)+'</span>':'')+'<br>Last published (server): <b>'+f(SYNC.serverV)+'</b><br>Saved copy on this phone: '+f(SYNC.cacheV)+'<br>Content shown: '+(SYNC.applied||'built-in (not live)')+'<br><small>Send a screenshot of this box to support.</small>';
+}
+window.addEventListener('hashchange',()=>{if(location.hash==='#check')showCheck()});
 syncSite();
 
 /* ---------------- admin page API ---------------- */
