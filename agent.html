@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#262b2c">
+<title>Thean · Agent Inbox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Koulen&family=Kantumruy+Pro:wght@400;500;600;700&display=swap">
+<style>
+/* Agent console — same misty stone palette as the website */
+:root{
+  --bg:#e8eae9;--bg2:#dfe3e2;--surface:#fff;--ink:#1c2021;--muted:#5f6767;--line:#cfd4d3;
+  --stone:#6f7877;--stone-d:#4c5555;--char:#262b2c;--char-ink:#f6f7f7;--accent:#4a6b75;--accent-soft:#dbe5e7;
+  --wait:#c98a22;--wait-soft:#f6ead4;--ok:#2f9e5f;--ok-soft:#dcefe3;--danger:#b3362f;--shadow:0 10px 30px rgba(28,32,33,.12);
+  --display:'Koulen','Kantumruy Pro',Impact,sans-serif;--body:'Kantumruy Pro',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#131616;--bg2:#181c1c;--surface:#1d2222;--ink:#e7ebea;--muted:#9ba4a3;--line:#2d3434;--stone:#5d6766;--stone-d:#46504f;--char:#e7ebea;--char-ink:#151818;--accent:#93b4be;--accent-soft:#223033;
+  --wait:#e7b25a;--wait-soft:#3a2e1c;--ok:#6fd39a;--ok-soft:#1d3326;--danger:#ef7a70;--shadow:0 10px 30px rgba(0,0,0,.45);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#131616;--bg2:#181c1c;--surface:#1d2222;--ink:#e7ebea;--muted:#9ba4a3;--line:#2d3434;--stone:#5d6766;--stone-d:#46504f;--char:#e7ebea;--char-ink:#151818;--accent:#93b4be;--accent-soft:#223033;
+  --wait:#e7b25a;--wait-soft:#3a2e1c;--ok:#6fd39a;--ok-soft:#1d3326;--danger:#ef7a70;--shadow:0 10px 30px rgba(0,0,0,.45);color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+[hidden]{display:none!important}
+svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.emb{font-family:var(--display);font-weight:400;letter-spacing:.06em;line-height:1.1}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:999px;padding:10px 18px;font-weight:600;cursor:pointer;background:var(--char);color:var(--char-ink);text-decoration:none}
+.btn.soft{background:var(--bg2);color:var(--ink)}.btn.sm{padding:6px 13px;font-size:.85rem}.btn.ok{background:var(--ok);color:#fff}.btn.del{background:transparent;color:var(--danger);border:1.5px solid var(--danger)}
+.btn:disabled{opacity:.5;cursor:default}
+.logo{width:40px;height:40px;border-radius:50%;background:var(--bg2);display:grid;place-items:center;font-family:var(--display);font-size:1.2rem;flex:none;overflow:hidden}
+
+/* login */
+.login{min-height:100%;display:grid;place-items:center;padding:24px 16px;background:radial-gradient(120% 80% at 50% 0%,var(--surface),var(--bg))}
+.lcard{width:100%;max-width:400px;background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:30px 24px;box-shadow:var(--shadow);display:grid;gap:14px}
+.lcard h1{margin:0;font-size:2rem}
+.lcard p{margin:0;color:var(--muted)}
+label.f{display:grid;gap:5px;font-size:.84rem;font-weight:600;color:var(--muted)}
+label.f input,label.f textarea{border:1px solid var(--line);border-radius:12px;padding:11px 13px;background:var(--bg);font-weight:400;color:var(--ink);width:100%}
+.err{background:#f7dedb;color:#8a2a22;border-radius:10px;padding:9px 12px;font-size:.88rem}
+.note{background:var(--accent-soft);border-radius:12px;padding:12px 14px;font-size:.9rem}
+.note code{background:var(--surface);padding:1px 6px;border-radius:6px;font-size:.85rem;overflow-wrap:anywhere}
+.note ol{margin:8px 0 0;padding-left:20px;display:grid;gap:4px}
+
+/* app */
+.app{position:fixed;inset:0;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);display:grid;grid-template-rows:auto minmax(0,1fr);overflow:hidden;background:var(--bg)}
+.top{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--char);color:var(--char-ink)}
+.top .ttl{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.top .ttl b{font-family:var(--display);font-weight:400;font-size:1.35rem;letter-spacing:.1em;line-height:1}
+.top .ttl small{display:block;opacity:.7;font-size:.75rem}
+.top .ttl .logo{background:rgba(255,255,255,.15)}
+.tb{position:relative;border:0;background:rgba(255,255,255,.1);color:inherit;height:38px;min-width:38px;padding:0 10px;border-radius:99px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:.82rem;font-weight:600}
+.tb svg{font-size:1.15rem}
+.tb.on{background:var(--ok);color:#fff}
+.tb.away{background:rgba(255,255,255,.1)}
+.tb .bd{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;border-radius:99px;background:#d6453a;color:#fff;font-size:.7rem;display:grid;place-items:center;padding:0 4px}
+@media(max-width:640px){.tb .tl{display:none}}
+.main{display:grid;grid-template-columns:340px minmax(0,1fr);min-height:0;overflow:hidden}
+@media(max-width:820px){.main{grid-template-columns:1fr}.main.sel .side{display:none}.main:not(.sel) .conv{display:none}}
+.side{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0;background:var(--surface)}
+.tabs{display:flex;gap:4px;padding:10px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.tabs button{flex:none;border:0;background:transparent;padding:7px 12px;border-radius:99px;font-weight:600;font-size:.85rem;cursor:pointer;color:var(--muted);display:flex;gap:6px;align-items:center}
+.tabs button.on{background:var(--char);color:var(--char-ink)}
+.tabs .c{background:var(--bg2);color:var(--ink);border-radius:99px;padding:0 7px;font-size:.75rem}
+.tabs button.on .c{background:rgba(255,255,255,.2);color:inherit}
+.tabs .c.hot{background:var(--wait);color:#fff}
+.search{padding:8px 10px;border-bottom:1px solid var(--line)}
+.search input{width:100%;border:1px solid var(--line);border-radius:99px;padding:8px 14px;background:var(--bg)}
+.list{flex:1;overflow-y:auto}
+.item{display:grid;grid-template-columns:42px 1fr auto;gap:10px;padding:12px 12px;border:0;border-bottom:1px solid var(--line);background:transparent;width:100%;text-align:left;cursor:pointer;align-items:center}
+.item:hover{background:var(--bg)}
+.item.on{background:var(--accent-soft)}
+.av{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;background:linear-gradient(155deg,var(--stone),var(--stone-d));position:relative}
+.av .st{position:absolute;bottom:0;right:0;width:12px;height:12px;border-radius:50%;border:2px solid var(--surface)}
+.item .nm{font-weight:600;display:flex;gap:6px;align-items:center;min-width:0}
+.item .nm span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .lm{font-size:.84rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .rt{display:grid;justify-items:end;gap:4px;font-size:.74rem;color:var(--muted)}
+.ub{background:#d6453a;color:#fff;border-radius:99px;min-width:20px;height:20px;display:grid;place-items:center;font-size:.72rem;font-weight:700;padding:0 6px}
+.pill{font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.pill.waiting{background:var(--wait-soft);color:var(--wait)}.pill.assigned{background:var(--ok-soft);color:var(--ok)}.pill.bot{background:var(--accent-soft);color:var(--accent)}.pill.closed{background:var(--bg2);color:var(--muted)}
+.emptyl{padding:40px 20px;text-align:center;color:var(--muted)}
+.conv{display:flex;flex-direction:column;min-height:0;background:var(--bg)}
+.ch{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.ch .who{flex:1;min-width:140px}
+.ch .who b{display:block;line-height:1.25}
+.ch .who small{color:var(--muted);font-size:.8rem}
+.back{border:0;background:var(--bg2);width:36px;height:36px;border-radius:50%;display:none;place-items:center;cursor:pointer;font-size:1.1rem}
+@media(max-width:820px){.back{display:grid}}
+.info{display:flex;gap:6px;flex-wrap:wrap;padding:8px 14px;background:var(--surface);border-bottom:1px solid var(--line);font-size:.8rem}
+.info span{background:var(--bg);border-radius:99px;padding:3px 10px;display:inline-flex;gap:5px;align-items:center;color:var(--muted)}
+.info button{border:0;background:var(--bg2);border-radius:99px;padding:3px 10px;font-size:.8rem;cursor:pointer}
+.msgs{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:8px}
+.m{max-width:min(78%,560px);padding:9px 13px;border-radius:16px;white-space:pre-line;overflow-wrap:anywhere;font-size:.93rem}
+.m.vis{align-self:flex-start;background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:4px}
+.m.bot{align-self:flex-end;background:var(--accent-soft);border-bottom-right-radius:4px}
+.m.agent{align-self:flex-end;background:var(--char);color:var(--char-ink);border-bottom-right-radius:4px}
+.m .by{display:block;font-size:.7rem;font-weight:700;opacity:.65;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em}
+.m time{display:block;font-size:.66rem;opacity:.55;margin-top:2px;text-align:right}
+.sys{align-self:center;font-size:.78rem;color:var(--muted);background:var(--bg2);border-radius:12px;padding:5px 12px;text-align:center;max-width:90%}
+.typing{align-self:flex-start;font-size:.8rem;color:var(--muted);font-style:italic}
+.acceptbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:12px 14px;background:var(--wait-soft);color:var(--ink);border-top:1px solid var(--line)}
+.qr{border-top:1px solid var(--line);background:var(--surface);padding:10px 12px}
+.qrgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px}
+.qrb{border:1px solid var(--line);background:var(--bg);border-radius:14px;padding:9px 4px 7px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;font-size:.74rem;font-weight:600;color:var(--ink);text-align:center;line-height:1.2}
+.qrb .ic{width:34px;height:34px;border-radius:11px;background:linear-gradient(155deg,var(--stone),var(--stone-d));color:#fff;display:grid;place-items:center;font-size:1.05rem}
+.qrb:hover{border-color:var(--stone)}
+.qrhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:.8rem;color:var(--muted);font-weight:600}
+.qrhead button{border:0;background:transparent;color:var(--accent);font-weight:600;cursor:pointer;font-size:.8rem}
+.comp{display:flex;gap:8px;padding:10px 12px;background:var(--surface);border-top:1px solid var(--line);align-items:flex-end}
+.comp textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:18px;padding:10px 14px;background:var(--bg);max-height:140px;min-height:44px;line-height:1.4}
+.ib{width:44px;height:44px;border-radius:50%;border:0;display:grid;place-items:center;cursor:pointer;font-size:1.2rem;flex:none;background:var(--bg2);color:var(--ink)}
+.ib.pri{background:var(--char);color:var(--char-ink)}
+.ib.on{background:var(--accent);color:#fff}
+.blank{flex:1;display:grid;place-items:center;text-align:center;color:var(--muted);padding:30px}
+.blank .big{font-size:3rem;opacity:.4}
+.modal{position:fixed;inset:0;z-index:70;background:rgba(10,12,12,.6);display:flex;align-items:center;justify-content:center;padding:16px}
+.sheet{background:var(--surface);border-radius:20px;width:100%;max-width:620px;max-height:92vh;overflow:auto}
+.sheet .hd{position:sticky;top:0;background:var(--surface);border-bottom:1px solid var(--line);padding:14px 18px;display:flex;align-items:center;gap:10px;z-index:2}
+.sheet .hd h3{margin:0;flex:1}
+.sheet .bd{padding:18px;display:grid;gap:12px}
+.qe{display:grid;grid-template-columns:100px 1fr;gap:8px;border:1px solid var(--line);border-radius:14px;padding:10px}
+.qe textarea{min-height:60px}
+.qe select{border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--bg);width:100%}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:90;background:var(--char);color:var(--char-ink);padding:10px 18px;border-radius:99px;font-size:.9rem;box-shadow:var(--shadow);max-width:calc(100vw - 32px);text-align:center;cursor:pointer}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:14px}
+.toggle small{display:block;color:var(--muted);font-size:.8rem}
+.toggle input{width:22px;height:22px}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+window.THEAN_FIREBASE = {
+  "apiKey": "AIzaSyD9hhjSe53uha7jADGUOiWK-MLHOGoz6Pk",
+  "authDomain": "thean-12952.firebaseapp.com",
+  "projectId": "thean-12952",
+  "storageBucket": "thean-12952.firebasestorage.app",
+  "messagingSenderId": "1082546170540",
+  "appId": "1:1082546170540:web:71e42aaada4df363588d09"
+};
+</script>
+<script type="module">
+const FBV='10.12.2';
+const base='https://www.gstatic.com/firebasejs/'+FBV+'/';
+const root=document.getElementById('root');
+let A,F,auth,db;
+try{
+  const [app,a,f]=await Promise.all([import(base+'firebase-app.js'),import(base+'firebase-auth.js'),import(base+'firebase-firestore.js')]);
+  A=a;F=f;const ap=app.initializeApp(window.THEAN_FIREBASE);auth=A.getAuth(ap);db=F.getFirestore(ap);
+}catch(e){root.innerHTML='<div class="login"><div class="lcard"><h1 class="emb">THEAN</h1><div class="err">Could not load the chat service. Check your internet connection and reload.</div></div></div>';throw e}
+
+/* ---------- icons ---------- */
+const P={chat:'<path d="M4 5h16v11H9.5L4 20z"/><path d="M8 9.3h8M8 12.3h5"/>',bell:'<path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',sound:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',mute:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>',
+ logout:'<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/>',
+ left:'<path d="M15 5l-7 7 7 7"/>',send:'<path d="M5 12h14M13 6l6 6-6 6"/>',bolt:'<path d="M13 3L5 13.5h6L10 21l8-10.5h-6z"/>',check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',close:'<path d="M6 6l12 12M18 6L6 18"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>',
+ wave:'<path d="M7 11V6.5a1.5 1.5 0 0 1 3 0V11M10 10V4.5a1.5 1.5 0 0 1 3 0V10M13 10V5.5a1.5 1.5 0 0 1 3 0V12M16 9.5a1.5 1.5 0 0 1 3 0V14a7 7 0 0 1-7 7h-1a7 7 0 0 1-5.3-2.4L3.4 15a1.6 1.6 0 0 1 2.4-2.1L7 14V11"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',bed:'<path d="M3 19.5V6M21 19.5V14a3 3 0 0 0-3-3h-7.5v5"/><path d="M3 16h18"/><circle cx="7" cy="12.5" r="1.8"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/>',
+ pin:'<path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',phone:'<path d="M5.2 3.5h3.3l1.6 4.4-2.2 1.5a11 11 0 0 0 4.8 4.8l1.5-2.2 4.4 1.6v3.3a2.4 2.4 0 0 1-2.6 2.4C9.6 18.9 5.1 14.4 4.7 6.1a2.4 2.4 0 0 1 .5-2.6z"/>',mail:'<rect x="3" y="5.5" width="18" height="13" rx="2.2"/><path d="M3.6 7.2l8.4 6 8.4-6"/>',heart:'<path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.3 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/>',
+ temple:'<path d="M12 2.6v2.6M10.5 7.4L12 5.2l1.5 2.2"/><path d="M9.9 12.2l.7-4.8h2.8l.7 4.8"/><path d="M3 21h18M4 12.2h16M5.2 12.2V21M18.8 12.2V21M9.3 12.2V21M14.7 12.2V21"/>',money:'<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 9v.01M18 15v.01"/>',car:'<path d="M4 16.5V12l2-5h12l2 5v4.5"/><path d="M3 12h18v4.5H3z"/><circle cx="7" cy="16.5" r="1.8"/><circle cx="17" cy="16.5" r="1.8"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.6v.2"/>',plus:'<path d="M12 5v14M5 12h14"/>',ext:'<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',robot:'<rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 4v4M9 13v1M15 13v1M2 13v3M22 13v3"/>'};
+const QICONS=['wave','clock','bed','sun','pin','phone','mail','check','heart','temple','money','car','info','bolt','chat'];
+const I=n=>'<svg class="i" viewBox="0 0 24 24" aria-hidden="true">'+(P[n]||P.info)+'</svg>';
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ---------- defaults ---------- */
+const DEFAULT_QUICK=[
+ {icon:'wave',label:'Greeting',send:true,en:"Hi, this is Thean 👋 Thanks for waiting. How can I help you today?",km:"សួស្ដី ខ្ញុំ Thean 👋 អរគុណដែលបានរង់ចាំ។ តើខ្ញុំអាចជួយអ្វីបានខ្លះ?"},
+ {icon:'clock',label:'One moment',send:true,en:"Give me one moment, I'm checking that for you.",km:"សូមរង់ចាំបន្តិច ខ្ញុំកំពុងពិនិត្យឱ្យអ្នក។"},
+ {icon:'bed',label:'Hotels',send:true,en:"I can recommend a few places to stay. Which town are you going to, and what is your budget per night?",km:"ខ្ញុំអាចណែនាំកន្លែងស្នាក់នៅមួយចំនួន។ តើអ្នកនឹងទៅក្រុងណា ហើយថវិកាប៉ុន្មានក្នុងមួយយប់?"},
+ {icon:'sun',label:'Best time',send:true,en:"The best time is November to February: cool and dry. June to October is the green season, with rain most afternoons.",km:"ពេលល្អបំផុតគឺខែវិច្ឆិកា ដល់ខែកុម្ភៈ ដែលត្រជាក់ និងស្ងួត។ ខែមិថុនា ដល់ខែតុលា ជារដូវវស្សា មានភ្លៀងស្ទើររាល់រសៀល។"},
+ {icon:'pin',label:'Location',send:false,en:"Here is the location on Google Maps: ",km:"នេះជាទីតាំងនៅលើ Google Maps៖ "},
+ {icon:'phone',label:'Ask contact',send:true,en:"Could you share your phone number or Telegram? I'll contact you directly.",km:"សូមផ្ដល់លេខទូរស័ព្ទ ឬ Telegram របស់អ្នក ខ្ញុំនឹងទាក់ទងអ្នកដោយផ្ទាល់។"},
+ {icon:'mail',label:'Collab',send:true,en:"Thanks for your interest in working together! Please send the details to info@kongthean.com and I'll get back to you.",km:"អរគុណដែលចាប់អារម្មណ៍សហការ! សូមផ្ញើព័ត៌មានលម្អិតមក info@kongthean.com ហើយខ្ញុំនឹងឆ្លើយតបវិញ។"},
+ {icon:'check',label:'Thank you',send:true,en:"Thank you for chatting with me! Have a wonderful trip 🙏",km:"អរគុណសម្រាប់ការជជែក! សូមឱ្យដំណើររបស់អ្នករីករាយ 🙏"}
+];
+const SYS={join:{en:n=>n+' joined the chat.',km:n=>n+' បានចូលរួមការជជែក។'},close:{en:()=>'This chat was closed. Thank you! Send a message any time if you need more help.',km:()=>'ការជជែកនេះត្រូវបានបិទ។ អរគុណ! ផ្ញើសារមកពេលណាក៏បាន ប្រសិនបើត្រូវការជំនួយបន្ថែម។'}};
+
+/* ---------- prefs ---------- */
+const pref=(k,d)=>{try{const v=localStorage.getItem('agent-'+k);return v==null?d:JSON.parse(v)}catch(e){return d}};
+const setPref=(k,v)=>{try{localStorage.setItem('agent-'+k,JSON.stringify(v))}catch(e){}};
+let soundOn=pref('sound',true),autoAccept=pref('auto',true);
+
+/* ---------- state ---------- */
+let me=null,agent=null,chats=[],firstSnap=true,sel=null,msgs=[],msgUnsub=null,chatUnsub=null,meUnsub=null,quick=DEFAULT_QUICK,tab='open',search='',showQuick=pref('qr',true),beat=null,seen={};
+
+/* ---------- auth ---------- */
+A.onAuthStateChanged(auth,async u=>{
+  cleanup(); me=u&&!u.isAnonymous?u:null;
+  if(!me){if(u&&u.isAnonymous)await A.signOut(auth);return drawLogin()}
+  root.innerHTML='<div class="login"><div class="lcard"><p>Loading…</p></div></div>';
+  try{const s=await F.getDoc(F.doc(db,'agents',me.uid));if(!s.exists())return drawNotAgent();agent=s.data();start()}
+  catch(e){drawNotAgent(e)}
+});
+function cleanup(){[chatUnsub,msgUnsub,meUnsub].forEach(f=>f&&f());chatUnsub=msgUnsub=meUnsub=null;if(beat)clearInterval(beat);chats=[];firstSnap=true;sel=null;msgs=[]}
+
+function drawLogin(msg){
+  root.innerHTML='<div class="login"><form class="lcard" novalidate><div style="display:flex;align-items:center;gap:12px"><span class="logo">T</span><div><h1 class="emb">THEAN</h1><p>Agent inbox · live chat</p></div></div>'+(msg?'<div class="err">'+esc(msg)+'</div>':'')+
+   '<label class="f">Email<input id="em" type="email" autocomplete="username" required></label><label class="f">Password<input id="pw" type="password" autocomplete="current-password" required></label>'+
+   '<button class="btn" type="submit" id="go">Sign in</button><button class="btn soft sm" type="button" id="fg">Forgot password?</button><p style="font-size:.82rem">This page is only for the website team. Visitors chat from the website.</p></form></div>';
+  const f=root.querySelector('form');
+  f.onsubmit=async e=>{e.preventDefault();const b=f.querySelector('#go');b.disabled=true;b.textContent='Signing in…';
+    try{await A.signInWithEmailAndPassword(auth,f.querySelector('#em').value.trim(),f.querySelector('#pw').value)}
+    catch(err){drawLogin(/invalid|wrong|not-found|credential/.test(err.code||'')?'Email or password is wrong.':err.code==='auth/too-many-requests'?'Too many tries. Wait a few minutes and try again.':err.code==='auth/network-request-failed'?'No internet connection.':'Could not sign in ('+(err.code||err.message)+').')}};
+  f.querySelector('#fg').onclick=async()=>{const em=f.querySelector('#em').value.trim();if(!em){toast('Type your email first');return}try{await A.sendPasswordResetEmail(auth,em);toast('Password reset email sent')}catch(e){toast('Could not send reset email')}};
+}
+function drawNotAgent(e){
+  root.innerHTML='<div class="login"><div class="lcard"><h1 class="emb">Almost there</h1><p>You are signed in as <b>'+esc(me.email)+'</b>, but this account is not set up as an agent yet.</p>'+
+   '<div class="note"><b>Do this once in Firebase:</b><ol><li>Open <b>Firestore Database → Data</b>.</li><li>Tap <b>+ Start collection</b>, name it <code>agents</code>.</li><li>Document ID: <code id="uid">'+esc(me.uid)+'</code> <button class="btn soft sm" id="cp" type="button">Copy</button></li><li>Add field <code>name</code> (string) = <code>Thean</code>, and <code>online</code> (boolean) = <code>false</code>. Save.</li></ol></div>'+
+   (e?'<div class="err">'+esc(e.code||e.message)+' — check that the security rules are published.</div>':'')+
+   '<button class="btn" id="re" type="button">I did it, check again</button><button class="btn soft sm" id="lo" type="button">Sign out</button></div></div>';
+  root.querySelector('#cp').onclick=()=>copy(me.uid);
+  root.querySelector('#re').onclick=()=>location.reload();
+  root.querySelector('#lo').onclick=()=>A.signOut(auth);
+}
+
+/* ---------- app ---------- */
+function start(){
+  drawShell();
+  setOnline(true,true);
+  beat=setInterval(()=>{if(agent&&agent.online)F.updateDoc(F.doc(db,'agents',me.uid),{lastSeen:F.serverTimestamp()}).catch(()=>{})},60000);
+  meUnsub=F.onSnapshot(F.doc(db,'agents',me.uid),s=>{if(s.exists()){agent=s.data();drawTop()}});
+  F.getDoc(F.doc(db,'settings','quick')).then(s=>{if(s.exists()&&Array.isArray(s.data().items)&&s.data().items.length)quick=s.data().items;drawConv()}).catch(()=>{});
+  chatUnsub=F.onSnapshot(F.query(F.collection(db,'chats'),F.orderBy('updatedAt','desc'),F.limit(200)),snap=>{
+    snap.docChanges().forEach(ch=>{
+      const d=ch.doc.data(),id=ch.doc.id,prev=seen[id];
+      if(!firstSnap&&ch.type!=='removed'){
+        if(d.status==='waiting'&&(!prev||prev.status!=='waiting')){alertNew('🔔 New live chat request',(d.name||'A visitor')+' wants to talk to an agent',id);if(autoAccept)accept(id,true)}
+        else if(d.lastFrom==='visitor'&&(d.status==='assigned'||d.status==='waiting')&&(!prev||prev.lastMsg!==d.lastMsg)&&!(sel===id&&!document.hidden))alertNew('💬 '+(d.name||'Visitor'),d.lastMsg,id);
+      }
+      seen[id]={status:d.status,lastMsg:d.lastMsg};
+    });
+    chats=snap.docs.map(d=>Object.assign({id:d.id},d.data()));
+    if(firstSnap&&autoAccept)chats.filter(c=>c.status==='waiting').forEach(c=>accept(c.id,true));
+    firstSnap=false;drawList();drawTop();updateTitle();if(sel)drawConvHead();
+  },err=>toast('Could not load chats: '+(err.code||err.message)));
+  window.addEventListener('beforeunload',()=>{F.updateDoc(F.doc(db,'agents',me.uid),{online:false}).catch(()=>{})});
+}
+function setOnline(v,quiet){F.updateDoc(F.doc(db,'agents',me.uid),{online:v,lastSeen:F.serverTimestamp(),email:me.email||''}).then(()=>{if(!quiet)toast(v?'You are available. Visitors can reach you.':'You are away. Visitors are told you will reply later.')}).catch(e=>toast('Could not change status: '+(e.code||e.message)))}
+
+function drawShell(){
+  root.innerHTML='<div class="app"><header class="top" id="top"></header><div class="main" id="main"><aside class="side"><div class="tabs" id="tabs"></div><div class="search"><input id="q" placeholder="Search name or message" aria-label="Search chats"></div><div class="list" id="list"></div></aside><section class="conv" id="conv"></section></div></div>';
+  root.querySelector('#q').oninput=e=>{search=e.target.value.toLowerCase();drawList()};
+  drawTop();drawList();drawConv();
+}
+function counts(){const c={waiting:0,mine:0,open:0,unread:0};chats.forEach(x=>{if(x.status==='waiting')c.waiting++;if(x.status==='assigned'&&x.agentUid===me.uid)c.mine++;if(x.status==='waiting'||x.status==='assigned')c.open++;c.unread+=x.status!=='closed'&&x.status!=='bot'?(x.unreadAgent||0):0});return c}
+function drawTop(){
+  const t=root.querySelector('#top');if(!t)return;const c=counts(),on=agent&&agent.online;
+  t.innerHTML='<div class="ttl"><span class="logo">T</span><div><b>THEAN</b><small>Inbox · '+esc((agent&&agent.name)||me.email)+'</small></div></div>'+
+   '<button class="tb '+(on?'on':'away')+'" id="st" title="Availability">'+I(on?'check':'clock')+'<span class="tl">'+(on?'Available':'Away')+'</span></button>'+
+   '<button class="tb" id="nt" title="Notifications">'+I('bell')+'<span class="tl">Alerts</span>'+(c.unread+c.waiting?'<span class="bd">'+(c.unread+c.waiting)+'</span>':'')+'</button>'+
+   '<button class="tb" id="sd" title="Sound" aria-label="Sound">'+I(soundOn?'sound':'mute')+'</button>'+
+   '<button class="tb" id="gs" title="Settings" aria-label="Settings">'+I('gear')+'</button>'+
+   '<button class="tb" id="lo" title="Sign out" aria-label="Sign out">'+I('logout')+'</button>';
+  t.querySelector('#st').onclick=()=>setOnline(!on);
+  t.querySelector('#nt').onclick=askNotify;
+  t.querySelector('#sd').onclick=()=>{soundOn=!soundOn;setPref('sound',soundOn);if(soundOn)beep();drawTop()};
+  t.querySelector('#gs').onclick=settings;
+  t.querySelector('#lo').onclick=async()=>{await F.updateDoc(F.doc(db,'agents',me.uid),{online:false}).catch(()=>{});A.signOut(auth)};
+}
+const TABS=[['open','Open'],['waiting','Waiting'],['mine','Mine'],['bot','Bot only'],['closed','Closed']];
+function filtered(){return chats.filter(c=>{
+  if(tab==='open'&&!(c.status==='waiting'||c.status==='assigned'))return false;
+  if(tab==='waiting'&&c.status!=='waiting')return false;
+  if(tab==='mine'&&!(c.status==='assigned'&&c.agentUid===me.uid))return false;
+  if(tab==='bot'&&c.status!=='bot')return false;
+  if(tab==='closed'&&c.status!=='closed')return false;
+  if(search&&!((c.name||'')+' '+(c.lastMsg||'')+' '+(c.contact||'')).toLowerCase().includes(search))return false;return true})}
+function vName(c){return c.name||('Visitor '+c.id.slice(0,4).toUpperCase())}
+function ago(ts){if(!ts||!ts.toMillis)return 'now';const s=(Date.now()-ts.toMillis())/1000;if(s<60)return 'now';if(s<3600)return Math.floor(s/60)+'m';if(s<86400)return Math.floor(s/3600)+'h';return Math.floor(s/86400)+'d'}
+const SCOL={waiting:'var(--wait)',assigned:'var(--ok)',bot:'#7fb3d5',closed:'var(--line)'};
+function drawList(){
+  const tb=root.querySelector('#tabs'),l=root.querySelector('#list');if(!tb)return;
+  const all={open:0,waiting:0,mine:0,bot:0,closed:0};chats.forEach(c=>{if(c.status==='waiting'||c.status==='assigned')all.open++;if(all[c.status]!=null&&c.status!=='assigned')all[c.status]++;if(c.status==='assigned'&&c.agentUid===me.uid)all.mine++});
+  tb.innerHTML=TABS.map(t=>'<button data-tab="'+t[0]+'" class="'+(tab===t[0]?'on':'')+'">'+t[1]+'<span class="c'+(t[0]==='waiting'&&all.waiting?' hot':'')+'">'+all[t[0]]+'</span></button>').join('');
+  tb.querySelectorAll('button').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;drawList()});
+  const f=filtered();
+  l.innerHTML=f.length?f.map(c=>'<button class="item'+(sel===c.id?' on':'')+'" data-id="'+c.id+'"><span class="av">'+esc(vName(c)[0])+'<span class="st" style="background:'+(SCOL[c.status]||'var(--line)')+'"></span></span><span style="min-width:0"><span class="nm"><span>'+esc(vName(c))+'</span><span class="pill '+esc(c.status)+'">'+esc(c.status==='assigned'?'live':c.status)+'</span></span><span class="lm">'+(c.lastFrom==='agent'?'You: ':c.lastFrom==='bot'?'Bot: ':'')+esc(c.lastMsg||'…')+'</span></span><span class="rt">'+ago(c.updatedAt)+(c.unreadAgent&&c.status!=='bot'?'<span class="ub">'+c.unreadAgent+'</span>':'')+'</span></button>').join('')
+   :'<div class="emptyl">'+(tab==='open'?'No open chats right now.<br>When a visitor taps “Talk to a live agent”, it appears here with a sound.':'Nothing here.')+'</div>';
+  l.querySelectorAll('.item').forEach(b=>b.onclick=()=>openChat(b.dataset.id));
+}
+function openChat(id){
+  sel=id;msgs=[];if(msgUnsub)msgUnsub();
+  root.querySelector('#main').classList.add('sel');
+  drawList();drawConv();
+  msgUnsub=F.onSnapshot(F.query(F.collection(db,'chats',id,'messages'),F.orderBy('ts','asc'),F.limit(500)),s=>{msgs=s.docs.map(d=>Object.assign({id:d.id},d.data()));drawMsgs()});
+  const c=chats.find(x=>x.id===id);if(c&&c.unreadAgent)F.updateDoc(F.doc(db,'chats',id),{unreadAgent:0}).catch(()=>{});
+}
+function cur(){return chats.find(x=>x.id===sel)}
+function drawConv(){
+  const v=root.querySelector('#conv');if(!v)return;const c=cur();
+  if(!c){v.innerHTML='<div class="blank"><div><div class="big">'+I('chat')+'</div><p>Pick a chat on the left.<br>New requests make a sound and show an alert.</p></div></div>';return}
+  v.innerHTML='<div class="ch" id="chh"></div><div class="info" id="inf"></div><div class="msgs" id="msgs"></div><div id="acc"></div><div class="qr" id="qr"></div><form class="comp" id="comp"><button class="ib'+(showQuick?' on':'')+'" type="button" id="qt" title="Quick replies" aria-label="Quick replies">'+I('bolt')+'</button><textarea rows="1" id="ta" placeholder="Reply to the visitor…" aria-label="Reply"></textarea><button class="ib pri" type="submit" aria-label="Send">'+I('send')+'</button></form>';
+  const ta=v.querySelector('#ta');
+  v.querySelector('#comp').onsubmit=e=>{e.preventDefault();sendMsg(ta.value)};
+  ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&window.innerWidth>820){e.preventDefault();sendMsg(ta.value)}});
+  ta.addEventListener('input',()=>{ta.style.height='';ta.style.height=Math.min(140,ta.scrollHeight)+'px';typingPing()});
+  v.querySelector('#qt').onclick=()=>{showQuick=!showQuick;setPref('qr',showQuick);v.querySelector('#qt').classList.toggle('on',showQuick);drawQuick()};
+  drawConvHead();drawMsgs();drawQuick();
+}
+function drawConvHead(){
+  const c=cur(),h=root.querySelector('#chh');if(!c||!h)return;
+  h.innerHTML='<button class="back" id="bk" aria-label="Back">'+I('left')+'</button><span class="av">'+esc(vName(c)[0])+'</span><div class="who"><b>'+esc(vName(c))+'</b><small><span class="pill '+esc(c.status)+'">'+esc(c.status==='assigned'?'live · '+(c.agentName||''):c.status)+'</span> · started '+ago(c.createdAt)+' ago</small></div>'+
+   (c.status==='closed'?'':'<button class="btn sm soft" id="cl">'+I('close')+' Close chat</button>');
+  h.querySelector('#bk').onclick=()=>{sel=null;if(msgUnsub)msgUnsub();root.querySelector('#main').classList.remove('sel');drawList();drawConv()};
+  const cl=h.querySelector('#cl');if(cl)cl.onclick=()=>closeChat(c.id);
+  const inf=root.querySelector('#inf');
+  inf.innerHTML=(c.contact?'<span>'+I('phone')+esc(c.contact)+'</span><button data-copy="'+esc(c.contact)+'">Copy</button>':'<span>'+I('user')+'No contact given</span>')+'<span>'+I('info')+(c.lang==='km'?'Khmer':'English')+'</span>'+(c.page?'<span>'+I('pin')+esc(c.page)+'</span>':'')+(c.ua&&/iPhone|Android/i.test(c.ua)?'<span>📱 Mobile</span>':'<span>💻 Desktop</span>');
+  inf.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>copy(b.dataset.copy));
+  const acc=root.querySelector('#acc');
+  acc.innerHTML=(c.status==='waiting'||c.status==='bot')?'<div class="acceptbar"><span>'+(c.status==='waiting'?'<b>Waiting for an agent.</b> Accept to let them know you are here.':'This visitor is talking to the bot. You can join any time.')+'</span><button class="btn ok sm" id="ac">'+I('check')+(c.status==='waiting'?' Accept chat':' Join chat')+'</button></div>':
+   (c.status==='assigned'&&c.agentUid&&c.agentUid!==me.uid?'<div class="acceptbar"><span>'+esc(c.agentName||'Another agent')+' is handling this chat.</span><button class="btn sm soft" id="ac">Take over</button></div>':'');
+  const ab=acc.querySelector('#ac');if(ab)ab.onclick=()=>accept(c.id);
+  const ty=c.visitorTyping&&c.visitorTyping.toMillis&&Date.now()-c.visitorTyping.toMillis()<6000;
+  const mt=root.querySelector('#typ');if(mt)mt.hidden=!ty;
+}
+function tm(ts){const d=ts&&ts.toDate?ts.toDate():new Date();return d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}
+function drawMsgs(){
+  const box=root.querySelector('#msgs');if(!box)return;const atEnd=box.scrollHeight-box.scrollTop-box.clientHeight<80;
+  box.innerHTML=msgs.map(m=>m.from==='system'?'<div class="sys">'+esc(m.text)+'</div>':'<div class="m '+(m.from==='visitor'?'vis':m.from)+'"><span class="by">'+(m.from==='visitor'?esc(vName(cur()||{id:'????'})):m.from==='bot'?'Bot':esc(m.agentName||'Agent'))+'</span>'+esc(m.text)+'<time>'+tm(m.ts)+'</time></div>').join('')+'<div class="typing" id="typ" hidden>Visitor is typing…</div>';
+  if(atEnd||msgs.length<30)box.scrollTop=box.scrollHeight;drawConvHead();
+}
+function drawQuick(){
+  const q=root.querySelector('#qr');if(!q)return;q.hidden=!showQuick;if(!showQuick)return;
+  q.innerHTML='<div class="qrhead"><span>Quick replies · tap to send in the visitor’s language</span><button type="button" id="qe">Edit</button></div><div class="qrgrid">'+quick.map((x,i)=>'<button class="qrb" type="button" data-q="'+i+'" title="'+esc(x.en)+'"><span class="ic">'+I(x.icon)+'</span>'+esc(x.label)+'</button>').join('')+'</div>';
+  q.querySelector('#qe').onclick=editQuick;
+  q.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{const x=quick[+b.dataset.q],c=cur();const t=(c&&c.lang==='km'&&x.km)?x.km:x.en;if(x.send)sendMsg(t);else{const ta=root.querySelector('#ta');ta.value=t;ta.focus()}});
+}
+
+/* ---------- actions ---------- */
+async function accept(id,auto){
+  try{
+    await F.runTransaction(db,async tx=>{
+      const r=F.doc(db,'chats',id),s=await tx.get(r);if(!s.exists())return;const d=s.data();
+      if(auto&&d.status!=='waiting')return;
+      const nm=(agent&&agent.name)||'Thean';
+      tx.update(r,{status:'assigned',agentUid:me.uid,agentName:nm,assignedAt:F.serverTimestamp(),updatedAt:F.serverTimestamp(),lastMsg:SYS.join[d.lang==='km'?'km':'en'](nm),lastFrom:'system',unreadAgent:0});
+      tx.set(F.doc(F.collection(db,'chats',id,'messages')),{from:'system',text:SYS.join[d.lang==='km'?'km':'en'](nm),ts:F.serverTimestamp()});
+    });
+    if(!auto)toast('You joined the chat');
+  }catch(e){toast('Could not accept: '+(e.code||e.message))}
+}
+async function sendMsg(text){
+  text=String(text||'').trim();const c=cur();if(!text||!c)return;
+  const ta=root.querySelector('#ta');if(ta){ta.value='';ta.style.height=''}
+  try{
+    if(c.status!=='assigned'||c.agentUid!==me.uid)await accept(c.id);
+    await F.addDoc(F.collection(db,'chats',c.id,'messages'),{from:'agent',text:text.slice(0,2000),agentName:(agent&&agent.name)||'Thean',agentUid:me.uid,ts:F.serverTimestamp()});
+    await F.updateDoc(F.doc(db,'chats',c.id),{lastMsg:text.slice(0,120),lastFrom:'agent',updatedAt:F.serverTimestamp(),unreadVisitor:F.increment(1),unreadAgent:0,agentTyping:null});
+  }catch(e){toast('Not sent: '+(e.code||e.message));if(ta)ta.value=text}
+}
+let armClose=null;
+async function closeChat(id){
+  if(armClose!==id){armClose=id;toast('Tap “Close chat” again to confirm');setTimeout(()=>{armClose=null},4000);return}
+  armClose=null;const c=chats.find(x=>x.id===id);const lg=c&&c.lang==='km'?'km':'en';
+  try{await F.addDoc(F.collection(db,'chats',id,'messages'),{from:'system',text:SYS.close[lg](),ts:F.serverTimestamp()});
+    await F.updateDoc(F.doc(db,'chats',id),{status:'closed',closedAt:F.serverTimestamp(),updatedAt:F.serverTimestamp(),lastMsg:'Chat closed',lastFrom:'system',unreadAgent:0});toast('Chat closed')}
+  catch(e){toast('Could not close: '+(e.code||e.message))}
+}
+let tpT=0;function typingPing(){const c=cur();if(!c)return;const n=Date.now();if(n-tpT<3000)return;tpT=n;F.updateDoc(F.doc(db,'chats',c.id),{agentTyping:F.serverTimestamp()}).catch(()=>{})}
+setInterval(()=>{if(sel)drawConvHead()},3000);
+
+/* ---------- notifications ---------- */
+let ac=null;
+function beep(){if(!soundOn)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();[0,.18].forEach((t,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=i?1320:990;g.gain.setValueAtTime(.0001,ac.currentTime+t);g.gain.exponentialRampToValueAtTime(.25,ac.currentTime+t+.02);g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+t+.3);o.connect(g);g.connect(ac.destination);o.start(ac.currentTime+t);o.stop(ac.currentTime+t+.32)})}catch(e){}}
+document.addEventListener('click',()=>{try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume()}catch(e){}},{once:true});
+function alertNew(title,body,id){
+  beep();try{navigator.vibrate&&navigator.vibrate([120,60,120])}catch(e){}
+  toast(title+': '+String(body||'').slice(0,70),()=>openChat(id));
+  if('Notification' in window&&Notification.permission==='granted'&&(document.hidden||sel!==id)){try{const n=new Notification(title,{body:String(body||''),tag:id,renotify:true});n.onclick=()=>{window.focus();openChat(id);n.close()}}catch(e){}}
+}
+async function askNotify(){
+  if(!('Notification' in window)){toast('This browser cannot show alerts. On iPhone, add this page to your Home Screen first.');return}
+  if(Notification.permission==='granted'){toast('Alerts are on. Keep this page open to receive them.');beep();return}
+  const p=await Notification.requestPermission();toast(p==='granted'?'Alerts are on':'Alerts were blocked. Allow notifications in your browser settings.');
+}
+function updateTitle(){const c=counts(),n=c.unread+c.waiting;document.title=(n?'('+n+') ':'')+'Thean · Agent Inbox'}
+
+/* ---------- settings & quick replies ---------- */
+function modal(title,inner){const m=document.createElement('div');m.className='modal';m.innerHTML='<div class="sheet" role="dialog" aria-modal="true"><div class="hd"><h3>'+esc(title)+'</h3><button class="ib" data-close aria-label="Close">'+I('close')+'</button></div><div class="bd">'+inner+'</div></div>';m.addEventListener('click',e=>{if(e.target===m||e.target.closest('[data-close]'))m.remove()});document.body.appendChild(m);return m}
+function settings(){
+  const m=modal('Settings','<label class="f">Your name shown to visitors<input id="nm" value="'+esc((agent&&agent.name)||'')+'"></label>'+
+   '<label class="toggle"><span><b>Auto-accept new requests</b><small>When a visitor asks for a live agent, you join automatically.</small></span><input type="checkbox" id="aa"'+(autoAccept?' checked':'')+'></label>'+
+   '<label class="toggle"><span><b>Sound alerts</b><small>Play a chime for new chats and messages.</small></span><input type="checkbox" id="so"'+(soundOn?' checked':'')+'></label>'+
+   '<div class="note">Alerts work while this page is open (a browser tab or the Home Screen app). Tip: on your phone, use <b>Share → Add to Home Screen</b> so the inbox opens like an app.</div>'+
+   '<div class="row"><button class="btn soft" data-close type="button">Cancel</button><button class="btn" id="sv" type="button">Save</button></div>');
+  m.querySelector('#sv').onclick=async()=>{autoAccept=m.querySelector('#aa').checked;soundOn=m.querySelector('#so').checked;setPref('auto',autoAccept);setPref('sound',soundOn);
+    const nm=m.querySelector('#nm').value.trim();if(nm&&nm!==(agent&&agent.name))await F.updateDoc(F.doc(db,'agents',me.uid),{name:nm.slice(0,40)}).catch(e=>toast('Name not saved: '+(e.code||e.message)));m.remove();toast('Saved');drawTop()};
+}
+function editQuick(){
+  let L=JSON.parse(JSON.stringify(quick));
+  const m=modal('Quick replies','<div id="ql" style="display:grid;gap:10px"></div><button class="btn soft" type="button" id="qa">'+I('plus')+' Add reply</button><div class="row"><button class="btn soft" type="button" id="qd">Reset to default</button><button class="btn soft" data-close type="button">Cancel</button><button class="btn" id="qs" type="button">Save for all agents</button></div>');
+  function draw(){m.querySelector('#ql').innerHTML=L.map((x,i)=>'<div class="qe"><div style="display:grid;gap:6px;align-content:start"><span class="qrb" style="pointer-events:none"><span class="ic">'+I(x.icon)+'</span></span><select data-i="'+i+'" data-k="icon">'+QICONS.map(o=>'<option'+(o===x.icon?' selected':'')+'>'+o+'</option>').join('')+'</select></div><div style="display:grid;gap:6px"><label class="f">Button label<input data-i="'+i+'" data-k="label" value="'+esc(x.label)+'"></label><label class="f">English<textarea data-i="'+i+'" data-k="en">'+esc(x.en)+'</textarea></label><label class="f">Khmer<textarea data-i="'+i+'" data-k="km">'+esc(x.km)+'</textarea></label><label style="display:flex;gap:8px;align-items:center;font-size:.85rem"><input type="checkbox" data-i="'+i+'" data-k="send"'+(x.send?' checked':'')+'> Send instantly (untick to put it in the box to finish typing)</label><div class="row"><button class="btn sm soft" type="button" data-mv="'+i+'" data-d="-1">↑</button><button class="btn sm soft" type="button" data-mv="'+i+'" data-d="1">↓</button><button class="btn sm del" type="button" data-rm="'+i+'">Remove</button></div></div></div>').join('')}
+  draw();
+  m.addEventListener('input',e=>{const t=e.target;if(t.dataset.k){L[+t.dataset.i][t.dataset.k]=t.type==='checkbox'?t.checked:t.value;if(t.dataset.k==='icon')draw()}});
+  m.addEventListener('change',e=>{const t=e.target;if(t.dataset.k){L[+t.dataset.i][t.dataset.k]=t.type==='checkbox'?t.checked:t.value;if(t.dataset.k==='icon')draw()}});
+  m.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    if(b.dataset.rm!=null){L.splice(+b.dataset.rm,1);draw()}
+    if(b.dataset.mv!=null){const i=+b.dataset.mv,j=i+(+b.dataset.d);if(j>=0&&j<L.length){[L[i],L[j]]=[L[j],L[i]];draw()}}
+    if(b.id==='qa'){L.push({icon:'chat',label:'New reply',send:true,en:'',km:''});draw()}
+    if(b.id==='qd'){L=JSON.parse(JSON.stringify(DEFAULT_QUICK));draw()}
+    if(b.id==='qs'){F.setDoc(F.doc(db,'settings','quick'),{items:L.filter(x=>x.en||x.km),updatedAt:F.serverTimestamp()}).then(()=>{quick=L.filter(x=>x.en||x.km);m.remove();drawQuick();toast('Quick replies saved')}).catch(e=>toast('Not saved: '+(e.code||e.message)))}});
+}
+
+/* ---------- misc ---------- */
+function toast(t,onClick){document.querySelectorAll('.toast').forEach(x=>x.remove());const d=document.createElement('div');d.className='toast';d.textContent=t;if(onClick)d.onclick=()=>{onClick();d.remove()};document.body.appendChild(d);setTimeout(()=>d.remove(),4000)}
+function copy(v){try{navigator.clipboard.writeText(v).then(()=>toast('Copied'),()=>toast(v))}catch(e){toast(v)}}
+</script>
+</body>
+</html>
