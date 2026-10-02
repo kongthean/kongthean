@@ -401,7 +401,8 @@ window.THEAN_FIREBASE = {
   "projectId": "thean-12952",
   "storageBucket": "thean-12952.firebasestorage.app",
   "messagingSenderId": "1082546170540",
-  "appId": "1:1082546170540:web:71e42aaada4df363588d09"
+  "appId": "1:1082546170540:web:71e42aaada4df363588d09",
+  "databaseURL": "https://thean-12952-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 </script>
 <script id="main">
@@ -898,9 +899,35 @@ if(location.hash==='#admin')enterAdmin();else render();
 })();
 </script>
 <script type="module" id="chatmod">
-/* Thean in-site chat: smart bot + live agent (Firebase) */
+/* Thean in-site chat: smart bot + live agent (Firebase Realtime Database) */
+/* Small wrapper around Firebase Realtime Database, shared by the website chat and the agent inbox */
+const TS={__ts:1};
+const INC=n=>({__inc:n});
+const ms=v=>typeof v==='number'?v:(v&&v.toMillis?v.toMillis():Date.now());
+async function makeDB(cfg,name){
+  const base='https://www.gstatic.com/firebasejs/10.12.2/';
+  const [app,au,d]=await Promise.all([import(base+'firebase-app.js'),import(base+'firebase-auth.js'),import(base+'firebase-database.js')]);
+  if(!cfg||!cfg.apiKey)throw new Error('no config');
+  const a=app.initializeApp(cfg,name);
+  const db=d.getDatabase(a,cfg.databaseURL);
+  const R=p=>d.ref(db,p);
+  const conv=o=>{const r={};for(const k in o){const v=o[k];r[k]=v===TS?d.serverTimestamp():(v&&v.__inc)?d.increment(v.__inc):v}return r};
+  const list=(s,rev)=>{const out=[];s.forEach(c=>{out.push(Object.assign({id:c.key},c.val()))});return rev?out.reverse():out};
+  return {
+    auth:au.getAuth(a),A:au,
+    get:async p=>{const s=await d.get(R(p));return s.exists()?s.val():null},
+    set:(p,v)=>d.set(R(p),conv(v)),
+    update:(p,v)=>d.update(R(p),conv(v)),
+    push:(p,v)=>d.push(R(p),conv(v)),
+    on:(p,cb,err)=>d.onValue(R(p),s=>cb(s.exists()?s.val():null),err||(()=>{})),
+    onMsgs:(p,cb,err)=>d.onValue(d.query(R(p),d.orderByKey(),d.limitToLast(300)),s=>cb(list(s)),err||(()=>{})),
+    onRecent:(p,field,n,cb,err)=>d.onValue(d.query(R(p),d.orderByChild(field),d.limitToLast(n)),s=>cb(list(s,true)),err||(()=>{})),
+    onDisconnect:(p,v)=>d.onDisconnect(R(p)).update(conv(v)),
+    onConnected:cb=>d.onValue(R('.info/connected'),s=>cb(!!s.val()))
+  };
+}
+
 const FB_CONFIG = window.THEAN_FIREBASE;
-const FBV = '10.12.2';
 const T = window.TheanSite;
 const L = () => (T.lang === 'km' ? 'km' : 'en');
 const W = {
@@ -923,15 +950,8 @@ let open=false, fb=null, user=null, chat=null, msgs=[], localMsgs=[], unsub=[], 
 const root=document.createElement('div'); root.id='tc'; document.body.appendChild(root);
 const STARTED='thean-chat-started';
 
-/* ---------------- firebase (lazy) ---------------- */
-async function loadFb(){
-  if(fb) return fb; if(!FB_CONFIG||!FB_CONFIG.apiKey) throw new Error('no config');
-  const base='https://www.gstatic.com/firebasejs/'+FBV+'/';
-  const [app,auth,fs]=await Promise.all([import(base+'firebase-app.js'),import(base+'firebase-auth.js'),import(base+'firebase-firestore.js')]);
-  const a=app.initializeApp(FB_CONFIG,'thean-chat');
-  fb={auth:auth.getAuth(a),db:fs.getFirestore(a),A:auth,F:fs};
-  return fb;
-}
+/* ---------------- firebase (lazy, Realtime Database) ---------------- */
+async function loadFb(){ if(fb) return fb; fb=await makeDB(FB_CONFIG,'thean-chat'); return fb }
 async function ensureUser(){
   const f=await loadFb();
   if(user) return user;
@@ -939,32 +959,32 @@ async function ensureUser(){
   if(!user){const c=await f.A.signInAnonymously(f.auth);user=c.user}
   return user;
 }
-function chatRef(){return fb.F.doc(fb.db,'chats',user.uid)}
-function msgCol(){return fb.F.collection(fb.db,'chats',user.uid,'messages')}
+const CP=()=>'chats/'+user.uid, MP=()=>'messages/'+user.uid;
 async function ensureChat(){
-  await ensureUser(); const F=fb.F;
+  await ensureUser();
   if(chat) return chat;
-  const snap=await F.getDoc(chatRef());
-  if(!snap.exists()){
-    await F.setDoc(chatRef(),{visitorUid:user.uid,status:'bot',name:'',contact:'',lang:L(),page:location.hash||'#/',createdAt:F.serverTimestamp(),updatedAt:F.serverTimestamp(),lastMsg:'',lastFrom:'',unreadAgent:0,unreadVisitor:0,ua:navigator.userAgent.slice(0,160)});
-    await F.addDoc(msgCol(),{from:'bot',text:greet(),ts:F.serverTimestamp()});
+  const ex=await fb.get(CP());
+  if(!ex){
+    await fb.set(CP(),{visitorUid:user.uid,status:'bot',name:'',contact:'',lang:L(),page:location.hash||'#/',createdAt:TS,updatedAt:TS,lastMsg:'',lastFrom:'',unreadAgent:0,unreadVisitor:0,ua:navigator.userAgent.slice(0,160)});
+    await fb.push(MP(),{from:'bot',text:greet(),ts:TS});
   }
   try{localStorage.setItem(STARTED,'1')}catch(e){}
   listen();
   return new Promise(r=>{const t=setInterval(()=>{if(chat){clearInterval(t);r(chat)}},50)});
 }
+let msgsLoaded=false;
 function listen(){
-  if(unsub.length) return; const F=fb.F;
-  unsub.push(F.onSnapshot(chatRef(),s=>{const prev=chat&&chat.status;chat=s.exists()?s.data():null;if(chat){liveMode=chat.status==='waiting'||chat.status==='assigned';if(open&&chat.unreadVisitor)F.updateDoc(chatRef(),{unreadVisitor:0}).catch(()=>{})}draw()}));
-  unsub.push(F.onSnapshot(F.query(msgCol(),F.orderBy('ts','asc'),F.limit(300)),s=>{
-    const before=msgs.length; msgs=s.docs.map(d=>({id:d.id,...d.data()}));
-    const fresh=msgs.slice(before).filter(m=>m.from==='agent');
-    if(before&&fresh.length&&!open){unread+=fresh.length;peek=fresh[fresh.length-1];beep()}
-    draw(true);
-  },()=>{}));
+  if(unsub.length) return;
+  unsub.push(fb.on(CP(),v=>{chat=v;if(chat){liveMode=chat.status==='waiting'||chat.status==='assigned';if(open&&chat.unreadVisitor)fb.update(CP(),{unreadVisitor:0}).catch(()=>{})}draw()}));
+  unsub.push(fb.onMsgs(MP(),list=>{
+    const known=new Set(msgs.map(m=>m.id)); msgs=list;
+    const fresh=list.filter(m=>!known.has(m.id)&&m.from==='agent');
+    if(msgsLoaded&&fresh.length&&!open){unread+=fresh.length;peek=fresh[fresh.length-1];beep()}
+    msgsLoaded=true; draw(true);
+  }));
 }
 /* returning visitor: reconnect quietly so agent replies show a badge */
-try{if(localStorage.getItem(STARTED)){loadFb().then(f=>new Promise(res=>{const off=f.A.onAuthStateChanged(f.auth,u=>{off();res(u)})})).then(u=>{if(u){user=u;fb.F.getDoc(chatRef()).then(s=>{if(s.exists())listen()})}}).catch(()=>{})}}catch(e){}
+try{if(localStorage.getItem(STARTED)){loadFb().then(f=>new Promise(res=>{const off=f.A.onAuthStateChanged(f.auth,u=>{off();res(u)})})).then(u=>{if(u){user=u;fb.get(CP()).then(v=>{if(v)listen()})}}).catch(()=>{})}}catch(e){}
 
 /* ---------------- smart bot ---------------- */
 function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')}
@@ -1034,13 +1054,13 @@ async function send(text){
   text=String(text||'').trim().slice(0,1500); if(!text) return;
   const ta=root.querySelector('textarea'); if(ta){ta.value='';ta.style.height=''}
   try{
-    await ensureChat(); online=true; const F=fb.F;
-    await F.addDoc(msgCol(),{from:'visitor',text,ts:F.serverTimestamp()});
+    await ensureChat(); online=true;
+    await fb.push(MP(),{from:'visitor',text,ts:TS});
     const live=chat&&(chat.status==='waiting'||chat.status==='assigned');
-    const upd={lastMsg:text.slice(0,120),lastFrom:'visitor',updatedAt:F.serverTimestamp(),lang:L(),page:location.hash||'#/'};
-    if(live) upd.unreadAgent=F.increment(1);
+    const upd={lastMsg:text.slice(0,120),lastFrom:'visitor',updatedAt:TS,lang:L(),page:location.hash||'#/'};
+    if(live) upd.unreadAgent=INC(1);
     if(chat&&chat.status==='closed') upd.status='bot';
-    await F.updateDoc(chatRef(),upd);
+    await fb.update(CP(),upd);
     if(!live) botReply(text);
   }catch(e){ online=false; localMsgs.push({from:'visitor',text,ts:Date.now()}); botReply(text,true) }
 }
@@ -1049,19 +1069,19 @@ function botReply(text,local){
   setTimeout(async()=>{
     const r=bot(text); botTyping=false;
     const m={from:'bot',text:r.text,links:(r.links||[]).map(x=>({l:x[0],h:x[1]})),live:!!r.live};
-    if(local||!fb){localMsgs.push(Object.assign({ts:Date.now()},m));draw(true);return}
-    try{const F=fb.F;await F.addDoc(msgCol(),Object.assign({ts:F.serverTimestamp()},m));await F.updateDoc(chatRef(),{lastMsg:r.text.slice(0,120),lastFrom:'bot',updatedAt:F.serverTimestamp()})}catch(e){localMsgs.push(Object.assign({ts:Date.now()},m));draw(true)}
+    if(local||!fb||!user){localMsgs.push(Object.assign({ts:Date.now()},m));draw(true);return}
+    try{await fb.push(MP(),Object.assign({ts:TS},m));await fb.update(CP(),{lastMsg:r.text.slice(0,120),lastFrom:'bot',updatedAt:TS})}catch(e){localMsgs.push(Object.assign({ts:Date.now()},m));draw(true)}
   },650+Math.min(900,text.length*12));
 }
 async function requestAgent(name,contact){
   showForm=false; draw(true);
   try{
-    await ensureChat(); const F=fb.F;
-    await F.updateDoc(chatRef(),{status:'waiting',name:String(name||'').slice(0,60),contact:String(contact||'').slice(0,80),requestedAt:F.serverTimestamp(),updatedAt:F.serverTimestamp(),lastMsg:'🔔 '+(L()==='km'?'ស្នើសុំភ្នាក់ងារ':'Requested a live agent'),lastFrom:'system',unreadAgent:F.increment(1),lang:L()});
-    await F.addDoc(msgCol(),{from:'system',text:w('connecting'),ts:F.serverTimestamp()});
+    await ensureChat();
+    await fb.update(CP(),{status:'waiting',name:String(name||'').slice(0,60),contact:String(contact||'').slice(0,80),requestedAt:TS,updatedAt:TS,lastMsg:'🔔 '+(L()==='km'?'ស្នើសុំភ្នាក់ងារ':'Requested a live agent'),lastFrom:'system',unreadAgent:INC(1),lang:L()});
+    await fb.push(MP(),{from:'system',text:w('connecting'),ts:TS});
     let avail=false;
-    try{const q=await F.getDocs(F.query(F.collection(fb.db,'agents'),F.where('online','==',true)));const now=Date.now();q.forEach(d=>{const ls=d.data().lastSeen;if(!ls||!ls.toMillis||now-ls.toMillis()<4*60*1000)avail=true})}catch(e){}
-    if(!avail) await F.addDoc(msgCol(),{from:'system',text:w('offline'),ts:F.serverTimestamp()});
+    try{const ag=await fb.get('agents')||{};Object.keys(ag).forEach(k=>{if(ag[k]&&ag[k].online)avail=true})}catch(e){}
+    if(!avail) await fb.push(MP(),{from:'system',text:w('offline'),ts:TS});
   }catch(e){ online=false; localMsgs.push({from:'system',text:w('noLive'),alt:true,ts:Date.now()}); draw(true) }
 }
 
@@ -1070,7 +1090,7 @@ let ac=null;
 function beep(){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.setValueAtTime(880,ac.currentTime);o.frequency.setValueAtTime(1175,ac.currentTime+.12);g.gain.setValueAtTime(.0001,ac.currentTime);g.gain.exponentialRampToValueAtTime(.2,ac.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+.35);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+.36)}catch(e){}}
 
 /* ---------------- render ---------------- */
-function tm(ts){const d=ts&&ts.toDate?ts.toDate():new Date(ts||Date.now());return d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}
+function tm(ts){const d=new Date(ms(ts));return d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}
 function safeHref(h){h=String(h||'');return /^#\//.test(h)||/^https:\/\//.test(h)?h:'#/'}
 function msgHtml(m){
   if(m.from==='system')return '<div class="tc-sys">'+esc(m.text)+(m.alt?altLinks():'')+'</div>';
@@ -1113,22 +1133,22 @@ function draw(scroll){
   panel.querySelector('.tc-head small').innerHTML=statusLine();
   const lv=panel.querySelector('.tc-live');lv.hidden=liveMode||showForm;lv.innerHTML=I('user')+esc(w('liveBtn'));
   panel.querySelector('textarea').placeholder=w('ph');
-  const all=(msgs.length?msgs:[{from:'bot',text:greet(),ts:1}]).concat(localMsgs).sort((a,b)=>(a.ts&&a.ts.toMillis?a.ts.toMillis():a.ts||Date.now())-(b.ts&&b.ts.toMillis?b.ts.toMillis():b.ts||Date.now()));
+  const all=(msgs.length?msgs:[{from:'bot',text:greet(),ts:1}]).concat(localMsgs).sort((a,b)=>ms(a.ts)-ms(b.ts));
   let h=all.map(msgHtml).join('');
   if(showForm)h+='<div class="tc-form"><b>'+esc(w('formTitle'))+'</b><input name="n" autocomplete="name" placeholder="'+esc(w('name'))+'" value="'+esc(chat&&chat.name||'')+'"><input name="c" placeholder="'+esc(w('contact'))+'" value="'+esc(chat&&chat.contact||'')+'"><div style="display:flex;gap:6px;justify-content:flex-end"><button class="btn sm soft" type="button" data-cancel>✕</button><button class="btn sm" type="button" data-connect>'+I('user')+esc(w('connect'))+'</button></div></div>';
-  const agentTyping=chat&&chat.agentTyping&&chat.agentTyping.toMillis&&Date.now()-chat.agentTyping.toMillis()<6000;
+  const agentTyping=chat&&typeof chat.agentTyping==='number'&&Date.now()-chat.agentTyping<6000;
   if(botTyping||agentTyping)h+='<div class="tc-typing" aria-label="'+esc(w('typing'))+'"><i></i><i></i><i></i></div>';
   const body=panel.querySelector('.tc-body');
   if(h!==lastBody){body.innerHTML=h;lastBody=h;if(scroll!==false)body.scrollTop=body.scrollHeight}
   panel.querySelector('.tc-chips').innerHTML=liveMode?'':w('chips').map(c=>'<button type="button" data-chip="'+esc(c)+'">'+esc(c)+'</button>').join('');
   if(showForm){const n=body.querySelector('[name=n]');if(n&&document.activeElement!==n&&!n.value)n.focus()}
 }
-let tpT=0;function typingPing(){if(!fb||!chat||!liveMode)return;const n=Date.now();if(n-tpT<3000)return;tpT=n;fb.F.updateDoc(chatRef(),{visitorTyping:fb.F.serverTimestamp()}).catch(()=>{})}
+let tpT=0;function typingPing(){if(!fb||!chat||!liveMode)return;const n=Date.now();if(n-tpT<3000)return;tpT=n;fb.update(CP(),{visitorTyping:TS}).catch(()=>{})}
 function started(){try{return !!localStorage.getItem(STARTED)}catch(e){return false}}
 function toggle(v){
   open=v==null?!open:v;
   if(open){unread=0;peek=null;
-    if(fb&&chat&&chat.unreadVisitor)fb.F.updateDoc(chatRef(),{unreadVisitor:0}).catch(()=>{});
+    if(fb&&user&&chat&&chat.unreadVisitor)fb.update(CP(),{unreadVisitor:0}).catch(()=>{});
     if(!chat&&started())ensureChat().catch(()=>{online=false});
   }else{const p=root.querySelector('.tc-panel');if(p)p.remove()}
   draw(true);
