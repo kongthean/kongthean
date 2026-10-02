@@ -143,17 +143,42 @@ window.THEAN_FIREBASE = {
   "projectId": "thean-12952",
   "storageBucket": "thean-12952.firebasestorage.app",
   "messagingSenderId": "1082546170540",
-  "appId": "1:1082546170540:web:71e42aaada4df363588d09"
+  "appId": "1:1082546170540:web:71e42aaada4df363588d09",
+  "databaseURL": "https://thean-12952-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 </script>
 <script type="module">
-const FBV='10.12.2';
-const base='https://www.gstatic.com/firebasejs/'+FBV+'/';
+/* Small wrapper around Firebase Realtime Database, shared by the website chat and the agent inbox */
+const TS={__ts:1};
+const INC=n=>({__inc:n});
+const ms=v=>typeof v==='number'?v:(v&&v.toMillis?v.toMillis():Date.now());
+async function makeDB(cfg,name){
+  const base='https://www.gstatic.com/firebasejs/10.12.2/';
+  const [app,au,d]=await Promise.all([import(base+'firebase-app.js'),import(base+'firebase-auth.js'),import(base+'firebase-database.js')]);
+  if(!cfg||!cfg.apiKey)throw new Error('no config');
+  const a=app.initializeApp(cfg,name);
+  const db=d.getDatabase(a,cfg.databaseURL);
+  const R=p=>d.ref(db,p);
+  const conv=o=>{const r={};for(const k in o){const v=o[k];r[k]=v===TS?d.serverTimestamp():(v&&v.__inc)?d.increment(v.__inc):v}return r};
+  const list=(s,rev)=>{const out=[];s.forEach(c=>{out.push(Object.assign({id:c.key},c.val()))});return rev?out.reverse():out};
+  return {
+    auth:au.getAuth(a),A:au,
+    get:async p=>{const s=await d.get(R(p));return s.exists()?s.val():null},
+    set:(p,v)=>d.set(R(p),conv(v)),
+    update:(p,v)=>d.update(R(p),conv(v)),
+    push:(p,v)=>d.push(R(p),conv(v)),
+    on:(p,cb,err)=>d.onValue(R(p),s=>cb(s.exists()?s.val():null),err||(()=>{})),
+    onMsgs:(p,cb,err)=>d.onValue(d.query(R(p),d.orderByKey(),d.limitToLast(300)),s=>cb(list(s)),err||(()=>{})),
+    onRecent:(p,field,n,cb,err)=>d.onValue(d.query(R(p),d.orderByChild(field),d.limitToLast(n)),s=>cb(list(s,true)),err||(()=>{})),
+    onDisconnect:(p,v)=>d.onDisconnect(R(p)).update(conv(v)),
+    onConnected:cb=>d.onValue(R('.info/connected'),s=>cb(!!s.val()))
+  };
+}
+
 const root=document.getElementById('root');
-let A,F,auth,db;
+let A,auth,DB;
 try{
-  const [app,a,f]=await Promise.all([import(base+'firebase-app.js'),import(base+'firebase-auth.js'),import(base+'firebase-firestore.js')]);
-  A=a;F=f;const ap=app.initializeApp(window.THEAN_FIREBASE);auth=A.getAuth(ap);db=F.getFirestore(ap);
+  DB=await makeDB(window.THEAN_FIREBASE,'agent');A=DB.A;auth=DB.auth;
 }catch(e){root.innerHTML='<div class="login"><div class="lcard"><h1 class="emb">THEAN</h1><div class="err">Could not load the chat service. Check your internet connection and reload.</div></div></div>';throw e}
 
 /* ---------- icons ---------- */
@@ -183,6 +208,7 @@ const SYS={join:{en:n=>n+' joined the chat.',km:n=>n+' បានចូលរួ�
 /* ---------- prefs ---------- */
 const pref=(k,d)=>{try{const v=localStorage.getItem('agent-'+k);return v==null?d:JSON.parse(v)}catch(e){return d}};
 const setPref=(k,v)=>{try{localStorage.setItem('agent-'+k,JSON.stringify(v))}catch(e){}};
+let wantOnline=true,connUnsub=null;
 let soundOn=pref('sound',true),autoAccept=pref('auto',true);
 
 /* ---------- state ---------- */
@@ -193,10 +219,10 @@ A.onAuthStateChanged(auth,async u=>{
   cleanup(); me=u&&!u.isAnonymous?u:null;
   if(!me){if(u&&u.isAnonymous)await A.signOut(auth);return drawLogin()}
   root.innerHTML='<div class="login"><div class="lcard"><p>Loading…</p></div></div>';
-  try{const s=await F.getDoc(F.doc(db,'agents',me.uid));if(!s.exists())return drawNotAgent();agent=s.data();start()}
+  try{const v=await DB.get('agents/'+me.uid);if(!v)return drawNotAgent();agent=v;start()}
   catch(e){drawNotAgent(e)}
 });
-function cleanup(){[chatUnsub,msgUnsub,meUnsub].forEach(f=>f&&f());chatUnsub=msgUnsub=meUnsub=null;if(beat)clearInterval(beat);chats=[];firstSnap=true;sel=null;msgs=[]}
+function cleanup(){[chatUnsub,msgUnsub,meUnsub,connUnsub].forEach(f=>f&&f());chatUnsub=msgUnsub=meUnsub=connUnsub=null;if(beat)clearInterval(beat);chats=[];firstSnap=true;sel=null;msgs=[]}
 
 function drawLogin(msg){
   root.innerHTML='<div class="login"><form class="lcard" novalidate><div style="display:flex;align-items:center;gap:12px"><span class="logo">T</span><div><h1 class="emb">THEAN</h1><p>Agent inbox · live chat</p></div></div>'+(msg?'<div class="err">'+esc(msg)+'</div>':'')+
@@ -208,39 +234,43 @@ function drawLogin(msg){
     catch(err){drawLogin(/invalid|wrong|not-found|credential/.test(err.code||'')?'Email or password is wrong.':err.code==='auth/too-many-requests'?'Too many tries. Wait a few minutes and try again.':err.code==='auth/network-request-failed'?'No internet connection.':'Could not sign in ('+(err.code||err.message)+').')}};
   f.querySelector('#fg').onclick=async()=>{const em=f.querySelector('#em').value.trim();if(!em){toast('Type your email first');return}try{await A.sendPasswordResetEmail(auth,em);toast('Password reset email sent')}catch(e){toast('Could not send reset email')}};
 }
-function drawNotAgent(e){
-  root.innerHTML='<div class="login"><div class="lcard"><h1 class="emb">Almost there</h1><p>You are signed in as <b>'+esc(me.email)+'</b>, but this account is not set up as an agent yet.</p>'+
-   '<div class="note"><b>Do this once in Firebase:</b><ol><li>Open <b>Firestore Database → Data</b>.</li><li>Tap <b>+ Start collection</b>, name it <code>agents</code>.</li><li>Document ID: <code id="uid">'+esc(me.uid)+'</code> <button class="btn soft sm" id="cp" type="button">Copy</button></li><li>Add field <code>name</code> (string) = <code>Thean</code>, and <code>online</code> (boolean) = <code>false</code>. Save.</li></ol></div>'+
-   (e?'<div class="err">'+esc(e.code||e.message)+' — check that the security rules are published.</div>':'')+
-   '<button class="btn" id="re" type="button">I did it, check again</button><button class="btn soft sm" id="lo" type="button">Sign out</button></div></div>';
-  root.querySelector('#cp').onclick=()=>copy(me.uid);
-  root.querySelector('#re').onclick=()=>location.reload();
+async function drawNotAgent(e){
+  let any=true;try{any=!!(await DB.get('agents'))}catch(x){}
+  root.innerHTML='<div class="login"><div class="lcard"><h1 class="emb">'+(any?'Not an agent yet':'Set up your inbox')+'</h1><p>You are signed in as <b>'+esc(me.email)+'</b>.</p>'+
+   (any?'<div class="note">This account is not an agent. An existing agent can add you. Send them this ID:<br><code>'+esc(me.uid)+'</code> <button class="btn soft sm" id="cp" type="button">Copy</button></div>'
+       :'<div class="note">No agent has been set up yet. Tap the button below to make <b>this account</b> the inbox owner. Only the first account can do this.</div><label class="f">Your name shown to visitors<input id="nm" value="Thean"></label><button class="btn" id="claim" type="button">Make me the agent</button>')+
+   (e?'<div class="err">'+esc(e.code||e.message)+' — check that the database rules are published.</div>':'')+
+   '<button class="btn soft sm" id="lo" type="button">Sign out</button></div></div>';
+  const cp=root.querySelector('#cp');if(cp)cp.onclick=()=>copy(me.uid);
+  const cl=root.querySelector('#claim');if(cl)cl.onclick=async()=>{cl.disabled=true;cl.textContent='Setting up…';
+    try{await DB.set('agents/'+me.uid,{name:(root.querySelector('#nm').value.trim()||'Thean').slice(0,40),online:true,email:me.email||'',lastSeen:TS});location.reload()}
+    catch(x){cl.disabled=false;cl.textContent='Make me the agent';toast('Could not set up: '+(x.code||x.message)+'. Are the database rules published?')}};
   root.querySelector('#lo').onclick=()=>A.signOut(auth);
 }
-
 /* ---------- app ---------- */
 function start(){
   drawShell();
   setOnline(true,true);
-  beat=setInterval(()=>{if(agent&&agent.online)F.updateDoc(F.doc(db,'agents',me.uid),{lastSeen:F.serverTimestamp()}).catch(()=>{})},60000);
-  meUnsub=F.onSnapshot(F.doc(db,'agents',me.uid),s=>{if(s.exists()){agent=s.data();drawTop()}});
-  F.getDoc(F.doc(db,'settings','quick')).then(s=>{if(s.exists()&&Array.isArray(s.data().items)&&s.data().items.length)quick=s.data().items;drawConv()}).catch(()=>{});
-  chatUnsub=F.onSnapshot(F.query(F.collection(db,'chats'),F.orderBy('updatedAt','desc'),F.limit(200)),snap=>{
-    snap.docChanges().forEach(ch=>{
-      const d=ch.doc.data(),id=ch.doc.id,prev=seen[id];
-      if(!firstSnap&&ch.type!=='removed'){
+  beat=setInterval(()=>{if(agent&&agent.online)DB.update('agents/'+me.uid,{lastSeen:TS}).catch(()=>{})},60000);
+  connUnsub=DB.onConnected(c=>{if(c&&wantOnline){DB.onDisconnect('agents/'+me.uid,{online:false,lastSeen:TS});DB.update('agents/'+me.uid,{online:true,lastSeen:TS}).catch(()=>{})}});
+  meUnsub=DB.on('agents/'+me.uid,v=>{if(v){agent=v;drawTop()}});
+  DB.get('settings/quick').then(v=>{if(v&&Array.isArray(v.items)&&v.items.length)quick=v.items;drawConv()}).catch(()=>{});
+  chatUnsub=DB.onRecent('chats','updatedAt',200,list=>{
+    list.forEach(d=>{
+      const id=d.id,prev=seen[id];
+      if(!firstSnap){
         if(d.status==='waiting'&&(!prev||prev.status!=='waiting')){alertNew('🔔 New live chat request',(d.name||'A visitor')+' wants to talk to an agent',id);if(autoAccept)accept(id,true)}
         else if(d.lastFrom==='visitor'&&(d.status==='assigned'||d.status==='waiting')&&(!prev||prev.lastMsg!==d.lastMsg)&&!(sel===id&&!document.hidden))alertNew('💬 '+(d.name||'Visitor'),d.lastMsg,id);
       }
       seen[id]={status:d.status,lastMsg:d.lastMsg};
     });
-    chats=snap.docs.map(d=>Object.assign({id:d.id},d.data()));
+    chats=list;
     if(firstSnap&&autoAccept)chats.filter(c=>c.status==='waiting').forEach(c=>accept(c.id,true));
     firstSnap=false;drawList();drawTop();updateTitle();if(sel)drawConvHead();
   },err=>toast('Could not load chats: '+(err.code||err.message)));
-  window.addEventListener('beforeunload',()=>{F.updateDoc(F.doc(db,'agents',me.uid),{online:false}).catch(()=>{})});
+  window.addEventListener('beforeunload',()=>{DB.update('agents/'+me.uid,{online:false}).catch(()=>{})});
 }
-function setOnline(v,quiet){F.updateDoc(F.doc(db,'agents',me.uid),{online:v,lastSeen:F.serverTimestamp(),email:me.email||''}).then(()=>{if(!quiet)toast(v?'You are available. Visitors can reach you.':'You are away. Visitors are told you will reply later.')}).catch(e=>toast('Could not change status: '+(e.code||e.message)))}
+function setOnline(v,quiet){wantOnline=v;DB.update('agents/'+me.uid,{online:v,lastSeen:TS,email:me.email||''}).then(()=>{if(!quiet)toast(v?'You are available. Visitors can reach you.':'You are away. Visitors are told you will reply later.')}).catch(e=>toast('Could not change status: '+(e.code||e.message)))}
 
 function drawShell(){
   root.innerHTML='<div class="app"><header class="top" id="top"></header><div class="main" id="main"><aside class="side"><div class="tabs" id="tabs"></div><div class="search"><input id="q" placeholder="Search name or message" aria-label="Search chats"></div><div class="list" id="list"></div></aside><section class="conv" id="conv"></section></div></div>';
@@ -260,7 +290,7 @@ function drawTop(){
   t.querySelector('#nt').onclick=askNotify;
   t.querySelector('#sd').onclick=()=>{soundOn=!soundOn;setPref('sound',soundOn);if(soundOn)beep();drawTop()};
   t.querySelector('#gs').onclick=settings;
-  t.querySelector('#lo').onclick=async()=>{await F.updateDoc(F.doc(db,'agents',me.uid),{online:false}).catch(()=>{});A.signOut(auth)};
+  t.querySelector('#lo').onclick=async()=>{wantOnline=false;await DB.update('agents/'+me.uid,{online:false}).catch(()=>{});A.signOut(auth)};
 }
 const TABS=[['open','Open'],['waiting','Waiting'],['mine','Mine'],['bot','Bot only'],['closed','Closed']];
 function filtered(){return chats.filter(c=>{
@@ -271,7 +301,7 @@ function filtered(){return chats.filter(c=>{
   if(tab==='closed'&&c.status!=='closed')return false;
   if(search&&!((c.name||'')+' '+(c.lastMsg||'')+' '+(c.contact||'')).toLowerCase().includes(search))return false;return true})}
 function vName(c){return c.name||('Visitor '+c.id.slice(0,4).toUpperCase())}
-function ago(ts){if(!ts||!ts.toMillis)return 'now';const s=(Date.now()-ts.toMillis())/1000;if(s<60)return 'now';if(s<3600)return Math.floor(s/60)+'m';if(s<86400)return Math.floor(s/3600)+'h';return Math.floor(s/86400)+'d'}
+function ago(ts){if(!ts)return 'now';const s=(Date.now()-ms(ts))/1000;if(s<60)return 'now';if(s<3600)return Math.floor(s/60)+'m';if(s<86400)return Math.floor(s/3600)+'h';return Math.floor(s/86400)+'d'}
 const SCOL={waiting:'var(--wait)',assigned:'var(--ok)',bot:'#7fb3d5',closed:'var(--line)'};
 function drawList(){
   const tb=root.querySelector('#tabs'),l=root.querySelector('#list');if(!tb)return;
@@ -287,8 +317,8 @@ function openChat(id){
   sel=id;msgs=[];if(msgUnsub)msgUnsub();
   root.querySelector('#main').classList.add('sel');
   drawList();drawConv();
-  msgUnsub=F.onSnapshot(F.query(F.collection(db,'chats',id,'messages'),F.orderBy('ts','asc'),F.limit(500)),s=>{msgs=s.docs.map(d=>Object.assign({id:d.id},d.data()));drawMsgs()});
-  const c=chats.find(x=>x.id===id);if(c&&c.unreadAgent)F.updateDoc(F.doc(db,'chats',id),{unreadAgent:0}).catch(()=>{});
+  msgUnsub=DB.onMsgs('messages/'+id,list=>{msgs=list;drawMsgs()});
+  const c=chats.find(x=>x.id===id);if(c&&c.unreadAgent)DB.update('chats/'+id,{unreadAgent:0}).catch(()=>{});
 }
 function cur(){return chats.find(x=>x.id===sel)}
 function drawConv(){
@@ -315,10 +345,10 @@ function drawConvHead(){
   acc.innerHTML=(c.status==='waiting'||c.status==='bot')?'<div class="acceptbar"><span>'+(c.status==='waiting'?'<b>Waiting for an agent.</b> Accept to let them know you are here.':'This visitor is talking to the bot. You can join any time.')+'</span><button class="btn ok sm" id="ac">'+I('check')+(c.status==='waiting'?' Accept chat':' Join chat')+'</button></div>':
    (c.status==='assigned'&&c.agentUid&&c.agentUid!==me.uid?'<div class="acceptbar"><span>'+esc(c.agentName||'Another agent')+' is handling this chat.</span><button class="btn sm soft" id="ac">Take over</button></div>':'');
   const ab=acc.querySelector('#ac');if(ab)ab.onclick=()=>accept(c.id);
-  const ty=c.visitorTyping&&c.visitorTyping.toMillis&&Date.now()-c.visitorTyping.toMillis()<6000;
+  const ty=typeof c.visitorTyping==='number'&&Date.now()-c.visitorTyping<6000;
   const mt=root.querySelector('#typ');if(mt)mt.hidden=!ty;
 }
-function tm(ts){const d=ts&&ts.toDate?ts.toDate():new Date();return d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}
+function tm(ts){const d=new Date(ms(ts));return d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}
 function drawMsgs(){
   const box=root.querySelector('#msgs');if(!box)return;const atEnd=box.scrollHeight-box.scrollTop-box.clientHeight<80;
   box.innerHTML=msgs.map(m=>m.from==='system'?'<div class="sys">'+esc(m.text)+'</div>':'<div class="m '+(m.from==='visitor'?'vis':m.from)+'"><span class="by">'+(m.from==='visitor'?esc(vName(cur()||{id:'????'})):m.from==='bot'?'Bot':esc(m.agentName||'Agent'))+'</span>'+esc(m.text)+'<time>'+tm(m.ts)+'</time></div>').join('')+'<div class="typing" id="typ" hidden>Visitor is typing…</div>';
@@ -334,13 +364,12 @@ function drawQuick(){
 /* ---------- actions ---------- */
 async function accept(id,auto){
   try{
-    await F.runTransaction(db,async tx=>{
-      const r=F.doc(db,'chats',id),s=await tx.get(r);if(!s.exists())return;const d=s.data();
-      if(auto&&d.status!=='waiting')return;
-      const nm=(agent&&agent.name)||'Thean';
-      tx.update(r,{status:'assigned',agentUid:me.uid,agentName:nm,assignedAt:F.serverTimestamp(),updatedAt:F.serverTimestamp(),lastMsg:SYS.join[d.lang==='km'?'km':'en'](nm),lastFrom:'system',unreadAgent:0});
-      tx.set(F.doc(F.collection(db,'chats',id,'messages')),{from:'system',text:SYS.join[d.lang==='km'?'km':'en'](nm),ts:F.serverTimestamp()});
-    });
+    const d=await DB.get('chats/'+id);if(!d)return;
+    if(auto&&d.status!=='waiting')return;
+    if(d.status==='assigned'&&d.agentUid===me.uid)return;
+    const nm=(agent&&agent.name)||'Thean',txt=SYS.join[d.lang==='km'?'km':'en'](nm);
+    await DB.update('chats/'+id,{status:'assigned',agentUid:me.uid,agentName:nm,assignedAt:TS,updatedAt:TS,lastMsg:txt,lastFrom:'system',unreadAgent:0});
+    await DB.push('messages/'+id,{from:'system',text:txt,ts:TS});
     if(!auto)toast('You joined the chat');
   }catch(e){toast('Could not accept: '+(e.code||e.message))}
 }
@@ -349,19 +378,19 @@ async function sendMsg(text){
   const ta=root.querySelector('#ta');if(ta){ta.value='';ta.style.height=''}
   try{
     if(c.status!=='assigned'||c.agentUid!==me.uid)await accept(c.id);
-    await F.addDoc(F.collection(db,'chats',c.id,'messages'),{from:'agent',text:text.slice(0,2000),agentName:(agent&&agent.name)||'Thean',agentUid:me.uid,ts:F.serverTimestamp()});
-    await F.updateDoc(F.doc(db,'chats',c.id),{lastMsg:text.slice(0,120),lastFrom:'agent',updatedAt:F.serverTimestamp(),unreadVisitor:F.increment(1),unreadAgent:0,agentTyping:null});
+    await DB.push('messages/'+c.id,{from:'agent',text:text.slice(0,2000),agentName:(agent&&agent.name)||'Thean',agentUid:me.uid,ts:TS});
+    await DB.update('chats/'+c.id,{lastMsg:text.slice(0,120),lastFrom:'agent',updatedAt:TS,unreadVisitor:INC(1),unreadAgent:0,agentTyping:null});
   }catch(e){toast('Not sent: '+(e.code||e.message));if(ta)ta.value=text}
 }
 let armClose=null;
 async function closeChat(id){
   if(armClose!==id){armClose=id;toast('Tap “Close chat” again to confirm');setTimeout(()=>{armClose=null},4000);return}
   armClose=null;const c=chats.find(x=>x.id===id);const lg=c&&c.lang==='km'?'km':'en';
-  try{await F.addDoc(F.collection(db,'chats',id,'messages'),{from:'system',text:SYS.close[lg](),ts:F.serverTimestamp()});
-    await F.updateDoc(F.doc(db,'chats',id),{status:'closed',closedAt:F.serverTimestamp(),updatedAt:F.serverTimestamp(),lastMsg:'Chat closed',lastFrom:'system',unreadAgent:0});toast('Chat closed')}
+  try{await DB.push('messages/'+id,{from:'system',text:SYS.close[lg](),ts:TS});
+    await DB.update('chats/'+id,{status:'closed',closedAt:TS,updatedAt:TS,lastMsg:'Chat closed',lastFrom:'system',unreadAgent:0});toast('Chat closed')}
   catch(e){toast('Could not close: '+(e.code||e.message))}
 }
-let tpT=0;function typingPing(){const c=cur();if(!c)return;const n=Date.now();if(n-tpT<3000)return;tpT=n;F.updateDoc(F.doc(db,'chats',c.id),{agentTyping:F.serverTimestamp()}).catch(()=>{})}
+let tpT=0;function typingPing(){const c=cur();if(!c)return;const n=Date.now();if(n-tpT<3000)return;tpT=n;DB.update('chats/'+c.id,{agentTyping:TS}).catch(()=>{})}
 setInterval(()=>{if(sel)drawConvHead()},3000);
 
 /* ---------- notifications ---------- */
@@ -389,7 +418,7 @@ function settings(){
    '<div class="note">Alerts work while this page is open (a browser tab or the Home Screen app). Tip: on your phone, use <b>Share → Add to Home Screen</b> so the inbox opens like an app.</div>'+
    '<div class="row"><button class="btn soft" data-close type="button">Cancel</button><button class="btn" id="sv" type="button">Save</button></div>');
   m.querySelector('#sv').onclick=async()=>{autoAccept=m.querySelector('#aa').checked;soundOn=m.querySelector('#so').checked;setPref('auto',autoAccept);setPref('sound',soundOn);
-    const nm=m.querySelector('#nm').value.trim();if(nm&&nm!==(agent&&agent.name))await F.updateDoc(F.doc(db,'agents',me.uid),{name:nm.slice(0,40)}).catch(e=>toast('Name not saved: '+(e.code||e.message)));m.remove();toast('Saved');drawTop()};
+    const nm=m.querySelector('#nm').value.trim();if(nm&&nm!==(agent&&agent.name))await DB.update('agents/'+me.uid,{name:nm.slice(0,40)}).catch(e=>toast('Name not saved: '+(e.code||e.message)));m.remove();toast('Saved');drawTop()};
 }
 function editQuick(){
   let L=JSON.parse(JSON.stringify(quick));
@@ -403,7 +432,7 @@ function editQuick(){
     if(b.dataset.mv!=null){const i=+b.dataset.mv,j=i+(+b.dataset.d);if(j>=0&&j<L.length){[L[i],L[j]]=[L[j],L[i]];draw()}}
     if(b.id==='qa'){L.push({icon:'chat',label:'New reply',send:true,en:'',km:''});draw()}
     if(b.id==='qd'){L=JSON.parse(JSON.stringify(DEFAULT_QUICK));draw()}
-    if(b.id==='qs'){F.setDoc(F.doc(db,'settings','quick'),{items:L.filter(x=>x.en||x.km),updatedAt:F.serverTimestamp()}).then(()=>{quick=L.filter(x=>x.en||x.km);m.remove();drawQuick();toast('Quick replies saved')}).catch(e=>toast('Not saved: '+(e.code||e.message)))}});
+    if(b.id==='qs'){DB.set('settings/quick',{items:L.filter(x=>x.en||x.km),updatedAt:TS}).then(()=>{quick=L.filter(x=>x.en||x.km);m.remove();drawQuick();toast('Quick replies saved')}).catch(e=>toast('Not saved: '+(e.code||e.message)))}});
 }
 
 /* ---------- misc ---------- */
