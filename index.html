@@ -911,6 +911,7 @@ function enterAdmin(u){
   try{var d=localStorage.getItem(DRAFT_KEY);if(d){S=JSON.parse(d);dirty=true}}catch(e){}
   render();
   if(dirty){toast('Saving the changes you made last time…');schedulePublish(500)}
+  else if(window.TheanAdmin.version){window.TheanAdmin.version().then(function(v){if(!v&&!dirty){dirty=true;toast('Putting your website online for the first time…');schedulePublish(300)}}).catch(function(e){pubState='error';pubErr='Could not reach the database: '+(e&&(e.code||e.message)||e);updatePubUI()})}
 }
 function adminLogin(msg){
   app.innerHTML='<div style="min-height:100vh;display:grid;place-items:center;padding:24px 16px"><form class="form" id="alog" style="width:100%;max-width:400px" novalidate><div style="display:flex;gap:12px;align-items:center"><span class="logo">'+(S.brand.logo?'<img alt="" src="'+S.brand.logo+'">':'')+'</span><div><h2 class="emb" style="margin:0">'+esc(S.brand.name)+'</h2><small style="color:var(--muted)">Website editor · team login</small></div></div>'+
@@ -1250,7 +1251,7 @@ async function makeDB(cfg,name){
   const a=app.initializeApp(cfg,name);
   const db=d.getDatabase(a,cfg.databaseURL);
   const R=p=>d.ref(db,p);
-  const conv=o=>{const r={};for(const k in o){const v=o[k];r[k]=v===TS?d.serverTimestamp():(v&&v.__inc)?d.increment(v.__inc):v}return r};
+  const conv=o=>{if(o===null||typeof o!=='object'||Array.isArray(o))return o;const r={};for(const k in o){const v=o[k];r[k]=v===TS?d.serverTimestamp():(v&&v.__inc)?d.increment(v.__inc):v}return r};
   const list=(s,rev)=>{const out=[];s.forEach(c=>{out.push(Object.assign({id:c.key},c.val()))});return rev?out.reverse():out};
   return {
     auth:au.getAuth(a),A:au,
@@ -1563,7 +1564,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261002-1433',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261002-1443',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
@@ -1591,8 +1592,14 @@ if(ADMIN_PAGE){
   window.TheanAdmin={
     async current(){const u=await authUser();if(!u||u.isAnonymous)return null;const a=await fb.get('agents/'+u.uid);return a?{uid:u.uid,email:u.email,agent:a}:{uid:u.uid,email:u.email,agent:null}},
     async login(email,pw){await loadFb();await fb.A.signInWithEmailAndPassword(fb.auth,email,pw);return this.current()},
+    async version(){await loadFb();return await fb.get('site/version')},
     async logout(){await loadFb();await fb.A.signOut(fb.auth)},
-    async publish(S){await loadFb();await fb.set('site/content',JSON.parse(JSON.stringify(S)));const now=Date.now();await fb.set('site/version',now);try{localStorage.setItem(CACHE,JSON.stringify({v:now,content:S}))}catch(e){}return now}
+    async publish(S){await loadFb();
+      const to=new Promise((_,rej)=>setTimeout(()=>rej(new Error('network: the server did not answer in 40 seconds')),40000));
+      const now=Date.now();
+      await Promise.race([(async()=>{await fb.set('site/content',JSON.parse(JSON.stringify(S)));await fb.set('site/version',now);
+        const back=await fb.get('site/version');if(back!==now)throw new Error('The server did not keep the change (version check failed)')})(),to]);
+      try{localStorage.setItem(CACHE,JSON.stringify({v:now,content:S}))}catch(e){}return now}
   };
   document.dispatchEvent(new Event('thean:admin-ready'));
 }
