@@ -209,7 +209,7 @@ const DEFAULT_QUICK=[
  {icon:'check',label:'Thank you',send:true,en:"Thank you for chatting with me! Have a wonderful trip 🙏",km:"អរគុណសម្រាប់ការជជែក! សូមឱ្យដំណើររបស់អ្នករីករាយ 🙏"}
 ];
 const JOIN_DEF={en:'{name} has joined the chat.',km:'{name} បានចូលរួមការជជែក។'};
-const BUSY={en:'Sorry, all our agents are busy right now. Please try again later. You can keep chatting with our assistant, or tap «Talk to Live Agent» to try again.',km:'សូមអភ័យទោស ភ្នាក់ងាររបស់យើងទាំងអស់កំពុងរវល់នៅពេលនេះ។ សូមព្យាយាមម្ដងទៀតនៅពេលក្រោយ។ អ្នកអាចបន្តជជែកជាមួយជំនួយការរបស់យើង ឬចុច «និយាយជាមួយភ្នាក់ងារផ្ទាល់» ដើម្បីព្យាយាមម្ដងទៀត។'};
+const BUSY={en:'Sorry, all our agents are busy right now. Please try again later. You can keep chatting with me in the meantime.',km:'សូមអភ័យទោស ភ្នាក់ងាររបស់យើងទាំងអស់កំពុងរវល់នៅពេលនេះ។ សូមព្យាយាមម្ដងទៀតនៅពេលក្រោយ។ អ្នកអាចបន្តជជែកជាមួយខ្ញុំក្នុងពេលនេះ។'};
 const BTN={en:{live:'Talk to Live Agent',more:'More Options'},km:{live:'និយាយជាមួយភ្នាក់ងារផ្ទាល់',more:'ជម្រើសផ្សេងៗ'}};
 const ekey=e=>String(e||'').toLowerCase().split('.').join(',');
 const isOwner=()=>!!agent&&(agent.role==='owner'||!agent.role);
@@ -299,7 +299,7 @@ async function expireWaiting(){
     if(c.status!=='waiting'||!c.requestedAt||now-ms(c.requestedAt)<waitMin*60000||expiring.has(c.id))continue;
     expiring.add(c.id);
     try{const r=await DB.tx('chats/'+c.id+'/status',cur=>cur===null?null:(cur==='waiting'?'bot':undefined));
-      if(r.committed&&r.val==='bot'){const lg=c.lang==='km'?'km':'en';await DB.push('messages/'+c.id,{from:'bot',text:BUSY[lg],btns:[{l:BTN[lg].live,a:'live'},{l:BTN[lg].more,a:'more'}],ts:TS});await DB.update('chats/'+c.id,{lastMsg:'⏱ No agent opened the chat in time',lastFrom:'bot',updatedAt:TS})}}catch(e){}
+      if(r.committed&&r.val==='bot'){const lg=c.lang==='km'?'km':'en';await DB.push('messages/'+c.id,{from:'bot',text:BUSY[lg],btns:[{l:BTN[lg].live,a:'live'}],ts:TS});await DB.update('chats/'+c.id,{lastMsg:'⏱ No agent opened the chat in time',lastFrom:'bot',updatedAt:TS})}}catch(e){}
     expiring.delete(c.id);
   }
 }
