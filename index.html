@@ -145,6 +145,8 @@ h2{margin:2px 0 0;font-size:clamp(1.8rem,4.4vw,2.6rem);text-wrap:balance}
 .kgh{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:22px 0 10px}.kgh h3{margin:0;font-size:1.05rem}
 .knext{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;padding:14px 18px;border-radius:16px;background:var(--char);color:var(--char-ink);margin-bottom:14px}
 .knext span{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.75}.knext b{font-size:1.1rem}.knext small{opacity:.85}
+.ytabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}.ytabs button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 16px;font-weight:600;cursor:pointer}.ytabs button.on{background:var(--char);color:var(--char-ink);border-color:var(--char)}
+.kyears.one{grid-template-columns:minmax(0,1fr);max-width:560px}
 .kyears{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
 .kyear{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px}
 .kyh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.kyh b{font-size:1.3rem}
@@ -927,24 +929,26 @@ function placesBlock(cat,filter){
 }
 function c2(){return S.c2||EMBED.c2||{}}
 function c2Edit(path){return admin?'<button class="btn sm soft aonly" data-arr="'+path+'">'+I('edit')+' Edit list</button>':''}
-function kList(path,cls){var L=c2()[path.split('.')[1]]||[];return '<div class="klist '+(cls||'')+'">'+L.map(function(x){return '<div class="kitem"><b>'+esc(tr(x.title))+'</b>'+(tr(x.text)?'<span>'+esc(tr(x.text))+'</span>':'')+'</div>'}).join('')+'</div>'}
+function kList(path,cls){var L=c2()[path.split('.')[1]]||[];return paged('k-'+path,L,function(x){return '<div class="kitem"><b>'+esc(tr(x.title))+'</b>'+(tr(x.text)?'<span>'+esc(tr(x.text))+'</span>':'')+'</div>'},6,'<div class="klist '+(cls||'')+'">',true)}
 function c2Blocks(){var C=c2(),km=lang==='km',h='';
   var yrs=['2026','2027','2028'].filter(function(y){return (C['d'+y]||[]).length}),all=[];yrs.forEach(function(y){(C['d'+y]||[]).forEach(function(x){all.push(x)})});
   var now=new Date();now.setHours(0,0,0,0);var next=all.filter(function(x){return x.start&&new Date(x.start)>=new Date(now.getTime()-2*864e5)}).sort(function(a,b){return a.start<b.start?-1:1})[0];
   if(yrs.length){var dd=next?Math.round((new Date(next.start)-now)/864e5):0;
     h+='<section><div class="sh"><div><div class="kick">'+(km?'ប្រតិទិន':'Calendar')+'</div><h2 class="emb">'+(km?'កាលបរិច្ឆេទពិធីបុណ្យសំខាន់ៗ':'Upcoming festival dates')+'</h2></div></div>';
     if(next)h+='<div class="knext"><span>'+(km?'បន្ទាប់':'Next')+'</span><b>'+esc(tr(next.title))+'</b><small>'+esc(tr(next.text))+(dd>0?' · '+(km?'ក្នុងរយៈពេល '+String(dd).replace(/\d/g,function(d){return '០១២៣៤៥៦៧៨៩'[+d]})+' ថ្ងៃ':'in '+dd+' day'+(dd>1?'s':'')):(km?' · កំពុងប្រារព្ធ':' · happening now'))+'</small></div>';
-    h+='<div class="kyears">'+yrs.map(function(y){return '<div class="kyear"><div class="kyh"><b>'+(km?y.replace(/\d/g,function(d){return '០១២៣៤៥៦៧៨៩'[+d]}):y)+'</b>'+c2Edit('c2.d'+y)+'</div>'+(C['d'+y]||[]).map(function(x){return '<div class="kdate'+(next&&x===next?' on':'')+'"><span>'+esc(tr(x.title))+'</span><small>'+esc(tr(x.text))+'</small></div>'}).join('')+'</div>'}).join('')+'</div></section>'}
-  if((C.national||[]).length)h+='<section><div class="sh"><h2 class="emb">'+(km?'ទិវាជាតិ និងព្រះរាជពិធី':'Royal & national days')+'</h2>'+c2Edit('c2.national')+'</div><div class="klist kdays">'+C.national.map(function(x){return '<div class="kitem"><small>'+esc(tr(x.text))+'</small><b>'+esc(tr(x.title))+'</b></div>'}).join('')+'</div></section>';
+    var fy=PG.fy||(next?next.start.slice(0,4):yrs[0]);if(fy!=='all'&&yrs.indexOf(fy)<0)fy=yrs[0];
+    h+='<div class="ytabs" role="tablist">'+yrs.map(function(y){return '<button type="button" class="'+(fy===y?'on':'')+'" data-fy="'+y+'">'+(km?y.replace(/\d/g,function(d){return '០១២៣៤៥៦៧៨៩'[+d]}):y)+'</button>'}).join('')+'<button type="button" class="'+(fy==='all'?'on':'')+'" data-fy="all">'+(km?'ទាំងអស់':'All years')+'</button></div>';
+    h+='<div class="kyears'+(fy==='all'?'':' one')+'">'+yrs.filter(function(y){return fy==='all'||y===fy}).map(function(y){return '<div class="kyear"><div class="kyh"><b>'+(km?y.replace(/\d/g,function(d){return '០១២៣៤៥៦៧៨៩'[+d]}):y)+'</b>'+c2Edit('c2.d'+y)+'</div>'+(C['d'+y]||[]).map(function(x){return '<div class="kdate'+(next&&x===next?' on':'')+'"><span>'+esc(tr(x.title))+'</span><small>'+esc(tr(x.text))+'</small></div>'}).join('')+'</div>'}).join('')+'</div></section>'}
+  if((C.national||[]).length)h+='<section><div class="sh"><h2 class="emb">'+(km?'ទិវាជាតិ និងព្រះរាជពិធី':'Royal & national days')+'</h2>'+c2Edit('c2.national')+'</div>'+paged('natdays',C.national,function(x){return '<div class="kitem"><small>'+esc(tr(x.text))+'</small><b>'+esc(tr(x.title))+'</b></div>'},6,'<div class="klist kdays">',true)+'</section>';
   var grp=function(head,kick,parts){var any=parts.some(function(p){return (C[p[0]]||[]).length});if(!any)return '';return '<section><div class="sh"><div><div class="kick">'+kick+'</div><h2 class="emb">'+head+'</h2></div></div>'+parts.map(function(p,pi){var n=(C[p[0]]||[]).length;return n||admin?'<details class="kdet"'+(pi===0?' open':'')+'><summary><h3>'+p[1]+'</h3><span class="kcount">'+n+'</span></summary>'+(admin?'<div style="margin:0 0 10px">'+c2Edit('c2.'+p[0])+'</div>':'')+kList('c2.'+p[0])+'</details>':''}).join('')+'</section>'};
   h+=grp(km?'របាំប្រពៃណីខ្មែរ':'Traditional dances (Robam)','Robam',[['classical',km?'របាំបុរាណ':'Classical court dances'],['folk',km?'របាំប្រជាប្រិយ':'Folk dances'],['social',km?'របាំប្រជាប្រិយសង្គម':'Social dances']]);
   h+=grp(km?'ម្ហូបខ្មែរប្រពៃណី':'Traditional food & dishes',km?'ម្ហូបខ្មែរ':'Khmer kitchen',[['foodMain',km?'ម្ហូប និងសម្លល្បីៗ':'Iconic dishes & curries'],['foodStreet',km?'អាហារតាមផ្លូវ បាយ និងគុយទាវ':'Street food, rice & noodles'],['foodSweet',km?'នំ បង្អែម និងចំណីប្រពៃណី':'Snacks, desserts & traditional cakes']]);
   return h}
 function timeline(){
-  return S.festivals.length?'<div class="tl">'+S.festivals.map(function(f){return '<div class="ev" style="position:relative">'+(admin?'<button class="edbtn aonly" style="top:0" data-ed="festivals:'+f.id+'" aria-label="Edit">'+I('edit')+'</button>':'')+'<div class="when">'+esc(tr(f.when))+'</div><h3>'+esc(tr(f.title))+'</h3>'+(f.img?'<img class="evimg" loading="lazy" alt="" src="'+f.img+'">':'')+'<p>'+esc(tr(f.text))+'</p>'+creditOf(f.img)+mediaSec('festivals',f.id,f)+'</div>'}).join('')+'</div>':'<div class="empty">'+ut('empty')+'</div>';
+  return S.festivals.length?paged('fest',S.festivals,function(f){return '<div class="ev" style="position:relative">'+(admin?'<button class="edbtn aonly" style="top:0" data-ed="festivals:'+f.id+'" aria-label="Edit">'+I('edit')+'</button>':'')+'<div class="when">'+esc(tr(f.when))+'</div><h3>'+esc(tr(f.title))+'</h3>'+(f.img?'<img class="evimg" loading="lazy" alt="" src="'+f.img+'">':'')+'<p>'+esc(tr(f.text))+'</p>'+creditOf(f.img)+mediaSec('festivals',f.id,f)+'</div>'},4,'<div class="tl">',S.festivals.length<=4):'<div class="empty">'+ut('empty')+'</div>';
 }
 function tipsBlock(){
-  return '<div class="acc">'+S.tips.map(function(t,i){return '<details'+(i===0?' open':'')+'>'+ed('tips',t.id)+'<summary><span class="n">'+I(t.icon||'bulb')+'</span>'+esc(tr(t.title))+'</summary><div class="body">'+esc(tr(t.text))+'</div></details>'}).join('')+'</div>';
+  return paged('tips',S.tips,function(t,i){return '<details'+(i===0?' open':'')+'>'+ed('tips',t.id)+'<summary><span class="n">'+I(t.icon||'bulb')+'</span>'+esc(tr(t.title))+'</summary><div class="body">'+esc(tr(t.text))+'</div></details>'},8,'<div class="acc">',S.tips.length<=8);
 }
 function stayBlock(){
   var h='<section><div class="sh"><h2 class="emb">'+ut('areas')+'</h2>'+addBtn('stays','','Add area')+'</div>'+paged('stays',pinFirst(S.stays),function(s){return '<div class="post">'+ed('stays',s.id)+'<div class="ph">'+pic(s,tr(s.title),s.art||'river')+'</div><div class="tx"><div class="meta"><span>'+I('pin')+esc(tr(s.region))+'</span></div><h3>'+esc(tr(s.title))+'</h3><p>'+esc(tr(s.text))+'</p>'+mediaSec('stays',s.id,s)+'<a class="more" target="_blank" rel="noopener" href="'+mapsQ('hotels in '+(s.region&&s.region.en||'')+', Cambodia')+'">'+I('bed')+' '+ut('openMap')+'</a></div></div>'},6,'<div class="posts">')+'</section>';
@@ -955,18 +959,19 @@ function postList(list,key){
   if(!list.length)return '<div class="empty">'+I('chat')+'<span>'+ut('empty')+'</span><button class="btn sm" data-act="chat">'+ut('startChat')+'</button></div>';
   return '<div class="posts">'+list.map(function(x){var lk=url(x.link);return '<div class="post">'+ed(key,x.id)+'<div class="ph">'+pic(x,tr(x.title),'river')+'</div><div class="tx">'+(x.date?'<div class="meta"><span>'+I('calendar')+esc(x.date)+'</span></div>':'')+'<h3>'+esc(tr(x.title))+'</h3><p>'+esc(tr(x.text))+'</p>'+(admin?mediaSec(key,x.id,x):gallery(x.gallery))+(playable(x)?'<a class="btn sm" style="justify-self:start" href="#"'+playAttr(x)+'>'+I('play')+ut('watch')+'</a>':'')+(lk&&!playable(x)?'<a class="more" target="_blank" rel="noopener" href="'+esc(lk)+'">'+ut('readMore')+' '+I('arrow')+'</a>':'')+'</div></div>'}).join('')+'</div>';
 }
-function postsBlock(key){return '<section><div class="sh"><h2 class="emb">'+ut('latest')+'</h2>'+addBtn(key,'','Add post')+'</div>'+postList(S[key]||[],key)+'</section>'}
+function postsBlock(key){var L=pinFirst(S[key]||[]);return '<section><div class="sh"><h2 class="emb">'+ut('latest')+'</h2>'+addBtn(key,'','Add post')+'</div>'+(L.length?paged('posts-'+key,L,function(x){return postList([x],key).replace(/^<div class="posts">/,'').replace(/<\/div>$/,'')},6,'<div class="posts">',L.length<=6):postList([],key))+'</section>'}
 var PG={},PLR={};
 function pinFirst(a){a=(a||[]).slice();return a.filter(function(x){return x.pin}).concat(a.filter(function(x){return !x.pin}))}
 function srchText(x){return [x.title,x.text,x.sum,x.region,x.body,x.when].map(function(v){return v?(typeof v==='object'?(v.en||'')+' '+(v.km||''):String(v)):''}).join(' ').toLowerCase()}
 function pager(key,pages,cur){if(pages<2)return '';var b=[],add=function(n){b.push('<button type="button" class="pgn'+(n===cur?' on':'')+'" data-pg="'+key+':'+n+'"'+(n===cur?' aria-current="page"':'')+'>'+num(n)+'</button>')};
   var lo=Math.max(1,cur-2),hi=Math.min(pages,cur+2);if(lo>1){add(1);if(lo>2)b.push('<span class="pgd">…</span>')}for(var i=lo;i<=hi;i++)add(i);if(hi<pages){if(hi<pages-1)b.push('<span class="pgd">…</span>');add(pages)}
   return '<nav class="pgr" aria-label="Pages"><button type="button" class="pgn ar" data-pg="'+key+':'+(cur-1)+'"'+(cur<=1?' disabled':'')+' aria-label="Previous">'+I('left')+'</button>'+b.join('')+'<button type="button" class="pgn ar" data-pg="'+key+':'+(cur+1)+'"'+(cur>=pages?' disabled':'')+' aria-label="Next">'+I('right')+'</button></nav>'}
-function paged(key,items,render,per,wrap){PG[key]=PG[key]||{q:'',p:1};var st=PG[key];
+function paged(key,items,render,per,wrap,noSearch){PG[key]=PG[key]||{q:'',p:1};var st=PG[key];
   PLR[key]=function(){var q=st.q.trim().toLowerCase(),words=q.split(/\s+/).filter(Boolean),list=words.length?items.filter(function(x){var t=srchText(x);return words.every(function(w){return t.indexOf(w)>=0})}):items;
     var pages=Math.max(1,Math.ceil(list.length/per));if(st.p>pages)st.p=pages;if(st.p<1)st.p=1;var part=list.slice((st.p-1)*per,st.p*per);
     return (list.length?(wrap||'<div class="grid">')+part.map(render).join('')+'</div>':'<div class="empty">'+(words.length?(lang==='km'?'រកមិនឃើញ «'+esc(st.q)+'»':'Nothing found for “'+esc(st.q)+'”'):ut('empty'))+'</div>')+pager(key,pages,st.p)};
   SUGSRC[key]=items;
+  if(noSearch)return '<div data-pl="'+key+'">'+PLR[key]()+'</div>';
   return '<div class="srchw"><div class="srch"><span>'+I('search')+'</span><input type="search" enterkeyhint="search" autocomplete="off" data-sq="'+key+'" value="'+esc(st.q)+'" placeholder="'+(lang==='km'?'ស្វែងរក…':'Search…')+'" aria-label="Search"><button type="button" class="sx" data-sx="'+key+'" aria-label="Clear"'+(st.q?'':' hidden')+'>'+I('close')+'</button></div><div class="sug" data-sug="'+key+'" hidden></div></div><div data-pl="'+key+'">'+PLR[key]()+'</div>'}
 var SUGSRC={};
 function recentQ(){try{return JSON.parse(localStorage.getItem('thean-recent-q')||'[]')}catch(e){return []}}
@@ -1363,6 +1368,7 @@ app.addEventListener('click',function(e){
   if(d.send==='messenger'){e.preventDefault();var f=t.closest('form'),msg=composeText(f);copy(msg);window.open(linkOf('messenger',S.links.messenger),'_blank','noopener');return}
   if(d.sgo||d.sgf){var a=(d.sgo||d.sgf).split('|'),it=(SUGCUR[a[0]]||[])[+a[1]];if(it)runSearch(a[0],it.t,!!d.sgf);return}
   if(d.sx){runSearch(d.sx,'',true);return}
+  if(d.fy){PG.fy=d.fy;var sy=scrollY;render();scrollTo(0,sy);return}
   if(d.pg){e.preventDefault();var pq=d.pg.split(':'),pk=pq.slice(0,-1).join(':');PG[pk]=PG[pk]||{q:'',p:1};PG[pk].p=+pq[pq.length-1];plRefresh(pk);var pe=app.querySelector('[data-pl="'+pk+'"]');if(pe){var y=pe.getBoundingClientRect().top+scrollY-140;scrollTo({top:y,behavior:'smooth'})}return}
   if(d.kh){e.preventDefault();khAct(d.kh,t);return}
   if(d.pageimg!=null){pickImage(1600,function(x){S.pages[+d.pageimg].img=x;changed()});return}
@@ -2221,7 +2227,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261003-1330',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261003-1427',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
