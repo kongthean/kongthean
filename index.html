@@ -911,7 +911,7 @@ function enterAdmin(u){
   try{var d=localStorage.getItem(DRAFT_KEY);if(d){S=JSON.parse(d);dirty=true}}catch(e){}
   render();
   if(dirty){toast('Saving the changes you made last time…');schedulePublish(500)}
-  else if(window.TheanAdmin.version){window.TheanAdmin.version().then(function(v){if(!v&&!dirty){dirty=true;toast('Putting your website online for the first time…');schedulePublish(300)}}).catch(function(e){pubState='error';pubErr='Could not reach the database: '+(e&&(e.code||e.message)||e);updatePubUI()})}
+  else if(window.TheanAdmin.version){window.TheanAdmin.version().then(function(v){if(v||dirty)return;return window.TheanAdmin.content().then(function(c){if(dirty)return;if(c&&typeof c==='object'){S=Object.assign({},EMBED,c);BASE=S;render()}dirty=true;toast('Putting your website online…');schedulePublish(300)})}).catch(function(e){pubState='error';pubErr='Could not reach the database: '+(e&&(e.code||e.message)||e);updatePubUI()})}
 }
 function adminLogin(msg){
   app.innerHTML='<div style="min-height:100vh;display:grid;place-items:center;padding:24px 16px"><form class="form" id="alog" style="width:100%;max-width:400px" novalidate><div style="display:flex;gap:12px;align-items:center"><span class="logo">'+(S.brand.logo?'<img alt="" src="'+S.brand.logo+'">':'')+'</span><div><h2 class="emb" style="margin:0">'+esc(S.brand.name)+'</h2><small style="color:var(--muted)">Website editor · team login</small></div></div>'+
@@ -1564,13 +1564,13 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261002-1443',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261003-0318',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
   try{SYNC.step='loading Firebase';await loadFb();
     SYNC.step='reading version';const v=await fb.get('site/version');SYNC.serverV=v||null;
-    if(!v){SYNC.step='done: nothing published yet';return}
+    if(!v){SYNC.step='checking saved content';const c0=await fb.get('site/content');if(!c0){SYNC.step='done: nothing published yet';return}T.setState(c0,{live:true,v:1});SYNC.applied='from the server (old save)';SYNC.step='done: saved content shown';return}
     if(c&&c.v===v){SYNC.step='done: already up to date';return}
     SYNC.step='downloading content';const content=await fb.get('site/content');if(!content){SYNC.step='done: no content on server';return}
     try{localStorage.setItem(CACHE,JSON.stringify({v,content}))}catch(e){}
@@ -1593,6 +1593,7 @@ if(ADMIN_PAGE){
     async current(){const u=await authUser();if(!u||u.isAnonymous)return null;const a=await fb.get('agents/'+u.uid);return a?{uid:u.uid,email:u.email,agent:a}:{uid:u.uid,email:u.email,agent:null}},
     async login(email,pw){await loadFb();await fb.A.signInWithEmailAndPassword(fb.auth,email,pw);return this.current()},
     async version(){await loadFb();return await fb.get('site/version')},
+    async content(){await loadFb();return await fb.get('site/content')},
     async logout(){await loadFb();await fb.A.signOut(fb.auth)},
     async publish(S){await loadFb();
       const to=new Promise((_,rej)=>setTimeout(()=>rej(new Error('network: the server did not answer in 40 seconds')),40000));
