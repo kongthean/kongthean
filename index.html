@@ -122,10 +122,10 @@ h2{margin:2px 0 0;font-size:clamp(1.8rem,4.4vw,2.6rem);text-wrap:balance}
 .ogrid img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .ogrid small{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,rgba(0,0,0,.7));color:#fff;font-size:.66rem;padding:10px 6px 4px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ogrid i{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.6);color:#fff;font-style:normal;font-size:.7rem;padding:2px 6px;border-radius:6px}
-.autobox{padding:14px 16px;border-radius:16px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 14%,var(--card,#fff)),var(--card,#fff));border:1px solid var(--line);margin:0 0 18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.autobox{padding:14px 16px;border-radius:16px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 14%,var(--surface)),var(--surface));border:1px solid var(--line);margin:0 0 18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .autobox b{display:block}.autobox>div{flex:1 1 220px}
 /* ===== KHQR ===== */
-.khbox{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;background:var(--card,#fff);border:1px solid var(--line);border-radius:22px;padding:20px}
+.khbox{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:20px}
 @media(max-width:720px){.khbox{grid-template-columns:minmax(0,1fr)}}
 .khin{display:grid;gap:12px;align-content:start}.khin input{font-size:1.4rem;font-weight:600}
 .khcur{display:inline-flex;background:var(--bg2);border-radius:99px;padding:3px;justify-self:start}.khcur button{border:0;background:transparent;padding:7px 16px;border-radius:99px;font-weight:600;cursor:pointer;color:var(--muted)}.khcur button.on{background:var(--ink);color:#fff}
@@ -135,7 +135,7 @@ h2{margin:2px 0 0;font-size:clamp(1.8rem,4.4vw,2.6rem);text-wrap:balance}
 .cardpay{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:16px 18px;border-radius:18px;background:var(--bg2)}.cardpay>svg{font-size:1.8rem}.cardpay>div{flex:1 1 220px}.cardpay small{display:block;color:var(--muted)}
 /* ===== traditions ===== */
 .klist{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
-.kitem{background:var(--card,#fff);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:grid;gap:4px;align-content:start}
+.kitem{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:grid;gap:4px;align-content:start}
 .kitem b{font-size:.98rem}.kitem span{color:var(--muted);font-size:.88rem;line-height:1.5}.kitem small{color:var(--accent);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase}
 .kdet{border-top:1px solid var(--line);padding:4px 0}.kdet:last-child{border-bottom:1px solid var(--line)}
 .kdet summary{display:flex;align-items:center;gap:10px;cursor:pointer;list-style:none;padding:14px 2px}.kdet summary::-webkit-details-marker{display:none}
@@ -146,7 +146,7 @@ h2{margin:2px 0 0;font-size:clamp(1.8rem,4.4vw,2.6rem);text-wrap:balance}
 .knext{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;padding:14px 18px;border-radius:16px;background:var(--char);color:var(--char-ink);margin-bottom:14px}
 .knext span{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.75}.knext b{font-size:1.1rem}.knext small{opacity:.85}
 .kyears{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
-.kyear{background:var(--card,#fff);border:1px solid var(--line);border-radius:18px;padding:14px 16px}
+.kyear{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px}
 .kyh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.kyh b{font-size:1.3rem}
 .kdate{display:grid;gap:2px;padding:9px 10px;border-radius:10px}.kdate+.kdate{border-top:1px solid var(--line)}
 .kdate span{font-weight:600;font-size:.92rem}.kdate small{color:var(--muted);font-size:.84rem}
@@ -154,10 +154,20 @@ h2{margin:2px 0 0;font-size:clamp(1.8rem,4.4vw,2.6rem);text-wrap:balance}
 .kdays{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
 @media(max-width:520px){.kdays{grid-template-columns:1fr 1fr;gap:8px}.kdays .kitem{padding:10px 12px}.kdays .kitem b{font-size:.84rem}}
 /* ===== search & pages ===== */
-.srch{display:flex;align-items:center;gap:8px;background:var(--card,#fff);border:1px solid var(--line);border-radius:999px;padding:0 16px;margin:0 0 18px;max-width:520px}
+.srchw{position:relative;max-width:520px;margin:0 0 18px}
+.srchw .srch{margin:0}
+.sx{border:0;background:transparent;color:var(--muted);display:grid;place-items:center;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1.1rem}
+.sug{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:30;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;padding:6px 0}
+.sgi{display:flex;align-items:center}
+.sgt{flex:1;display:flex;align-items:center;gap:14px;border:0;background:transparent;color:var(--ink);text-align:left;padding:11px 16px;font-size:1rem;cursor:pointer;min-width:0}
+.sgt svg{font-size:1.25rem;color:var(--muted);flex:none}.sgt span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sgt .sq{font-weight:400}.sgt b{font-weight:700}
+.sgf{border:0;background:transparent;color:var(--muted);width:44px;height:44px;display:grid;place-items:center;cursor:pointer;font-size:1.15rem}.sgf svg{transform:rotate(-135deg)}
+.sgi:hover{background:var(--bg2)}
+.srch input::-webkit-search-cancel-button{display:none}
+.srch{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:0 16px;margin:0 0 18px;max-width:520px}
 .srch span{color:var(--muted);display:grid}.srch input{flex:1;border:0;background:transparent;padding:12px 0;font-size:1rem;color:var(--ink);outline:none;min-width:0}
 .pgr{display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap;margin-top:26px}
-.pgn{min-width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--card,#fff);color:var(--ink);font-weight:600;cursor:pointer;display:grid;place-items:center;padding:0 6px}
+.pgn{min-width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-weight:600;cursor:pointer;display:grid;place-items:center;padding:0 6px}
 .pgn.on{background:var(--char);color:var(--char-ink);border-color:var(--char)}.pgn:disabled{opacity:.35;cursor:default}.pgd{color:var(--muted);padding:0 2px}
 /* ===== Icon tiles ===== */
 .notice .nl{display:flex;gap:14px;flex:none;min-width:0}
@@ -168,7 +178,7 @@ h2{margin:2px 0 0;font-size:clamp(1.8rem,4.4vw,2.6rem);text-wrap:balance}
 @media(min-width:700px){.tiles.row .tile{flex-basis:132px}}
 .tbar{height:3px;border-radius:3px;background:color-mix(in srgb,var(--ink) 12%,transparent);margin:4px auto 0;max-width:140px;position:relative;overflow:hidden}
 .tbar i{position:absolute;top:0;bottom:0;left:0;border-radius:3px;background:var(--ink);transition:left .25s,width .25s}
-.tarw{position:absolute;top:38px;width:36px;height:36px;border-radius:50%;border:0;background:var(--card,#fff);color:var(--ink);box-shadow:0 4px 12px rgba(0,0,0,.18);display:none;place-items:center;cursor:pointer;z-index:2}
+.tarw{position:absolute;top:38px;width:36px;height:36px;border-radius:50%;border:0;background:var(--surface);color:var(--ink);box-shadow:0 4px 12px rgba(0,0,0,.18);display:none;place-items:center;cursor:pointer;z-index:2}
 .tarw.l{left:-8px}.tarw.r{right:-8px}
 @media(hover:hover) and (min-width:700px){.tarw{display:grid}}
 .sbar{margin:26px 0 0;padding:16px;border-radius:20px;background:var(--bg2);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
@@ -202,7 +212,7 @@ svg.i.mis{fill:currentColor;stroke:none}
 .tiles.st-color .tile .ic{background:var(--tb);color:var(--tf);box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 6px 16px -8px var(--tf);border:1px solid color-mix(in srgb,var(--tf) 14%,transparent)}
 .tiles.st-color .tile .ic svg,.tiles.st-outline .tile .ic svg{filter:none;font-size:2.1rem}
 .tiles.st-color .tile:hover .ic{transform:translateY(-4px);box-shadow:0 12px 22px -10px var(--tf)}
-.tiles.st-outline .tile .ic{background:var(--card,#fff);color:var(--ink);border:1.5px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.tiles.st-outline .tile .ic{background:var(--surface);color:var(--ink);border:1.5px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.05)}
 .tiles.st-outline .tile .ic svg .d{opacity:0}
 .tiles.st-photo .tile .ic{background:var(--tb,#d9dede) center/cover no-repeat;color:var(--tf,#333);border-radius:50%;box-shadow:0 6px 16px rgba(0,0,0,.18)}
 .tiles.st-photo .tile .ic.ph{position:relative}
@@ -938,9 +948,29 @@ function paged(key,items,render,per,wrap){PG[key]=PG[key]||{q:'',p:1};var st=PG[
   PLR[key]=function(){var q=st.q.trim().toLowerCase(),words=q.split(/\s+/).filter(Boolean),list=words.length?items.filter(function(x){var t=srchText(x);return words.every(function(w){return t.indexOf(w)>=0})}):items;
     var pages=Math.max(1,Math.ceil(list.length/per));if(st.p>pages)st.p=pages;if(st.p<1)st.p=1;var part=list.slice((st.p-1)*per,st.p*per);
     return (list.length?(wrap||'<div class="grid">')+part.map(render).join('')+'</div>':'<div class="empty">'+(words.length?(lang==='km'?'រកមិនឃើញ «'+esc(st.q)+'»':'Nothing found for “'+esc(st.q)+'”'):ut('empty'))+'</div>')+pager(key,pages,st.p)};
-  return '<div class="srch"><span>'+I('search')+'</span><input type="search" data-sq="'+key+'" value="'+esc(st.q)+'" placeholder="'+(lang==='km'?'ស្វែងរក…':'Search…')+'" aria-label="Search"></div><div data-pl="'+key+'">'+PLR[key]()+'</div>'}
+  SUGSRC[key]=items;
+  return '<div class="srchw"><div class="srch"><span>'+I('search')+'</span><input type="search" enterkeyhint="search" autocomplete="off" data-sq="'+key+'" value="'+esc(st.q)+'" placeholder="'+(lang==='km'?'ស្វែងរក…':'Search…')+'" aria-label="Search"><button type="button" class="sx" data-sx="'+key+'" aria-label="Clear"'+(st.q?'':' hidden')+'>'+I('close')+'</button></div><div class="sug" data-sug="'+key+'" hidden></div></div><div data-pl="'+key+'">'+PLR[key]()+'</div>'}
+var SUGSRC={};
+function recentQ(){try{return JSON.parse(localStorage.getItem('thean-recent-q')||'[]')}catch(e){return []}}
+function saveQ(q){q=String(q||'').trim();if(q.length<2)return;var r=recentQ().filter(function(x){return x.toLowerCase()!==q.toLowerCase()});r.unshift(q);try{localStorage.setItem('thean-recent-q',JSON.stringify(r.slice(0,8)))}catch(e){}}
+function sugList(key,q){q=String(q||'').trim().toLowerCase();var out=[],seen={};
+  var add=function(t,kind){t=String(t||'').trim();var k=t.toLowerCase();if(!t||seen[k])return;seen[k]=1;out.push({t:t,kind:kind})};
+  recentQ().filter(function(x){return !q||x.toLowerCase().indexOf(q)===0}).slice(0,3).forEach(function(x){add(x,'recent')});
+  if(q){var pool=[];(SUGSRC[key]||[]).forEach(function(x){[x.title,x.region].forEach(function(v){if(!v)return;[typeof v==='object'?v.en:v,typeof v==='object'?v.km:''].forEach(function(z){if(z)pool.push(z)})})});
+    pool.filter(function(z){return z.toLowerCase().indexOf(q)===0}).concat(pool.filter(function(z){var l=z.toLowerCase();return l.indexOf(q)>0&&(l.indexOf(' '+q)>=0||l.indexOf('('+q)>=0)})).concat(pool.filter(function(z){return z.toLowerCase().indexOf(q)>0})).forEach(function(z){add(z,'s')})}
+  return out.slice(0,8)}
+function sugHtml(key,q){var L=sugList(key,q);if(!L.length)return '';var ql=String(q||'').trim();
+  return L.map(function(x,i){var t=x.t,lo=t.toLowerCase(),p=ql?lo.indexOf(ql.toLowerCase()):-1;var label=p>=0?esc(t.slice(0,p))+'<span class="sq">'+esc(t.slice(p,p+ql.length))+'</span><b>'+esc(t.slice(p+ql.length))+'</b>':'<b>'+esc(t)+'</b>';
+    return '<div class="sgi" role="option"><button type="button" class="sgt" data-sgo="'+key+'|'+i+'">'+(x.kind==='recent'?I('clock'):I('search'))+'<span>'+label+'</span></button><button type="button" class="sgf" data-sgf="'+key+'|'+i+'" aria-label="Fill in">'+I('arrow')+'</button></div>'}).join('')}
+var SUGCUR={};
+function showSug(key,q){var box=app.querySelector('[data-sug="'+key+'"]');if(!box)return;SUGCUR[key]=sugList(key,q);var h=sugHtml(key,q);box.innerHTML=h;box.hidden=!h}
+function hideSug(key){var box=app.querySelector('[data-sug="'+key+'"]');if(box)box.hidden=true}
+function runSearch(key,q,fill){var inp=app.querySelector('[data-sq="'+key+'"]');PG[key]=PG[key]||{q:'',p:1};PG[key].q=q;PG[key].p=1;if(inp){inp.value=q;inp.focus()}var sx=app.querySelector('[data-sx="'+key+'"]');if(sx)sx.hidden=!q;plRefresh(key);if(fill){showSug(key,q)}else{saveQ(q);hideSug(key);if(inp)inp.blur()}}
+app.addEventListener('focusin',function(e){var k=e.target.dataset&&e.target.dataset.sq;if(!k)return;showSug(k,e.target.value);if(innerWidth<700){var t=e.target;setTimeout(function(){var y=t.getBoundingClientRect().top+scrollY-84;scrollTo({top:y,behavior:'smooth'})},250)}});
+app.addEventListener('keydown',function(e){var k=e.target.dataset&&e.target.dataset.sq;if(!k)return;if(e.key==='Enter'){e.preventDefault();runSearch(k,e.target.value)}else if(e.key==='Escape')hideSug(k)});
+document.addEventListener('pointerdown',function(e){if(!e.target.closest||!e.target.closest('.srchw'))Object.keys(SUGCUR).forEach(hideSug)});
 function plRefresh(key){var el=app.querySelector('[data-pl="'+key+'"]');if(el&&PLR[key])el.innerHTML=PLR[key]()}
-app.addEventListener('input',function(e){var k=e.target.dataset&&e.target.dataset.sq;if(!k)return;PG[k]=PG[k]||{q:'',p:1};PG[k].q=e.target.value;PG[k].p=1;plRefresh(k)});
+app.addEventListener('input',function(e){var k=e.target.dataset&&e.target.dataset.sq;if(!k)return;PG[k]=PG[k]||{q:'',p:1};PG[k].q=e.target.value;PG[k].p=1;plRefresh(k);showSug(k,e.target.value);var sx=app.querySelector('[data-sx="'+k+'"]');if(sx)sx.hidden=!e.target.value});
 function videoCard(v){var lk=url(v.link),pa=playAttr(v);return '<a class="card" '+(pa?'href="#"'+pa:(lk?'target="_blank" rel="noopener" href="'+esc(lk)+'"':''))+'>'+ed('videos',v.id)+'<div class="ph" style="aspect-ratio:16/9">'+(v.img||!v.videoPoster?pic(v,tr(v.title),'river'):'<img loading="lazy" alt="" src="'+v.videoPoster+'">')+'<span class="play" style="width:58px;height:58px;font-size:1.4rem">'+I('play')+'</span></div><div class="tx"><h3>'+esc(tr(v.title))+'</h3>'+(tr(v.text)?'<p>'+esc(tr(v.text))+'</p>':'')+'</div></a>'}
 function videosBlock(){
   return '<section><div class="sh"><h2 class="emb">'+ut('videos')+'</h2>'+addBtn('videos','','Add video')+'</div>'+paged('videos',pinFirst(visVideos()),videoCard,10)+'</section>';
@@ -1282,6 +1312,8 @@ app.addEventListener('click',function(e){
   if(d.topic){chatTopic=d.topic;render();return}
   if(d.star){stars=+d.star;t.parentNode.querySelectorAll('button').forEach(function(x,i){x.classList.toggle('on',i<stars)});return}
   if(d.send==='messenger'){e.preventDefault();var f=t.closest('form'),msg=composeText(f);copy(msg);window.open(linkOf('messenger',S.links.messenger),'_blank','noopener');return}
+  if(d.sgo||d.sgf){var a=(d.sgo||d.sgf).split('|'),it=(SUGCUR[a[0]]||[])[+a[1]];if(it)runSearch(a[0],it.t,!!d.sgf);return}
+  if(d.sx){runSearch(d.sx,'',true);return}
   if(d.pg){e.preventDefault();var pq=d.pg.split(':'),pk=pq.slice(0,-1).join(':');PG[pk]=PG[pk]||{q:'',p:1};PG[pk].p=+pq[pq.length-1];plRefresh(pk);var pe=app.querySelector('[data-pl="'+pk+'"]');if(pe){var y=pe.getBoundingClientRect().top+scrollY-140;scrollTo({top:y,behavior:'smooth'})}return}
   if(d.kh){e.preventDefault();khAct(d.kh,t);return}
   if(d.pageimg!=null){pickImage(1600,function(x){S.pages[+d.pageimg].img=x;changed()});return}
@@ -1501,7 +1533,7 @@ function mediaForm(){var M=S.media||{};
   m.querySelector('[data-ok]').onclick=function(){S.media={cloud:m.querySelector('[data-k="cloud"]').value.trim(),preset:m.querySelector('[data-k="preset"]').value.trim()};m.remove();changed();toast('Saved. You can upload videos now.')};
 }
 /* =================== ADMIN DASHBOARD =================== */
-var DSECS=[['overview','home','Overview'],['slides','image','Slideshow'],['posts','calendar','Posts & news'],['videos','video','Videos'],['places','pin','Places & temples'],['pages','menu','Menu pages'],['stays','bed','Hotels & stays'],['festivals','lotus','Festivals'],['tips','bulb','Travel tips'],['about','user','About & donation'],['texts','edit','Words & headings'],['settings','link','Contact & settings']];
+var DSECS=[['overview','home','Overview'],['home','star','Home page'],['posts','calendar','Posts & news'],['videos','video','Videos'],['places','pin','Places & temples'],['pages','menu','Menu pages'],['stays','bed','Hotels & stays'],['festivals','lotus','Festivals'],['tips','bulb','Travel tips'],['about','user','About & donation'],['texts','edit','Words & headings'],['settings','link','Contact & settings']];
 function setText(path,l,val){var k=path.split('.'),o=S;if(k[0]==='ui'){S.ui=S.ui||{};if(!S.ui[k[1]])S.ui[k[1]]={en:UI.en[k[1]]||'',km:UI.km[k[1]]||''}}for(var i=0;i<k.length-1;i++){o[k[i]]=o[k[i]]||{};o=o[k[i]]}var last=k[k.length-1];if(l){if(!o[last]||typeof o[last]!=='object')o[last]={en:'',km:''};o[last][l]=val}else o[last]=val}
 function moveItem(list,id,dir){var a=S[list];if(!a)return;var i=a.findIndex(function(x){return x.id===id}),j=i+dir;if(i<0||j<0||j>=a.length)return;var t=a[i];a[i]=a[j];a[j]=t;changed()}
 function rmItem(list,id){var a=S[list]||[],o=a.find(function(x){return x.id===id});S[list]=a.filter(function(x){return x.id!==id});if(list==='pages'&&o&&o.list)delete S[o.list];changed();toast('Deleted')}
@@ -1512,7 +1544,9 @@ function dItem(list,x,i,n,opt){opt=opt||{};
   var badges=(x.pin?'<em>Pinned</em>':'')+(x.featured?'<em>★ Home page</em>':'')+(x.video?'<em>▶ Video</em>':x.link&&list!=='hotels'?'<em>🔗 Link</em>':'')+(x.gallery&&x.gallery.length?'<em>🖼 '+x.gallery.length+'</em>':'')+(!tr(x.title||x.label,'km')&&x.title?'':'');
   return '<div class="ditem">'+thumb(x,opt.kind)+'<div class="dtx"><b>'+esc(title)+'</b>'+(sub?'<small>'+esc(sub)+'</small>':'')+(txt?'<p>'+esc(txt)+'</p>':'')+(badges?'<div class="dbadges">'+badges+'</div>':'')+'</div>'+
     '<div class="dact"><button class="btn sm" data-ed="'+list+':'+x.id+'">'+I('edit')+' Edit all</button>'+(/^(places|news|social|videos|hotels|stays|pages|cp_)/.test(list)?qmBtns(list,x.id,x):'')+(/^(places|videos|stays|hotels|news|social)/.test(list)?'<button class="btn sm soft" data-pin="'+list+':'+x.id+'">'+(x.pin?'Unpin':'Pin to top')+'</button>':'')+'<button class="btn sm soft" data-mv="'+list+':'+x.id+':-1" aria-label="Move up"'+(i===0?' disabled':'')+'>'+I('up')+'</button><button class="btn sm soft" data-mv="'+list+':'+x.id+':1" aria-label="Move down"'+(i===n-1?' disabled':'')+'>'+I('down')+'</button>'+(opt.noDel?'':'<button class="btn sm del" data-rm="'+list+':'+x.id+'">Delete</button>')+'<a class="btn sm soft" target="_blank" href="'+viewHref(list,x)+'">View</a></div></div>'}
-function dList(list,arr,opt){opt=opt||{};arr=arr||[];return arr.length?'<div class="dlist">'+arr.map(function(x,i){return dItem(list,x,(S[list]||[]).indexOf(x),(S[list]||[]).length,typeof opt.fn==='function'?opt.fn(x):opt)}).join('')+'</div>':'<div class="dempty">Nothing here yet. Tap <b>'+esc(opt.addLabel||'Add')+'</b> to create the first one.</div>'}
+function dList(list,arr,opt){opt=opt||{};arr=arr||[];
+  if(arr.length>10){var rowf=function(x){return dItem(list,x,(S[list]||[]).indexOf(x),(S[list]||[]).length,typeof opt.fn==='function'?opt.fn(x):opt)};return paged('d-'+list+'-'+(dashFilter[list]||dashFilter.places||''),arr,rowf,10,'<div class="dlist">')}
+  return arr.length?'<div class="dlist">'+arr.map(function(x,i){return dItem(list,x,(S[list]||[]).indexOf(x),(S[list]||[]).length,typeof opt.fn==='function'?opt.fn(x):opt)}).join('')+'</div>':'<div class="dempty">Nothing here yet. Tap <b>'+esc(opt.addLabel||'Add')+'</b> to create the first one.</div>'}
 function dHead(title,desc,addAttr,addLabel){return '<div class="dhead"><div><h2>'+esc(title)+'</h2>'+(desc?'<p>'+desc+'</p>':'')+'</div>'+(addAttr?'<button class="btn" '+addAttr+'>'+I('plus')+' '+esc(addLabel||'Add')+'</button>':'')+'</div>'}
 function dChips(key,opts,def){var cur=dashFilter[key]||def;return '<div class="dchips">'+opts.map(function(o){return '<button class="'+(o[0]===cur?'on':'')+'" data-df="'+key+':'+o[0]+'">'+esc(o[1])+'</button>'}).join('')+'</div>'}
 function dField(path,label,area){var v=path.split('.').reduce(function(o,k){return o==null?o:o[k]},S);if(path.indexOf('ui.')===0)v={en:u2(path.slice(3),'en'),km:u2(path.slice(3),'km')};v=v&&typeof v==='object'?v:{en:v||'',km:''};
@@ -1527,9 +1561,22 @@ function dashSection(){
     h+='<div class="dwelcome"><h2>Hello'+(adminUser&&adminUser.agent&&adminUser.agent.name?', '+esc(adminUser.agent.name):'')+' 👋</h2><p>Everything you change here <b>saves and goes live automatically</b> within a few seconds. Watch the status at the top: <b>✓ Live on the website</b> means visitors can see it.</p></div>';
     var need=photoTargets().length;
     h+='<div class="autobox"><span style="font-size:1.8rem">✨</span><div><b>HD photos & videos</b><small style="color:var(--muted)">'+(need?need+' places, slides or videos have no photo yet. Add free HD photos from Wikimedia Commons in one tap.':'Every place has a photo. You can change any photo with <b>Online photo</b>.')+'</small></div>'+(need?'<button class="btn" data-act="autophotos">'+I('image')+' Add HD photos</button>':'')+'</div>';
-    h+='<h3 class="dsub">Quick actions</h3><div class="dcards">'+dCard('calendar','Add a post','News, trips, events with photos & video','data-add="news:"')+dCard('video','Add a video','Upload from your phone or paste a link','data-add="videos:"')+dCard('pin','Add a place','Destination, temple or culture story','data-add="places:destination"')+dCard('image','Change slideshow','Big photos at the top of the home page','data-act="slides"')+dCard('bell','Edit announcement','The red/dark bar under the slideshow','data-dash="texts"')+dCard('menu','Add a menu page','New icon in the menu with its own posts','data-add="pages:custom"')+'</div>';
-    h+='<h3 class="dsub">Your website</h3><div class="dstats">'+[['Posts',(S.news||[]).length+(S.social||[]).length+S.pages.reduce(function(a,p){return a+(p.custom&&S[p.list]?S[p.list].length:0)},0),'posts'],['Videos',(S.videos||[]).length,'videos'],['Places',S.places.length,'places'],['Menu pages',S.pages.length,'pages'],['Slides',S.slides.length,'slides']].map(function(r){return '<button class="dstat" data-dash="'+r[2]+'"><b>'+r[1]+'</b><span>'+r[0]+'</span></button>'}).join('')+'</div>';
+    h+='<h3 class="dsub">Quick actions</h3><div class="dcards">'+dCard('calendar','Add a post','News, trips, events with photos & video','data-add="news:"')+dCard('video','Add a video','Upload from your phone or paste a link','data-add="videos:"')+dCard('pin','Add a place','Destination, temple or culture story','data-add="places:destination"')+dCard('star','Home page','Slideshow, announcement, message of gratitude','data-dash="home"')+dCard('bell','Edit announcement','The red/dark bar under the slideshow','data-dash="texts"')+dCard('menu','Add a menu page','New icon in the menu with its own posts','data-add="pages:custom"')+'</div>';
+    h+='<h3 class="dsub">Your website</h3><div class="dstats">'+[['Posts',(S.news||[]).length+(S.social||[]).length+S.pages.reduce(function(a,p){return a+(p.custom&&S[p.list]?S[p.list].length:0)},0),'posts'],['Videos',(S.videos||[]).length,'videos'],['Places',S.places.length,'places'],['Menu pages',S.pages.length,'pages'],['Slides',S.slides.length,'home']].map(function(r){return '<button class="dstat" data-dash="'+r[2]+'"><b>'+r[1]+'</b><span>'+r[0]+'</span></button>'}).join('')+'</div>';
     h+='<div class="dnote">'+(mediaOK()?'✅ Photo & video storage is connected (Cloudinary).':'⚠️ Photo & video storage is not connected yet. <button class="btn sm" data-act="media">Set up now</button>')+'<br>Website data size: <b>'+mb.toFixed(1)+' MB</b>'+(mb>8?' — large. New photos go to Cloudinary once it is connected, which keeps the site fast.':' — good.')+'</div>';
+  }
+  else if(sec==='home'){
+    h+=dHead('Home page','Everything at the top and middle of your home page, in one place.');
+    h+='<h3 class="dsub">Slideshow <button class="btn sm soft" data-act="slides">'+I('image')+' Edit slideshow</button></h3><div class="dgrid">'+S.slides.map(function(sl,i){return '<div class="dslide">'+(sl.img?'<img alt="" src="'+sl.img+'">':art('temple','d'+i))+'<span>'+(i+1)+'. '+esc(tr(sl.cap)||'(no headline)')+'</span></div>'}).join('')+'</div>';
+    h+='<h3 class="dsub">Announcement bar</h3>'+dField('notice','The dark bar under the slideshow',true);
+    var mv=S.message&&S.message.video;
+    h+='<h3 class="dsub">A message of gratitude</h3><div class="dnote" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span style="flex:1">'+(S.message.show===false?'Hidden from visitors. Nothing is left in its place.':'Showing on the home page.')+'</span>'+(S.message.show===false?'<button class="btn sm" data-act="msgshow">Show on website</button>':'<button class="btn sm soft" data-act="msghide">Hide</button>')+'</div>';
+    h+='<div class="dfield"><b>Message text</b><div class="two"><label class="f">ខ្មែរ<textarea data-tp="message.km" rows="4">'+esc(S.message.km||'')+'</textarea></label><label class="f">English<textarea data-tp="message.en" rows="4">'+esc(S.message.en||'')+'</textarea></label></div></div>';
+    h+='<h3 class="dsub">Photo or video under the thank-you message</h3><div class="dlist"><div class="ditem">'+(mv?thumb(mv,'video'):'<span class="dth">'+I('image')+'</span>')+'<div class="dtx"><b>'+(mv?esc(tr(mv.title)||(mv.video||mv.link?'Video':'Photo')):'Nothing yet')+'</b><small>'+(mv&&(mv.video||(mv.link&&embedOf(mv.link)))?'Shows as a video':'Shows as a photo')+'</small></div><div class="dact">'+qmBtns('path','message.video',mv||{})+(mv?'<button class="btn sm soft" data-act="msgvideo">'+I('edit')+' Text & link</button><button class="btn sm del" data-act="msgclear">Remove</button>':'')+'</div></div></div>';
+    var pv=(S.videos||[]).filter(function(x){return x.pin});
+    h+='<h3 class="dsub">Featured video on the home page</h3><div class="dnote">'+(pv.length?'Showing: <b>'+esc(tr(pv[0].title))+'</b> (pinned).':'Showing the first video in your list. Pin a video in <b>Videos</b> to choose which one.')+' <button class="btn sm soft" data-dash="videos">Open Videos</button></div>';
+    var fp=(S.places||[]).filter(function(x){return x.featured});
+    h+='<h3 class="dsub">Featured places ('+fp.length+')</h3><div class="dnote">'+(fp.length?fp.map(function(x){return esc(tr(x.title))}).join(' · '):'None yet.')+' <button class="btn sm soft" data-dash="places">Open Places</button><br><small>Tick “Show on home page” when editing a place.</small></div>';
   }
   else if(sec==='slides'){
     h+=dHead('Slideshow','The big photos at the top of the home page. Add, remove, reorder and write the headline for each.','data-act="slides"','Edit slideshow');
@@ -1543,9 +1590,6 @@ function dashSection(){
   else if(sec==='videos'){
     h+=dHead('Videos','Upload videos from your phone (up to 100 MB) or paste a YouTube / Facebook / TikTok link. They all play inside your website.','data-add="videos:"','Add video');
     h+=dList('videos',S.videos,{kind:'video',addLabel:'Add video'});
-    var mv=S.message&&S.message.video;
-    h+='<h3 class="dsub">A message of gratitude</h3><div class="dnote" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span style="flex:1">'+(S.message.show===false?'Hidden from visitors. Nothing is left in its place.':'Showing on the home page.')+'</span>'+(S.message.show===false?'<button class="btn sm" data-act="msgshow">Show on website</button>':'<button class="btn sm soft" data-act="msghide">Hide</button>')+'<button class="btn sm soft" data-dash="texts">Edit text</button></div>';
-    h+='<h3 class="dsub">Photo or video under the thank-you message</h3><div class="dlist"><div class="ditem">'+(mv?thumb(mv,'video'):'<span class="dth">'+I('image')+'</span>')+'<div class="dtx"><b>'+(mv?esc(tr(mv.title)||(mv.video||mv.link?'Video':'Photo')):'Nothing yet')+'</b><small>'+(mv&&(mv.video||(mv.link&&embedOf(mv.link)))?'Shows as a video':'Shows as a photo')+'</small></div><div class="dact">'+qmBtns('path','message.video',mv||{})+(mv?'<button class="btn sm soft" data-act="msgvideo">'+I('edit')+' Text & link</button><button class="btn sm del" data-act="msgclear">Remove</button>':'')+'</div></div></div>';
   }
   else if(sec==='places'){
     var cats=[['destination','Destinations'],['temple','Temples'],['culture','Art & culture']],c=dashFilter.places||'destination';
@@ -1568,7 +1612,7 @@ function dashSection(){
   }
   else if(sec==='texts'){
     h+=dHead('Words & headings','Change any text on the website in English and Khmer. It saves as you type.');
-    h+=dField('notice','Announcement bar (under the slideshow)',true)+'<div class="dfield"><b>Thank-you message</b><div class="two"><label class="f">ខ្មែរ<textarea data-tp="message.km" rows="4">'+esc(S.message.km||'')+'</textarea></label><label class="f">English<textarea data-tp="message.en" rows="4">'+esc(S.message.en||'')+'</textarea></label></div></div>'+dField('brand.sub','Line under the website name');
+    h+='<div class="dnote">The announcement bar and the message of gratitude are in <button class="btn sm soft" data-dash="home">Home page</button></div>'+dField('brand.sub','Line under the website name');
     h+='<h3 class="dsub">Headings and buttons</h3><input class="dsearch" id="dsq" placeholder="Search, e.g. Explore, Featured, Watch…" value="'+esc(dashFilter.q||'')+'"><div id="dsr">'+textRows(dashFilter.q||'')+'</div>';
   }
   else if(sec==='settings'){
@@ -2128,7 +2172,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261003-1129',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261003-1212',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
