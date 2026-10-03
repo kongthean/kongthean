@@ -127,13 +127,13 @@ label.f input,label.f textarea{border:1px solid var(--line);border-radius:12px;p
 .sheet{background:var(--surface);border-radius:20px;width:100%;max-width:620px;max-height:92vh;overflow:auto}
 .sheet .hd{position:sticky;top:0;background:var(--surface);border-bottom:1px solid var(--line);padding:14px 18px;display:flex;align-items:center;gap:10px;z-index:2}
 .sheet .hd h3{margin:0;flex:1}
-.sheet .bd{padding:18px;display:grid;gap:12px}
+.sheet .bd{padding:18px;display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
 .qe{display:grid;grid-template-columns:100px 1fr;gap:8px;border:1px solid var(--line);border-radius:14px;padding:10px}
 .qe textarea{min-height:60px}
 .qe select{border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--bg);width:100%}
 .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .toast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:90;background:var(--char);color:var(--char-ink);padding:10px 18px;border-radius:99px;font-size:.9rem;box-shadow:var(--shadow);max-width:calc(100vw - 32px);text-align:center;cursor:pointer}
-.toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:14px}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:8px 12px;flex-wrap:wrap;padding:12px 14px;border:1px solid var(--line);border-radius:14px}
 .toggle small{display:block;color:var(--muted);font-size:.8rem}
 .toggle input{width:22px;height:22px}
 </style>
@@ -792,12 +792,14 @@ async function team(){
   const m=modal('Team','<div id="tl">Loading…</div>');
   async function draw(){
     let ag={},inv={};try{ag=await DB.get('agents')||{}}catch(e){}try{if(isOwner())inv=await DB.get('invites')||{}}catch(e){}
-    const rows=Object.keys(ag).map(uid=>{const a=ag[uid]||{};return '<div class="toggle"><span style="display:flex;gap:10px;align-items:center;min-width:0"><span class="av" style="width:36px;height:36px">'+esc((a.name||'?')[0])+'<span class="st" style="background:'+(a.online?'var(--ok)':'var(--line)')+'"></span></span><span style="min-width:0"><b>'+esc(a.name||'Agent')+(uid===me.uid?' (you)':'')+'</b><small>'+esc(a.email||'')+' · '+((a.role==='owner'||!a.role)?'Owner':'Agent')+' · '+(a.online?'online':'away')+'</small></span></span>'+(isOwner()&&uid!==me.uid?'<button class="btn sm del" data-rm="'+esc(uid)+'" type="button">Remove</button>':'')+'</div>'}).join('');
+    const rows=Object.keys(ag).map(uid=>{const a=ag[uid]||{};return '<div class="toggle"><span style="display:flex;gap:10px;align-items:center;min-width:0"><span class="av" style="width:36px;height:36px">'+esc((a.name||'?')[0])+'<span class="st" style="background:'+(a.online?'var(--ok)':'var(--line)')+'"></span></span><span style="min-width:0"><b>'+esc(a.name||'Agent')+(uid===me.uid?' (you)':'')+'</b><small>'+esc(a.email||'')+' · '+((a.role==='owner'||!a.role)?'Owner':'Agent')+' · '+(a.online?'online':'away')+'</small></span></span>'+(isOwner()&&uid!==me.uid?((a.role==='owner'||!a.role)?'<button class="btn sm soft" data-own="'+esc(uid)+'" data-to="agent" type="button">Make agent</button>':'<button class="btn sm soft" data-own="'+esc(uid)+'" data-to="owner" type="button">Make owner</button>'):'')+(isOwner()&&uid!==me.uid?'<button class="btn sm del" data-rm="'+esc(uid)+'" type="button">Remove</button>':'')+'</div>'}).join('');
     const invs=Object.keys(inv).map(k=>'<div class="toggle"><span><b>'+esc(inv[k].email||k)+'</b><small>Invited · waiting for them to create an account</small></span><button class="btn sm soft" data-ri="'+esc(k)+'" type="button">Cancel</button></div>').join('');
     m.querySelector('#tl').innerHTML='<div style="display:grid;gap:8px">'+rows+'</div>'+
       (isOwner()?'<h4 style="margin:18px 0 8px">Invite a team member</h4><div class="note">Type their email, then tell them to open <b>kongthean.com/agent</b>, tap <b>New team member? Create account</b> and use that same email.</div><div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><input id="ie" type="email" placeholder="name@example.com" style="flex:1;min-width:180px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--bg)"><input id="in" placeholder="Name (optional)" style="flex:1;min-width:140px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--bg)"><button class="btn" id="ia" type="button">Invite</button></div>'+(invs?'<div style="display:grid;gap:8px;margin-top:12px">'+invs+'</div>':'')
        :'<div class="note" style="margin-top:12px">Only the owner can invite or remove team members.</div>');
     m.querySelectorAll('[data-rm]').forEach(b=>b.onclick=async()=>{if(!b.dataset.armed){b.dataset.armed=1;b.textContent='Tap again';return}try{await DB.remove('agents/'+b.dataset.rm);toast('Removed from the team');draw()}catch(e){toast('Not removed: '+(e.code||e.message))}});
+    m.querySelectorAll('[data-own]').forEach(b=>b.onclick=async()=>{if(!b.dataset.armed){b.dataset.armed=1;b.textContent='Tap again to confirm';return}
+      try{await DB.update('agents/'+b.dataset.own,{role:b.dataset.to});toast(b.dataset.to==='owner'?'Now an owner: can invite and remove team members and change settings':'Now an agent');draw()}catch(e){toast('Not changed: '+(e.code||e.message))}});
     m.querySelectorAll('[data-ri]').forEach(b=>b.onclick=async()=>{try{await DB.remove('invites/'+b.dataset.ri);draw()}catch(e){toast('Not cancelled: '+(e.code||e.message))}});
     const ia=m.querySelector('#ia');if(ia)ia.onclick=async()=>{const em=m.querySelector('#ie').value.trim().toLowerCase();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){toast('Type a valid email');return}
       try{await DB.set('invites/'+ekey(em),{email:em,name:m.querySelector('#in').value.trim().slice(0,40),by:me.uid,at:TS});toast('Invited '+em);draw()}catch(e){toast('Not invited: '+(e.code||e.message))}};
