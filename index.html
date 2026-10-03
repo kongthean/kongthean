@@ -1763,7 +1763,7 @@ async function typeThen(ms,m){botTyping=true;draw(true);await sleep(ms);botTypin
 async function endLive(){
   const lg=L();
   await say({from:'visitor',text:w('bEnd',lg)});
-  if(fb&&user&&chat){await fb.update(CP(),{status:'bot',updatedAt:TS,lastMsg:w('endedSys','en'),lastFrom:'system'});await say({from:'system',text:w('endedSys',lg)})}
+  if(fb&&user&&chat){await fb.update(CP(),{status:'bot',updatedAt:TS,lastMsg:w('endedSys','en'),lastFrom:'system'});await say({from:'system',text:w('endedSys','en'),staff:true})}
   await typeThen(1200,{from:'bot',text:w('ended',lg)});
 }
 let toBusy=false;
@@ -2032,6 +2032,7 @@ function tm(ts){return new Date(ms(ts)).toLocaleTimeString([], {hour:'numeric',m
 function safeHref(h){h=String(h||'');return /^#\//.test(h)||/^https:\/\//.test(h)?h:'#/'}
 function altLinks(){const Lk=T.S.links||{};return '<div class="tc-alt">'+['messenger','telegram','email'].filter(k=>Lk[k]).map(k=>'<a target="_blank" rel="noopener" href="'+esc(T.linkOf(k,Lk[k]))+'">'+I(k)+esc(k==='email'?Lk[k]:k[0].toUpperCase()+k.slice(1))+'</a>').join('')+'</div>'}
 function msgHtml(m,isLast){
+  if(m.staff)return '';
   if(m.from==='system')return '<div class="tc-sys">'+esc(m.text)+(m.alt?altLinks():'')+'</div>';
   const out=m.from==='visitor',by=m.from==='agent'?(m.agentName||'Agent'):m.from==='bot'?w('assistant'):'';
   let h='<div class="tc-m '+(out?'out':'in')+'">'+(by?'<span class="by">'+esc(by)+(m.from==='agent'?' · '+esc(w('live')):'')+'</span>':'')+esc(m.text)+
@@ -2095,7 +2096,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261003-0719',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261003-0829',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
