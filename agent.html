@@ -110,6 +110,10 @@ label.f input,label.f textarea{border:1px solid var(--line);border-radius:12px;p
 .qrb{border:1px solid var(--line);background:var(--bg);border-radius:14px;padding:9px 4px 7px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;font-size:.74rem;font-weight:600;color:var(--ink);text-align:center;line-height:1.2}
 .qrb .ic{width:34px;height:34px;border-radius:11px;background:linear-gradient(155deg,var(--stone),var(--stone-d));color:#fff;display:grid;place-items:center;font-size:1.05rem}
 .qrb:hover{border-color:var(--stone)}
+.aib{display:flex;align-items:center;gap:6px;border:1px dashed var(--stone);background:var(--bg);color:var(--ink);border-radius:99px;padding:6px 12px;font-size:.8rem;font-weight:600;cursor:pointer;margin:0 12px 6px auto}
+.endopt{display:grid;gap:8px}.endopt button{text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:14px;padding:12px 14px;cursor:pointer;color:var(--ink);font-size:.9rem;line-height:1.4}
+.endopt button:hover{border-color:var(--stone)}.endopt small{display:block;color:var(--muted);font-size:.74rem;margin-top:4px}
+.agrow{display:flex;gap:10px;align-items:center;width:100%}
 .qrhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:.8rem;color:var(--muted);font-weight:600}
 .qrhead button{border:0;background:transparent;color:var(--accent);font-weight:600;cursor:pointer;font-size:.8rem}
 .comp{display:flex;gap:8px;padding:10px 12px;background:var(--surface);border-top:1px solid var(--line);align-items:flex-end}
@@ -160,7 +164,7 @@ async function makeDB(cfg,name){
   const a=app.initializeApp(cfg,name);
   const db=d.getDatabase(a,cfg.databaseURL);
   const R=p=>d.ref(db,p);
-  const conv=o=>{const r={};for(const k in o){const v=o[k];r[k]=v===TS?d.serverTimestamp():(v&&v.__inc)?d.increment(v.__inc):v}return r};
+  const conv=o=>{if(o===null||typeof o!=='object'||Array.isArray(o))return o;const r={};for(const k in o){const v=o[k];r[k]=v===TS?d.serverTimestamp():(v&&v.__inc)?d.increment(v.__inc):v}return r};
   const list=(s,rev)=>{const out=[];s.forEach(c=>{out.push(Object.assign({id:c.key},c.val()))});return rev?out.reverse():out};
   return {
     auth:au.getAuth(a),A:au,
@@ -188,11 +192,198 @@ try{
 /* ---------- icons ---------- */
 const P={chat:'<path d="M4 5h16v11H9.5L4 20z"/><path d="M8 9.3h8M8 12.3h5"/>',bell:'<path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',sound:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',mute:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>',
  logout:'<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/>',
- left:'<path d="M15 5l-7 7 7 7"/>',send:'<path d="M5 12h14M13 6l6 6-6 6"/>',bolt:'<path d="M13 3L5 13.5h6L10 21l8-10.5h-6z"/>',check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',close:'<path d="M6 6l12 12M18 6L6 18"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>',
+ left:'<path d="M15 5l-7 7 7 7"/>',send:'<path d="M5 12h14M13 6l6 6-6 6"/>',bolt:'<path d="M13 3L5 13.5h6L10 21l8-10.5h-6z"/>',edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>',swap:'<path d="M4 8h13l-3.5-3.5M20 16H7l3.5 3.5"/>',door:'<path d="M14 4H6v16h8"/><path d="M11 12h9M17 9l3 3-3 3"/>',check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',close:'<path d="M6 6l12 12M18 6L6 18"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>',
  wave:'<path d="M7 11V6.5a1.5 1.5 0 0 1 3 0V11M10 10V4.5a1.5 1.5 0 0 1 3 0V10M13 10V5.5a1.5 1.5 0 0 1 3 0V12M16 9.5a1.5 1.5 0 0 1 3 0V14a7 7 0 0 1-7 7h-1a7 7 0 0 1-5.3-2.4L3.4 15a1.6 1.6 0 0 1 2.4-2.1L7 14V11"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',bed:'<path d="M3 19.5V6M21 19.5V14a3 3 0 0 0-3-3h-7.5v5"/><path d="M3 16h18"/><circle cx="7" cy="12.5" r="1.8"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/>',
  pin:'<path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',phone:'<path d="M5.2 3.5h3.3l1.6 4.4-2.2 1.5a11 11 0 0 0 4.8 4.8l1.5-2.2 4.4 1.6v3.3a2.4 2.4 0 0 1-2.6 2.4C9.6 18.9 5.1 14.4 4.7 6.1a2.4 2.4 0 0 1 .5-2.6z"/>',mail:'<rect x="3" y="5.5" width="18" height="13" rx="2.2"/><path d="M3.6 7.2l8.4 6 8.4-6"/>',heart:'<path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.3 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/>',
  temple:'<path d="M12 2.6v2.6M10.5 7.4L12 5.2l1.5 2.2"/><path d="M9.9 12.2l.7-4.8h2.8l.7 4.8"/><path d="M3 21h18M4 12.2h16M5.2 12.2V21M18.8 12.2V21M9.3 12.2V21M14.7 12.2V21"/>',money:'<rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 9v.01M18 15v.01"/>',car:'<path d="M4 16.5V12l2-5h12l2 5v4.5"/><path d="M3 12h18v4.5H3z"/><circle cx="7" cy="16.5" r="1.8"/><circle cx="17" cy="16.5" r="1.8"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.6v.2"/>',plus:'<path d="M12 5v14M5 12h14"/>',ext:'<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',robot:'<rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 4v4M9 13v1M15 13v1M2 13v3M22 13v3"/>'};
 P.users='<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M15.5 4.7a3.5 3.5 0 0 1 0 6.6M17.5 14.3c2.4.6 4 2.6 4 5.7"/>';P.edit='<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>';
+const SITE={S:{}};let BOTLANG='en';
+const BOT=(function(T,L){
+/* ---------------- smart bot ---------------- */
+function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')}
+const hasKm=s=>/[ក-៿]/.test(s);
+function tr(o,lg){if(!o)return '';if(typeof o==='string')return o;return o[lg]||o.en||o.km||''}
+const KW={
+ menu:['menu','option','options','more info','help me','what can you do','ជម្រើស','ម៉ឺនុយ','ជួយ'],
+ howru:['how are you','how r u','សុខសប្បាយ','សុខទេ'],
+ who:['who are you','are you a bot','are you human','are you real','your name','អ្នកជានរណា','អ្នកឈ្មោះអី'],
+ ok:[' ok ',' okay ',' yes ',' sure ',' cool ',' nice ',' great ',' good ','បាទ','ចាស','យល់ព្រម','ល្អ'],
+ bye:['bye','goodbye','see you','លាហើយ','លាសិនហើយ'],
+ greet:['hello','hi ','hey','good morning','good afternoon','sus dey','សួស្ដី','ជម្រាបសួរ','សួស្តី'],
+ thanks:['thank','thx','អរគុណ'],
+ agent:['agent','human','real person','someone','talk to agent','live agent','person','people','staff','representative','customer service','support team','admin','contact agent','ភ្នាក់ងារផ្ទាល់','បុគ្គលិក','និយាយផ្ទាល់','speak','call me','មនុស្ស','ភ្នាក់ងារ','និយាយជាមួយ'],
+ t1:['best time','when to','season','weather','rain','month','hot','cold','climate','រដូវ','ពេលល្អ','ពេលណា','អាកាសធាតុ','ភ្លៀង'],
+ t2:['visa','passport','evisa','ទិដ្ឋាការ','លិខិតឆ្លងដែន'],
+ t3:['money','dollar','riel','atm','currency','cash','pay','khqr','លុយ','ប្រាក់','ដុល្លារ','រៀល'],
+ t4:['dress','wear','clothes','etiquette','manner','rule','សំលៀកបំពាក់','សម្លៀកបំពាក់','សុជីវធម៌'],
+ t5:['ticket','angkor pass','entrance','entry fee','សំបុត្រ'],
+ t6:['tuk','grab','passapp','bus','taxi','transport','get around','getting around','drive','scooter','motorbike','រ៉ឺម៉ក','ឡានក្រុង','ធ្វើដំណើរ'],
+ t7:['safe','safety','health','mosquito','water','sick','landmine','សុវត្ថិភាព','សុខភាព','មូស'],
+ t8:['khmer word','language','how to say','phrase','ពាក្យខ្មែរ','ភាសា'],
+ hotel:['hotel','stay','sleep','resort','guesthouse','hostel','accommodation','room','សណ្ឋាគារ','ស្នាក់','ផ្ទះសំណាក់','រីសត'],
+ contact:['contact','email','phone','number','collab','sponsor','work with','partnership','advertis','ទំនាក់ទំនង','អ៊ីមែល','លេខទូរស័ព្ទ','សហការ'],
+ donate:['donat','support','aba','qr','ឧបត្ថម្ភ','បរិច្ចាគ','គាំទ្រ'],
+ video:['video','youtube','tiktok','reel','film','វីដេអូ'],
+ fest:['festival','new year','water festival','pchum','holiday','celebrat','បុណ្យ','ចូលឆ្នាំ','ភ្ជុំ','អុំទូក'],
+ temple:['temple','temples','ruin','heritage','angkor','ប្រាសាទ','អង្គរ'],
+ food:['food','eat','restaurant','dish','amok','ម្ហូប','ញ៉ាំ','អាម៉ុក'],
+ beach:['beach','island','sea','swim','ឆ្នេរ','កោះ','សមុទ្រ'],
+ price:['price','cost','how much','budget','cheap','ថ្លៃ','តម្លៃ'],
+ where:['where','destination','recommend','go','visit','trip','plan','ទៅណា','កន្លែង','គោលដៅ','ដំណើរ']
+};
+const EXTRA={'angkor-wat':['angkor wat','angkorwat','អង្គរវត្ត'],'bayon':['bayon','angkor thom','បាយ័ន','អង្គរធំ'],'ta-prohm':['ta prohm','taprohm','tomb raider','តាព្រហ្ម'],'banteay-srei':['banteay srei','banteay srey','បន្ទាយស្រី'],'preah-vihear':['preah vihear','វិហារ'],'koh-ker':['koh ker','កោះកេរ្តិ៍','កោះកេ'],'sambor-prei-kuk':['sambor','prei kuk','សំបូរ'],'kampot':['kampot','bokor','pepper','កំពត','បូកគោ','ម្រេច'],'kep':['kep','crab','rabbit island','កែប','ក្ដាម'],'koh-rong':['koh rong','samloem','sihanoukville','កោះរ៉ុង','សីហនុ'],'mondulkiri':['mondulkiri','sen monorom','bou sra','មណ្ឌលគិរី'],'ratanakiri':['ratanakiri','yeak laom','yeak loam','banlung','រតនគិរី','យក្សឡោម'],'kratie':['kratie','dolphin','kampi','ក្រចេះ','ផ្សោត'],'battambang':['battambang','bamboo train','bat cave','sampeau','បាត់ដំបង'],'phnom-kulen':['kulen','គូលែន'],'tonle-sap':['tonle sap','floating village','kampong phluk','ទន្លេសាប','បណ្ដែតទឹក'],'apsara':['apsara','dance','ballet','អប្សរា','របាំ'],'sbek-thom':['sbek','shadow','puppet','ស្បែកធំ'],'silk':['silk','weav','koh dach','សូត្រ','ត្បាញ'],'amok':['amok','food','eat','អាម៉ុក','ម្ហូប']};
+function has(t,list){return list.some(k=>t.includes(norm(k)))}
+function placeKeys(p){const ks=(EXTRA[p.id]||[]).slice();const te=norm(tr(p.title,'en')).replace(/temple|&|the/g,' ').replace(/\s+/g,' ').trim();if(te.length>3)ks.push(te);const tk=tr(p.title,'km').replace('ប្រាសាទ','');if(tk.length>1)ks.push(tk);return ks.map(norm)}
+function findPlace(t){let best=null,score=0;(T.S.places||[]).forEach(p=>{placeKeys(p).forEach(k=>{if(k&&t.includes(k)&&k.length>score){best=p;score=k.length}})});return best}
+function tip(id,lg){const x=(T.S.tips||[]).find(t=>t.id===id);return x?{text:'💡 '+tr(x.title,lg)+'\n'+tr(x.text,lg),links:[[lg==='km'?'គន្លឹះធ្វើដំណើរ':'All travel tips','#/p/tips']]}:null}
+function placeAnswer(p,lg){const km=lg==='km';let s='📍 '+tr(p.title,lg)+' · '+tr(p.region,lg)+'\n'+tr(p.sum,lg);if(tr(p.best,lg))s+='\n\n'+(km?'🕐 ពេលល្អ៖ ':'🕐 Best time: ')+tr(p.best,lg);if(tr(p.getting,lg))s+='\n'+(km?'🚗 ':'🚗 ')+tr(p.getting,lg);if(tr(p.tip,lg))s+='\n'+(km?'💡 គន្លឹះ៖ ':'💡 Tip: ')+tr(p.tip,lg);return {text:s,links:[[km?'អានបន្ថែម':'Read more','#/place/'+p.id],[km?'ផែនទី':'Map','https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(p.mapq||tr(p.title,'en')+', Cambodia')]]}}
+function listAnswer(arr,lg,head,link){return {text:head+'\n'+arr.map(p=>'• '+tr(p.title,lg)+' ('+tr(p.region,lg)+')').join('\n'),links:[link].concat(arr.slice(0,3).map(p=>[tr(p.title,lg),'#/place/'+p.id]))}}
+function bot0(text){
+  const lg=hasKm(text)?'km':L(),km=lg==='km',t=' '+norm(text)+' ',S=T.S,Lk=S.links||{};
+  if(has(t,KW.agent))return {text:km?'ប្រាកដណាស់! ចុចប៊ូតុង «និយាយជាមួយភ្នាក់ងារផ្ទាល់» ខាងក្រោម ហើយយើងនឹងភ្ជាប់អ្នកទៅភ្នាក់ងារ។':'Of course! Tap «Talk to Live Agent» below and we will connect you with an agent.',live:true};
+  if(has(t,KW.hotel)){const st=(S.stays||[]);const m=st.find(s=>t.includes(norm(tr(s.region,'en')))||t.includes(norm(tr(s.region,'km'))));
+    if(m)return {text:'🏨 '+tr(m.title,lg)+'\n'+tr(m.text,lg),links:[[km?'កន្លែងស្នាក់នៅទាំងអស់':'All areas to stay','#/p/stay']]};
+    return {text:(km?'🏨 កន្លែងស្នាក់នៅតាមតំបន់៖\n':'🏨 Where we suggest staying:\n')+st.map(s=>'• '+tr(s.title,lg)).join('\n')+(km?'\n\nប្រាប់យើងពីខេត្តដែលអ្នកនឹងទៅ យើងនឹងណែនាំបន្ថែម។':'\n\nTell us which province you are going to and we can say more.'),links:[[km?'មើលទំព័រសណ្ឋាគារ':'See the hotel page','#/p/stay']]}}
+  const p=findPlace(t); if(p)return placeAnswer(p,lg);
+  for(const id of ['t2','t3','t4','t5','t6','t7','t8']){if(has(t,KW[id]))return tip(id,lg)}
+  if(has(t,KW.t1))return tip('t1',lg);
+  if(has(t,KW.fest)){const f=(S.festivals||[]);return {text:(km?'🎉 ពិធីបុណ្យសំខាន់ៗ៖\n':'🎉 Main festivals:\n')+f.map(x=>'• '+tr(x.when,lg)+' — '+tr(x.title,lg)).join('\n'),links:[[km?'សិល្បៈ និងប្រពៃណី':'Art & Tradition','#/p/culture']]}}
+  if(has(t,KW.food))return placeAnswer((S.places||[]).find(x=>x.id==='amok')||S.places[0],lg);
+  if(has(t,KW.beach))return listAnswer((S.places||[]).filter(x=>x.art==='sea'),lg,km?'🏝️ ឆ្នេរ និងកោះ៖':'🏝️ Beaches and islands:',[km?'គោលដៅទាំងអស់':'All destinations','#/p/destinations']);
+  if(has(t,KW.temple))return listAnswer((S.places||[]).filter(x=>x.cat==='temple'),lg,km?'🛕 ប្រាសាទដែលយើងណែនាំ៖':'🛕 Temples we recommend:',[km?'ទំព័រប្រវត្តិសាស្ត្រ':'Historical page','#/p/temples']);
+  if(has(t,KW.contact)){const rows=[];if(Lk.email)rows.push('✉️ '+Lk.email);if(Lk.phone)rows.push('📞 '+Lk.phone);if(Lk.messenger)rows.push('💬 Messenger: '+Lk.messenger);if(Lk.telegram)rows.push('✈️ Telegram: '+Lk.telegram);
+    return {text:(km?'អ្នកអាចទាក់ទងក្រុមការងាររបស់យើងតាម៖\n':'You can reach our team here:\n')+rows.join('\n')+(km?'':''),links:[[km?'ទំព័រទំនាក់ទំនង':'Contact page','#/p/contact']],live:true}}
+  if(has(t,KW.donate))return {text:km?'🙏 អរគុណសម្រាប់ការចង់គាំទ្រ! ព័ត៌មានទាំងអស់មាននៅទំព័រការបរិច្ចាគ។':'🙏 Thank you for wanting to help! Everything is on the Donation page.',links:[[km?'ការបរិច្ចាគ':'Donation','#/p/donate']]};
+  if(has(t,KW.video))return {text:km?'🎬 វីដេអូរបស់យើងមាននៅទីនេះ៖':'🎬 You can watch our videos here:',links:[[km?'វីដេអូ':'Videos','#/p/videos']].concat(Lk.youtube?[['YouTube','https://'+String(Lk.youtube).replace(/^https?:\/\//,'')]]:[])};
+  if(has(t,KW.price))return {text:km?'💵 តម្លៃខុសគ្នាតាមរដូវ និងកន្លែង។ សម្រាប់តម្លៃសណ្ឋាគារ ឬដំណើរកម្សាន្តជាក់លាក់ សូមសួរភ្នាក់ងាររបស់យើងផ្ទាល់។':'💵 Prices change with the season and the place. For a specific hotel or trip price, it is best to ask one of our agents.',live:true,links:[[km?'គន្លឹះលុយកាក់':'Money tips','#/p/tips']]};
+  if(has(t,KW.menu))return {text:km?'នេះជាប្រធានបទដែលខ្ញុំអាចជួយបាន៖':'Here are some things I can help with:',more:true};
+  if(has(t,KW.howru))return {text:km?'ខ្ញុំសុខសប្បាយ អរគុណដែលសួរ! 😊 ចុះអ្នកវិញ? តើអ្នកកំពុងគ្រោងធ្វើដំណើរទៅណា?':"I'm doing great, thanks for asking! 😊 How about you? Are you planning a trip somewhere?"};
+  if(has(t,KW.who))return {text:km?'ខ្ញុំជាជំនួយការស្វ័យប្រវត្តិរបស់ក្រុម Thean។ ខ្ញុំអាចឆ្លើយសំណួរអំពីការធ្វើដំណើរនៅកម្ពុជា។ ប្រសិនបើអ្នកចង់និយាយជាមួយមនុស្ស គ្រាន់តែប្រាប់ខ្ញុំ។':"I'm the Thean team's virtual assistant. I can answer questions about travelling in Cambodia. If you'd like to talk to a person, just tell me."};
+  if(has(t,KW.bye))return {text:km?'លាសិនហើយ! 👋 សូមឱ្យដំណើររបស់អ្នករីករាយ។':'Goodbye! 👋 Have a wonderful trip.'};
+  if(has(t,KW.thanks))return {text:km?'មិនអីទេ! 😊 រីករាយនឹងដំណើររបស់អ្នក។':"You're welcome! 😊 Enjoy your trip."};
+  if(has(t,KW.greet))return {text:km?'សួស្ដី! 😊 តើអ្នកកំពុងគ្រោងទៅណា?':'Hello! 😊 Where are you thinking of going?'};
+  const prov=(window.TheanProv||[]).find(pr=>t.includes(norm(pr[0]))||t.includes(pr[1]));
+  if(prov){const inP=(S.places||[]).filter(x=>norm(tr(x.region,'en')).includes(norm(prov[0])));if(inP.length)return listAnswer(inP,lg,(km?'📍 នៅ ':'📍 In ')+(km?prov[1]:prov[0])+':',[km?'គោលដៅ':'Destinations','#/p/destinations']);
+    return {text:(km?'យើងមិនទាន់មានមគ្គុទ្ទេសក៍សម្រាប់ ':'We don\'t have a guide for ')+(km?prov[1]:prov[0])+(km?' នៅឡើយទេ ប៉ុន្តែភ្នាក់ងាររបស់យើងអាចជួយអ្នកបាន។':' yet, but our agents can help you.'),live:true,links:[[km?'បើកផែនទី':'Open map','https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(prov[0]+', Cambodia')]]}}
+  if(has(t,KW.where))return listAnswer((S.places||[]).filter(x=>x.featured),lg,km?'✨ កន្លែងដែលយើងចូលចិត្តបំផុត៖':'✨ Our favourite places right now:',[km?'គោលដៅទាំងអស់':'All destinations','#/p/destinations']);
+  if(has(t,KW.ok))return {text:km?'ល្អណាស់! 😊 មានអ្វីផ្សេងទៀតដែលខ្ញុំអាចជួយបានទេ?':'Great! 😊 Is there anything else I can help you with?'};
+  return {text:km?'សុំទោស ខ្ញុំមិនប្រាកដអំពីសំណួរនេះទេ។ ខ្ញុំអាចប្រាប់អ្នកអំពីគោលដៅ ប្រាសាទ ពេលល្អសម្រាប់ធ្វើដំណើរ ទិដ្ឋាការ ឬសណ្ឋាគារ។ ឬនិយាយជាមួយភ្នាក់ងារផ្ទាល់។':"I'm not sure about that one. I can help with destinations, temples, the best time to go, visas or hotels. Or you can talk to a live agent.",live:true,fallback:true};
+}
+
+/* ---------- more knowledge: culture, festivals, trip planner (Oct 2026) ---------- */
+Object.assign(EXTRA,{'kampot':['kampot','pepper','កំពត','ម្រេច'],'phnom-bakheng':['bakheng','បាខែង'],'angkor-thom':['south gate','angkor thom gate','ទ្វារខាងត្បូង'],'preah-khan':['preah khan','ព្រះខ័ន'],'neak-pean':['neak pean','នាគព័ន្ធ'],
+ 'beng-mealea':['beng mealea','bengmealea','បឹងមាលា'],'banteay-chhmar':['chhmar','ឆ្មារ'],'royal-palace':['royal palace','silver pagoda','palace','emerald buddha','ព្រះបរមរាជវាំង','វាំង','ព្រះកែវមរកត'],
+ 'national-museum':['museum','សារមន្ទីរ'],'wat-phnom':['wat phnom','lady penh','វត្តភ្នំ','ដូនពេញ'],'oudong':['oudong','udong','ឧដុង្គ'],'phnom-chisor':['chisor','ជីសូរ'],'wat-nokor':['nokor','នគរបាជ័យ'],
+ 'phnom-penh':['riverside','sisowath','មាត់ទន្លេ'],'koh-kong':['koh kong','cardamom','chi phat','tatai','កោះកុង','ក្រវាញ','ចិផាត'],'kampong-cham':['kampong cham','bamboo bridge','koh paen','កំពង់ចាម','ស្ពានឫស្សី'],
+ 'kirirom':['kirirom','គិរីរម្យ'],'kbal-spean':['kbal spean','lingas','ក្បាលស្ពាន'],'bokor':['bokor','បូកគោ'],'pinpeat':['pinpeat','pin peat','khmer music','traditional music','ពិណពាទ្យ','ភ្លេងខ្មែរ'],
+ 'chapei':['chapei','chapey','ចាប៉ី'],'lakhon-khol':['lakhon','khol','masked dance','mask dance','ល្ខោនខោល'],'bokator':['bokator','kun khmer','kickbox','boxing','martial art','បុក្កតោ','គុនខ្មែរ','ប្រដាល់'],
+ 'krama':['krama','scarf','sampot','traditional dress','traditional clothes','traditional costume','ក្រមា','សំពត់','សម្លៀកបំពាក់ប្រពៃណី'],'pottery':['pottery','clay pot','kampong chhnang','គ្រឿងស្មូន','កំពង់ឆ្នាំង'],
+ 'palm-sugar':['sugar palm','palm sugar','palm tree','rice field','ត្នោត','វាលស្រែ'],'wedding':['wedding','marriage','married','marry','រៀបការ','អាពាហ៍ពិពាហ៍','ការរៀបការ']});
+const FEST_K={f1:['khmer new year','new year','choul chnam','songkran','ចូលឆ្នាំ'],f2:['visak','vesak','ploughing','plowing','ពិសាខ','វិសាខ','ច្រត់ព្រះនង្គ័ល'],f3:['pchum','ancestor','ភ្ជុំ'],f4:['water festival','om touk','boat race','moon salute','អុំទូក','សំពះព្រះខែ'],
+ f5:['meak bochea','magha','មាឃបូជា'],f6:['kathen','kathina','កឋិន'],f7:['independence','ឯករាជ្យ']};
+const FAQ=[
+ {k:['sampeah','greet','bow','say hello','how to greet','សំពះ'],en:"🙏 The sampeah is the Khmer greeting: press your palms together in front of your chest and bow slightly. The higher the hands, the more respect: chest level for friends, chin or nose level for elders, and forehead level for monks. A smile and a sampeah are always welcome.",km:"🙏 ការសំពះ គឺជាការគោរពរបស់ខ្មែរ៖ ផ្គុំបាតដៃនៅមុខទ្រូង ហើយឱនក្បាលបន្តិច។ ដៃកាន់តែខ្ពស់ កាន់តែគោរព៖ កម្រិតទ្រូងសម្រាប់មិត្តភក្តិ កម្រិតចង្កា ឬច្រមុះសម្រាប់ចាស់ទុំ និងកម្រិតថ្ងាសសម្រាប់ព្រះសង្ឃ។"},
+ {k:['religion','buddhis','monk','pagoda','wat ','theravada','ព្រះពុទ្ធ','សាសនា','ព្រះសង្ឃ','វត្ត'],en:"🛕 Most Cambodians follow Theravada Buddhism, and every village has its pagoda (wat). Visitors are welcome: dress modestly, take off your shoes before the vihara, sit with your feet pointing away from the Buddha, and women should not touch monks or hand things to them directly. Early morning you will see monks collecting alms.",km:"🛕 ប្រជាជនកម្ពុជាភាគច្រើនគោរពព្រះពុទ្ធសាសនាថេរវាទ ហើយភូមិនីមួយៗមានវត្ត។ ភ្ញៀវត្រូវបានស្វាគមន៍៖ ស្លៀកពាក់សមរម្យ ដោះស្បែកជើងមុនចូលព្រះវិហារ អង្គុយកុំចង្អុលជើងទៅព្រះពុទ្ធរូប ហើយស្ត្រីមិនគួរប៉ះព្រះសង្ឃទេ។ ពេលព្រឹក អ្នកនឹងឃើញព្រះសង្ឃនិមន្តបិណ្ឌបាត។"},
+ {k:['custom','taboo','dont','don\'t','do and','rude','polite','respect','culture shock','ទំនៀម','ហាម','គួរ'],en:"🤝 A few Khmer customs: don't touch anyone's head, don't point your feet at people or Buddha images, give and receive things with your right hand or both hands, take off shoes when entering homes and temples, dress modestly at sacred places, and keep public affection low-key. Speaking calmly and smiling goes a long way.",km:"🤝 ទំនៀមទម្លាប់ខ្មែរមួយចំនួន៖ កុំប៉ះក្បាលអ្នកដទៃ កុំចង្អុលជើងទៅមនុស្ស ឬព្រះពុទ្ធរូប ហុច និងទទួលរបស់ដោយដៃស្ដាំ ឬដៃទាំងពីរ ដោះស្បែកជើងពេលចូលផ្ទះ និងវត្ត ស្លៀកពាក់សមរម្យនៅទីសក្ការៈ។ និយាយទន់ភ្លន់ និងញញឹម ជួយបានច្រើន។"},
+ {k:['national flower','national animal','national bird','national tree','national symbol','flag','rumdul','romduol','kouprey','ibis','ទង់ជាតិ','ផ្ការំដួល','គោព្រៃ','ត្រយ៉ងយក្ស','និមិត្តរូបជាតិ'],en:"🇰🇭 Cambodia's national symbols: the flag shows Angkor Wat; the national flower is the fragrant Rumdul; the national tree is the sugar palm (thnot); the national animal is the kouprey, a wild forest ox; and the national bird is the giant ibis.",km:"🇰🇭 និមិត្តរូបជាតិកម្ពុជា៖ ទង់ជាតិមានរូបអង្គរវត្ត ផ្កាជាតិគឺផ្ការំដួល ដើមឈើជាតិគឺដើមត្នោត សត្វជាតិគឺគោព្រៃ ហើយបក្សីជាតិគឺត្រយ៉ងយក្ស។"},
+ {k:['khmer language','khmer script','alphabet','letters','writing','អក្សរខ្មែរ','ភាសាខ្មែរ','ព្យញ្ជនៈ'],en:"✍️ Khmer is the national language, written in Khmer script, one of the oldest writing systems in Southeast Asia, used since at least the 7th century. It has 33 consonants and many vowel signs. Learn sues-dey (hello) and or-kun (thank you) and people will love it.",km:"✍️ ភាសាខ្មែរ ជាភាសាជាតិ សរសេរដោយអក្សរខ្មែរ ដែលជាប្រព័ន្ធអក្សរចាស់ជាងគេមួយនៅអាស៊ីអាគ្នេយ៍ ប្រើតាំងពីយ៉ាងហោចណាស់សតវត្សទី៧។ មានព្យញ្ជនៈ ៣៣ និងស្រៈជាច្រើន។"},
+ {k:['history','khmer empire','khmer rouge','pol pot','genocide','tuol sleng','killing field','ប្រវត្តិ','ខ្មែរក្រហម','ទួលស្លែង'],en:"📜 In short: the Khmer Empire ruled much of mainland Southeast Asia from the 9th to 15th centuries, with Angkor as its capital. Cambodia was a French protectorate from 1863 and became independent in 1953. From 1975 to 1979 the Khmer Rouge regime killed around 1.7 million people. To understand this period with respect, visit the Tuol Sleng Genocide Museum and the Choeung Ek memorial in Phnom Penh.",km:"📜 សង្ខេប៖ អាណាចក្រខ្មែរ គ្រប់គ្រងផ្នែកធំនៃអាស៊ីអាគ្នេយ៍ដីគោក ពីសតវត្សទី៩ ដល់ទី១៥ ដោយមានអង្គរជារាជធានី។ កម្ពុជាស្ថិតក្រោមអាណាព្យាបាលបារាំងចាប់ពីឆ្នាំ ១៨៦៣ និងទទួលបានឯករាជ្យនៅឆ្នាំ ១៩៥៣។ ពីឆ្នាំ ១៩៧៥ ដល់ ១៩៧៩ របបខ្មែរក្រហមបានសម្លាប់មនុស្សប្រហែល ១,៧ លាននាក់។ សារមន្ទីរទួលស្លែង និងវាលពិឃាតជើងឯក នៅភ្នំពេញ ជួយឱ្យយល់ពីរយៈពេលនេះ។"},
+ {k:['tip ','tipping','service charge','គិតលុយបន្ថែម'],en:"💵 Tipping is not required in Cambodia, but it is appreciated: round up for tuk-tuks, leave a dollar or two at restaurants, and tip guides and drivers at the end of a good day.",km:"💵 ការផ្ដល់លុយបន្ថែម (tip) មិនមែនជាកាតព្វកិច្ចទេ ប៉ុន្តែគេពេញចិត្ត៖ បង្គ្រប់ថ្លៃរ៉ឺម៉ក ទុក ១ ឬ ២ ដុល្លារនៅភោជនីយដ្ឋាន ហើយផ្ដល់ដល់មគ្គុទ្ទេសក៍ និងអ្នកបើកបរ ក្រោយថ្ងៃល្អមួយ។"}
+];
+const CULT=['culture','tradition','traditional','custom','heritage','art ','arts','craft','វប្បធម៌','ប្រពៃណី','សិល្បៈ','បេតិកភណ្ឌ'];
+/* trip planner */
+const PLANK=['plan','itinerary','schedule','route','programme','program','trip for','days in','day trip','travel plan','arrange','កាលវិភាគ','រៀបចំដំណើរ','ផែនការ','គម្រោងដំណើរ','ដំណើរកម្សាន្ត'];
+const KMD='០១២៣៤៥៦៧៨៩';
+const NUMW={one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12,fourteen:14,'a week':7,'one week':7,'two weeks':14,'2 weeks':14,'weekend':2,'មួយ':1,'ពីរ':2,'បី':3,'បួន':4,'ប្រាំមួយ':6,'ប្រាំពីរ':7,'ប្រាំ':5,'មួយសប្ដាហ៍':7,'មួយអាទិត្យ':7,'ចុងសប្ដាហ៍':2};
+function daysOf(t,loose){t=t.replace(/[០-៩]/g,d=>String(KMD.indexOf(d)));
+  let m=t.match(/(\d{1,2})\s*-?\s*(day|days|d |nights?|ថ្ងៃ|យប់)/);if(m)return Math.max(1,+m[1]+(/night|យប់/.test(m[2])?1:0));
+  m=t.match(/(\d{1,2})\s*(weeks?|សប្ដាហ៍|អាទិត្យ)/);if(m)return +m[1]*7;
+  for(const k of Object.keys(NUMW).sort((a,b)=>b.length-a.length)){if(t.includes(k+' day')||t.includes(k+'ថ្ងៃ')||(k.length>3&&t.includes(k)&&/week|weekend|សប្ដាហ៍|អាទិត្យ/.test(k)))return NUMW[k]}
+  if(loose){m=t.match(/\b(\d{1,2})\b/);if(m&&+m[1]>0&&+m[1]<=30)return +m[1];for(const k in NUMW)if(t.includes(' '+k+' ')||t.trim()===k)return NUMW[k]}
+  return 0}
+function interestsOf(t){const I={};
+  if(has(t,['temple','angkor','history','historic','ruin','ប្រាសាទ','អង្គរ','ប្រវត្តិ']))I.T=1;
+  if(has(t,['beach','island','sea','swim','snorkel','dive','ឆ្នេរ','កោះ','សមុទ្រ']))I.B=1;
+  if(has(t,['nature','mountain','waterfall','forest','jungle','hike','trek','elephant','dolphin','wildlife','eco','countryside','ធម្មជាតិ','ភ្នំ','ទឹកធ្លាក់','ព្រៃ','ដំរី','ផ្សោត']))I.N=1;
+  if(has(t,['culture','tradition','dance','craft','silk','food','market','local life','village','វប្បធម៌','ប្រពៃណី','របាំ','ម្ហូប','ផ្សារ','ភូមិ']))I.C=1;
+  if(has(t,['city','phnom penh','shopping','nightlife','ភ្នំពេញ','ទីក្រុង']))I.P=1;
+  return I}
+const MON=[['jan','មករា'],['feb','កុម្ភៈ'],['mar','មីនា'],['apr','មេសា'],['may','ឧសភា'],['jun','មិថុនា'],['jul','កក្កដា'],['aug','សីហា'],['sep','កញ្ញា'],['oct','តុលា'],['nov','វិច្ឆិកា'],['dec','ធ្នូ']];
+function monthOf(t){for(let i=0;i<12;i++){if(new RegExp('\\b'+MON[i][0]).test(t)||t.includes(MON[i][1]))return i}return -1}
+const D=(en,km,ids)=>({en,km,ids:ids||[]});
+const REG={
+ SR:{n:['Siem Reap','សៀមរាប'],go:['Fly or take a bus to Siem Reap (about 6 hours by road from Phnom Penh).','ធ្វើដំណើរទៅសៀមរាប តាមយន្តហោះ ឬឡានក្រុង (ប្រហែល ៦ ម៉ោងតាមផ្លូវគោកពីភ្នំពេញ)។'],days:[
+  D('Sunrise at Angkor Wat → Angkor Thom South Gate → Bayon → Ta Prohm. Evening: Apsara dance show.','ថ្ងៃរះនៅអង្គរវត្ត → ទ្វារខាងត្បូងអង្គរធំ → បាយ័ន → តាព្រហ្ម។ ពេលល្ងាច៖ មើលរបាំអប្សរា។',['angkor-wat','bayon','ta-prohm','apsara']),
+  D('Banteay Srei and Kbal Spean in the morning → Preah Khan and Neak Pean in the afternoon → sunset at Phnom Bakheng.','បន្ទាយស្រី និងក្បាលស្ពាន ពេលព្រឹក → ព្រះខ័ន និងនាគព័ន្ធ ពេលរសៀល → ថ្ងៃលិចនៅភ្នំបាខែង។',['banteay-srei','kbal-spean','preah-khan','phnom-bakheng']),
+  D('Phnom Kulen waterfall or Beng Mealea jungle temple → sunset at a Tonle Sap floating village.','ទឹកធ្លាក់ភ្នំគូលែន ឬប្រាសាទបឹងមាលា → ថ្ងៃលិចនៅភូមិបណ្ដែតទឹកទន្លេសាប។',['phnom-kulen','beng-mealea','tonle-sap']),
+  D('Day trip to Koh Ker pyramid temple, back for Khmer dinner and the night market.','ដំណើរមួយថ្ងៃទៅប្រាសាទកោះកេរ ត្រឡប់មកញ៉ាំអាហារខ្មែរ និងផ្សាររាត្រី។',['koh-ker'])]},
+ BB:{n:['Battambang','បាត់ដំបង'],go:['Bus to Battambang (about 3 hours from Siem Reap).','ឡានក្រុងទៅបាត់ដំបង (ប្រហែល ៣ ម៉ោងពីសៀមរាប)។'],days:[
+  D('Colonial old town and riverside → countryside by tuk-tuk (rice paper, fish paste, rice wine villages) → Phnom Sampeau bat cave at sunset.','ក្រុងចាស់ និងមាត់ស្ទឹង → ជនបទតាមរ៉ឺម៉ក (ភូមិនំបញ្ចុក ប្រហុក ស្រា) → រូងប្រចៀវភ្នំសំពៅពេលថ្ងៃលិច។',['battambang'])]},
+ PP:{n:['Phnom Penh','ភ្នំពេញ'],go:['Travel to Phnom Penh (bus about 6 hours from Siem Reap, or a short flight).','ធ្វើដំណើរទៅភ្នំពេញ (ឡានក្រុងប្រហែល ៦ ម៉ោងពីសៀមរាប ឬជិះយន្តហោះ)។'],days:[
+  D('Royal Palace & Silver Pagoda → National Museum → Wat Phnom → sunset boat on the Mekong.','ព្រះបរមរាជវាំង និងវត្តព្រះកែវ → សារមន្ទីរជាតិ → វត្តភ្នំ → ជិះទូកមើលថ្ងៃលិចលើទន្លេមេគង្គ។',['royal-palace','national-museum','wat-phnom','phnom-penh']),
+  D('Koh Dach silk island in the morning → Central Market and Russian Market → Khmer food: amok and num banh chok.','កោះដាច់ (កោះសូត្រ) ពេលព្រឹក → ផ្សារធំថ្មី និងផ្សារទួលទំពូង → ម្ហូបខ្មែរ៖ អាម៉ុក និងនំបញ្ចុក។',['silk','amok']),
+  D('Day trip: Oudong old capital → Kampong Chhnang pottery villages.','ដំណើរមួយថ្ងៃ៖ អតីតរាជធានីឧដុង្គ → ភូមិគ្រឿងស្មូនកំពង់ឆ្នាំង។',['oudong','pottery'])]},
+ NE:{n:['Kratie & Mondulkiri','ក្រចេះ និងមណ្ឌលគិរី'],go:['Head north-east (Phnom Penh to Kratie about 5 hours).','ធ្វើដំណើរទៅភាគឦសាន (ភ្នំពេញ ទៅក្រចេះ ប្រហែល ៥ ម៉ោង)។'],days:[
+  D('Kratie: boat trip to see Irrawaddy dolphins at Kampi, sunset on the Mekong.','ក្រចេះ៖ ជិះទូកមើលផ្សោតនៅកំពី ថ្ងៃលិចលើទន្លេមេគង្គ។',['kratie']),
+  D('Drive to Mondulkiri (about 3 hours) → Bou Sra waterfall → misty hills at sunset.','ធ្វើដំណើរទៅមណ្ឌលគិរី (ប្រហែល ៣ ម៉ោង) → ទឹកធ្លាក់ប៊ូស្រា → ភ្នំអ័ព្ទពេលថ្ងៃលិច។',['mondulkiri']),
+  D('Ethical elephant sanctuary visit and forest walk with a local Bunong guide.','ទស្សនាជម្រកដំរីដែលគោរពសត្វ និងដើរព្រៃជាមួយមគ្គុទ្ទេសក៍ជនជាតិព្នង។',['mondulkiri'])]},
+ KK:{n:['Kirirom & Koh Kong','គិរីរម្យ និងកោះកុង'],go:['Drive west into the mountains.','ធ្វើដំណើរទៅភាគខាងលិច ចូលតំបន់ភ្នំ។'],days:[
+  D('Kirirom pine forest, lakes and waterfalls; night in a cabin.','ព្រៃស្រល់គិរីរម្យ បឹង និងទឹកធ្លាក់ ស្នាក់ក្នុងខ្ទម។',['kirirom']),
+  D('Cardamom Mountains: Tatai river, mangrove walkway at Peam Krasop.','ជួរភ្នំក្រវាញ៖ ស្ទឹងតាតៃ ស្ពានព្រៃកោងកាងពាមក្រសោប។',['koh-kong'])]},
+ KA:{n:['Kampot & Kep','កំពត និងកែប'],go:['Travel south to Kampot (about 3 hours from Phnom Penh).','ធ្វើដំណើរទៅកំពត (ប្រហែល ៣ ម៉ោងពីភ្នំពេញ)។'],days:[
+  D('Kampot pepper farm → riverside sunset cruise and fireflies.','ចម្ការម្រេចកំពត → ជិះទូកមើលថ្ងៃលិច និងអំពិលអំពែក។',['kampot']),
+  D('Bokor Mountain in the morning → Kep crab market and seaside sunset.','ភ្នំបូកគោពេលព្រឹក → ផ្សារក្ដាមកែប និងថ្ងៃលិចមាត់សមុទ្រ។',['bokor','kep'])]},
+ KR:{n:['Koh Rong','កោះរ៉ុង'],go:['Bus to Sihanoukville and ferry to Koh Rong (allow most of the day).','ឡានក្រុងទៅក្រុងព្រះសីហនុ និងសាឡាងទៅកោះរ៉ុង (ចំណាយពេលស្ទើរពេញមួយថ្ងៃ)។'],days:[
+  D('Arrive, white-sand beach afternoon, glowing plankton swim at night.','មកដល់ សម្រាកលើឆ្នេរខ្សាច់ស ហែលមើលភ្លាំងតុងភ្លឺពេលយប់។',['koh-rong']),
+  D('Snorkelling or a boat trip around Koh Rong Samloem, lazy beach evening.','មុជទឹកមើលផ្កាថ្ម ឬជិះទូកជុំវិញកោះរ៉ុងសន្លឹម ល្ងាចសម្រាកលើឆ្នេរ។',['koh-rong'])]}
+};
+const GEO=['SR','BB','PP','NE','KK','KA','KR'];
+function buildPlan(n,I,mon,lg){
+  const km=lg==='km';n=Math.min(Math.max(n,1),14);
+  let want=[];const add=(r,d)=>{if(!want.find(x=>x[0]===r))want.push([r,d])};
+  if(I.P&&!I.T&&n<=3)add('PP',3);
+  add('SR',I.T&&n>=8?4:3);
+  if(I.C||I.P)add('PP',I.C&&!I.N&&!I.B?3:2);
+  if(I.B){add('KA',2);add('KR',2)}if(I.N){add('NE',3);add('KK',2)}
+  add('PP',2);if(I.C)add('BB',1);
+  ['KA','KR','NE','BB','KK'].forEach(r=>add(r,2));
+  let left=n,alloc={};
+  for(const [r,d] of want){if(left<=0)break;const take=Math.min(d,left,REG[r].days.length);alloc[r]=take;left-=take}
+  if(left>0){for(const r of ['SR','PP','NE']){if(left<=0)break;const extra=Math.min(REG[r].days.length-(alloc[r]||0),left);if(extra>0){alloc[r]=(alloc[r]||0)+extra;left-=extra}}}
+  const order=GEO.filter(r=>alloc[r]);let day=0,out=[],ids=[];const kn=x=>km?String(x).replace(/\d/g,d=>KMD[+d]):String(x);
+  order.forEach((r,ri)=>{const R=REG[r];for(let i=0;i<alloc[r];i++){day++;const d=R.days[i];ids=ids.concat(d.ids);
+      out.push((km?'ថ្ងៃទី '+kn(day):'Day '+day)+' · '+R.n[km?1:0]+'\n'+(ri>0&&i===0?'🚌 '+R.go[km?1:0]+' ':'')+d[km?'km':'en'])}});
+  const lab={T:['temples','ប្រាសាទ'],B:['beaches','ឆ្នេរ'],N:['nature','ធម្មជាតិ'],C:['culture','វប្បធម៌'],P:['city','ទីក្រុង']};
+  const like=Object.keys(I).map(k=>lab[k][km?1:0]).join(', ');
+  let txt=(km?'🗺️ ផែនការដំណើរ '+kn(n)+' ថ្ងៃនៅកម្ពុជា':'🗺️ Your '+n+'-day Cambodia plan')+(like?' ('+like+')':'')+'\n\n'+out.join('\n\n');
+  if(mon>=0){const cool=[10,11,0,1].includes(mon),hot=[2,3,4].includes(mon);
+    txt+='\n\n'+(km?(cool?'☀️ ខែនេះត្រជាក់ និងស្ងួត ល្អណាស់សម្រាប់ធ្វើដំណើរ។':hot?'🔥 ខែនេះក្ដៅខ្លាំង៖ ចេញដំណើរពេលព្រឹកព្រលឹម ហើយសម្រាកពេលថ្ងៃត្រង់។':'🌧️ រដូវវស្សា៖ ព្រឹកច្រើនតែភ្លឺល្អ ភ្លៀងខ្លីៗពេលរសៀល ទេសភាពខៀវស្រងាត់ ហើយភ្ញៀវតិច។'):(cool?'☀️ That month is cool and dry, the best time to travel.':hot?'🔥 That month is very hot: start early and rest at midday.':'🌧️ Green season: mornings are usually clear, short rain in the afternoon, lush views and fewer visitors.'));
+    const fs=(T.S.festivals||[]).filter(f=>norm(tr(f.when,'en')).includes(MON[mon][0])||tr(f.when,'km').includes(MON[mon][1]));
+    if(fs.length)txt+='\n🎉 '+(km?'ពិធីបុណ្យខែនេះ៖ ':'Festival that month: ')+fs.map(f=>tr(f.title,lg)).join(', ')}
+  if(n>=14)txt+='\n\n'+(km?'សម្រាប់ដំណើរវែងជាងនេះ ក្រុមការងាររបស់យើងអាចរៀបចំជូនបាន។':'For a longer trip, our team can design it with you.');
+  txt+='\n\n👉 '+(km?'ចង់ឱ្យក្រុមការងាររបស់យើងកែសម្រួល កក់សណ្ឋាគារ ឬរកអ្នកបើកបរ? ចុច «និយាយជាមួយភ្នាក់ងារផ្ទាល់»។':'Want our team to adjust it, book hotels or find a driver? Tap «Talk to Live Agent».');
+  const P=T.S.places||[],links=[];[...new Set(ids)].forEach(id=>{const p=P.find(x=>x.id===id);if(p&&links.length<4)links.push([tr(p.title,lg),'#/place/'+id])});
+  return {text:txt.slice(0,1990),links,live:true,plan:true}}
+let PLAN=null;
+function bot(text){
+  const lg=hasKm(text)?'km':L(),km=lg==='km',t=' '+norm(text)+' ',S=T.S||{};
+  /* trip planner */
+  const dd=daysOf(t),wantsPlan=(has(t,PLANK)&&(dd||has(t,['plan','itinerary','schedule','កាលវិភាគ','ផែនការ','រៀបចំ'])))||(dd>0&&(Object.keys(interestsOf(t)).length>0||has(t,['i have','we have','ខ្ញុំមាន','យើងមាន','trip','travel','visit','holiday','vacation','tour','cambodia','siem reap','ដំណើរ','ទៅលេង','កម្សាន្ត','កម្ពុជា','សៀមរាប'])));
+  if(wantsPlan||(PLAN&&(daysOf(t,true)||Object.keys(interestsOf(t)).length))){
+    const n=daysOf(t,!!PLAN)||(PLAN&&PLAN.n)||0,I=Object.assign({},PLAN&&PLAN.I,interestsOf(t)),mon=monthOf(t)>=0?monthOf(t):(PLAN?PLAN.mon:-1);
+    if(!n){PLAN={I,mon,n:0};return {text:km?'🗺️ រីករាយនឹងជួយរៀបចំដំណើររបស់អ្នក! តើអ្នកមានពេលប៉ុន្មានថ្ងៃ? ហើយអ្នកចូលចិត្តអ្វីខ្លះ៖ ប្រាសាទ ឆ្នេរ ធម្មជាតិ វប្បធម៌ ឬទីក្រុង? (ឧ. «៥ ថ្ងៃ ប្រាសាទ និងឆ្នេរ ខែធ្នូ»)':'🗺️ I would love to plan your trip! How many days do you have, and what do you enjoy: temples, beaches, nature, culture or city life? (e.g. "5 days, temples and beach, in December")'}}
+    PLAN=null;return buildPlan(n,I,mon,lg)}
+  PLAN=null;
+  /* specific festival */
+  for(const id in FEST_K){if(has(t,FEST_K[id])){const f=(S.festivals||[]).find(x=>x.id===id);if(f)return {text:'🎉 '+tr(f.title,lg)+' · '+tr(f.when,lg)+'\n'+tr(f.text,lg),links:[[km?'សិល្បៈ និងប្រពៃណី':'Art & Tradition','#/p/culture']]}}}
+  /* place or culture item by name (most specific) */
+  const p=findPlace(t);
+  /* culture questions */
+  for(const q of FAQ){if(has(t,q.k)&&!(p&&p.cat!=='culture'&&!/history|ប្រវត្តិ/.test(t)))return {text:q[km?'km':'en'],links:[[km?'សិល្បៈ និងប្រពៃណី':'Art & Tradition','#/p/culture']]}}
+  if(!p&&has(t,CULT)){const cs=(S.places||[]).filter(x=>x.cat==='culture');return {text:(km?'🪷 វប្បធម៌ និងប្រពៃណីខ្មែរ ដែលយើងណែនាំ៖\n':'🪷 Khmer culture and traditions we love:\n')+cs.map(x=>'• '+tr(x.title,lg)+' — '+tr(x.sum,lg)).join('\n').slice(0,1500)+(km?'\n\nសួរខ្ញុំពីណាមួយ ខ្ញុំនឹងប្រាប់បន្ថែម។':'\n\nAsk me about any of them and I will tell you more.'),links:[[km?'សិល្បៈ និងប្រពៃណី':'Art & Tradition','#/p/culture']]}}
+  return bot0(text)}
+
+return {bot:bot,reset:function(){PLAN=null}}})(SITE,()=>BOTLANG);
 const QICONS=['wave','clock','bed','sun','pin','phone','mail','check','heart','temple','money','car','info','bolt','chat'];
 const I=n=>'<svg class="i" viewBox="0 0 24 24" aria-hidden="true">'+(P[n]||P.info)+'</svg>';
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -208,6 +399,12 @@ const DEFAULT_QUICK=[
  {icon:'mail',label:'Collab',send:true,en:"Thanks for your interest in working together! Please send the details to info@kongthean.com and I'll get back to you.",km:"អរគុណដែលចាប់អារម្មណ៍សហការ! សូមផ្ញើព័ត៌មានលម្អិតមក info@kongthean.com ហើយខ្ញុំនឹងឆ្លើយតបវិញ។"},
  {icon:'check',label:'Thank you',send:true,en:"Thank you for chatting with me! Have a wonderful trip 🙏",km:"អរគុណសម្រាប់ការជជែក! សូមឱ្យដំណើររបស់អ្នករីករាយ 🙏"}
 ];
+const CLOSE_DEF=[
+ {en:"Thank you for chatting with us! Have a wonderful trip 🙏",km:"អរគុណសម្រាប់ការជជែកជាមួយយើង! សូមឱ្យដំណើររបស់អ្នករីករាយ 🙏"},
+ {en:"Thank you! Our team will contact you soon with all the details. Goodbye 👋",km:"អរគុណ! ក្រុមការងាររបស់យើងនឹងទាក់ទងអ្នកក្នុងពេលឆាប់ៗ ជាមួយព័ត៌មានលម្អិត។ លាសិនហើយ 👋"},
+ {en:"It was a pleasure helping you. Message us any time if you need anything else!",km:"រីករាយណាស់ដែលបានជួយអ្នក។ ផ្ញើសារមកយើងពេលណាក៏បាន ប្រសិនបើត្រូវការអ្វីបន្ថែម!"},
+ {en:"Since we haven't heard back from you, we will close this chat now. Feel free to message us again any time. Thank you!",km:"ដោយសារយើងមិនទាន់ទទួលបានការឆ្លើយតបពីអ្នក យើងនឹងបិទការជជែកនេះ។ សូមផ្ញើសារមកម្ដងទៀតពេលណាក៏បាន។ អរគុណ!"}];
+const TRANSFER={en:'Please hold on a moment. We are transferring you to another agent who can help you further.',km:'សូមរង់ចាំបន្តិច។ យើងកំពុងផ្ទេរអ្នកទៅភ្នាក់ងារម្នាក់ទៀត ដែលអាចជួយអ្នកបន្ថែម។'};
 const JOIN_DEF={en:'{name} has joined the chat.',km:'{name} បានចូលរួមការជជែក។'};
 const BUSY={en:'Sorry, all our agents are busy right now. Please try again later. You can keep chatting with me in the meantime.',km:'សូមអភ័យទោស ភ្នាក់ងាររបស់យើងទាំងអស់កំពុងរវល់នៅពេលនេះ។ សូមព្យាយាមម្ដងទៀតនៅពេលក្រោយ។ អ្នកអាចបន្តជជែកជាមួយខ្ញុំក្នុងពេលនេះ។'};
 const BTN={en:{live:'Talk to Live Agent',more:'More Options'},km:{live:'និយាយជាមួយភ្នាក់ងារផ្ទាល់',more:'ជម្រើសផ្សេងៗ'}};
@@ -223,7 +420,7 @@ let wantOnline=true,connUnsub=null;
 let soundOn=pref('sound',true),waitMin=10;
 
 /* ---------- state ---------- */
-let me=null,agent=null,chats=[],firstSnap=true,sel=null,msgs=[],msgUnsub=null,chatUnsub=null,meUnsub=null,quick=DEFAULT_QUICK,tab='open',search='',showQuick=pref('qr',true),beat=null,seen={};
+let me=null,agent=null,chats=[],firstSnap=true,sel=null,msgs=[],msgUnsub=null,chatUnsub=null,meUnsub=null,quick=DEFAULT_QUICK,closing=CLOSE_DEF,tab='open',search='',showQuick=pref('qr',true),beat=null,seen={};
 
 /* ---------- auth ---------- */
 A.onAuthStateChanged(auth,async u=>{
@@ -271,21 +468,22 @@ async function drawNotAgent(e){
 /* ---------- app ---------- */
 function start(){
   drawShell();
-  setOnline(true,true);
+  setOnline(agent.online!==false,true);
   beat=setInterval(()=>{if(agent&&agent.online)DB.update('agents/'+me.uid,{lastSeen:TS}).catch(()=>{})},60000);
   connUnsub=DB.onConnected(c=>{if(c&&wantOnline){DB.onDisconnect('agents/'+me.uid,{online:false,lastSeen:TS});DB.update('agents/'+me.uid,{online:true,lastSeen:TS}).catch(()=>{})}});
   meUnsub=DB.on('agents/'+me.uid,v=>{if(v){agent=v;drawTop()}});
   DB.get('settings/public').then(v=>{if(v&&v.waitMin)waitMin=+v.waitMin||10}).catch(()=>{});
   setInterval(expireWaiting,30000);
-  DB.get('settings/quick').then(v=>{if(v&&Array.isArray(v.items)&&v.items.length)quick=v.items;drawConv()}).catch(()=>{});
+  DB.get('settings/quick').then(v=>{if(v&&Array.isArray(v.items)&&v.items.length)quick=v.items;if(v&&Array.isArray(v.closing)&&v.closing.length)closing=v.closing;drawConv()}).catch(()=>{});
   chatUnsub=DB.onRecent('chats','updatedAt',200,list=>{
     list.forEach(d=>{
       const id=d.id,prev=seen[id];
       if(!firstSnap){
-        if(d.status==='waiting'&&(!prev||prev.status!=='waiting')){alertNew('🔔 New live chat request',vName(d)+' wants to talk to an agent',id)}
+        if(d.status==='assigned'&&d.agentUid===me.uid&&prev&&prev.agentUid!==me.uid&&d.transferFrom){alertNew('🔁 Chat transferred to you',vName(d)+' · from '+d.transferFrom,id)}
+        else if(d.status==='waiting'&&(!prev||prev.status!=='waiting')){alertNew('🔔 New live chat request',vName(d)+' wants to talk to an agent',id)}
         else if(d.lastFrom==='visitor'&&(d.status==='assigned'||d.status==='waiting')&&(!prev||prev.lastMsg!==d.lastMsg)&&!(sel===id&&!document.hidden))alertNew('💬 '+vName(d),d.lastMsg,id);
       }
-      seen[id]={status:d.status,lastMsg:d.lastMsg};
+      seen[id]={status:d.status,lastMsg:d.lastMsg,agentUid:d.agentUid||null};
     });
     chats=list;
     expireWaiting();
@@ -361,27 +559,29 @@ function cur(){return chats.find(x=>x.id===sel)}
 function drawConv(){
   const v=root.querySelector('#conv');if(!v)return;const c=cur();
   if(!c){v.innerHTML='<div class="blank"><div><div class="big">'+I('chat')+'</div><p>Pick a chat on the left.<br>New requests make a sound and show an alert.</p></div></div>';return}
-  v.innerHTML='<div class="ch" id="chh"></div><div class="info" id="inf"></div><div class="msgs" id="msgs"></div><div id="acc"></div><div class="qr" id="qr"></div><form class="comp" id="comp" hidden><button class="ib'+(showQuick?' on':'')+'" type="button" id="qt" title="Quick replies" aria-label="Quick replies">'+I('bolt')+'</button><textarea rows="1" id="ta" placeholder="Reply to the visitor…" aria-label="Reply"></textarea><button class="ib pri" type="submit" aria-label="Send">'+I('send')+'</button></form>';
+  v.innerHTML='<div class="ch" id="chh"></div><div class="info" id="inf"></div><div class="msgs" id="msgs"></div><div id="acc"></div><div class="qr" id="qr"></div><button type="button" class="aib" id="aib" hidden>'+I('spark')+' Help me reply</button><form class="comp" id="comp" hidden><button class="ib'+(showQuick?' on':'')+'" type="button" id="qt" title="Quick replies" aria-label="Quick replies">'+I('bolt')+'</button><textarea rows="1" id="ta" placeholder="Reply to the visitor…" aria-label="Reply"></textarea><button class="ib pri" type="submit" aria-label="Send">'+I('send')+'</button></form>';
   const ta=v.querySelector('#ta');
   v.querySelector('#comp').onsubmit=e=>{e.preventDefault();sendMsg(ta.value)};
   ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&window.innerWidth>820){e.preventDefault();sendMsg(ta.value)}});
   ta.addEventListener('input',()=>{ta.style.height='';ta.style.height=Math.min(140,ta.scrollHeight)+'px'});
   v.querySelector('#qt').onclick=()=>{showQuick=!showQuick;setPref('qr',showQuick);v.querySelector('#qt').classList.toggle('on',showQuick);drawQuick()};
+  v.querySelector('#aib').onclick=aiDraft;
   drawConvHead();drawMsgs();drawQuick();
 }
 function drawConvHead(){
   const c=cur(),h=root.querySelector('#chh');if(!c||!h)return;
   h.innerHTML='<button class="back" id="bk" aria-label="Back">'+I('left')+'</button><span class="av">'+esc(vName(c)[0])+'</span><div class="who"><b>'+esc(vName(c))+'</b><small><span class="pill '+esc(c.status)+'">'+esc(c.status==='assigned'?'live · '+(c.agentName||''):c.status)+'</span> · started '+ago(c.createdAt)+' ago</small></div>'+
-   (c.status==='closed'?'':'<button class="btn sm soft" id="cl">'+I('close')+' Close chat</button>');
+   (c.status==='assigned'&&c.agentUid===me.uid?'<button class="btn sm soft" id="tr" title="Transfer to another agent">'+I('swap')+' Transfer</button>':'')+(c.status==='closed'?'':'<button class="btn sm soft" id="cl">'+I(c.status==='assigned'?'door':'close')+' '+(c.status==='assigned'?'End chat':'Close chat')+'</button>');
   h.querySelector('#bk').onclick=()=>{sel=null;if(msgUnsub)msgUnsub();root.querySelector('#main').classList.remove('sel');drawList();drawConv()};
-  const cl=h.querySelector('#cl');if(cl)cl.onclick=()=>closeChat(c.id);
+  const cl=h.querySelector('#cl');if(cl)cl.onclick=()=>c.status==='assigned'?endSheet(c.id):closeChat(c.id);
+  const trb=h.querySelector('#tr');if(trb)trb.onclick=()=>transferSheet(c.id);
   const inf=root.querySelector('#inf');
   inf.innerHTML=(c.contact?'<span>'+I('phone')+esc(c.contact)+'</span><button data-copy="'+esc(c.contact)+'">Copy</button>':'<span>'+I('user')+'No contact given</span>')+'<span>'+I('info')+(c.lang==='km'?'Khmer':'English')+'</span>'+(c.page?'<span>'+I('pin')+esc(c.page)+'</span>':'')+(c.ua&&/iPhone|Android/i.test(c.ua)?'<span>📱 Mobile</span>':'<span>💻 Desktop</span>');
   inf.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>copy(b.dataset.copy));
   const acc=root.querySelector('#acc');
   const mine=c.status==='assigned'&&c.agentUid===me.uid,other=c.status==='assigned'&&c.agentUid&&c.agentUid!==me.uid;
   acc.innerHTML=mine?'':'<div class="acceptbar"><span>'+(c.status==='waiting'?'<b>Waiting for an agent.</b> The customer does not know you are here until you open the chat.':other?'<b>'+esc(c.agentName||'Another agent')+'</b> is handling this chat. You are only viewing it.':c.status==='closed'?'This chat is closed. You are only viewing it.':'The customer is talking to the assistant. You are only viewing it.')+'</span><button class="btn ok sm" id="ac">'+I('check')+(other?' Take over':' Open chat')+'</button></div>';
-  const cp=root.querySelector('#comp'),qq=root.querySelector('#qr');if(cp)cp.hidden=!mine;if(qq)qq.hidden=!mine||!showQuick;
+  const cp=root.querySelector('#comp'),qq=root.querySelector('#qr'),ab2=root.querySelector('#aib');if(cp)cp.hidden=!mine;if(ab2)ab2.hidden=!mine;if(qq)qq.hidden=!mine||!showQuick;
   const ab=acc.querySelector('#ac');if(ab)ab.onclick=()=>accept(c.id);
   const ty=typeof c.visitorTyping==='number'&&Date.now()-c.visitorTyping<6000;
   const mt=root.querySelector('#typ');if(mt)mt.hidden=!ty;
@@ -420,6 +620,89 @@ async function sendMsg(text){
     await DB.push('messages/'+c.id,{from:'agent',text:text.slice(0,2000),agentName:(agent&&agent.name)||'Agent',agentUid:me.uid,ts:TS});
     await DB.update('chats/'+c.id,{lastMsg:text.slice(0,120),lastFrom:'agent',updatedAt:TS,unreadVisitor:INC(1),unreadAgent:0});
   }catch(e){toast('Not sent: '+(e.code||e.message));if(ta)ta.value=text}
+}
+/* ---------- end chat with a goodbye message ---------- */
+function endSheet(id){
+  const c=chats.find(x=>x.id===id)||{},lg=c.lang==='km'?'km':'en';
+  const m=modal('End this chat','<p style="margin:0;color:var(--muted);font-size:.88rem">Pick a goodbye message. It is sent in the customer’s language ('+(lg==='km'?'Khmer':'English')+'), then the chat ends with: “'+esc(ENDED[lg])+'”</p><div class="endopt">'+closing.map((x,i)=>'<button type="button" data-ci="'+i+'">'+esc((lg==='km'&&x.km)?x.km:x.en)+'<small>Send &amp; end chat</small></button>').join('')+
+    '<button type="button" data-ci="-1"><b>End without a goodbye message</b><small>Only the standard “chat ended” message is sent</small></button></div><div class="row"><button class="btn soft" type="button" id="ced">'+I('edit')+' Edit goodbye messages</button><button class="btn soft" data-close type="button">Cancel</button></div>');
+  m.querySelector('#ced').onclick=()=>{m.remove();editClosing()};
+  m.querySelectorAll('[data-ci]').forEach(b=>b.onclick=async()=>{const i=+b.dataset.ci;m.remove();const x=closing[i];await endAssigned(id,x?((lg==='km'&&x.km)?x.km:x.en):null)});
+}
+async function endAssigned(id,text){
+  const c=chats.find(x=>x.id===id)||{},lg=c.lang==='km'?'km':'en';
+  try{
+    if(text)await DB.push('messages/'+id,{from:'agent',text:text.slice(0,2000),agentName:(agent&&agent.name)||'Agent',agentUid:me.uid,ts:TS});
+    await DB.push('messages/'+id,{from:'bot',text:ENDED[lg],ts:TS});
+    await DB.update('chats/'+id,{status:'closed',closedAt:TS,updatedAt:TS,lastMsg:'Chat ended',lastFrom:'system',unreadAgent:0});
+    toast('Chat ended'+(text?' with your goodbye message':''));
+  }catch(e){toast('Could not end the chat: '+(e.code||e.message))}
+}
+function editClosing(){
+  let L=JSON.parse(JSON.stringify(closing));
+  const m=modal('Goodbye messages','<p style="margin:0;color:var(--muted);font-size:.88rem">These appear when you tap <b>End chat</b>. Write each one in English and Khmer.</p><div id="cl2" style="display:grid;gap:10px"></div><button class="btn soft" type="button" id="ca">'+I('plus')+' Add message</button><div class="row"><button class="btn soft" type="button" id="cdf">Reset to default</button><button class="btn soft" data-close type="button">Cancel</button><button class="btn" type="button" id="cs">Save</button></div>');
+  const draw=()=>{m.querySelector('#cl2').innerHTML=L.map((x,i)=>'<div class="qe" style="grid-template-columns:1fr"><label class="f">English<textarea data-i="'+i+'" data-k="en">'+esc(x.en)+'</textarea></label><label class="f">Khmer<textarea data-i="'+i+'" data-k="km">'+esc(x.km||'')+'</textarea></label><div class="row"><button class="btn sm del" type="button" data-rm="'+i+'">Remove</button></div></div>').join('')};draw();
+  m.addEventListener('input',e=>{const t=e.target;if(t.dataset.i!=null)L[+t.dataset.i][t.dataset.k]=t.value});
+  m.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    if(b.dataset.rm!=null){L.splice(+b.dataset.rm,1);draw()}
+    if(b.id==='ca'){L.push({en:'',km:''});draw()}
+    if(b.id==='cdf'){L=JSON.parse(JSON.stringify(CLOSE_DEF));draw()}
+    if(b.id==='cs'){const keep=L.filter(x=>x.en||x.km);DB.set('settings/quick',{items:quick,closing:keep,updatedAt:TS}).then(()=>{closing=keep.length?keep:CLOSE_DEF;m.remove();toast('Goodbye messages saved')}).catch(er=>toast('Not saved: '+(er.code||er.message)))}});
+}
+/* ---------- transfer ---------- */
+async function transferSheet(id){
+  let ag={};try{ag=(await DB.get('agents'))||{}}catch(e){toast('Could not load the team');return}
+  const others=Object.keys(ag).filter(u=>u!==me.uid).sort((a,b)=>(ag[b].online?1:0)-(ag[a].online?1:0));
+  const m=modal('Transfer chat','<p style="margin:0;color:var(--muted);font-size:.88rem">The customer sees: “'+esc(TRANSFER.en)+'”</p><div class="endopt">'+others.map(u=>{const a=ag[u]||{};return '<button type="button" data-to="'+esc(u)+'"><span class="agrow"><span class="av" style="width:34px;height:34px">'+esc((a.name||'?')[0])+'<span class="st" style="background:'+(a.online?'var(--ok)':'var(--line)')+'"></span></span><span><b>'+esc(a.name||'Agent')+'</b><small>'+(a.online?'Online now':'Away · will get it when they open the inbox')+'</small></span></span></button>'}).join('')+
+    '<button type="button" data-to="*"><b>Any available agent</b><small>Puts the chat back in the waiting list for the whole team</small></button></div>'+(others.length?'':'<p style="margin:0;font-size:.85rem">No other team members yet. Invite them from <b>Team</b>.</p>')+'<div class="row"><button class="btn soft" data-close type="button">Cancel</button></div>');
+  m.querySelectorAll('[data-to]').forEach(b=>b.onclick=async()=>{m.remove();await doTransfer(id,b.dataset.to,ag)});
+}
+async function doTransfer(id,to,ag){
+  const c=chats.find(x=>x.id===id)||{},lg=c.lang==='km'?'km':'en',from=(agent&&agent.name)||'Agent';
+  try{
+    await DB.push('messages/'+id,{from:'system',text:TRANSFER[lg],ts:TS});
+    if(to==='*'){
+      await DB.update('chats/'+id,{status:'waiting',agentUid:null,agentName:null,requestedAt:TS,updatedAt:TS,transferFrom:from,lastMsg:'Transferred to the team by '+from,lastFrom:'system',unreadAgent:1});
+      toast('Sent back to the waiting list');
+    }else{
+      const a=ag[to]||{},nm=a.name||'Agent',jt=((lg==='km'?a.joinKm:a.joinEn)||JOIN_DEF[lg]).split('{name}').join(nm);
+      await DB.update('chats/'+id,{status:'assigned',agentUid:to,agentName:nm,assignedAt:TS,updatedAt:TS,transferFrom:from,lastMsg:'Transferred to '+nm,lastFrom:'system',unreadAgent:1});
+      await DB.push('messages/'+id,{from:'system',text:jt,join:true,ts:TS});
+      toast('Transferred to '+nm);
+    }
+  }catch(e){toast('Could not transfer: '+(e.code||e.message))}
+}
+/* ---------- help me reply (built-in assistant, no paid AI) ---------- */
+let aiN=0,aiFor='';
+async function loadSite(){if(SITE.loaded)return;try{const c=await DB.get('site/content');if(c)SITE.S=c;SITE.loaded=true}catch(e){}}
+async function aiDraft(){
+  const c=cur();if(!c)return;await loadSite();
+  const vis=[];for(let i=msgs.length-1;i>=0;i--){const x=msgs[i];if(x.from==='visitor')vis.unshift(x.text);else if(x.from==='agent'&&vis.length)break}
+  const q=vis.slice(-3).join('\n'),lg=c.lang==='km'?'km':'en';
+  if(aiFor!==q+sel){aiFor=q+sel;aiN=0}else aiN++;
+  BOTLANG=lg;BOT.reset();
+  const ta=root.querySelector('#ta');ta.value=draftReply(q,lg,aiN%3,c);ta.dispatchEvent(new Event('input'));ta.focus();
+  toast(aiN%3===0?'✨ Draft ready. Check it, edit if needed, then tap Send. Tap again for another version.':'✨ Another version ('+(aiN%3+1)+'/3)');
+}
+function draftReply(q,lg,v,c){
+  const km=lg==='km',nm=c.name&&!/^visitor/i.test(c.name)?String(c.name).split(' ')[0]:'';
+  const hi=km?'សួស្ដី'+(nm?' '+nm:'')+'! ':'Hi'+(nm?' '+nm:'')+'! ';
+  const more=km?'មានអ្វីផ្សេងទៀតដែលខ្ញុំអាចជួយបានទេ? 😊':'Is there anything else I can help you with? 😊';
+  if(!q.trim())return hi+(km?'តើខ្ញុំអាចជួយអ្វីបានខ្លះថ្ងៃនេះ? 😊':'How can I help you today? 😊');
+  const r=BOT.bot(q);
+  const body0=String(r.text||'').split('\n\n').filter(p=>!/live agent|ភ្នាក់ងារផ្ទាល់/i.test(p)).join('\n\n').trim();
+  if(r.fallback||body0.replace(/[^\p{L}]/gu,'').length<25){
+    return [hi+(km?'អរគុណសម្រាប់សំណួររបស់អ្នក! ខ្ញុំនឹងពិនិត្យជាមួយក្រុមការងារ ហើយឆ្លើយតបទៅអ្នកក្នុងពេលឆាប់ៗ។ 🙏':'Thank you for your question! Let me check this with our team and get back to you shortly. 🙏'),
+      hi+(km?'ដើម្បីជួយអ្នកបានល្អ សូមប្រាប់ខ្ញុំបន្ថែមបន្តិច៖ ថ្ងៃធ្វើដំណើរ ចំនួនមនុស្ស និងថវិការបស់អ្នក។':'To help you best, could you tell me a little more: your travel dates, how many people, and your budget?'),
+      (km?'សំណួរល្អណាស់! សូមរង់ចាំខ្ញុំប៉ុន្មាននាទី ខ្ញុំកំពុងរកព័ត៌មានជូនអ្នក។':'Good question! Please give me a few minutes while I find the details for you.')][v];
+  }
+  const body=r.text.split('\n\n').filter(p=>!/live agent|ភ្នាក់ងារផ្ទាល់/i.test(p)).join('\n\n').trim();
+  const links=(r.links||[]).filter(x=>String(x[1]).charAt(0)==='#').slice(0,2).map(x=>'👉 '+x[0]+': https://kongthean.com/'+x[1]).join('\n');
+  const first=body.split('\n\n')[0];
+  const out=[hi+(km?'អរគុណសម្រាប់សំណួរ។ 😊':'Thanks for your question. 😊')+'\n\n'+body+(links?'\n\n'+links:'')+'\n\n'+more,
+    hi+first+(links?'\n\n'+links.split('\n')[0]:'')+'\n\n'+more,
+    hi+body+'\n\n'+(km?'ប្រសិនបើអ្នកប្រាប់ខ្ញុំពីថ្ងៃធ្វើដំណើរ និងចំនួនមនុស្ស ខ្ញុំអាចជួយរៀបចំ និងកក់ជូនបាន។ 🙏':'If you share your travel dates and how many people, I can help arrange and book everything for you. 🙏')][v];
+  return out.slice(0,2000);
 }
 let armClose=null;
 async function closeChat(id){
@@ -507,7 +790,7 @@ function editQuick(){
     if(b.dataset.mv!=null){const i=+b.dataset.mv,j=i+(+b.dataset.d);if(j>=0&&j<L.length){[L[i],L[j]]=[L[j],L[i]];draw()}}
     if(b.id==='qa'){L.push({icon:'chat',label:'New reply',send:true,en:'',km:''});draw()}
     if(b.id==='qd'){L=JSON.parse(JSON.stringify(DEFAULT_QUICK));draw()}
-    if(b.id==='qs'){DB.set('settings/quick',{items:L.filter(x=>x.en||x.km),updatedAt:TS}).then(()=>{quick=L.filter(x=>x.en||x.km);m.remove();drawQuick();toast('Quick replies saved')}).catch(e=>toast('Not saved: '+(e.code||e.message)))}});
+    if(b.id==='qs'){DB.set('settings/quick',{items:L.filter(x=>x.en||x.km),closing:closing,updatedAt:TS}).then(()=>{quick=L.filter(x=>x.en||x.km);m.remove();drawQuick();toast('Quick replies saved')}).catch(e=>toast('Not saved: '+(e.code||e.message)))}});
 }
 
 /* ---------- misc ---------- */
