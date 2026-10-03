@@ -271,7 +271,7 @@ function bot0(text){
 }
 
 /* ---------- more knowledge: culture, festivals, trip planner (Oct 2026) ---------- */
-Object.assign(EXTRA,{'kampot':['kampot','pepper','កំពត','ម្រេច'],'phnom-bakheng':['bakheng','បាខែង'],'angkor-thom':['south gate','angkor thom gate','ទ្វារខាងត្បូង'],'preah-khan':['preah khan','ព្រះខ័ន'],'neak-pean':['neak pean','នាគព័ន្ធ'],
+Object.assign(EXTRA,{'apsara':['apsara','ballet','tep apsara','អប្សរា'],'kampot':['kampot','pepper','កំពត','ម្រេច'],'phnom-bakheng':['bakheng','បាខែង'],'angkor-thom':['south gate','angkor thom gate','ទ្វារខាងត្បូង'],'preah-khan':['preah khan','ព្រះខ័ន'],'neak-pean':['neak pean','នាគព័ន្ធ'],
  'beng-mealea':['beng mealea','bengmealea','បឹងមាលា'],'banteay-chhmar':['chhmar','ឆ្មារ'],'royal-palace':['royal palace','silver pagoda','palace','emerald buddha','ព្រះបរមរាជវាំង','វាំង','ព្រះកែវមរកត'],
  'national-museum':['museum','សារមន្ទីរ'],'wat-phnom':['wat phnom','lady penh','វត្តភ្នំ','ដូនពេញ'],'oudong':['oudong','udong','ឧដុង្គ'],'phnom-chisor':['chisor','ជីសូរ'],'wat-nokor':['nokor','នគរបាជ័យ'],
  'phnom-penh':['riverside','sisowath','មាត់ទន្លេ'],'koh-kong':['koh kong','cardamom','chi phat','tatai','កោះកុង','ក្រវាញ','ចិផាត'],'kampong-cham':['kampong cham','bamboo bridge','koh paen','កំពង់ចាម','ស្ពានឫស្សី'],
@@ -279,7 +279,7 @@ Object.assign(EXTRA,{'kampot':['kampot','pepper','កំពត','ម្រេច
  'chapei':['chapei','chapey','ចាប៉ី'],'lakhon-khol':['lakhon','khol','masked dance','mask dance','ល្ខោនខោល'],'bokator':['bokator','kun khmer','kickbox','boxing','martial art','បុក្កតោ','គុនខ្មែរ','ប្រដាល់'],
  'krama':['krama','scarf','sampot','traditional dress','traditional clothes','traditional costume','ក្រមា','សំពត់','សម្លៀកបំពាក់ប្រពៃណី'],'pottery':['pottery','clay pot','kampong chhnang','គ្រឿងស្មូន','កំពង់ឆ្នាំង'],
  'palm-sugar':['sugar palm','palm sugar','palm tree','rice field','ត្នោត','វាលស្រែ'],'wedding':['wedding','marriage','married','marry','រៀបការ','អាពាហ៍ពិពាហ៍','ការរៀបការ']});
-const FEST_K={f1:['khmer new year','new year','choul chnam','songkran','ចូលឆ្នាំ'],f2:['visak','vesak','ploughing','plowing','ពិសាខ','វិសាខ','ច្រត់ព្រះនង្គ័ល'],f3:['pchum','ancestor','ភ្ជុំ'],f4:['water festival','om touk','boat race','moon salute','អុំទូក','សំពះព្រះខែ'],
+const FEST_K={f1:['khmer new year','new year','choul chnam','chaul chnam','ចូលឆ្នាំ'],f2:['visak','vesak','ពិសាខ','វិសាខ'],f8:['ploughing','plowing','chroat','ច្រត់ព្រះនង្គ័ល'],f9:['kite','khleng','ខ្លែង'],f3:['pchum','ancestor','ភ្ជុំ'],f4:['water festival','om touk','boat race','moon salute','អុំទូក','សំពះព្រះខែ'],
  f5:['meak bochea','magha','មាឃបូជា'],f6:['kathen','kathina','កឋិន'],f7:['independence','ឯករាជ្យ']};
 const FAQ=[
  {k:['sampeah','greet','bow','say hello','how to greet','សំពះ'],en:"The sampeah is the Khmer greeting: press your palms together in front of your chest and bow slightly. The higher the hands, the more respect: chest level for friends, chin or nose level for elders, and forehead level for monks. A smile and a sampeah are always welcome.",km:"ការសំពះ គឺជាការគោរពរបស់ខ្មែរ៖ ផ្គុំបាតដៃនៅមុខទ្រូង ហើយឱនក្បាលបន្តិច។ ដៃកាន់តែខ្ពស់ កាន់តែគោរព៖ កម្រិតទ្រូងសម្រាប់មិត្តភក្តិ កម្រិតចង្កា ឬច្រមុះសម្រាប់ចាស់ទុំ និងកម្រិតថ្ងាសសម្រាប់ព្រះសង្ឃ។"},
@@ -374,14 +374,29 @@ function bot(text){
     if(!n){PLAN={I,mon,n:0};return {text:km?'រីករាយនឹងជួយរៀបចំដំណើររបស់អ្នក! តើអ្នកមានពេលប៉ុន្មានថ្ងៃ? ហើយអ្នកចូលចិត្តអ្វីខ្លះ៖ ប្រាសាទ ឆ្នេរ ធម្មជាតិ វប្បធម៌ ឬទីក្រុង? (ឧ. «៥ ថ្ងៃ ប្រាសាទ និងឆ្នេរ ខែធ្នូ»)':'I would love to plan your trip! How many days do you have, and what do you enjoy: temples, beaches, nature, culture or city life? (e.g. "5 days, temples and beach, in December")'}}
     PLAN=null;return buildPlan(n,I,mon,lg)}
   PLAN=null;
+  /* dances & food (traditions lists) */
+  const cf=c2Find(t);if(cf){const x=cf.x;return {text:tr(x.title,lg)+'\n'+tr(x.text,lg)+'\n\n'+(km?'ស្វែងយល់បន្ថែមនៅទំព័រ សិល្បៈ និងប្រពៃណី។':'See more on our Art & Tradition page.'),links:[[km?'សិល្បៈ និងប្រពៃណី':'Art & Tradition','#/p/culture']]}}
+  const C2=S.c2||{};
+  if(has(t,['traditional dance','khmer dance','dances','robam','របាំប្រពៃណី','របាំខ្មែរ'])&&!findPlace(t)){const g=[['classical',km?'របាំបុរាណ':'Classical court dances'],['folk',km?'របាំប្រជាប្រិយ':'Folk dances'],['social',km?'របាំសង្គម':'Social dances']];return {text:(km?'របាំប្រពៃណីខ្មែរ៖\n':'Traditional Khmer dances:\n')+g.map(x=>x[1]+': '+(C2[x[0]]||[]).map(y=>tr(y.title,lg)).join(', ')).join('\n\n'),links:[[km?'សិល្បៈ និងប្រពៃណី':'Art & Tradition','#/p/culture']]}}
+  if(has(t,['khmer food','traditional food','what to eat','what should i eat','dishes','local food','dessert','street food','ម្ហូបខ្មែរ','ម្ហូបប្រពៃណី','បង្អែម'])){const g=[['foodMain',km?'ម្ហូប និងសម្ល':'Iconic dishes'],['foodStreet',km?'អាហារតាមផ្លូវ':'Street food'],['foodSweet',km?'នំ និងបង្អែម':'Desserts & cakes']];return {text:(km?'ម្ហូបខ្មែរប្រពៃណីដែលគួរសាកល្បង៖\n':'Traditional Khmer food to try:\n')+g.map(x=>x[1]+': '+(C2[x[0]]||[]).map(y=>tr(y.title,lg)).join(', ')).join('\n\n'),links:[[km?'សិល្បៈ និងប្រពៃណី':'Art & Tradition','#/p/culture']]}}
   /* specific festival */
-  for(const id in FEST_K){if(has(t,FEST_K[id])){const f=(S.festivals||[]).find(x=>x.id===id);if(f)return {text:''+tr(f.title,lg)+' · '+tr(f.when,lg)+'\n'+tr(f.text,lg),links:[[km?'សិល្បៈ និងប្រពៃណី':'Art & Tradition','#/p/culture']]}}}
+  for(const id in FEST_K){if(has(t,FEST_K[id])){const f=(S.festivals||[]).find(x=>x.id===id);if(f)return {text:tr(f.title,lg)+' · '+tr(f.when,lg)+'\n'+tr(f.text,lg)+festDates(id,t,lg),links:[[km?'សិល្បៈ និងប្រពៃណី':'Art & Tradition','#/p/culture']]}}}
   /* place or culture item by name (most specific) */
   const p=findPlace(t);
   /* culture questions */
   for(const q of FAQ){if(has(t,q.k)&&!(p&&p.cat!=='culture'&&!/history|ប្រវត្តិ/.test(t)))return {text:q[km?'km':'en'],links:[[km?'សិល្បៈ និងប្រពៃណី':'Art & Tradition','#/p/culture']]}}
   if(!p&&has(t,CULT)){const cs=(S.places||[]).filter(x=>x.cat==='culture');return {text:(km?'វប្បធម៌ និងប្រពៃណីខ្មែរ ដែលយើងណែនាំ៖\n':'Khmer culture and traditions we love:\n')+cs.map(x=>'• '+tr(x.title,lg)+' — '+tr(x.sum,lg)).join('\n').slice(0,1500)+(km?'\n\nសួរខ្ញុំពីណាមួយ ខ្ញុំនឹងប្រាប់បន្ថែម។':'\n\nAsk me about any of them and I will tell you more.'),links:[[km?'សិល្បៈ និងប្រពៃណី':'Art & Tradition','#/p/culture']]}}
   return bot0(text)}
+
+const FEST_DK={f1:'new year',f2:'visak',f8:'ploughing',f3:'pchum',f4:'water'};
+function festDates(id,t,lg){const C=(T.S&&T.S.c2)||{},key=FEST_DK[id];if(!key)return '';const km=lg==='km';let yrs=['2026','2027','2028'];const y=yrs.filter(x=>t.includes(x));if(y.length)yrs=y;
+  const rows=[];yrs.forEach(yy=>(C['d'+yy]||[]).forEach(d=>{if(norm(tr(d.title,'en')).includes(key))rows.push(tr(d.text,lg))}));
+  return rows.length?'\n\n'+(km?'កាលបរិច្ឆេទ៖ ':'Dates: ')+rows.join(' · '):''}
+function c2Find(t){const C=(T.S&&T.S.c2)||{};let best=null,sc=0;
+  ['classical','folk','social','foodMain','foodStreet','foodSweet','national'].forEach(k=>(C[k]||[]).forEach(x=>{const en=norm(tr(x.title,'en'));const keys=[en.replace(/\(.*?\)/g,'').trim(),tr(x.title,'km')];(en.match(/\((.*?)\)/g)||[]).forEach(m=>keys.push(m.slice(1,-1).trim()));
+    keys.slice().forEach(k2=>{if(k2&&/^robam /.test(k2))keys.push(k2.slice(6))});
+    keys.forEach(kk=>{kk=String(kk||'').trim();if(kk.length>=5&&t.includes(kk)&&kk.length>sc){best={x,k};sc=kk.length}})}));
+  return best}
 
 return {bot:bot,reset:function(){PLAN=null}}})(SITE,()=>BOTLANG);
 const QICONS=['wave','clock','bed','sun','pin','phone','mail','check','heart','temple','money','car','info','bolt','chat'];
