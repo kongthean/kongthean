@@ -169,6 +169,18 @@ h2{margin:2px 0 0;font-size:clamp(1.8rem,4.4vw,2.6rem);text-wrap:balance}
 .pgr{display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap;margin-top:26px}
 .pgn{min-width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-weight:600;cursor:pointer;display:grid;place-items:center;padding:0 6px}
 .pgn.on{background:var(--char);color:var(--char-ink);border-color:var(--char)}.pgn:disabled{opacity:.35;cursor:default}.pgd{color:var(--muted);padding:0 2px}
+/* ===== media section ===== */
+.msec{margin:26px 0 8px}.msh{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.msh h3{margin:0;font-size:1.15rem}.msh h3 small{color:var(--muted);font-weight:500;font-size:.85rem;margin-left:4px}.msa{display:flex;gap:6px;flex-wrap:wrap}
+.gal.mgal{display:grid;margin:0;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+@media(min-width:900px){.gal.mgal{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.mgal .galb{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;border:0;padding:0;background:var(--bg2);display:block}
+.mgal .galb img{width:100%;height:100%;object-fit:cover;display:block}
+.mgal .galb.big{grid-column:span 2;grid-row:span 2}
+.galb.gv .play{position:absolute;inset:0;margin:auto;width:46px;height:46px}
+.gdel{position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;display:grid;place-items:center;font-size:.9rem;cursor:pointer}
+.galed span{position:relative}
+.gvb{position:absolute;margin:4px;background:rgba(0,0,0,.6);color:#fff;font-style:normal;font-size:.7rem;padding:1px 5px;border-radius:5px}
 /* ===== Icon tiles ===== */
 .notice .nl{display:flex;gap:14px;flex:none;min-width:0}
 .tslide{position:relative}
@@ -923,19 +935,19 @@ function c2Blocks(){var C=c2(),km=lang==='km',h='';
   h+=grp(km?'ម្ហូបខ្មែរប្រពៃណី':'Traditional food & dishes',km?'ម្ហូបខ្មែរ':'Khmer kitchen',[['foodMain',km?'ម្ហូប និងសម្លល្បីៗ':'Iconic dishes & curries'],['foodStreet',km?'អាហារតាមផ្លូវ បាយ និងគុយទាវ':'Street food, rice & noodles'],['foodSweet',km?'នំ បង្អែម និងចំណីប្រពៃណី':'Snacks, desserts & traditional cakes']]);
   return h}
 function timeline(){
-  return S.festivals.length?'<div class="tl">'+S.festivals.map(function(f){return '<div class="ev" style="position:relative">'+(admin?'<button class="edbtn aonly" style="top:0" data-ed="festivals:'+f.id+'" aria-label="Edit">'+I('edit')+'</button>':'')+'<div class="when">'+esc(tr(f.when))+'</div><h3>'+esc(tr(f.title))+'</h3>'+(f.img?'<img class="evimg" loading="lazy" alt="" src="'+f.img+'">':'')+'<p>'+esc(tr(f.text))+'</p>'+creditOf(f.img)+'</div>'}).join('')+'</div>':'<div class="empty">'+ut('empty')+'</div>';
+  return S.festivals.length?'<div class="tl">'+S.festivals.map(function(f){return '<div class="ev" style="position:relative">'+(admin?'<button class="edbtn aonly" style="top:0" data-ed="festivals:'+f.id+'" aria-label="Edit">'+I('edit')+'</button>':'')+'<div class="when">'+esc(tr(f.when))+'</div><h3>'+esc(tr(f.title))+'</h3>'+(f.img?'<img class="evimg" loading="lazy" alt="" src="'+f.img+'">':'')+'<p>'+esc(tr(f.text))+'</p>'+creditOf(f.img)+mediaSec('festivals',f.id,f)+'</div>'}).join('')+'</div>':'<div class="empty">'+ut('empty')+'</div>';
 }
 function tipsBlock(){
   return '<div class="acc">'+S.tips.map(function(t,i){return '<details'+(i===0?' open':'')+'>'+ed('tips',t.id)+'<summary><span class="n">'+I(t.icon||'bulb')+'</span>'+esc(tr(t.title))+'</summary><div class="body">'+esc(tr(t.text))+'</div></details>'}).join('')+'</div>';
 }
 function stayBlock(){
-  var h='<section><div class="sh"><h2 class="emb">'+ut('areas')+'</h2>'+addBtn('stays','','Add area')+'</div>'+paged('stays',pinFirst(S.stays),function(s){return '<div class="post">'+ed('stays',s.id)+'<div class="ph">'+pic(s,tr(s.title),s.art||'river')+'</div><div class="tx"><div class="meta"><span>'+I('pin')+esc(tr(s.region))+'</span></div><h3>'+esc(tr(s.title))+'</h3><p>'+esc(tr(s.text))+'</p><a class="more" target="_blank" rel="noopener" href="'+mapsQ('hotels in '+(s.region&&s.region.en||'')+', Cambodia')+'">'+I('bed')+' '+ut('openMap')+'</a></div></div>'},6,'<div class="posts">')+'</section>';
+  var h='<section><div class="sh"><h2 class="emb">'+ut('areas')+'</h2>'+addBtn('stays','','Add area')+'</div>'+paged('stays',pinFirst(S.stays),function(s){return '<div class="post">'+ed('stays',s.id)+'<div class="ph">'+pic(s,tr(s.title),s.art||'river')+'</div><div class="tx"><div class="meta"><span>'+I('pin')+esc(tr(s.region))+'</span></div><h3>'+esc(tr(s.title))+'</h3><p>'+esc(tr(s.text))+'</p>'+mediaSec('stays',s.id,s)+'<a class="more" target="_blank" rel="noopener" href="'+mapsQ('hotels in '+(s.region&&s.region.en||'')+', Cambodia')+'">'+I('bed')+' '+ut('openMap')+'</a></div></div>'},6,'<div class="posts">')+'</section>';
   h+='<section><div class="sh"><h2 class="emb">'+ut('picks')+'</h2>'+addBtn('hotels','','Add hotel')+'</div>'+(S.hotels&&S.hotels.length?paged('hotels',pinFirst(S.hotels),function(x){return postList([x],'hotels').replace(/^<div class="posts">/,'').replace(/<\/div>$/,'')},6,'<div class="posts">'):postList([],'hotels'))+'</section>';
   return h;
 }
 function postList(list,key){
   if(!list.length)return '<div class="empty">'+I('chat')+'<span>'+ut('empty')+'</span><button class="btn sm" data-act="chat">'+ut('startChat')+'</button></div>';
-  return '<div class="posts">'+list.map(function(x){var lk=url(x.link);return '<div class="post">'+ed(key,x.id)+'<div class="ph">'+pic(x,tr(x.title),'river')+'</div><div class="tx">'+(x.date?'<div class="meta"><span>'+I('calendar')+esc(x.date)+'</span></div>':'')+'<h3>'+esc(tr(x.title))+'</h3><p>'+esc(tr(x.text))+'</p>'+gallery(x.gallery)+(playable(x)?'<a class="btn sm" style="justify-self:start" href="#"'+playAttr(x)+'>'+I('play')+ut('watch')+'</a>':'')+(lk&&!playable(x)?'<a class="more" target="_blank" rel="noopener" href="'+esc(lk)+'">'+ut('readMore')+' '+I('arrow')+'</a>':'')+'</div></div>'}).join('')+'</div>';
+  return '<div class="posts">'+list.map(function(x){var lk=url(x.link);return '<div class="post">'+ed(key,x.id)+'<div class="ph">'+pic(x,tr(x.title),'river')+'</div><div class="tx">'+(x.date?'<div class="meta"><span>'+I('calendar')+esc(x.date)+'</span></div>':'')+'<h3>'+esc(tr(x.title))+'</h3><p>'+esc(tr(x.text))+'</p>'+(admin?mediaSec(key,x.id,x):gallery(x.gallery))+(playable(x)?'<a class="btn sm" style="justify-self:start" href="#"'+playAttr(x)+'>'+I('play')+ut('watch')+'</a>':'')+(lk&&!playable(x)?'<a class="more" target="_blank" rel="noopener" href="'+esc(lk)+'">'+ut('readMore')+' '+I('arrow')+'</a>':'')+'</div></div>'}).join('')+'</div>';
 }
 function postsBlock(key){return '<section><div class="sh"><h2 class="emb">'+ut('latest')+'</h2>'+addBtn(key,'','Add post')+'</div>'+postList(S[key]||[],key)+'</section>'}
 var PG={},PLR={};
@@ -1132,7 +1144,7 @@ function renderPlace(p){
   h+='<div class="wrap"><section style="padding-top:32px"><div class="detail"><div class="prose">'+(admin?'<button class="btn sm aonly" data-ed="places:'+p.id+'" style="margin-bottom:14px">'+I('edit')+' Edit this place</button>':'')+
     '<p style="font-size:1.2rem;font-weight:500">'+esc(tr(p.sum))+'</p>'+creditOf(p.img)+String(tr(p.body)).split(/\n\n+/).filter(Boolean).map(function(x){return '<p>'+esc(x)+'</p>'}).join('')+
     (tr(p.tip)?'<div class="tipbox">'+I('bulb')+'<div><b>'+ut('tip')+'</b><div>'+esc(tr(p.tip))+'</div></div></div>':'')+
-    gallery(p.gallery)+(playable(p)?'<a class="btn" href="#"'+playAttr(p)+'>'+I('play')+ut('watch')+'</a>':(p.link?'<a class="btn" target="_blank" rel="noopener" href="'+esc(url(p.link))+'">'+I('play')+ut('watch')+'</a>':''))+'</div>';
+    mediaSec('places',p.id,p)+(!playable(p)&&p.link?'<a class="btn" target="_blank" rel="noopener" href="'+esc(url(p.link))+'">'+I('play')+ut('watch')+'</a>':'')+'</div>';
   h+='<aside class="facts">'+(tr(p.region)?fact('pin',locLabel(p),tr(p.region)):'')+(tr(p.built)?fact('clock',p.story?(lang==='km'?'សម័យកាល':'Period'):u('built'),tr(p.built)):'')+(tr(p.best)?fact('sun',p.story?(lang==='km'?'ពេលល្អទស្សនា':'Best time to visit'):u('bestTime'),tr(p.best)):'')+(tr(p.getting)?fact('car',p.story?(lang==='km'?'កន្លែងដែលអាចឃើញ':'Where to see it'):u('gettingThere'),tr(p.getting)):'')+
     '<div class="fact" style="grid-template-columns:1fr"><a class="btn" style="justify-content:center" target="_blank" rel="noopener" href="'+mapsQ(p.mapq||((p.title&&p.title.en)+', Cambodia'))+'">'+I('pin')+ut('openMap')+'</a></div></aside></div></section>';
   var rel=S.places.filter(function(x){return x.cat===p.cat&&x.id!==p.id}).slice(0,6);
@@ -1140,7 +1152,18 @@ function renderPlace(p){
   h+=band()+'</div>';
   return h;
 }
-function gallery(arr){if(!arr||!arr.length)return '';return '<div class="gal">'+arr.map(function(g,i){return '<button type="button" class="galb" data-zoom="'+i+'"><img loading="lazy" alt="" src="'+g+'"></button>'}).join('')+'</div>'}
+function gThumb(g){return typeof g==='string'?g:(g&&(g.p||g.img))||''}
+function gallery(arr){if(!arr||!arr.length)return '';return '<div class="gal">'+arr.map(function(g,i){if(g&&typeof g==='object'&&g.v){PLAY.push({kind:'file',src:g.v,poster:g.p||''});return '<a href="#" class="galb gv" data-play="'+(PLAY.length-1)+'">'+(g.p?'<img loading="lazy" alt="" src="'+g.p+'">':'')+'<span class="play">'+I('play')+'</span></a>'}return '<button type="button" class="galb" data-zoom="'+i+'"><img loading="lazy" alt="" src="'+gThumb(g)+'"></button>'}).join('')+'</div>'}
+function mediaSec(list,id,o){var g=(o.gallery||[]).slice(),hasMain=!!playable(o),n=g.length+(hasMain?1:0),km=lang==='km';
+  if(!n&&!admin)return '';
+  var h='<div class="msec"><div class="msh"><h3>'+(km?'រូបថត និងវីដេអូ':'Photos & videos')+(n?' <small>'+num(n)+'</small>':'')+'</h3>'+(admin?'<div class="msa aonly"><button class="btn sm soft" data-gm="'+list+'|'+id+'|photos">'+I('image')+' Add photos</button><button class="btn sm soft" data-gm="'+list+'|'+id+'|video">'+I('video')+' Add video</button><button class="btn sm soft" data-gm="'+list+'|'+id+'|online">'+I('globe')+' Online photo</button></div>':'')+'</div>';
+  if(!n)return h+'<p class="aonly" style="color:var(--muted);margin:0">No photos or videos yet. Add some to make this page come alive.</p></div>';
+  h+='<div class="gal mgal">';
+  if(hasMain){var pm=playable(o);PLAY.push(pm);h+='<a href="#" class="galb gv big" data-play="'+(PLAY.length-1)+'">'+((o.videoPoster||o.img)?'<img loading="lazy" alt="" src="'+(o.videoPoster||o.img)+'">':'')+'<span class="play">'+I('play')+'</span></a>'}
+  g.forEach(function(x,i){var del=admin?'<span class="gdel aonly" role="button" data-gx="'+list+'|'+id+'|'+i+'" aria-label="Remove">'+I('close')+'</span>':'';
+    if(x&&typeof x==='object'&&x.v){PLAY.push({kind:'file',src:x.v,poster:x.p||''});h+='<a href="#" class="galb gv" data-play="'+(PLAY.length-1)+'">'+(x.p?'<img loading="lazy" alt="" src="'+x.p+'">':'')+'<span class="play">'+I('play')+'</span>'+del+'</a>'}
+    else h+='<button type="button" class="galb" data-zoom="'+i+'"><img loading="lazy" alt="" src="'+gThumb(x)+'">'+del+'</button>'});
+  return h+'</div></div>'}
 function fact(ic,k,v){return '<div class="fact"><span class="fi">'+I(ic)+'</span><div><b>'+esc(k)+'</b><span>'+esc(v)+'</span></div></div>'}
 
 /* ---------- FOOTER ---------- */
@@ -1290,7 +1313,7 @@ function toast(t){var d=document.createElement('div');d.className='toast';d.text
 function copy(v){function ok(){toast(u('copied')+': '+v)}try{navigator.clipboard.writeText(v).then(ok,function(){toast(v)})}catch(e){toast(v)}}
 var stars=0;
 app.addEventListener('click',function(e){
-  var t=e.target.closest('button,a');if(!t)return;
+  var gxe=e.target.closest('[data-gx]');var t=gxe||e.target.closest('button,a');if(!t)return;
   if(editing&&e.target.closest('[data-edit]')&&!t.hasAttribute('data-ed')){e.preventDefault();return}
   var d=t.dataset;
   if(d.ed){e.preventDefault();e.stopPropagation();var a=d.ed.split(':');editItem(a[0],a[1]);return}
@@ -1306,7 +1329,13 @@ app.addEventListener('click',function(e){
   if(d.mv&&t.closest('.dash')){var mq=d.mv.split(':');moveItem(mq[0],mq[1],+mq[2]);return}
   if(d.rm){var rq=d.rm.split(':');if(!t.dataset.armed){t.dataset.armed=1;t.textContent='Tap again to delete';setTimeout(function(){if(t.isConnected){delete t.dataset.armed;t.textContent='Delete'}},3500);return}rmItem(rq[0],rq[1]);return}
   if(d.qm){e.preventDefault();e.stopPropagation();var mq2=d.qm.split('|');quickMedia(mq2[0],mq2[1],mq2[2]);return}
-  if(d.zoom!=null){e.preventDefault();zoom(t.querySelector('img').src);return}
+  if(d.gx){e.preventDefault();e.stopPropagation();var gq=d.gx.split('|'),go=getObj(gq[0],gq[1]);if(go&&go.gallery){if(!t.dataset.armed){t.dataset.armed=1;t.style.background='#b3362f';toast('Tap ✕ again to remove');return}go.gallery.splice(+gq[2],1);changed()}return}
+  if(d.gm){e.preventDefault();var mq=d.gm.split('|'),mo=getObj(mq[0],mq[1]);if(!mo)return;mo.gallery=mo.gallery||[];
+    if(mq[2]==='photos')pickImages(1600,function(L){mo.gallery=mo.gallery.concat(L);changed();toast(L.length+' photo'+(L.length>1?'s':'')+' added')});
+    else if(mq[2]==='video')quickVideo(function(r){mo.gallery.push({v:r.url,p:r.poster});changed()});
+    else onlinePicker('photo',mo.q||(mo.title&&mo.title.en?mo.title.en+' Cambodia':'Cambodia'),function(r){mo.gallery.push(r.img);setCredit(r.img,r);changed()});
+    return}
+  if(d.zoom!=null){e.preventDefault();var zi=t.querySelector('img');if(zi)zoom(zi.src);return}
   if(d.arr){editArr(d.arr);return}
   if(d.copy!=null){copy(d.copy);return}
   if(d.topic){chatTopic=d.topic;render();return}
@@ -1421,7 +1450,7 @@ var ICONS=['pin','temple','lotus','bed','compass','video','social','donate','bel
 function schemaOf(list){return SCHEMA[list]||SCHEMA.post}
 var SCHEMA={
  places:[['title','Name','bi'],['region','Location (province, city or country)','bi'],['loc','Location type','select:auto,country,capital,city,province,provinces,area,where'],['cat','Section','select:destination,temple,culture'],['img','Main photo','img'],['gallery','More photos','imgs'],['art','Drawing if no photo','select:hills,sea,river,temple,culture'],['featured','Show on home page','check'],['sum','Short summary','biarea'],['body','Full story (blank line = new paragraph)','biarea'],['built','Built / era (temples)','bi'],['best','Best time','bi'],['getting','Getting there','biarea'],['tip','Your tip','biarea'],['mapq','Google Maps search words','text'],['video','Video from your device','video'],['link','Or a video link','text']],
- festivals:[['title','Name','bi'],['when','When','bi'],['img','Photo','img'],['text','Description','biarea']],
+ festivals:[['title','Name','bi'],['when','When','bi'],['img','Photo','img'],['gallery','More photos','imgs'],['video','Video from your device','video'],['link','Or a video link','text'],['text','Description','biarea']],
  tips:[['title','Title','bi'],['icon','Icon','icon'],['text','Text','biarea']],
  stays:[['title','Area name','bi'],['region','Province','bi'],['img','Photo','img'],['gallery','More photos','imgs'],['art','Drawing if no photo','select:hills,sea,river,temple'],['text','Description','biarea']],
  hotels:[['title','Hotel name','bi'],['img','Photo','img'],['gallery','More photos','imgs'],['text','Why you like it','biarea'],['link','Booking or map link','text']],
@@ -1436,7 +1465,7 @@ function fieldHtml(f,v){var k=f[0],lab=f[1],t=f[2];v=v==null?'':v;
   if(t==='bi'||t==='biarea'){var a=t==='biarea';v=typeof v==='object'?v:{en:v,km:''};return '<div class="two">'+['en','km'].map(function(L){return '<label class="f">'+esc(lab)+' ('+(L==='en'?'English':'Khmer')+')'+(a?'<textarea data-k="'+k+'" data-l="'+L+'">'+esc(v[L]||'')+'</textarea>':'<input data-k="'+k+'" data-l="'+L+'" value="'+esc(v[L]||'')+'">')+'</label>'}).join('')+'</div>'}
   if(t==='img')return '<div class="imgpick"><div class="pv" data-pv="'+k+'">'+(v?'<img alt="" src="'+v+'">':'')+'</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm" type="button" data-pick="'+k+'">'+I('image')+' '+esc(lab)+'</button>'+'<button class="btn sm soft" type="button" data-online="'+k+'">'+I('globe')+' Find HD photo online</button>'+(v?'<button class="btn sm del" type="button" data-unpick="'+k+'">Remove</button>':'')+'</div></div>';
   if(t==='video'){var ok=S.media&&S.media.cloud&&S.media.preset;return '<div class="f" data-vbox="'+k+'"><b style="font-size:.84rem;color:var(--muted)">'+esc(lab)+'</b>'+(v?'<div class="vok">✅ Video uploaded. Now tap <b>Add</b> or <b>Update</b> below. It goes live automatically.</div><video src="'+esc(v)+'" controls playsinline style="width:100%;max-height:240px;border-radius:10px;background:#000;margin-top:6px"></video>':'<div class="vnone">No video uploaded yet.</div>')+'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;align-items:center">'+(ok?'<button class="btn sm" type="button" data-vup="'+k+'">'+I('video')+' '+(v?'Replace video':'Upload video')+'</button>':'<button class="btn sm soft" type="button" data-vsetup>'+I('video')+' Set up video upload first</button>')+'<button class="btn sm soft" type="button" data-vonline="'+k+'">'+I('globe')+' Find video online</button>'+(v?'<button class="btn sm del" type="button" data-vdel="'+k+'">Remove video</button>':'')+'</div><div class="vbar" hidden><div class="vfill"></div><span class="vtxt"></span></div><div class="verr" hidden></div></div>'}
-  if(t==='imgs'){v=Array.isArray(v)?v:[];return '<div class="f"><b style="font-size:.84rem;color:var(--muted)">'+esc(lab)+'</b><div class="galed" data-gal="'+k+'">'+v.map(function(g,i){return '<span><img alt="" src="'+g+'"><button type="button" data-gdel="'+k+':'+i+'" aria-label="Remove photo">✕</button></span>'}).join('')+'<button type="button" class="btn sm soft" data-gadd="'+k+'">'+I('plus')+' Add photos</button></div></div>'}
+  if(t==='imgs'){v=Array.isArray(v)?v:[];return '<div class="f"><b style="font-size:.84rem;color:var(--muted)">'+esc(lab)+'</b><div class="galed" data-gal="'+k+'">'+v.map(function(g,i){return '<span>'+(g&&g.v?'<i class="gvb">▶</i>':'')+'<img alt="" src="'+gThumb(g)+'"><button type="button" data-gdel="'+k+':'+i+'" aria-label="Remove photo">✕</button></span>'}).join('')+'<button type="button" class="btn sm soft" data-gadd="'+k+'">'+I('plus')+' Add photos</button></div></div>'}
   if(t==='check')return '<label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-k="'+k+'" style="width:auto"'+(v?' checked':'')+'> '+esc(lab)+'</label>';
   if(t.indexOf('select:')===0)return '<label class="f">'+esc(lab)+'<select data-k="'+k+'">'+t.slice(7).split(',').map(function(o){return '<option'+(o===v?' selected':'')+'>'+o+'</option>'}).join('')+'</select></label>';
   if(t==='icon')return '<label class="f">'+esc(lab)+'<select data-k="'+k+'">'+ICONS.map(function(o){return '<option'+(o===v?' selected':'')+'>'+o+'</option>'}).join('')+'</select></label>';
@@ -2172,7 +2201,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261003-1212',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261003-1301',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
