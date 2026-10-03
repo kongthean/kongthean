@@ -405,15 +405,19 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;'
 
 /* ---------- defaults ---------- */
 const DEFAULT_QUICK=[
- {icon:'wave',label:'Greeting',send:true,en:"Hi, this is Thean Thanks for waiting. How can I help you today?",km:"សួស្ដី ខ្ញុំ Thean អរគុណដែលបានរង់ចាំ។ តើខ្ញុំអាចជួយអ្វីបានខ្លះ?"},
+ {icon:'wave',label:'Greeting',send:true,en:"Hi! Thank you for waiting. How can we help you today?",km:"សួស្ដី! អរគុណដែលបានរង់ចាំ។ តើយើងអាចជួយអ្វីបានខ្លះថ្ងៃនេះ?"},
  {icon:'clock',label:'One moment',send:true,en:"Give me one moment, I'm checking that for you.",km:"សូមរង់ចាំបន្តិច ខ្ញុំកំពុងពិនិត្យឱ្យអ្នក។"},
  {icon:'bed',label:'Hotels',send:true,en:"I can recommend a few places to stay. Which town are you going to, and what is your budget per night?",km:"ខ្ញុំអាចណែនាំកន្លែងស្នាក់នៅមួយចំនួន។ តើអ្នកនឹងទៅក្រុងណា ហើយថវិកាប៉ុន្មានក្នុងមួយយប់?"},
  {icon:'sun',label:'Best time',send:true,en:"The best time is November to February: cool and dry. June to October is the green season, with rain most afternoons.",km:"ពេលល្អបំផុតគឺខែវិច្ឆិកា ដល់ខែកុម្ភៈ ដែលត្រជាក់ និងស្ងួត។ ខែមិថុនា ដល់ខែតុលា ជារដូវវស្សា មានភ្លៀងស្ទើររាល់រសៀល។"},
  {icon:'pin',label:'Location',send:false,en:"Here is the location on Google Maps: ",km:"នេះជាទីតាំងនៅលើ Google Maps៖ "},
  {icon:'phone',label:'Ask contact',send:true,en:"Could you share your phone number or Telegram? I'll contact you directly.",km:"សូមផ្ដល់លេខទូរស័ព្ទ ឬ Telegram របស់អ្នក ខ្ញុំនឹងទាក់ទងអ្នកដោយផ្ទាល់។"},
  {icon:'mail',label:'Collab',send:true,en:"Thanks for your interest in working together! Please send the details to info@kongthean.com and I'll get back to you.",km:"អរគុណដែលចាប់អារម្មណ៍សហការ! សូមផ្ញើព័ត៌មានលម្អិតមក info@kongthean.com ហើយខ្ញុំនឹងឆ្លើយតបវិញ។"},
- {icon:'check',label:'Thank you',send:true,en:"Thank you for chatting with me! Have a wonderful trip ",km:"អរគុណសម្រាប់ការជជែក! សូមឱ្យដំណើររបស់អ្នករីករាយ "}
+ {icon:'check',label:'Goodbye',send:true,en:"Thank you for chatting with us! Have a wonderful trip.",km:"អរគុណសម្រាប់ការជជែកជាមួយយើង! សូមឱ្យដំណើររបស់អ្នករីករាយ។"},
+ {icon:'chat',label:'Will contact',send:true,en:"Thank you! Our team will contact you soon with all the details. Goodbye.",km:"អរគុណ! ក្រុមការងាររបស់យើងនឹងទាក់ទងអ្នកក្នុងពេលឆាប់ៗ ជាមួយព័ត៌មានលម្អិត។ លាសិនហើយ។"},
+ {icon:'heart',label:'Pleasure',send:true,en:"It was a pleasure helping you. Message us any time if you need anything else!",km:"រីករាយណាស់ដែលបានជួយអ្នក។ ផ្ញើសារមកយើងពេលណាក៏បាន ប្រសិនបើត្រូវការអ្វីបន្ថែម!"},
+ {icon:'clock',label:'No reply',send:true,en:"Since we haven't heard back from you, we will close this chat now. Feel free to message us again any time. Thank you!",km:"ដោយសារយើងមិនទាន់ទទួលបានការឆ្លើយតបពីអ្នក យើងនឹងបិទការជជែកនេះ។ សូមផ្ញើសារមកម្ដងទៀតពេលណាក៏បាន។ អរគុណ!"}
 ];
+const LEAVE_DEF={en:'{name} has left the chat.',km:'{name} បានចាកចេញពីការជជែក។'};
 const CLOSE_DEF=[
  {en:"Thank you for chatting with us! Have a wonderful trip ",km:"អរគុណសម្រាប់ការជជែកជាមួយយើង! សូមឱ្យដំណើររបស់អ្នករីករាយ "},
  {en:"Thank you! Our team will contact you soon with all the details. Goodbye ",km:"អរគុណ! ក្រុមការងាររបស់យើងនឹងទាក់ទងអ្នកក្នុងពេលឆាប់ៗ ជាមួយព័ត៌មានលម្អិត។ លាសិនហើយ "},
@@ -489,7 +493,10 @@ function start(){
   meUnsub=DB.on('agents/'+me.uid,v=>{if(v){agent=v;drawTop()}});
   DB.get('settings/public').then(v=>{if(v&&v.waitMin)waitMin=+v.waitMin||10}).catch(()=>{});
   setInterval(expireWaiting,30000);
-  DB.get('settings/quick').then(v=>{if(v&&Array.isArray(v.items)&&v.items.length)quick=v.items;if(v&&Array.isArray(v.closing)&&v.closing.length)closing=v.closing;drawConv()}).catch(()=>{});
+  DB.get('settings/quick').then(v=>{if(v&&Array.isArray(v.items)&&v.items.length){quick=v.items;
+      if(!v.goodbyeMerged){const have=new Set(quick.map(x=>x.en));const add=(Array.isArray(v.closing)&&v.closing.length?v.closing:CLOSE_DEF).filter(x=>x.en&&!have.has(x.en)).map((x,i)=>({icon:['check','chat','heart','clock'][i%4],label:['Goodbye','Will contact','Pleasure','No reply'][i]||'Goodbye',send:true,en:x.en,km:x.km||''}));
+        quick=quick.concat(add);DB.set('settings/quick',{items:quick,goodbyeMerged:true,updatedAt:TS}).catch(()=>{})}}
+      drawConv()}).catch(()=>{});
   chatUnsub=DB.onRecent('chats','updatedAt',200,list=>{
     list.forEach(d=>{
       const id=d.id,prev=seen[id];
@@ -588,7 +595,7 @@ function drawConvHead(){
   h.innerHTML='<button class="back" id="bk" aria-label="Back">'+I('left')+'</button><span class="av">'+esc(vName(c)[0])+'</span><div class="who"><b>'+esc(vName(c))+'</b><small><span class="pill '+esc(c.status)+'">'+esc(c.status==='assigned'?'live · '+(c.agentName||''):c.status)+'</span> · started '+ago(c.createdAt)+' ago</small></div>'+
    (c.status==='assigned'&&c.agentUid===me.uid?'<button class="btn sm soft" id="tr" title="Transfer to another agent">'+I('swap')+' Transfer</button>':'')+(c.status==='closed'?'':'<button class="btn sm soft" id="cl">'+I(c.status==='assigned'?'door':'close')+' '+(c.status==='assigned'?'End chat':'Close chat')+'</button>');
   h.querySelector('#bk').onclick=()=>{sel=null;if(msgUnsub)msgUnsub();root.querySelector('#main').classList.remove('sel');drawList();drawConv()};
-  const cl=h.querySelector('#cl');if(cl)cl.onclick=()=>c.status==='assigned'?endSheet(c.id):closeChat(c.id);
+  const cl=h.querySelector('#cl');if(cl)cl.onclick=()=>closeChat(c.id);
   const trb=h.querySelector('#tr');if(trb)trb.onclick=()=>transferSheet(c.id);
   const inf=root.querySelector('#inf');
   inf.innerHTML=(c.contact?'<span>'+I('phone')+esc(c.contact)+'</span><button data-copy="'+esc(c.contact)+'">Copy</button>':'<span>'+I('user')+'No contact given</span>')+'<span>'+I('info')+(c.lang==='km'?'Khmer':'English')+'</span>'+(c.page?'<span>'+I('pin')+esc(c.page)+'</span>':'')+(c.ua&&/iPhone|Android/i.test(c.ua)?'<span>Mobile</span>':'<span>Desktop</span>');
@@ -616,6 +623,7 @@ function drawQuick(){
 }
 
 /* ---------- actions ---------- */
+function leaveText(lg,c){const nm=(c&&c.agentName)||(agent&&agent.name)||'Agent';const mineA=!c||c.agentUid===me.uid;const t=(mineA&&agent&&agent['leave'+(lg==='km'?'Km':'En')])||LEAVE_DEF[lg];return t.split('{name}').join(nm)}
 function joinText(lg){const t=(agent&&agent['join'+(lg==='km'?'Km':'En')])||JOIN_DEF[lg];return t.split('{name}').join((agent&&agent.name)||'Agent')}
 async function accept(id){
   try{
@@ -721,7 +729,7 @@ function draftReply(q,lg,v,c){
 }
 let armClose=null;
 async function closeChat(id){
-  if(armClose!==id){armClose=id;toast('Tap “Close chat” again to confirm');setTimeout(()=>{armClose=null},4000);return}
+  if(armClose!==id){armClose=id;toast((chats.find(x=>x.id===id)||{}).status==='assigned'?'Tap “End chat” again to end the chat':'Tap “Close chat” again to confirm');setTimeout(()=>{armClose=null},4000);return}
   armClose=null;const c=chats.find(x=>x.id===id)||{};const lg=c.lang==='km'?'km':'en';
   try{
     if(c.status==='waiting'){
@@ -730,6 +738,7 @@ async function closeChat(id){
       await DB.update('chats/'+id,{status:'bot',updatedAt:TS,lastMsg:'Closed before opening · customer told agents are busy',lastFrom:'bot',unreadAgent:0});
       toast('Closed. The customer was told all agents are busy.');
     }else if(c.status==='assigned'){
+      const lv=leaveText(lg,c);if(lv)await DB.push('messages/'+id,{from:'system',text:lv,ts:TS});
       await DB.push('messages/'+id,{from:'bot',text:ENDED[lg],ts:TS});
       await DB.update('chats/'+id,{status:'closed',closedAt:TS,updatedAt:TS,lastMsg:'Chat closed',lastFrom:'system',unreadAgent:0});
       toast('Chat closed');
@@ -764,15 +773,17 @@ function settings(){
   const m=modal('Settings','<label class="f">Your name shown to customers<input id="nm" value="'+esc(a.name||'')+'"></label>'+
    '<label class="f">Message customers see when you open a chat (English)<input id="je" value="'+esc(a.joinEn||JOIN_DEF.en)+'"></label>'+
    '<label class="f">Same message in Khmer<input id="jk" value="'+esc(a.joinKm||JOIN_DEF.km)+'"></label>'+
+   '<label class="f">Message customers see when you end a chat (English)<input id="le" value="'+esc(a.leaveEn||LEAVE_DEF.en)+'"></label>'+
+   '<label class="f">Same message in Khmer<input id="lk" value="'+esc(a.leaveKm||LEAVE_DEF.km)+'"></label>'+
    '<div class="note" id="pv"></div>'+
    '<label class="toggle"><span><b>Sound alerts</b><small>Play a chime for new chats and messages on this device.</small></span><input type="checkbox" id="so"'+(soundOn?' checked':'')+'></label>'+
    (isOwner()?'<label class="f">Minutes to wait for an agent before telling the customer all agents are busy (whole team)<input id="wm" type="number" min="1" max="120" value="'+waitMin+'"></label>':'')+
    '<div class="note">Alerts work while this page is open (a browser tab or the Home Screen app). Tip: on your phone, use <b>Share → Add to Home Screen</b> so the inbox opens like an app.</div>'+
    '<div class="row"><button class="btn soft" data-close type="button">Cancel</button><button class="btn" id="sv" type="button">Save</button></div>');
-  const pv=()=>{const n=m.querySelector('#nm').value.trim()||'Agent';m.querySelector('#pv').innerHTML='<b>Preview:</b> '+esc((m.querySelector('#je').value||JOIN_DEF.en).split('{name}').join(n))+'<br><small>Write <code>{name}</code> where your name should appear.</small>'};
+  const pv=()=>{const n=m.querySelector('#nm').value.trim()||'Agent';m.querySelector('#pv').innerHTML='<b>Preview:</b> '+esc((m.querySelector('#je').value||JOIN_DEF.en).split('{name}').join(n))+' … '+esc((m.querySelector('#le').value||LEAVE_DEF.en).split('{name}').join(n))+'<br><small>Write <code>{name}</code> where your name should appear.</small>'};
   m.addEventListener('input',pv);pv();
   m.querySelector('#sv').onclick=async()=>{soundOn=m.querySelector('#so').checked;setPref('sound',soundOn);
-    const up={name:(m.querySelector('#nm').value.trim()||'Agent').slice(0,40),joinEn:m.querySelector('#je').value.trim().slice(0,200)||JOIN_DEF.en,joinKm:m.querySelector('#jk').value.trim().slice(0,200)||JOIN_DEF.km};
+    const up={name:(m.querySelector('#nm').value.trim()||'Agent').slice(0,40),joinEn:m.querySelector('#je').value.trim().slice(0,200)||JOIN_DEF.en,joinKm:m.querySelector('#jk').value.trim().slice(0,200)||JOIN_DEF.km,leaveEn:m.querySelector('#le').value.trim().slice(0,200)||LEAVE_DEF.en,leaveKm:m.querySelector('#lk').value.trim().slice(0,200)||LEAVE_DEF.km};
     try{await DB.update('agents/'+me.uid,up);
       const wm=m.querySelector('#wm');if(wm){const v=Math.max(1,Math.min(120,parseInt(wm.value,10)||10));await DB.update('settings/public',{waitMin:v});waitMin=v}
       m.remove();toast('Saved');drawTop()}catch(e){toast('Not saved: '+(e.code||e.message))}};
@@ -805,7 +816,7 @@ function editQuick(){
     if(b.dataset.mv!=null){const i=+b.dataset.mv,j=i+(+b.dataset.d);if(j>=0&&j<L.length){[L[i],L[j]]=[L[j],L[i]];draw()}}
     if(b.id==='qa'){L.push({icon:'chat',label:'New reply',send:true,en:'',km:''});draw()}
     if(b.id==='qd'){L=JSON.parse(JSON.stringify(DEFAULT_QUICK));draw()}
-    if(b.id==='qs'){DB.set('settings/quick',{items:L.filter(x=>x.en||x.km),closing:closing,updatedAt:TS}).then(()=>{quick=L.filter(x=>x.en||x.km);m.remove();drawQuick();toast('Quick replies saved')}).catch(e=>toast('Not saved: '+(e.code||e.message)))}});
+    if(b.id==='qs'){DB.set('settings/quick',{items:L.filter(x=>x.en||x.km),goodbyeMerged:true,updatedAt:TS}).then(()=>{quick=L.filter(x=>x.en||x.km);m.remove();drawQuick();toast('Quick replies saved')}).catch(e=>toast('Not saved: '+(e.code||e.message)))}});
 }
 
 /* ---------- misc ---------- */
