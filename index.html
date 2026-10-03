@@ -178,6 +178,9 @@ h2{margin:2px 0 0;font-size:clamp(1.8rem,4.4vw,2.6rem);text-wrap:balance}
 .mgal .galb img{width:100%;height:100%;object-fit:cover;display:block}
 .mgal .galb.big{grid-column:span 2;grid-row:span 2}
 .galb.gv .play{position:absolute;inset:0;margin:auto;width:46px;height:46px}
+.vbig{display:grid;gap:4px;justify-items:start;text-align:left;width:100%;border:1.5px dashed var(--line);background:var(--bg);color:var(--ink);border-radius:14px;padding:14px;cursor:pointer}.vbig svg{font-size:1.4rem}.vbig small{color:var(--muted)}
+.vcov{display:flex;gap:12px;align-items:center;margin-top:6px}.vcovp{width:120px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:var(--bg2);display:grid;place-items:center;color:var(--muted);font-size:.75rem;flex:none}.vcovp img{width:100%;height:100%;object-fit:cover}
+.gcap{position:absolute;left:0;right:0;bottom:0;padding:16px 8px 6px;background:linear-gradient(transparent,rgba(0,0,0,.75));color:#fff;font-style:normal;font-size:.75rem;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gdel{position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;display:grid;place-items:center;font-size:.9rem;cursor:pointer}
 .galed span{position:relative}
 .gvb{position:absolute;margin:4px;background:rgba(0,0,0,.6);color:#fff;font-style:normal;font-size:.7rem;padding:1px 5px;border-radius:5px}
@@ -867,6 +870,9 @@ function embedOf(link){var u=String(link||'').trim();if(!u)return null;if(!/^htt
   if((m=u.match(/tiktok\.com\/.*video\/(\d+)/)))return {kind:'frame',src:'https://www.tiktok.com/embed/v2/'+m[1],tall:true};
   if(/\.(mp4|webm|mov|m4v)(\?|$)/i.test(u))return {kind:'file',src:u};
   return null}
+function ytId(link){var m=String(link||'').match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([\w-]{6,})/);return m?m[1]:''}
+function linkCover(link){var y=ytId(link);return y?'https://img.youtube.com/vi/'+y+'/hqdefault.jpg':''}
+function gItem(x){if(!x||typeof x!=='object')return null;if(x.v)return {kind:'file',src:x.v,poster:x.p||''};if(x.l)return embedOf(x.l);return null}
 function playable(v){if(!v)return null;if(v.video)return {kind:'file',src:v.video,poster:v.img||v.videoPoster||''};return embedOf(v.link)}
 function playAttr(v){var p=playable(v);if(!p)return '';PLAY.push(p);return ' data-play="'+(PLAY.length-1)+'"'}
 function playVideo(p){var z=document.createElement('div');z.className='modal vmodal';
@@ -876,7 +882,7 @@ function playVideo(p){var z=document.createElement('div');z.className='modal vmo
   z.style.background='rgba(0,0,0,.92)';z.addEventListener('click',function(e){if(e.target===z||e.target.closest('.ib')){var vv=z.querySelector('video');if(vv)vv.pause();z.remove()}});document.body.appendChild(z)}
 function videoFeature(v,small,edAct){
   var href=url(v.link),isV=!!playable(v);
-  var inner='<div class="ph">'+(v.img||v.videoPoster?'<img loading="lazy" alt="" src="'+(v.img||v.videoPoster)+'">':art('river','vid'))+(isV?'<span class="play">'+I('play')+'</span>':'')+'</div><div class="tx">'+(isV?'<div class="kick">'+ut('videos')+'</div>':'')+(tr(v.title)||isV?'<h3 class="emb" style="margin:0;font-size:clamp(1.5rem,3.4vw,2.1rem)">'+esc(tr(v.title)||u('watch'))+'</h3>':'')+(tr(v.text)?'<p>'+esc(tr(v.text))+'</p>':'')+(isV?'<span class="btn light sm" style="justify-self:start;align-self:flex-start">'+I('play')+ut('watch')+'</span>':'')+'</div>';
+  var vc=v.img||v.videoPoster||linkCover(v.link);var inner='<div class="ph">'+(vc?'<img loading="lazy" alt="" src="'+vc+'">':art('river','vid'))+(isV?'<span class="play">'+I('play')+'</span>':'')+'</div><div class="tx">'+(isV?'<div class="kick">'+ut('videos')+'</div>':'')+(tr(v.title)||isV?'<h3 class="emb" style="margin:0;font-size:clamp(1.5rem,3.4vw,2.1rem)">'+esc(tr(v.title)||u('watch'))+'</h3>':'')+(tr(v.text)?'<p>'+esc(tr(v.text))+'</p>':'')+(isV?'<span class="btn light sm" style="justify-self:start;align-self:flex-start">'+I('play')+ut('watch')+'</span>':'')+'</div>';
   var qmo=admin&&editing?(edAct==='msgvideo'?qmOverlay('path','message.video',v):qmOverlay('videos',v.id,v)):'';
   inner=inner.replace('<div class="ph">','<div class="ph">'+qmo);
   var eb=admin?(edAct?'<button class="edbtn aonly" data-act="'+edAct+'" aria-label="Edit photo or video">'+I('edit')+'</button>':ed('videos',v.id)):'';
@@ -983,7 +989,7 @@ app.addEventListener('keydown',function(e){var k=e.target.dataset&&e.target.data
 document.addEventListener('pointerdown',function(e){if(!e.target.closest||!e.target.closest('.srchw'))Object.keys(SUGCUR).forEach(hideSug)});
 function plRefresh(key){var el=app.querySelector('[data-pl="'+key+'"]');if(el&&PLR[key])el.innerHTML=PLR[key]()}
 app.addEventListener('input',function(e){var k=e.target.dataset&&e.target.dataset.sq;if(!k)return;PG[k]=PG[k]||{q:'',p:1};PG[k].q=e.target.value;PG[k].p=1;plRefresh(k);showSug(k,e.target.value);var sx=app.querySelector('[data-sx="'+k+'"]');if(sx)sx.hidden=!e.target.value});
-function videoCard(v){var lk=url(v.link),pa=playAttr(v);return '<a class="card" '+(pa?'href="#"'+pa:(lk?'target="_blank" rel="noopener" href="'+esc(lk)+'"':''))+'>'+ed('videos',v.id)+'<div class="ph" style="aspect-ratio:16/9">'+(v.img||!v.videoPoster?pic(v,tr(v.title),'river'):'<img loading="lazy" alt="" src="'+v.videoPoster+'">')+'<span class="play" style="width:58px;height:58px;font-size:1.4rem">'+I('play')+'</span></div><div class="tx"><h3>'+esc(tr(v.title))+'</h3>'+(tr(v.text)?'<p>'+esc(tr(v.text))+'</p>':'')+'</div></a>'}
+function videoCard(v){var lk=url(v.link),pa=playAttr(v);return '<a class="card" '+(pa?'href="#"'+pa:(lk?'target="_blank" rel="noopener" href="'+esc(lk)+'"':''))+'>'+ed('videos',v.id)+'<div class="ph" style="aspect-ratio:16/9">'+(v.img?pic(v,tr(v.title),'river'):(v.videoPoster||linkCover(v.link))?'<img loading="lazy" alt="" src="'+(v.videoPoster||linkCover(v.link))+'">':pic(v,tr(v.title),'river'))+'<span class="play" style="width:58px;height:58px;font-size:1.4rem">'+I('play')+'</span></div><div class="tx"><h3>'+esc(tr(v.title))+'</h3>'+(tr(v.text)?'<p>'+esc(tr(v.text))+'</p>':'')+'</div></a>'}
 function videosBlock(){
   return '<section><div class="sh"><h2 class="emb">'+ut('videos')+'</h2>'+addBtn('videos','','Add video')+'</div>'+paged('videos',pinFirst(visVideos()),videoCard,10)+'</section>';
 }
@@ -1152,16 +1158,30 @@ function renderPlace(p){
   h+=band()+'</div>';
   return h;
 }
-function gThumb(g){return typeof g==='string'?g:(g&&(g.p||g.img))||''}
-function gallery(arr){if(!arr||!arr.length)return '';return '<div class="gal">'+arr.map(function(g,i){if(g&&typeof g==='object'&&g.v){PLAY.push({kind:'file',src:g.v,poster:g.p||''});return '<a href="#" class="galb gv" data-play="'+(PLAY.length-1)+'">'+(g.p?'<img loading="lazy" alt="" src="'+g.p+'">':'')+'<span class="play">'+I('play')+'</span></a>'}return '<button type="button" class="galb" data-zoom="'+i+'"><img loading="lazy" alt="" src="'+gThumb(g)+'"></button>'}).join('')+'</div>'}
+function gThumb(g){return typeof g==='string'?g:(g&&(g.p||g.img||linkCover(g.l)))||''}
+function gallery(arr){if(!arr||!arr.length)return '';return '<div class="gal">'+arr.map(function(g,i){var gp=gItem(g);if(gp){PLAY.push(gp);var gt=gThumb(g);return '<a href="#" class="galb gv" data-play="'+(PLAY.length-1)+'">'+(gt?'<img loading="lazy" alt="" src="'+gt+'">':'')+'<span class="play">'+I('play')+'</span></a>'}return '<button type="button" class="galb" data-zoom="'+i+'"><img loading="lazy" alt="" src="'+gThumb(g)+'"></button>'}).join('')+'</div>'}
+function addVideoForm(mo){var cover='',km=false;
+  var m=modal('Add a video','<div class="vopt"><button type="button" class="vbig" data-vup>'+I('video')+'<b>Upload from your phone</b><small>Short videos, up to 100 MB. Plays on your website.</small></button></div>'+
+   '<div class="dfield"><b>Or paste a YouTube, Facebook or TikTok link</b><small style="color:var(--muted)">Best for long videos. It still plays inside your website.</small><input data-vl placeholder="https://youtube.com/watch?v=…" style="border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg);color:var(--ink)">'+
+   '<div class="vcov"><div class="vcovp" data-vcp></div><div style="display:grid;gap:6px"><b style="font-size:.85rem">Cover picture</b><small style="color:var(--muted)">Optional. YouTube videos get their own cover automatically.</small><button type="button" class="btn sm soft" data-vcov>'+I('image')+' Choose cover</button></div></div>'+
+   '<label class="f">Short caption (optional)<input data-vt placeholder="e.g. Pchum Ben at our village pagoda"></label>'+
+   '<div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-vadd>Add video</button></div></div>');
+  var inp=m.querySelector('[data-vl]'),pv=m.querySelector('[data-vcp]');
+  function prev(){var c=cover||linkCover(inp.value);pv.innerHTML=c?'<img alt="" src="'+c+'">':'<span>No cover</span>'}prev();inp.addEventListener('input',prev);
+  m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+    if(b.hasAttribute('data-vup')){m.remove();quickVideo(function(r){mo.gallery.push({v:r.url,p:r.poster});changed()})}
+    if(b.hasAttribute('data-vcov'))pickImage(1280,function(u){cover=u;prev()});
+    if(b.hasAttribute('data-vadd')){var l=inp.value.trim();if(!l){toast('Paste a video link, or tap Upload from your phone');return}if(!embedOf(l)){toast('This link cannot play on the website. Use a YouTube, Facebook or TikTok video link.');return}
+      var it={l:l};if(cover)it.p=cover;var t=m.querySelector('[data-vt]').value.trim();if(t)it.t={en:t,km:t};mo.gallery.push(it);m.remove();changed();toast('Video added')}});
+}
 function mediaSec(list,id,o){var g=(o.gallery||[]).slice(),hasMain=!!playable(o),n=g.length+(hasMain?1:0),km=lang==='km';
   if(!n&&!admin)return '';
   var h='<div class="msec"><div class="msh"><h3>'+(km?'រូបថត និងវីដេអូ':'Photos & videos')+(n?' <small>'+num(n)+'</small>':'')+'</h3>'+(admin?'<div class="msa aonly"><button class="btn sm soft" data-gm="'+list+'|'+id+'|photos">'+I('image')+' Add photos</button><button class="btn sm soft" data-gm="'+list+'|'+id+'|video">'+I('video')+' Add video</button><button class="btn sm soft" data-gm="'+list+'|'+id+'|online">'+I('globe')+' Online photo</button></div>':'')+'</div>';
   if(!n)return h+'<p class="aonly" style="color:var(--muted);margin:0">No photos or videos yet. Add some to make this page come alive.</p></div>';
   h+='<div class="gal mgal">';
-  if(hasMain){var pm=playable(o);PLAY.push(pm);h+='<a href="#" class="galb gv big" data-play="'+(PLAY.length-1)+'">'+((o.videoPoster||o.img)?'<img loading="lazy" alt="" src="'+(o.videoPoster||o.img)+'">':'')+'<span class="play">'+I('play')+'</span></a>'}
+  if(hasMain){var pm=playable(o);PLAY.push(pm);var mc=o.videoPoster||linkCover(o.link)||o.img;h+='<a href="#" class="galb gv big" data-play="'+(PLAY.length-1)+'">'+(mc?'<img loading="lazy" alt="" src="'+mc+'">':'')+'<span class="play">'+I('play')+'</span></a>'}
   g.forEach(function(x,i){var del=admin?'<span class="gdel aonly" role="button" data-gx="'+list+'|'+id+'|'+i+'" aria-label="Remove">'+I('close')+'</span>':'';
-    if(x&&typeof x==='object'&&x.v){PLAY.push({kind:'file',src:x.v,poster:x.p||''});h+='<a href="#" class="galb gv" data-play="'+(PLAY.length-1)+'">'+(x.p?'<img loading="lazy" alt="" src="'+x.p+'">':'')+'<span class="play">'+I('play')+'</span>'+del+'</a>'}
+    var xp=gItem(x);if(xp){PLAY.push(xp);var xt=gThumb(x);h+='<a href="#" class="galb gv'+(x.t?' cap':'')+'" data-play="'+(PLAY.length-1)+'">'+(xt?'<img loading="lazy" alt="" src="'+xt+'">':'')+'<span class="play">'+I('play')+'</span>'+(x.t?'<em class="gcap">'+esc(tr(x.t))+'</em>':'')+del+'</a>'}
     else h+='<button type="button" class="galb" data-zoom="'+i+'"><img loading="lazy" alt="" src="'+gThumb(x)+'">'+del+'</button>'});
   return h+'</div></div>'}
 function fact(ic,k,v){return '<div class="fact"><span class="fi">'+I(ic)+'</span><div><b>'+esc(k)+'</b><span>'+esc(v)+'</span></div></div>'}
@@ -1332,7 +1352,7 @@ app.addEventListener('click',function(e){
   if(d.gx){e.preventDefault();e.stopPropagation();var gq=d.gx.split('|'),go=getObj(gq[0],gq[1]);if(go&&go.gallery){if(!t.dataset.armed){t.dataset.armed=1;t.style.background='#b3362f';toast('Tap ✕ again to remove');return}go.gallery.splice(+gq[2],1);changed()}return}
   if(d.gm){e.preventDefault();var mq=d.gm.split('|'),mo=getObj(mq[0],mq[1]);if(!mo)return;mo.gallery=mo.gallery||[];
     if(mq[2]==='photos')pickImages(1600,function(L){mo.gallery=mo.gallery.concat(L);changed();toast(L.length+' photo'+(L.length>1?'s':'')+' added')});
-    else if(mq[2]==='video')quickVideo(function(r){mo.gallery.push({v:r.url,p:r.poster});changed()});
+    else if(mq[2]==='video')addVideoForm(mo);
     else onlinePicker('photo',mo.q||(mo.title&&mo.title.en?mo.title.en+' Cambodia':'Cambodia'),function(r){mo.gallery.push(r.img);setCredit(r.img,r);changed()});
     return}
   if(d.zoom!=null){e.preventDefault();var zi=t.querySelector('img');if(zi)zoom(zi.src);return}
@@ -2201,7 +2221,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261003-1301',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261003-1330',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
