@@ -124,6 +124,15 @@ h2{margin:2px 0 0;font-size:clamp(1.8rem,4.4vw,2.6rem);text-wrap:balance}
 .ogrid i{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.6);color:#fff;font-style:normal;font-size:.7rem;padding:2px 6px;border-radius:6px}
 .autobox{padding:14px 16px;border-radius:16px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 14%,var(--card,#fff)),var(--card,#fff));border:1px solid var(--line);margin:0 0 18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .autobox b{display:block}.autobox>div{flex:1 1 220px}
+/* ===== KHQR ===== */
+.khbox{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;background:var(--card,#fff);border:1px solid var(--line);border-radius:22px;padding:20px}
+@media(max-width:720px){.khbox{grid-template-columns:minmax(0,1fr)}}
+.khin{display:grid;gap:12px;align-content:start}.khin input{font-size:1.4rem;font-weight:600}
+.khcur{display:inline-flex;background:var(--bg2);border-radius:99px;padding:3px;justify-self:start}.khcur button{border:0;background:transparent;padding:7px 16px;border-radius:99px;font-weight:600;cursor:pointer;color:var(--muted)}.khcur button.on{background:var(--ink);color:#fff}
+.khchips{display:flex;gap:8px;flex-wrap:wrap}.khchips button{border:1px solid var(--line);background:var(--bg);border-radius:99px;padding:7px 14px;font-weight:600;cursor:pointer;color:var(--ink)}
+.khout{display:grid;justify-items:center;align-content:start;gap:12px;text-align:center}.khact{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.khsteps{text-align:left;font-size:.88rem;color:var(--muted);margin:0;padding-left:18px;display:grid;gap:4px;max-width:340px}
+.cardpay{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:16px 18px;border-radius:18px;background:var(--bg2)}.cardpay>svg{font-size:1.8rem}.cardpay>div{flex:1 1 220px}.cardpay small{display:block;color:var(--muted)}
 /* ===== Icon tiles ===== */
 .notice .nl{display:flex;gap:14px;flex:none;min-width:0}
 .tslide{position:relative}
@@ -160,6 +169,18 @@ h2{margin:2px 0 0;font-size:clamp(1.8rem,4.4vw,2.6rem);text-wrap:balance}
   background:linear-gradient(155deg,var(--stone) 0%,var(--stone-d) 100%);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 6px 14px rgba(40,46,47,.22);transition:transform .2s,box-shadow .2s}
 .tile .ic svg{filter:drop-shadow(0 2px 1px rgba(0,0,0,.25))}
+svg.i .d{fill:currentColor;opacity:.2;stroke:none}
+svg.mi{stroke-width:1.6}
+.tiles.st-color .tile .ic{background:var(--tb);color:var(--tf);box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 6px 16px -8px var(--tf);border:1px solid color-mix(in srgb,var(--tf) 14%,transparent)}
+.tiles.st-color .tile .ic svg,.tiles.st-outline .tile .ic svg{filter:none;font-size:2.1rem}
+.tiles.st-color .tile:hover .ic{transform:translateY(-4px);box-shadow:0 12px 22px -10px var(--tf)}
+.tiles.st-outline .tile .ic{background:var(--card,#fff);color:var(--ink);border:1.5px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.tiles.st-outline .tile .ic svg .d{opacity:0}
+.tiles.st-photo .tile .ic{background:var(--tb,#d9dede) center/cover no-repeat;color:var(--tf,#333);border-radius:50%;box-shadow:0 6px 16px rgba(0,0,0,.18)}
+.tiles.st-photo .tile .ic.ph{position:relative}
+.tiles.st-photo .tile .ic .bdg{position:absolute;right:-4px;bottom:-4px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:1rem;border:2px solid var(--bg,#fff)}
+.tiles.st-photo .tile .ic .bdg svg{font-size:1rem;filter:none}
+.tiles.st-photo .tile .ic .bdg svg .d{opacity:.35}
 .tile:hover .ic{transform:translateY(-4px) rotate(-2deg);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 12px 22px rgba(40,46,47,.28)}
 .tile b{font-size:.88rem;font-weight:600;line-height:1.25}
 .tile small{font-size:.74rem;color:var(--muted);line-height:1.3;margin-top:-6px}
@@ -684,8 +705,29 @@ function header(R){
    '<button class="ib" data-act="drawer" aria-label="'+esc(u('menu'))+'">'+I('menu')+'</button></div></div></header>';
 }
 
+var MI={
+ pin:'<path class="d" d="M3 6.5l6-2 6 2 6-2v13l-6 2-6-2-6 2z"/><path d="M3 6.5l6-2 6 2 6-2v13l-6 2-6-2-6 2z"/><path d="M9 4.5v13M15 6.5v13"/>',
+ temple:'<path class="d" d="M5 20v-5h2.5v-3H9V9h1.5V5.5L12 3l1.5 2.5V9H15v3h1.5v3H19v5z"/><path d="M3 20h18"/><path d="M5 20v-5h2.5v-3H9V9h1.5V5.5L12 3l1.5 2.5V9H15v3h1.5v3H19v5"/><path d="M10.5 20v-2.6a1.5 1.5 0 0 1 3 0V20"/>',
+ lotus:'<path class="d" d="M12 4.5c1.9 2.1 2.9 4.3 2.9 6.6S13.7 15.4 12 17c-1.7-1.6-2.9-3.6-2.9-5.9S10.1 6.6 12 4.5z"/><path d="M12 4.5c1.9 2.1 2.9 4.3 2.9 6.6S13.7 15.4 12 17c-1.7-1.6-2.9-3.6-2.9-5.9S10.1 6.6 12 4.5z"/><path d="M9.3 9.4C6.8 8.6 4.5 9 3.4 9.6 3.8 13.7 7 17 12 17s8.2-3.3 8.6-7.4c-1.1-.6-3.4-1-5.9-.2"/><path d="M8 20.5h8"/>',
+ bed:'<path class="d" d="M3 12.5h18V17H3z"/><path d="M3 7v13M21 12.5V20M3 17h18M3 12.5h18"/><path d="M6 12.5V10a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 12 10v2.5"/>',
+ compass:'<rect class="d" x="5" y="7" width="14" height="12.5" rx="2.2"/><rect x="5" y="7" width="14" height="12.5" rx="2.2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M9.5 11v5M14.5 11v5M8 19.5V21M16 19.5V21"/>',
+ video:'<rect class="d" x="3" y="5" width="18" height="14" rx="3.2"/><rect x="3" y="5" width="18" height="14" rx="3.2"/><path d="M10.2 9.3v5.4l4.6-2.7z" fill="currentColor"/>',
+ social:'<circle class="d" cx="9" cy="8" r="3.2"/><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19.5c0-3.2 2.4-5.6 5.5-5.6s5.5 2.4 5.5 5.6"/><path d="M15.8 5.3a2.7 2.7 0 0 1 0 5.4M17.4 14.2c2 .6 3.1 2.5 3.1 5.3"/>',
+ donate:'<path class="d" d="M12 11s-3.6-2.2-3.6-4.6A2.1 2.1 0 0 1 12 5.1a2.1 2.1 0 0 1 3.6 1.3C15.6 8.8 12 11 12 11z"/><path d="M12 11s-3.6-2.2-3.6-4.6A2.1 2.1 0 0 1 12 5.1a2.1 2.1 0 0 1 3.6 1.3C15.6 8.8 12 11 12 11z"/><path d="M3 14.5h3l3.4-1.4h3.1a1.5 1.5 0 0 1 0 3H10"/><path d="M12.6 16.1l5.1-2.5a1.6 1.6 0 0 1 2 2.4L14 20.5H6.2L3 19.4"/>',
+ bell:'<path class="d" d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
+ mail:'<rect class="d" x="3" y="5.5" width="18" height="13" rx="2.6"/><rect x="3" y="5.5" width="18" height="13" rx="2.6"/><path d="M4 7.6l8 5.9 8-5.9"/>',
+ thumb:'<path class="d" d="M4 5h16v11H9.2L4 20z"/><path d="M4 5h16v11H9.2L4 20z"/><path d="M12 7.4l1.05 2.1 2.3.33-1.67 1.62.4 2.3L12 12.66l-2.08 1.1.4-2.3-1.67-1.63 2.3-.33z"/>',
+ user:'<rect class="d" x="3" y="4.5" width="18" height="15" rx="3"/><rect x="3" y="4.5" width="18" height="15" rx="3"/><circle cx="9" cy="10.6" r="2.3"/><path d="M5.7 16.5c.4-1.8 1.7-2.9 3.3-2.9s2.9 1.1 3.3 2.9M14.6 9.7H18M14.6 13.2H18"/>',
+ star:'<path class="d" d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/><path d="M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/>'
+};
+var TCOL=[['#dce9f1','#2b5a72'],['#f1e5cf','#7a5626'],['#f3dfe0','#8c3945'],['#dde9de','#3a6143'],['#f2e1d6','#8a4826'],['#e6e1f1','#53447d'],['#d8ecea','#2a6762'],['#f3ebcd','#76611b'],['#efe4d6','#6f4f33'],['#dbe4f3','#33508a'],['#e6ecd5','#56662a'],['#e4e7ea','#3c4650']];
+function MIco(n){return '<svg class="i mi" viewBox="0 0 24 24" aria-hidden="true">'+(MI[n]||P[n]||P.info)+'</svg>'}
+function tileStyle(){return (S.ui&&S.ui.tiles)||'color'}
+function tileIc(p,i){var st=tileStyle(),c=TCOL[i%TCOL.length];
+  if(st==='photo'){var bf=p.bannerFrom&&placeById(p.bannerFrom),im=p.img||(bf&&bf.img)||'';if(im)return '<span class="ic ph" style="background-image:url(\''+im+'\')"><span class="bdg" style="background:'+c[1]+'">'+MIco(p.icon)+'</span></span>'}
+  return '<span class="ic" style="--tb:'+c[0]+';--tf:'+c[1]+'">'+MIco(p.icon)+'</span>'}
 function tilesHtml(row){
-  return (row?'<div class="tslide"><button class="tarw l" data-tmove="-1" aria-label="Previous">'+I('left')+'</button><button class="tarw r" data-tmove="1" aria-label="Next">'+I('right')+'</button>':'')+'<div class="tiles'+(row?' row':'')+'">'+S.pages.map(function(p){return '<a class="tile" style="position:relative" href="#/p/'+p.id+'">'+(admin?'<button class="edbtn aonly" style="top:-6px;right:4px;width:30px;height:30px" data-ed="pages:'+p.id+'" aria-label="Edit">'+I('edit')+'</button>':'')+'<span class="ic">'+I(p.icon)+'</span><b>'+esc(tr(p.label))+'</b>'+(tr(p.hint)?'<small>'+esc(tr(p.hint))+'</small>':'')+'</a>'}).join('')+(admin?'<button class="tile aonly" data-add="pages:custom" style="border:0;background:transparent;cursor:pointer;flex-direction:column"><span class="ic" style="background:var(--bg2);color:var(--ink);box-shadow:none;border:2px dashed var(--stone)">'+I('plus')+'</span><b>Add page</b><small>New menu item</small></button>':'')+'</div>'+(row?'<div class="tbar"><i></i></div></div>':'');
+  return (row?'<div class="tslide"><button class="tarw l" data-tmove="-1" aria-label="Previous">'+I('left')+'</button><button class="tarw r" data-tmove="1" aria-label="Next">'+I('right')+'</button>':'')+'<div class="tiles st-'+tileStyle()+(row?' row':'')+'">'+S.pages.map(function(p,pi){return '<a class="tile" style="position:relative" href="#/p/'+p.id+'">'+(admin?'<button class="edbtn aonly" style="top:-6px;right:4px;width:30px;height:30px" data-ed="pages:'+p.id+'" aria-label="Edit">'+I('edit')+'</button>':'')+tileIc(p,pi)+'<b>'+esc(tr(p.label))+'</b>'+(tr(p.hint)?'<small>'+esc(tr(p.hint))+'</small>':'')+'</a>'}).join('')+(admin?'<button class="tile aonly" data-add="pages:custom" style="border:0;background:transparent;cursor:pointer;flex-direction:column"><span class="ic" style="background:var(--bg2);color:var(--ink);box-shadow:none;border:2px dashed var(--stone)">'+I('plus')+'</span><b>Add page</b><small>New menu item</small></button>':'')+'</div>'+(row?'<div class="tbar"><i></i></div></div>':'');
 }
 function drawerHtml(){
   return '<div class="drawer" role="dialog" aria-label="'+esc(u('menu'))+'"><div class="wrap"><div class="head"><div><div class="kick">'+esc(u('menuSub'))+'</div><h2 class="emb">'+esc(u('explore'))+'</h2></div><button class="ib" data-act="drawer" aria-label="'+esc(u('close'))+'">'+I('close')+'</button></div>'+
@@ -833,11 +875,124 @@ function videosBlock(){
 function contactCard(k){var v=S.links[k];if(!v)return '';var lk=linkOf(k,v);
   if(k==='email'||k==='phone')return '<button class="ccard" data-copy="'+esc(v)+'"><span class="ic">'+I(k)+'</span><span style="min-width:0"><b>'+esc(u(k))+'</b><small>'+esc(v)+' · '+ut('copy')+'</small></span></button>';
   return '<a class="ccard" target="_blank" rel="noopener" href="'+esc(lk)+'"><span class="ic b-'+k+'">'+I(k)+'</span><span style="min-width:0"><b>'+esc(u(k))+'</b><small>'+esc(v)+'</small></span></a>'}
+/* Tiny QR code encoder (byte mode, error level M, versions 1-15). Returns a square boolean matrix. */
+var QR=(function(){
+  var EXP=new Array(512),LOG=new Array(256);(function(){var x=1;for(var i=0;i<255;i++){EXP[i]=x;LOG[x]=i;x<<=1;if(x&256)x^=0x11d}for(i=255;i<512;i++)EXP[i]=EXP[i-255]})();
+  function gmul(a,b){return a&&b?EXP[LOG[a]+LOG[b]]:0}
+  function rsGen(n){var g=[1];for(var i=0;i<n;i++){var r=new Array(g.length+1).fill(0);for(var j=0;j<g.length;j++){r[j]^=g[j];r[j+1]^=gmul(g[j],EXP[i])}g=r}return g}
+  function rsEnc(data,n){var g=rsGen(n),res=data.concat(new Array(n).fill(0));for(var i=0;i<data.length;i++){var c=res[i];if(c)for(var j=0;j<g.length;j++)res[i+j]^=gmul(g[j],c)}return res.slice(data.length)}
+  /* level M: [ecc per block, g1 blocks, g1 data, g2 blocks, g2 data] */
+  var BL=[null,[10,1,16,0,0],[16,1,28,0,0],[26,1,44,0,0],[18,2,32,0,0],[24,2,43,0,0],[16,4,27,0,0],[18,4,31,0,0],[22,2,38,2,39],[22,3,36,2,37],[26,4,43,1,44],[30,1,50,4,51],[22,6,36,2,37],[22,8,37,1,38],[24,4,40,5,41],[24,5,41,5,42]];
+  var AL=[null,[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70]];
+  function utf8(s){var o=[];s=unescape(encodeURIComponent(s));for(var i=0;i<s.length;i++)o.push(s.charCodeAt(i));return o}
+  function bch(v,poly,bits){var msb=function(x){var n=0;while(x){n++;x>>>=1}return n};var d=v<<(msb(poly)-1);while(msb(d)>=msb(poly))d^=poly<<(msb(d)-msb(poly));return (v<<(msb(poly)-1))|d}
+  function make(text){
+    var bytes=utf8(text),ver=0,b;
+    for(var v=1;v<=15;v++){b=BL[v];var cap=b[1]*b[2]+b[3]*b[4],need=4+(v<10?8:16)+bytes.length*8;if(need<=cap*8){ver=v;break}}
+    if(!ver)throw new Error('Text too long for QR');
+    var cap=b[1]*b[2]+b[3]*b[4],bits=[];
+    function put(val,n){for(var i=n-1;i>=0;i--)bits.push((val>>>i)&1)}
+    put(4,4);put(bytes.length,ver<10?8:16);bytes.forEach(function(x){put(x,8)});
+    put(0,Math.min(4,cap*8-bits.length));while(bits.length%8)bits.push(0);
+    var cw=[];for(var i=0;i<bits.length;i+=8){var x=0;for(var j=0;j<8;j++)x=(x<<1)|bits[i+j];cw.push(x)}
+    for(var pad=0;cw.length<cap;pad++)cw.push(pad%2?0x11:0xEC);
+    var blocks=[],eccs=[],k=0;
+    for(var g=0;g<2;g++){var nb=b[1+g*2],nd=b[2+g*2];for(var bi=0;bi<nb;bi++){var blk=cw.slice(k,k+nd);k+=nd;blocks.push(blk);eccs.push(rsEnc(blk,b[0]))}}
+    var out=[],mx=Math.max.apply(null,blocks.map(function(x){return x.length}));
+    for(i=0;i<mx;i++)blocks.forEach(function(x){if(i<x.length)out.push(x[i])});
+    for(i=0;i<b[0];i++)eccs.forEach(function(x){out.push(x[i])});
+    var N=ver*4+17,M=[],F=[];for(i=0;i<N;i++){M.push(new Array(N).fill(false));F.push(new Array(N).fill(false))}
+    function set(r,c,d){M[r][c]=d;F[r][c]=true}
+    function finder(r,c){for(var y=-1;y<=7;y++)for(var x=-1;x<=7;x++){var rr=r+y,cc=c+x;if(rr<0||cc<0||rr>=N||cc>=N)continue;var d=(y>=0&&y<=6&&(x===0||x===6))||(x>=0&&x<=6&&(y===0||y===6))||(y>=2&&y<=4&&x>=2&&x<=4);set(rr,cc,d)}}
+    finder(0,0);finder(0,N-7);finder(N-7,0);
+    for(i=8;i<N-8;i++){if(!F[6][i])set(6,i,i%2===0);if(!F[i][6])set(i,6,i%2===0)}
+    var al=AL[ver],L=al.length-1;al.forEach(function(r,ri){al.forEach(function(c,ci){if((ri===0&&ci===0)||(ri===0&&ci===L)||(ri===L&&ci===0))return;for(var y=-2;y<=2;y++)for(var x=-2;x<=2;x++)set(r+y,c+x,Math.max(Math.abs(x),Math.abs(y))!==1)})});
+    set(N-8,8,true);
+    /* reserve format + version areas */
+    for(i=0;i<9;i++){if(!F[8][i])set(8,i,false);if(!F[i][8])set(i,8,false)}
+    for(i=0;i<8;i++){if(!F[8][N-1-i])set(8,N-1-i,false);if(!F[N-1-i][8])set(N-1-i,8,false)}
+    if(ver>=7)for(i=0;i<6;i++)for(j=0;j<3;j++){set(i,N-11+j,false);set(N-11+j,i,false)}
+    /* data */
+    var dbits=[];out.forEach(function(x){for(var q=7;q>=0;q--)dbits.push((x>>>q)&1)});
+    var idx=0,up=true;
+    for(var col=N-1;col>0;col-=2){if(col===6)col--;
+      for(var t=0;t<N;t++){var r=up?N-1-t:t;for(var cc=0;cc<2;cc++){var c=col-cc;if(F[r][c])continue;M[r][c]=idx<dbits.length?!!dbits[idx]:false;idx++}}
+      up=!up}
+    var MASKS=[function(r,c){return (r+c)%2===0},function(r){return r%2===0},function(r,c){return c%3===0},function(r,c){return (r+c)%3===0},function(r,c){return (Math.floor(r/2)+Math.floor(c/3))%2===0},function(r,c){return (r*c)%2+(r*c)%3===0},function(r,c){return ((r*c)%2+(r*c)%3)%2===0},function(r,c){return ((r+c)%2+(r*c)%3)%2===0}];
+    function withMask(m){var A=M.map(function(row){return row.slice()});
+      for(var r=0;r<N;r++)for(var c=0;c<N;c++)if(!F[r][c]&&MASKS[m](r,c))A[r][c]=!A[r][c];
+      var fmt=bch((0<<3)|m,0x537)^0x5412,fb=function(i){return ((fmt>>>i)&1)===1};
+      for(var i=0;i<=5;i++)A[i][8]=fb(i);A[7][8]=fb(6);A[8][8]=fb(7);A[8][7]=fb(8);for(i=9;i<15;i++)A[8][14-i]=fb(i);
+      for(i=0;i<8;i++)A[8][N-1-i]=fb(i);for(i=8;i<15;i++)A[N-15+i][8]=fb(i);A[N-8][8]=true;
+      if(ver>=7){var vi=bch(ver,0x1f25);for(i=0;i<18;i++){var bit=((vi>>>i)&1)===1,a=Math.floor(i/3),bb=i%3+N-11;A[a][bb]=bit;A[bb][a]=bit}}
+      return A}
+    function penalty(A){var p=0,r,c;
+      for(r=0;r<N;r++){var run=1;for(c=1;c<N;c++){if(A[r][c]===A[r][c-1]){run++;if(run===5)p+=3;else if(run>5)p++}else run=1}}
+      for(c=0;c<N;c++){run=1;for(r=1;r<N;r++){if(A[r][c]===A[r-1][c]){run++;if(run===5)p+=3;else if(run>5)p++}else run=1}}
+      for(r=0;r<N-1;r++)for(c=0;c<N-1;c++){var v=A[r][c];if(v===A[r][c+1]&&v===A[r+1][c]&&v===A[r+1][c+1])p+=3}
+      var pat=[true,false,true,true,true,false,true,false,false,false,false],pat2=pat.slice().reverse();
+      for(r=0;r<N;r++)for(c=0;c<=N-11;c++){var h1=true,h2=true,v1=true,v2=true;for(var k=0;k<11;k++){if(A[r][c+k]!==pat[k])h1=false;if(A[r][c+k]!==pat2[k])h2=false;if(A[c+k][r]!==pat[k])v1=false;if(A[c+k][r]!==pat2[k])v2=false}p+=40*((h1?1:0)+(h2?1:0)+(v1?1:0)+(v2?1:0))}
+      var dark=0;for(r=0;r<N;r++)for(c=0;c<N;c++)if(A[r][c])dark++;p+=Math.floor(Math.abs(dark*100/(N*N)-50)/5)*10;return p}
+    var best=null,bp=1e9;for(var m=0;m<8;m++){var A=withMask(m),pp=penalty(A);if(pp<bp){bp=pp;best=A}}
+    return best;
+  }
+  return {make:make};
+})();
+
+/* ---------- KHQR (Bakong) ---------- */
+function khTlv(id,v){v=String(v);return id+(v.length<10?'0':'')+v.length+v}
+function khCrc(str){var c=0xFFFF;for(var i=0;i<str.length;i++){c^=str.charCodeAt(i)<<8;for(var j=0;j<8;j++)c=(c&0x8000)?((c<<1)^0x1021)&0xFFFF:(c<<1)&0xFFFF}return ('0000'+c.toString(16).toUpperCase()).slice(-4)}
+function khAscii(x,n){return String(x||'').normalize('NFD').replace(/[^\x20-\x7E]/g,'').trim().slice(0,n)}
+function khqrString(D,amt,cur){
+  var now=Date.now(),a=cur==='KHR'?String(Math.round(amt)):String(Math.round(amt*100)/100);
+  var s=khTlv('00','01')+khTlv('01',amt>0?'12':'11')+khTlv('29',khTlv('00',String(D.bakongId).trim()))+khTlv('52','5999')+khTlv('58','KH')+khTlv('59',khAscii(D.khName||S.brand.name||'THEAN',25)||'THEAN')+khTlv('60',khAscii(D.khCity||'Phnom Penh',15)||'Phnom Penh');
+  if(amt>0)s+=khTlv('99',khTlv('00',String(now))+khTlv('01',String(now+86400000)));
+  s+=khTlv('53',cur==='KHR'?'116':'840');if(amt>0)s+=khTlv('54',a);
+  s+='6304';return s+khCrc(s)}
+var KH={cur:null,amt:''};
+function khFmt(a,cur){return cur==='KHR'?Math.round(a).toLocaleString('en-US')+' ៛':'$'+(Math.round(a*100)/100).toFixed(2)}
+function khDraw(cv,D,amt,cur){
+  var str=khqrString(D,amt,cur),M=QR.make(str),N=M.length,W=600,pad=60,cell=Math.floor((W-pad*2)/N),qs=cell*N,H=300+qs+90;
+  cv.width=W;cv.height=H;var g=cv.getContext('2d');
+  g.fillStyle='#ffffff';g.fillRect(0,0,W,H);
+  g.fillStyle='#E1232E';g.beginPath();g.moveTo(0,0);g.lineTo(W,0);g.lineTo(W,90);g.lineTo(W-60,130);g.lineTo(0,130);g.closePath();g.fill();
+  g.fillStyle='#fff';g.font='bold 44px Arial,Helvetica,sans-serif';g.textAlign='center';g.fillText('KHQR',W/2,82);
+  g.textAlign='left';g.fillStyle='#222';g.font='600 28px Arial,Helvetica,sans-serif';g.fillText(khAscii(D.khName||S.brand.name,25),pad,180);
+  g.font='bold 48px Arial,Helvetica,sans-serif';g.fillText(amt>0?khFmt(amt,cur).replace(' ៛',''):'',pad,240);if(amt>0&&cur==='KHR'){g.font='600 26px Arial';g.fillText('KHR',pad+g.measureText(Math.round(amt).toLocaleString('en-US')).width+150,240)}
+  g.strokeStyle='#cfcfcf';g.setLineDash([10,8]);g.lineWidth=2;g.beginPath();g.moveTo(0,270);g.lineTo(W,270);g.stroke();g.setLineDash([]);
+  var x0=(W-qs)/2,y0=300;g.fillStyle='#000';for(var r=0;r<N;r++)for(var c=0;c<N;c++)if(M[r][c])g.fillRect(x0+c*cell,y0+r*cell,cell,cell);
+  var lw=Math.round(cell*7);g.fillStyle='#fff';g.fillRect(W/2-lw/2-4,y0+qs/2-lw/2-4,lw+8,lw+8);g.fillStyle='#E1232E';g.beginPath();g.arc(W/2,y0+qs/2,lw/2,0,Math.PI*2);g.fill();g.fillStyle='#fff';g.font='bold '+Math.round(lw*.42)+'px Arial';g.textAlign='center';g.fillText('៛$',W/2,y0+qs/2+lw*.15);
+  g.fillStyle='#888';g.font='20px Arial';g.fillText('Scan with any Bakong / KHQR banking app',W/2,H-36);
+  return str}
+function khBox(){var D=S.donate,km=lang==='km',cur=KH.cur||D.khCur||'USD',pre=cur==='KHR'?[10000,20000,40000,100000]:[5,10,20,50];
+  return '<div class="khbox"><div class="khin"><div class="khcur" role="group"><button type="button" data-kh="cur:USD" class="'+(cur==='USD'?'on':'')+'">USD $</button><button type="button" data-kh="cur:KHR" class="'+(cur==='KHR'?'on':'')+'">KHR ៛</button></div>'+
+   '<label class="f" style="margin:0">'+(km?'ចំនួនទឹកប្រាក់':'Amount')+'<input id="khamt" inputmode="decimal" placeholder="'+(cur==='KHR'?'20000':'10')+'" value="'+esc(KH.amt)+'"></label>'+
+   '<div class="khchips">'+pre.map(function(a){return '<button type="button" data-kh="amt:'+a+'">'+(cur==='USD'?'$'+a:khFmt(a,cur))+'</button>'}).join('')+'</div>'+
+   '<button class="btn" type="button" data-kh="go" style="justify-content:center">'+I('check')+(km?' បង្ហាញ QR សម្រាប់បង់':' Show QR to pay')+'</button></div><div class="khout" id="khout"><p style="color:var(--muted);margin:0">'+(km?'បញ្ចូលចំនួនទឹកប្រាក់ រួចចុច «បង្ហាញ QR» ។':'Enter an amount, then tap «Show QR to pay».')+'</p></div></div>'}
+function khAct(a,t){var D=S.donate,km=lang==='km';var inp=document.getElementById('khamt');if(inp)KH.amt=inp.value;
+  if(a.indexOf('cur:')===0){KH.cur=a.slice(4);KH.amt='';var box=t.closest('.khbox');box.outerHTML=khBox();return}
+  if(a.indexOf('amt:')===0){KH.amt=a.slice(4);if(inp)inp.value=KH.amt;a='go'}
+  if(a==='go'){var cur=KH.cur||D.khCur||'USD',v=parseFloat(String(KH.amt).replace(/[^0-9.]/g,''));var out=document.getElementById('khout');
+    if(!(v>0)){out.innerHTML='<p style="color:#b42318;margin:0">'+(km?'សូមបញ្ចូលចំនួនទឹកប្រាក់':'Please enter an amount')+'</p>';return}
+    if(cur==='USD'&&v>10000||cur==='KHR'&&v>40000000){out.innerHTML='<p style="color:#b42318;margin:0">'+(km?'ចំនួនធំពេក':'That amount is too large')+'</p>';return}
+    out.innerHTML='<canvas id="khcv" style="width:100%;max-width:320px;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.15)"></canvas><div class="khact"><button class="btn" type="button" data-kh="save">'+I('download')+(km?' រក្សាទុក QR':' Save QR image')+'</button></div><ol class="khsteps"><li>'+(km?'រក្សាទុករូប QR ឬថតអេក្រង់':'Save the QR image (or take a screenshot)')+'</li><li>'+(km?'បើកកម្មវិធីធនាគាររបស់អ្នក (ABA, ACLEDA, Wing, Bakong…) → ស្កេន → ជ្រើសរូបភាព':'Open your banking app (ABA, ACLEDA, Wing, Bakong…) → Scan → choose the photo')+'</li><li>'+(km?'ពិនិត្យឈ្មោះ និងចំនួន '+khFmt(v,cur)+' រួចបញ្ជាក់':'Check the name and the amount '+khFmt(v,cur)+', then confirm')+'</li></ol>';
+    try{khDraw(document.getElementById('khcv'),D,v,cur)}catch(e){out.innerHTML='<p>❌ '+esc(e.message)+'</p>'}return}
+  if(a==='save'){var cv=document.getElementById('khcv');if(!cv)return;cv.toBlob(function(bl){var f;try{f=new File([bl],'thean-khqr.png',{type:'image/png'})}catch(e){}
+      if(f&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:'KHQR'}).catch(function(){})}
+      else{var u=URL.createObjectURL(bl),l=document.createElement('a');l.href=u;l.download='thean-khqr.png';document.body.appendChild(l);l.click();setTimeout(function(){URL.revokeObjectURL(u);l.remove()},1500)}},'image/png');return}
+}
 function donateBlock(){
   var D=S.donate,h='<section><div class="sh"><h2 class="emb">'+ut('support')+'</h2>'+(admin?'<button class="btn sm soft aonly" data-arr="donate.ways">'+I('edit')+' Edit list</button>':'')+'</div><ul class="checks">'+D.ways.map(function(w,i){return '<li>'+I('check')+'<span'+E('donate.ways.'+i)+'>'+esc(tr(w))+'</span></li>'}).join('')+'</ul></section>';
-  h+='<section><div class="sh"><h2 class="emb">'+ut('payInfo')+'</h2>'+(admin?'<button class="btn sm soft aonly" data-act="donate">'+I('edit')+' Payment details</button>':'')+'</div>';
+  var kmL=lang==='km';
+  if(D.bakongId)h+='<section><div class="sh"><div><div class="kick">Bakong · KHQR</div><h2 class="emb">'+(kmL?'បរិច្ចាគតាម KHQR':'Donate with KHQR')+'</h2></div>'+(admin?'<button class="btn sm soft aonly" data-act="donate">'+I('edit')+' Payment details</button>':'')+'</div>'+khBox()+'</section>';
+  h+='<section><div class="cardpay">'+I('donate')+'<div><b>'+(kmL?'បង់តាមកាតអន្តរជាតិ (Visa / Mastercard)?':'Paying by international card (Visa / Mastercard)?')+'</b><small>'+(kmL?'ទាក់ទងក្រុមការងាររបស់យើង យើងនឹងផ្ញើតំណបង់ប្រាក់ជូនអ្នក។':'Contact our team and we will send you a secure payment link.')+'</small></div><a class="btn" href="#/p/contact">'+I('mail')+(kmL?' ទាក់ទងយើង':' Contact us')+'</a></div></section>';
+  if(!D.qr&&!D.accName&&D.bakongId)return h+donateTail(D);
+  h+='<section><div class="sh"><h2 class="emb">'+ut('payInfo')+'</h2>'+(admin&&!D.bakongId?'<button class="btn sm soft aonly" data-act="donate">'+I('edit')+' Payment details</button>':'')+'</div>';
   h+=(D.qr||D.accName)?'<div class="qr">'+(D.qr?'<img alt="Payment QR code" src="'+D.qr+'">':'<div></div>')+'<div style="display:grid;gap:10px">'+(D.bank?'<b style="font-size:1.2rem">'+esc(D.bank)+'</b>':'')+(D.accName?'<div><small style="color:var(--muted)">'+ut('accountName')+'</small><div>'+esc(D.accName)+'</div></div>':'')+(D.accNo?'<div><small style="color:var(--muted)">'+ut('accountNo')+'</small><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><b style="font-variant-numeric:tabular-nums;letter-spacing:.04em">'+esc(D.accNo)+'</b><button class="btn sm soft" data-copy="'+esc(D.accNo)+'">'+ut('copy')+'</button></div></div>':'')+'</div></div>':'<div class="empty">'+I('donate')+'<span>'+ut('joinTripSub')+'</span><button class="btn sm" data-act="chat">'+ut('startChat')+'</button></div>';
-  h+='</section><section><div class="sh"><h2 class="emb">'+ut('giveWell')+'</h2>'+(admin?'<button class="btn sm soft aonly" data-arr="donate.tips">'+I('edit')+' Edit list</button>':'')+'</div><div class="acc">'+D.tips.map(function(t,i){return '<details'+(i===0?' open':'')+'><summary><span class="n">'+I('info')+'</span><span'+E('donate.tips.'+i+'.title')+'>'+esc(tr(t.title))+'</span></summary><div class="body"'+E('donate.tips.'+i+'.text')+'>'+esc(tr(t.text))+'</div></details>'}).join('')+'</div></section>';
+  h+='</section>';return h+donateTail(D);
+}
+function donateTail(D){var h='';
+  h+='<section><div class="sh"><h2 class="emb">'+ut('giveWell')+'</h2>'+(admin?'<button class="btn sm soft aonly" data-arr="donate.tips">'+I('edit')+' Edit list</button>':'')+'</div><div class="acc">'+D.tips.map(function(t,i){return '<details'+(i===0?' open':'')+'><summary><span class="n">'+I('info')+'</span><span'+E('donate.tips.'+i+'.title')+'>'+esc(tr(t.title))+'</span></summary><div class="body"'+E('donate.tips.'+i+'.text')+'>'+esc(tr(t.text))+'</div></details>'}).join('')+'</div></section>';
   return h;
 }
 function contactBlock(){
@@ -1035,12 +1190,14 @@ app.addEventListener('click',function(e){
   if(d.topic){chatTopic=d.topic;render();return}
   if(d.star){stars=+d.star;t.parentNode.querySelectorAll('button').forEach(function(x,i){x.classList.toggle('on',i<stars)});return}
   if(d.send==='messenger'){e.preventDefault();var f=t.closest('form'),msg=composeText(f);copy(msg);window.open(linkOf('messenger',S.links.messenger),'_blank','noopener');return}
+  if(d.kh){e.preventDefault();khAct(d.kh,t);return}
   if(d.pageimg!=null){pickImage(1600,function(x){S.pages[+d.pageimg].img=x;changed()});return}
   switch(d.act){
     case 'chat':if(window.TheanChat)window.TheanChat.open();return;
     case 'drawer':drawer=!drawer;render();return;
     case 'slides':slidesForm();return;
     case 'back':e.preventDefault();goBack();return;
+    case 'tilestyle':tileStyleForm();return;
     case 'links':linksForm();return;
     case 'autophotos':autoPhotos();return;
     case 'donate':donateForm();return;
@@ -1320,7 +1477,7 @@ function dashSection(){
   }
   else if(sec==='settings'){
     h+=dHead('Contact & settings','Links, logo, storage and your team.');
-    h+='<div class="dcards">'+dCard('link','Contact links & numbers','Facebook, Telegram, phone, email, follower count…','data-act="links"')+dCard('image','Logo','The round logo at the top','data-act="logo"')+dCard('pin','Map image','Picture on the Cambodia map section','data-act="mapimg"')+dCard('video','Photo & video storage',mediaOK()?'Connected ✓ ('+esc(S.media.cloud)+')':'Not connected: tap to set up','data-act="media"')+dCard('users','Team & chat inbox','Invite staff, answer customers','onclick="location.href=\'agent\'"')+dCard('download','Backup copy','Download a copy of the website','data-act="export"')+'</div>';
+    h+='<div class="dcards">'+dCard('menu','Menu icon style','Colour, photo, outline or classic grey','data-act="tilestyle"')+dCard('link','Contact links & numbers','Facebook, Telegram, phone, email, follower count…','data-act="links"')+dCard('image','Logo','The round logo at the top','data-act="logo"')+dCard('pin','Map image','Picture on the Cambodia map section','data-act="mapimg"')+dCard('video','Photo & video storage',mediaOK()?'Connected ✓ ('+esc(S.media.cloud)+')':'Not connected: tap to set up','data-act="media"')+dCard('users','Team & chat inbox','Invite staff, answer customers','onclick="location.href=\'agent\'"')+dCard('download','Backup copy','Download a copy of the website','data-act="export"')+'</div>';
   }
   return h;
 }
@@ -1373,6 +1530,13 @@ function slidesForm(){
     if(b.dataset.snov!=null){delete L[+b.dataset.snov].video;draw()}
     if(b.hasAttribute('data-ok')){S.slides=L;cur=0;m.remove();changed()}});
 }
+function tileStyleForm(){
+  var opts=[['color','Colour','Each icon has its own soft colour'],['photo','Photo','Round photo of each page with a small icon'],['outline','Outline','Clean white buttons with dark icons'],['classic','Classic grey','The original grey buttons']];
+  var sample=S.pages.slice(0,4);
+  var m=modal('Menu icon style','<div style="display:grid;gap:10px">'+opts.map(function(o){var keep=S.ui&&S.ui.tiles;S.ui=S.ui||{};S.ui.tiles=o[0];var prev='<div class="tiles st-'+o[0]+'" style="grid-template-columns:repeat(4,1fr);gap:8px;pointer-events:none;transform:scale(.8);transform-origin:left top;margin-bottom:-18px">'+sample.map(function(p,i){return '<span class="tile">'+tileIc(p,i)+'<b style="font-size:.7rem">'+esc(tr(p.label))+'</b></span>'}).join('')+'</div>';S.ui.tiles=keep;
+    return '<button type="button" data-ts="'+o[0]+'" style="text-align:left;border:2px solid '+(tileStyle()===o[0]?'var(--ink)':'var(--line)')+';background:var(--bg);border-radius:16px;padding:12px;cursor:pointer;color:var(--ink)"><b>'+o[1]+(tileStyle()===o[0]?' ✓':'')+'</b><small style="display:block;color:var(--muted);margin-bottom:8px">'+o[2]+'</small>'+prev+'</button>'}).join('')+'</div>');
+  m.addEventListener('click',function(e){var b=e.target.closest('[data-ts]');if(!b)return;S.ui=S.ui||{};S.ui.tiles=b.dataset.ts;m.remove();changed();toast('✅ Menu style changed')});
+}
 function linksForm(){
   var L=S.links;
   var m=modal('Links, stats & chat',LINKS.map(function(k){return fieldHtml([k,UI.en[k]+(k==='messenger'?' (page name or m.me link)':k==='telegram'?' (username or t.me link)':k==='tiktok'?' (username, e.g. @thean)':''),'text'],L[k])}).join('')+
@@ -1384,9 +1548,9 @@ function linksForm(){
 }
 function donateForm(){
   var D=S.donate,qr=D.qr;
-  var m=modal('Payment details',fieldHtml(['qr','QR code image','img'],D.qr)+fieldHtml(['bank','Bank (e.g. ABA)','text'],D.bank)+fieldHtml(['accName','Account name','text'],D.accName)+fieldHtml(['accNo','Account number','text'],D.accNo)+'<div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-ok>Update</button></div>');
+  var m=modal('Payment details','<div style="padding:12px;border-radius:12px;background:var(--bg2);display:grid;gap:8px"><b>Bakong KHQR (customer types the amount, QR shows it)</b>'+fieldHtml(['bakongId','Bakong account ID (e.g. kong_thean@aba). Find it in the Bakong app or your bank app → KHQR','text'],D.bakongId)+fieldHtml(['khName','Name shown to payers (English letters, max 25)','text'],D.khName||'')+fieldHtml(['khCity','City','text'],D.khCity||'Phnom Penh')+fieldHtml(['khCur','Default currency','select:USD,KHR'],D.khCur||'USD')+'<small style="color:var(--muted)">Test it once: open the Donation page, make a QR for $0.10 and scan it with your own bank app before sharing.</small></div><b style="margin-top:6px">Or a fixed QR image & bank details</b>'+fieldHtml(['qr','QR code image','img'],D.qr)+fieldHtml(['bank','Bank (e.g. ABA)','text'],D.bank)+fieldHtml(['accName','Account name','text'],D.accName)+fieldHtml(['accNo','Account number','text'],D.accNo)+'<div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-ok>Update</button></div>');
   m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;if(b.dataset.pick)pickImage(800,function(x){qr=x;m.querySelector('[data-pv="qr"]').innerHTML='<img alt="" src="'+x+'">'});if(b.dataset.unpick){qr='';m.querySelector('[data-pv="qr"]').innerHTML=''}
-    if(b.hasAttribute('data-ok')){D.qr=qr;['bank','accName','accNo'].forEach(function(k){D[k]=m.querySelector('[data-k="'+k+'"]').value.trim()});m.remove();changed()}});
+    if(b.hasAttribute('data-ok')){D.qr=qr;['bakongId','khName','khCity','khCur','bank','accName','accNo'].forEach(function(k){D[k]=m.querySelector('[data-k="'+k+'"]').value.trim()});m.remove();changed()}});
 }
 function bioForm(){
   var m=modal('About me',fieldHtml(['bio','Bio (blank line = new paragraph)','biarea'],S.about.bio)+'<div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-ok>Update</button></div>');
@@ -1850,7 +2014,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261003-0601',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261003-0615',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
