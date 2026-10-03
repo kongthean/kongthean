@@ -113,6 +113,27 @@ h2{margin:2px 0 0;font-size:clamp(1.8rem,4.4vw,2.6rem);text-wrap:balance}
 .more{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:.92rem;text-decoration:none;color:var(--accent)}
 
 /* ===== Icon tiles ===== */
+.notice .nl{display:flex;gap:14px;flex:none;min-width:0}
+.tslide{position:relative}
+.tiles.row{display:flex;grid-template-columns:none;gap:6px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:8px 2px 12px;scroll-behavior:smooth}
+.tiles.row::-webkit-scrollbar{display:none}
+.tiles.row .tile{flex:0 0 calc((100% - 12px)/3.3);scroll-snap-align:start}
+@media(min-width:700px){.tiles.row .tile{flex-basis:132px}}
+.tbar{height:3px;border-radius:3px;background:color-mix(in srgb,var(--ink) 12%,transparent);margin:4px auto 0;max-width:140px;position:relative;overflow:hidden}
+.tbar i{position:absolute;top:0;bottom:0;left:0;border-radius:3px;background:var(--ink);transition:left .25s,width .25s}
+.tarw{position:absolute;top:38px;width:36px;height:36px;border-radius:50%;border:0;background:var(--card,#fff);color:var(--ink);box-shadow:0 4px 12px rgba(0,0,0,.18);display:none;place-items:center;cursor:pointer;z-index:2}
+.tarw.l{left:-8px}.tarw.r{right:-8px}
+@media(hover:hover) and (min-width:700px){.tarw{display:grid}}
+.sbar{margin:26px 0 0;padding:16px;border-radius:20px;background:var(--bg2);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.sbar>b{font-size:.95rem;flex:1 1 160px}
+.sbar .sic{display:flex;gap:10px;flex-wrap:wrap}
+.sbar a{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:1.3rem;text-decoration:none;box-shadow:0 4px 10px rgba(0,0,0,.15);transition:transform .15s}
+.sbar a:active,.sbar a:hover{transform:translateY(-2px) scale(1.05)}
+.sbar a.facebook{background:#1877F2}.sbar a.messenger{background:linear-gradient(45deg,#0a7cff,#a033ff,#ff5c87)}
+.sbar a.telegram{background:#27A7E7}.sbar a.tiktok{background:#111}.sbar a.youtube{background:#FF0000}
+.sbar a.instagram{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285AEB 90%)}
+.sbar a.tiktok svg{filter:drop-shadow(1.5px 1px 0 #ff0050) drop-shadow(-1px -1px 0 #00f2ea)}
+
 .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:22px 12px}
 @media(max-width:420px){.tiles{grid-template-columns:repeat(3,1fr)}}
 .tile{display:flex;flex-direction:column;align-items:center;gap:9px;text-decoration:none;color:var(--ink);text-align:center;min-width:0}
@@ -497,8 +518,8 @@ var app=document.getElementById('app');
 
 /* ---------- UI words ---------- */
 var UI={
-en:{storiesKick:'Angkor',latestKick:'News & stories',home:'Home',explore:'Explore',menuSub:'Everything on this site, one tap away',followers:'Followers',postsN:'Posts',provinces:'Provinces',temples:'Temples & sites',featured:'Featured places',featuredSub:'Where to go next',seeAll:'See all',season:'When to visit',seasonSub:'Cambodia has three seasons',cool:'Cool & dry',hot:'Hot',wet:'Green / rainy',bestTime:'Best time',gettingThere:'Getting there',region:'Province',built:'Built',openMap:'Open in Google Maps',tip:'Our tip',related:'You may also like',watch:'Watch video',videos:'Videos',map:'Cambodia map',mapSub:'Tap a province to open it on the map',tribute:'A message of gratitude',stories:'Temple stories',chatTitle:'Chat with us',chatSub:'Online · our team usually replies within hours',chatPick:'What do you want to talk about?',chatHow:'Choose where to continue the conversation:',copy:'Copy',copied:'Copied',empty:'Nothing here yet.',back:'Back',all:'All',name:'Your name',message:'Message',sendEmail:'Send by email',sendMsgr:'Copy & open Messenger',rate:'How was your experience?',thanks:'Thank you!',menu:'Menu',close:'Close',readMore:'Read more',joinTrip:'Plan a trip with us',joinTripSub:'Ask about routes, places to stay or collaborations.',startChat:'Start a chat',exploreBtn:'Explore destinations',watchBtn:'Watch videos',quickLinks:'Pages',follow:'Follow',aboutShort:'A Cambodian travel team sharing scenic routes, travel spots and peaceful places.',rights:'All rights reserved.',festivals:'Festivals through the year',arts:'Arts & living traditions',areas:'Where to stay, by area',picks:'Our picks',support:'Ways to support',payInfo:'Scan to support',giveWell:'Give responsibly',whatIDo:'What we share',collab:'Work with us',contactWays:'Reach us',writeMe:'Write to us',facebook:'Facebook',messenger:'Messenger',telegram:'Telegram',tiktok:'TikTok',youtube:'YouTube',instagram:'Instagram',email:'Email',phone:'Phone',address:'Address',website:'Website',topicTrip:'Plan a trip',topicCollab:'Collaboration',topicHotel:'Hotels',topicOther:'Something else',accountName:'Account name',accountNo:'Account number',latest:'Latest',filter:'Filter'},
-km:{storiesKick:'អង្គរ',latestKick:'ព័ត៌មាន និងរឿងរ៉ាវ',home:'ទំព័រដើម',explore:'ស្វែងយល់',menuSub:'គ្រប់យ៉ាងនៅលើគេហទំព័រនេះ ក្នុងមួយចុច',followers:'អ្នកតាមដាន',postsN:'ការបង្ហោះ',provinces:'ខេត្ត-រាជធានី',temples:'ប្រាសាទ និងរមណីយដ្ឋាន',featured:'កន្លែងពិសេស',featuredSub:'ទៅណាបន្ទាប់?',seeAll:'មើលទាំងអស់',season:'ពេលល្អសម្រាប់ទស្សនា',seasonSub:'កម្ពុជាមានបីរដូវ',cool:'រដូវត្រជាក់',hot:'រដូវក្ដៅ',wet:'រដូវវស្សា',bestTime:'ពេលល្អបំផុត',gettingThere:'របៀបធ្វើដំណើរ',region:'ខេត្ត',built:'កសាងឡើង',openMap:'បើកក្នុង Google Maps',tip:'គន្លឹះពីយើង',related:'កន្លែងផ្សេងទៀត',watch:'មើលវីដេអូ',videos:'វីដេអូ',map:'ផែនទីកម្ពុជា',mapSub:'ចុចលើខេត្ត ដើម្បីបើកលើផែនទី',tribute:'សារដឹងគុណ',stories:'រឿងរ៉ាវប្រាសាទ',chatTitle:'ជជែកជាមួយយើង',chatSub:'អនឡាញ · ជាធម្មតាឆ្លើយតបក្នុងរយៈពេលប៉ុន្មានម៉ោង',chatPick:'តើអ្នកចង់និយាយអំពីអ្វី?',chatHow:'ជ្រើសរើសកន្លែងបន្តការសន្ទនា៖',copy:'ចម្លង',copied:'បានចម្លង',empty:'មិនទាន់មានអ្វីនៅទីនេះទេ។',back:'ត្រឡប់',all:'ទាំងអស់',name:'ឈ្មោះរបស់អ្នក',message:'សារ',sendEmail:'ផ្ញើតាមអ៊ីមែល',sendMsgr:'ចម្លង ហើយបើក Messenger',rate:'តើបទពិសោធន៍របស់អ្នកយ៉ាងដូចម្ដេច?',thanks:'អរគុណ!',menu:'ម៉ឺនុយ',close:'បិទ',readMore:'អានបន្ត',joinTrip:'រៀបចំដំណើរជាមួយយើង',joinTripSub:'សួរយើងអំពីផ្លូវធ្វើដំណើរ កន្លែងស្នាក់នៅ ឬការសហការ។',startChat:'ចាប់ផ្ដើមជជែក',exploreBtn:'ស្វែងរកគោលដៅ',watchBtn:'មើលវីដេអូ',quickLinks:'ទំព័រ',follow:'តាមដាន',aboutShort:'ក្រុមការងារធ្វើដំណើរកម្ពុជា ចែករំលែកផ្លូវទេសភាព កន្លែងទេសចរណ៍ និងទីកន្លែងស្ងប់ស្ងាត់។',rights:'រក្សាសិទ្ធិគ្រប់យ៉ាង។',festivals:'ពិធីបុណ្យពេញមួយឆ្នាំ',arts:'សិល្បៈ និងប្រពៃណីរស់',areas:'កន្លែងស្នាក់នៅតាមតំបន់',picks:'ជម្រើសរបស់យើង',support:'វិធីគាំទ្រ',payInfo:'ស្កេនដើម្បីគាំទ្រ',giveWell:'បរិច្ចាគឱ្យបានត្រឹមត្រូវ',whatIDo:'អ្វីដែលយើងចែករំលែក',collab:'សហការជាមួយយើង',contactWays:'ទាក់ទងយើង',writeMe:'សរសេរមកយើង',facebook:'Facebook',messenger:'Messenger',telegram:'Telegram',tiktok:'TikTok',youtube:'YouTube',instagram:'Instagram',email:'អ៊ីមែល',phone:'ទូរស័ព្ទ',address:'អាសយដ្ឋាន',website:'គេហទំព័រ',topicTrip:'រៀបចំដំណើរ',topicCollab:'ការសហការ',topicHotel:'សណ្ឋាគារ',topicOther:'ផ្សេងៗ',accountName:'ឈ្មោះគណនី',accountNo:'លេខគណនី',latest:'ថ្មីៗ',filter:'តម្រង'}
+en:{storiesKick:'Angkor',latestKick:'News & stories',home:'Home',explore:'Explore',menuSub:'Everything on this site, one tap away',followers:'Followers',postsN:'Posts',provinces:'Provinces',temples:'Temples & sites',featured:'Featured places',featuredSub:'Where to go next',seeAll:'See all',season:'When to visit',seasonSub:'Cambodia has three seasons',cool:'Cool & dry',hot:'Hot',wet:'Green / rainy',bestTime:'Best time',gettingThere:'Getting there',region:'Province',built:'Built',openMap:'Open in Google Maps',tip:'Our tip',related:'You may also like',watch:'Watch video',videos:'Videos',map:'Cambodia map',mapSub:'Tap a province to open it on the map',tribute:'A message of gratitude',stories:'Temple stories',chatTitle:'Chat with us',chatSub:'Online · our team usually replies within hours',chatPick:'What do you want to talk about?',chatHow:'Choose where to continue the conversation:',copy:'Copy',copied:'Copied',empty:'Nothing here yet.',back:'Back',all:'All',name:'Your name',message:'Message',sendEmail:'Send by email',sendMsgr:'Copy & open Messenger',rate:'How was your experience?',thanks:'Thank you!',menu:'Menu',close:'Close',readMore:'Read more',joinTrip:'Plan a trip with us',joinTripSub:'Ask about routes, places to stay or collaborations.',startChat:'Start a chat',exploreBtn:'Explore destinations',watchBtn:'Watch videos',quickLinks:'Pages',follow:'Follow',followUs:'Follow & contact us',aboutShort:'A Cambodian travel team sharing scenic routes, travel spots and peaceful places.',rights:'All rights reserved.',festivals:'Festivals through the year',arts:'Arts & living traditions',areas:'Where to stay, by area',picks:'Our picks',support:'Ways to support',payInfo:'Scan to support',giveWell:'Give responsibly',whatIDo:'What we share',collab:'Work with us',contactWays:'Reach us',writeMe:'Write to us',facebook:'Facebook',messenger:'Messenger',telegram:'Telegram',tiktok:'TikTok',youtube:'YouTube',instagram:'Instagram',email:'Email',phone:'Phone',address:'Address',website:'Website',topicTrip:'Plan a trip',topicCollab:'Collaboration',topicHotel:'Hotels',topicOther:'Something else',accountName:'Account name',accountNo:'Account number',latest:'Latest',filter:'Filter'},
+km:{storiesKick:'អង្គរ',latestKick:'ព័ត៌មាន និងរឿងរ៉ាវ',home:'ទំព័រដើម',explore:'ស្វែងយល់',menuSub:'គ្រប់យ៉ាងនៅលើគេហទំព័រនេះ ក្នុងមួយចុច',followers:'អ្នកតាមដាន',postsN:'ការបង្ហោះ',provinces:'ខេត្ត-រាជធានី',temples:'ប្រាសាទ និងរមណីយដ្ឋាន',featured:'កន្លែងពិសេស',featuredSub:'ទៅណាបន្ទាប់?',seeAll:'មើលទាំងអស់',season:'ពេលល្អសម្រាប់ទស្សនា',seasonSub:'កម្ពុជាមានបីរដូវ',cool:'រដូវត្រជាក់',hot:'រដូវក្ដៅ',wet:'រដូវវស្សា',bestTime:'ពេលល្អបំផុត',gettingThere:'របៀបធ្វើដំណើរ',region:'ខេត្ត',built:'កសាងឡើង',openMap:'បើកក្នុង Google Maps',tip:'គន្លឹះពីយើង',related:'កន្លែងផ្សេងទៀត',watch:'មើលវីដេអូ',videos:'វីដេអូ',map:'ផែនទីកម្ពុជា',mapSub:'ចុចលើខេត្ត ដើម្បីបើកលើផែនទី',tribute:'សារដឹងគុណ',stories:'រឿងរ៉ាវប្រាសាទ',chatTitle:'ជជែកជាមួយយើង',chatSub:'អនឡាញ · ជាធម្មតាឆ្លើយតបក្នុងរយៈពេលប៉ុន្មានម៉ោង',chatPick:'តើអ្នកចង់និយាយអំពីអ្វី?',chatHow:'ជ្រើសរើសកន្លែងបន្តការសន្ទនា៖',copy:'ចម្លង',copied:'បានចម្លង',empty:'មិនទាន់មានអ្វីនៅទីនេះទេ។',back:'ត្រឡប់',all:'ទាំងអស់',name:'ឈ្មោះរបស់អ្នក',message:'សារ',sendEmail:'ផ្ញើតាមអ៊ីមែល',sendMsgr:'ចម្លង ហើយបើក Messenger',rate:'តើបទពិសោធន៍របស់អ្នកយ៉ាងដូចម្ដេច?',thanks:'អរគុណ!',menu:'ម៉ឺនុយ',close:'បិទ',readMore:'អានបន្ត',joinTrip:'រៀបចំដំណើរជាមួយយើង',joinTripSub:'សួរយើងអំពីផ្លូវធ្វើដំណើរ កន្លែងស្នាក់នៅ ឬការសហការ។',startChat:'ចាប់ផ្ដើមជជែក',exploreBtn:'ស្វែងរកគោលដៅ',watchBtn:'មើលវីដេអូ',quickLinks:'ទំព័រ',follow:'តាមដាន',followUs:'តាមដាន និងទាក់ទងយើង',aboutShort:'ក្រុមការងារធ្វើដំណើរកម្ពុជា ចែករំលែកផ្លូវទេសភាព កន្លែងទេសចរណ៍ និងទីកន្លែងស្ងប់ស្ងាត់។',rights:'រក្សាសិទ្ធិគ្រប់យ៉ាង។',festivals:'ពិធីបុណ្យពេញមួយឆ្នាំ',arts:'សិល្បៈ និងប្រពៃណីរស់',areas:'កន្លែងស្នាក់នៅតាមតំបន់',picks:'ជម្រើសរបស់យើង',support:'វិធីគាំទ្រ',payInfo:'ស្កេនដើម្បីគាំទ្រ',giveWell:'បរិច្ចាគឱ្យបានត្រឹមត្រូវ',whatIDo:'អ្វីដែលយើងចែករំលែក',collab:'សហការជាមួយយើង',contactWays:'ទាក់ទងយើង',writeMe:'សរសេរមកយើង',facebook:'Facebook',messenger:'Messenger',telegram:'Telegram',tiktok:'TikTok',youtube:'YouTube',instagram:'Instagram',email:'អ៊ីមែល',phone:'ទូរស័ព្ទ',address:'អាសយដ្ឋាន',website:'គេហទំព័រ',topicTrip:'រៀបចំដំណើរ',topicCollab:'ការសហការ',topicHotel:'សណ្ឋាគារ',topicOther:'ផ្សេងៗ',accountName:'ឈ្មោះគណនី',accountNo:'លេខគណនី',latest:'ថ្មីៗ',filter:'តម្រង'}
 };
 function u(k){var o=S.ui&&S.ui[k];if(o&&o[lang])return o[lang];return (UI[lang]&&UI[lang][k])||UI.en[k]||k}
 function ut(k){return admin?'<span data-edit="ui.'+k+'">'+esc(u(k))+'</span>':esc(u(k))}
@@ -577,7 +598,8 @@ function url(v){v=String(v||'').trim();if(!v)return '';if(!/^https?:\/\//i.test(
 function linkOf(k,v){v=String(v||'').trim();if(!v)return '';
   if(k==='email')return 'mailto:'+v; if(k==='phone')return 'tel:'+v.replace(/[^\d+]/g,'');
   if(k==='address')return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(v);
-  if(k==='messenger'&&v.indexOf('.')<0)v='m.me/'+v; if(k==='telegram'&&v.indexOf('.')<0)v='t.me/'+v.replace(/^@/,'');
+  var PRE={messenger:'m.me/',telegram:'t.me/',tiktok:'tiktok.com/@',youtube:'youtube.com/@',instagram:'instagram.com/',facebook:'facebook.com/'};
+  if(PRE[k]&&!/^https?:/i.test(v)&&v.indexOf('/')<0&&!/\.(com|me|net|org|kh|io|be|tv|app)$/i.test(v))v=PRE[k]+v.replace(/^@/,'');
   return url(v)}
 function mapsQ(q){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q)}
 function uid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
@@ -620,7 +642,7 @@ function render(){
   document.body.classList.toggle('editing',editing);
   document.title=(R.name==='p'&&page(R.id)?tr(page(R.id).label)+' · ':'')+(R.name==='place'&&placeById(R.id)?tr(placeById(R.id).title)+' · ':'')+'Thean · Cambodia Traveler';
   if(editing)app.querySelectorAll('[data-edit]').forEach(function(el){try{el.contentEditable='plaintext-only'}catch(x){el.contentEditable='true'}el.spellcheck=false});
-  startAuto();
+  startAuto();initTiles();
   try{document.dispatchEvent(new Event('thean:render'))}catch(e){}
 }
 
@@ -632,8 +654,8 @@ function header(R){
    '<button class="ib" data-act="drawer" aria-label="'+esc(u('menu'))+'">'+I('menu')+'</button></div></div></header>';
 }
 
-function tilesHtml(){
-  return '<div class="tiles">'+S.pages.map(function(p){return '<a class="tile" style="position:relative" href="#/p/'+p.id+'">'+(admin?'<button class="edbtn aonly" style="top:-6px;right:4px;width:30px;height:30px" data-ed="pages:'+p.id+'" aria-label="Edit">'+I('edit')+'</button>':'')+'<span class="ic">'+I(p.icon)+'</span><b>'+esc(tr(p.label))+'</b>'+(tr(p.hint)?'<small>'+esc(tr(p.hint))+'</small>':'')+'</a>'}).join('')+(admin?'<button class="tile aonly" data-add="pages:custom" style="border:0;background:transparent;cursor:pointer;flex-direction:column"><span class="ic" style="background:var(--bg2);color:var(--ink);box-shadow:none;border:2px dashed var(--stone)">'+I('plus')+'</span><b>Add page</b><small>New menu item</small></button>':'')+'</div>';
+function tilesHtml(row){
+  return (row?'<div class="tslide"><button class="tarw l" data-tmove="-1" aria-label="Previous">'+I('left')+'</button><button class="tarw r" data-tmove="1" aria-label="Next">'+I('right')+'</button>':'')+'<div class="tiles'+(row?' row':'')+'">'+S.pages.map(function(p){return '<a class="tile" style="position:relative" href="#/p/'+p.id+'">'+(admin?'<button class="edbtn aonly" style="top:-6px;right:4px;width:30px;height:30px" data-ed="pages:'+p.id+'" aria-label="Edit">'+I('edit')+'</button>':'')+'<span class="ic">'+I(p.icon)+'</span><b>'+esc(tr(p.label))+'</b>'+(tr(p.hint)?'<small>'+esc(tr(p.hint))+'</small>':'')+'</a>'}).join('')+(admin?'<button class="tile aonly" data-add="pages:custom" style="border:0;background:transparent;cursor:pointer;flex-direction:column"><span class="ic" style="background:var(--bg2);color:var(--ink);box-shadow:none;border:2px dashed var(--stone)">'+I('plus')+'</span><b>Add page</b><small>New menu item</small></button>':'')+'</div>'+(row?'<div class="tbar"><i></i></div></div>':'');
 }
 function drawerHtml(){
   return '<div class="drawer" role="dialog" aria-label="'+esc(u('menu'))+'"><div class="wrap"><div class="head"><div><div class="kick">'+esc(u('menuSub'))+'</div><h2 class="emb">'+esc(u('explore'))+'</h2></div><button class="ib" data-act="drawer" aria-label="'+esc(u('close'))+'">'+I('close')+'</button></div>'+
@@ -652,10 +674,10 @@ function renderHome(){
   h+='</div>';
   /* notice */
   var L=S.links;
-  h+='<div class="notice"><div class="wrap">'+I('bell')+'<span'+E('notice')+'>'+esc(tr(S.notice))+'</span>'+(L.facebook?'<a target="_blank" rel="noopener" href="'+esc(linkOf('facebook',L.facebook))+'">Facebook</a>':'')+(L.telegram?'<a target="_blank" rel="noopener" href="'+esc(linkOf('telegram',L.telegram))+'">Telegram</a>':'')+'</div></div>';
+  h+='<div class="notice"><div class="wrap">'+I('bell')+'<span'+E('notice')+'>'+esc(tr(S.notice))+'</span>'+'<span class="nl">'+(L.facebook?'<a target="_blank" rel="noopener" href="'+esc(linkOf('facebook',L.facebook))+'">Facebook</a>':'')+(L.telegram?'<a target="_blank" rel="noopener" href="'+esc(linkOf('telegram',L.telegram))+'">Telegram</a>':'')+(L.tiktok?'<a target="_blank" rel="noopener" href="'+esc(linkOf('tiktok',L.tiktok))+'">TikTok</a>':'')+'</span></div></div>';
   h+='<div class="wrap">';
   /* tiles */
-  h+='<section><div class="sh"><div><div class="kick">'+ut('menuSub')+'</div><h2 class="emb">'+ut('explore')+'</h2></div></div>'+tilesHtml();
+  h+='<section><div class="sh"><div><div class="kick">'+ut('menuSub')+'</div><h2 class="emb">'+ut('explore')+'</h2></div></div>'+tilesHtml(true)+socialBar();
   /* stats */
   var temples=S.places.filter(function(p){return p.cat==='temple'}).length;
   h+='<div class="stats"><div class="stat"><b'+E('stats.followers')+'>'+esc(S.stats.followers)+'</b><span>'+ut('followers')+'</span></div><div class="stat"><b'+E('stats.posts')+'>'+esc(S.stats.posts)+'</b><span>'+ut('postsN')+'</span></div><div class="stat"><b>'+num(25)+'</b><span>'+ut('provinces')+'</span></div><div class="stat"><b>'+num(temples)+'</b><span>'+ut('temples')+'</span></div></div></section>';
@@ -737,7 +759,7 @@ function renderPage(p,R){
   else if(k==='feedback')h+=feedbackBlock();
   else if(k==='about')h+=aboutBlock();
   /* other pages */
-  h+='<section><div class="sh"><h2 class="emb">'+ut('explore')+'</h2></div>'+tilesHtml()+'</section>';
+  h+='<section><div class="sh"><h2 class="emb">'+ut('explore')+'</h2></div>'+tilesHtml(true)+socialBar()+'</section>';
   h+=band()+'</div>';
   return h;
 }
@@ -824,6 +846,23 @@ function gallery(arr){if(!arr||!arr.length)return '';return '<div class="gal">'+
 function fact(ic,k,v){return '<div class="fact"><span class="fi">'+I(ic)+'</span><div><b>'+esc(k)+'</b><span>'+esc(v)+'</span></div></div>'}
 
 /* ---------- FOOTER ---------- */
+function socialBar(){
+  var L=S.links,ks=['facebook','messenger','telegram','tiktok','youtube','instagram'].filter(function(k){return L[k]});
+  if(!ks.length)return '';
+  return '<div class="sbar"><b>'+ut('followUs')+'</b><div class="sic">'+ks.map(function(k){return '<a class="'+k+'" target="_blank" rel="noopener" aria-label="'+esc(u(k))+'" title="'+esc(u(k))+'" href="'+esc(linkOf(k,L[k]))+'">'+I(k)+'</a>'}).join('')+'</div></div>';
+}
+var tPause=0,tTimer=null;
+function tStep(row){return row.querySelector('.tile')?row.querySelector('.tile').getBoundingClientRect().width+6:120}
+function tMove(row,d){var max=row.scrollWidth-row.clientWidth;if(max<=4)return;var x=row.scrollLeft+d*tStep(row);if(d>0&&row.scrollLeft>=max-4)x=0;else if(d<0&&row.scrollLeft<=4)x=max;row.scrollTo({left:x,behavior:'smooth'})}
+function tBar(row){var b=row.parentNode.querySelector('.tbar i');if(!b)return;var w=row.scrollWidth,c=row.clientWidth;if(w<=c+4){b.parentNode.style.visibility='hidden';return}b.parentNode.style.visibility='';b.style.width=(c/w*100)+'%';b.style.left=(row.scrollLeft/w*100)+'%'}
+function initTiles(){
+  clearInterval(tTimer);
+  var rows=app.querySelectorAll('.tiles.row');if(!rows.length)return;
+  rows.forEach(function(row){tBar(row);row.addEventListener('scroll',function(){tBar(row)},{passive:true});
+    ['touchstart','pointerdown','wheel'].forEach(function(ev){row.addEventListener(ev,function(){tPause=Date.now()+8000},{passive:true})})});
+  if(editing||admin||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  tTimer=setInterval(function(){if(Date.now()<tPause||document.hidden)return;app.querySelectorAll('.tiles.row').forEach(function(row){var r=row.getBoundingClientRect();if(r.bottom>0&&r.top<innerHeight)tMove(row,1)})},3000);
+}
 function footer(){
   var L=S.links;
   return '<footer><div class="wrap"><div class="fb"><div class="brand"><span class="logo">'+(S.brand.logo?'<img alt="" src="'+S.brand.logo+'">':'')+'</span><b>'+esc(S.brand.name)+'</b></div><p style="opacity:.75;max-width:24rem;font-size:.92rem">'+ut('aboutShort')+'</p><div class="soc">'+['facebook','messenger','telegram','tiktok','youtube','instagram'].filter(function(k){return L[k]}).map(function(k){return '<a target="_blank" rel="noopener" aria-label="'+k+'" href="'+esc(linkOf(k,L[k]))+'">'+I(k)+'</a>'}).join('')+'</div></div>'+
@@ -865,6 +904,7 @@ app.addEventListener('click',function(e){
   if(d.ed){e.preventDefault();e.stopPropagation();var a=d.ed.split(':');editItem(a[0],a[1]);return}
   if(d.add!=null){var b=d.add.split(':');editItem(b[0],null,b[1]);return}
   if(d.lang){lang=d.lang;try{localStorage.setItem('thean-lang',lang)}catch(x){}render();return}
+  if(d.tmove){var rw=t.closest('.tslide').querySelector('.tiles.row');tPause=Date.now()+8000;tMove(rw,+d.tmove);return}
   if(d.slide){go(cur+(+d.slide));startAuto();return}
   if(d.dot!=null){go(+d.dot);startAuto();return}
   if(d.play!=null&&!(editing&&e.target.closest('.edbtn'))){e.preventDefault();var pp=PLAY[+d.play];if(pp)playVideo(pp);return}
@@ -1205,7 +1245,7 @@ function slidesForm(){
 }
 function linksForm(){
   var L=S.links;
-  var m=modal('Links, stats & chat',LINKS.map(function(k){return fieldHtml([k,UI.en[k]+(k==='messenger'?' (page name or m.me link)':k==='telegram'?' (username or t.me link)':''),'text'],L[k])}).join('')+
+  var m=modal('Links, stats & chat',LINKS.map(function(k){return fieldHtml([k,UI.en[k]+(k==='messenger'?' (page name or m.me link)':k==='telegram'?' (username or t.me link)':k==='tiktok'?' (username, e.g. @thean)':''),'text'],L[k])}).join('')+
     '<div class="two">'+fieldHtml(['followers','Followers number','text'],S.stats.followers)+fieldHtml(['posts','Posts number','text'],S.stats.posts)+'</div>'+
     fieldHtml(['greet','Chat greeting','biarea'],S.chatGreet)+fieldHtml(['bname','Website name (top left)','text'],S.brand.name)+fieldHtml(['sub','Line under the name','bi'],S.brand.sub)+
     '<div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-ok>Update</button></div>');
@@ -1566,7 +1606,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261003-0318',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261003-0330',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
