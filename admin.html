@@ -870,7 +870,7 @@ function placeCard(p){
 var PLAY=[];
 function embedOf(link){var u=String(link||'').trim();if(!u)return null;if(!/^https?:/i.test(u))u='https://'+u;var m;
   if((m=u.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([\w-]{6,})/)))return {kind:'frame',src:'https://www.youtube.com/embed/'+m[1]+'?autoplay=1&rel=0&playsinline=1',tall:/shorts\//.test(u)};
-  if(/facebook\.com|fb\.watch/.test(u)&&/video|watch|reel|fb\.watch|\/v\//.test(u))return {kind:'frame',src:'https://www.facebook.com/plugins/video.php?show_text=false&autoplay=true&href='+encodeURIComponent(u),tall:/reel/.test(u)};
+  if(/(^|\.|\/\/)(facebook\.com|fb\.watch|fb\.com)\//.test(u)&&/video|watch|reel|fb\.watch|\/v\/|share\/(v|r)\/|story\.php/.test(u))return {kind:'frame',src:'https://www.facebook.com/plugins/video.php?show_text=false&autoplay=true&href='+encodeURIComponent(u),tall:/reel|share\/r\//.test(u)};
   if((m=u.match(/tiktok\.com\/.*video\/(\d+)/)))return {kind:'frame',src:'https://www.tiktok.com/embed/v2/'+m[1],tall:true};
   if(/\.(mp4|webm|mov|m4v)(\?|$)/i.test(u))return {kind:'file',src:u};
   return null}
@@ -1167,6 +1167,11 @@ function renderPlace(p){
 }
 function gThumb(g){return typeof g==='string'?g:(g&&(g.p||g.img||linkCover(g.l)))||''}
 function gallery(arr){if(!arr||!arr.length)return '';return '<div class="gal">'+arr.map(function(g,i){var gp=gItem(g);if(gp){PLAY.push(gp);var gt=gThumb(g);return '<a href="#" class="galb gv" data-play="'+(PLAY.length-1)+'">'+(gt?'<img loading="lazy" alt="" src="'+gt+'">':'')+'<span class="play">'+I('play')+'</span></a>'}return '<button type="button" class="galb" data-zoom="'+i+'"><img loading="lazy" alt="" src="'+gThumb(g)+'"></button>'}).join('')+'</div>'}
+function isShortTT(l){return /(vt|vm)\.tiktok\.com\/|tiktok\.com\/t\//i.test(String(l||''))}
+function resolveTT(l){return fetch('https://www.tiktok.com/oembed?url='+encodeURIComponent(l)).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(j){var id=j.embed_product_id||((String(j.html||'').match(/data-video-id="(\d+)"/)||[])[1]);if(!id)throw new Error('no id');
+  return {link:'https://www.tiktok.com/@'+(j.author_unique_id||'video')+'/video/'+id,thumb:j.thumbnail_url||'',title:j.title||''}})}
+function keepCover(u){if(!u||!mediaOK())return Promise.resolve(u);var M=S.media,fd=new FormData();fd.append('file',u);fd.append('upload_preset',M.preset);fd.append('folder','thean');
+  return fetch('https://api.cloudinary.com/v1_1/'+encodeURIComponent(M.cloud)+'/image/upload',{method:'POST',body:fd}).then(function(r){return r.json()}).then(function(j){return j.secure_url||u}).catch(function(){return u})}
 function addVideoForm(mo){var cover='',km=false;
   var m=modal('Add a video','<div class="vopt"><button type="button" class="vbig" data-vup>'+I('video')+'<b>Upload from your phone</b><small>Short videos, up to 100 MB. Plays on your website.</small></button></div>'+
    '<div class="dfield"><b>Or paste a YouTube, Facebook or TikTok link</b><small style="color:var(--muted)">Best for long videos. It still plays inside your website.</small><input data-vl placeholder="https://youtube.com/watch?v=…" style="border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg);color:var(--ink)">'+
@@ -1178,8 +1183,12 @@ function addVideoForm(mo){var cover='',km=false;
   m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
     if(b.hasAttribute('data-vup')){m.remove();quickVideo(function(r){mo.gallery.push({v:r.url,p:r.poster});changed()})}
     if(b.hasAttribute('data-vcov'))pickImage(1280,function(u){cover=u;prev()});
-    if(b.hasAttribute('data-vadd')){var l=inp.value.trim();if(!l){toast('Paste a video link, or tap Upload from your phone');return}if(!embedOf(l)){toast('This link cannot play on the website. Use a YouTube, Facebook or TikTok video link.');return}
-      var it={l:l};if(cover)it.p=cover;var t=m.querySelector('[data-vt]').value.trim();if(t)it.t={en:t,km:t};mo.gallery.push(it);m.remove();changed();toast('Video added')}});
+    if(b.hasAttribute('data-vadd')){var l=inp.value.trim(),t=m.querySelector('[data-vt]').value.trim();if(!l){toast('Paste a video link, or tap Upload from your phone');return}
+      var finish=function(link,cv){var it={l:link};if(cv)it.p=cv;if(t)it.t={en:t,km:t};mo.gallery.push(it);m.remove();changed();toast('Video added')};
+      if(isShortTT(l)){b.disabled=true;b.textContent='Checking link…';resolveTT(l).then(function(r){return (cover?Promise.resolve(cover):keepCover(r.thumb)).then(function(cv){finish(r.link,cv)})})
+        .catch(function(){b.disabled=false;b.textContent='Add video';toast('Could not read this TikTok link. Open the video in TikTok, tap Share → Copy link, and try again.')});return}
+      if(!embedOf(l)){toast('This link cannot play on the website. Use a YouTube, Facebook or TikTok video link.');return}
+      finish(l,cover)}});
 }
 function mediaSec(list,id,o){var g=(o.gallery||[]).slice(),hasMain=!!playable(o),n=g.length+(hasMain?1:0),km=lang==='km';
   if(!n&&!admin)return '';
@@ -1454,7 +1463,10 @@ window.addEventListener('beforeunload',function(e){if(admin&&dirty){e.preventDef
 function adminBar(){
   return '<div class="adminbar"><button class="btn sm" data-act="dash">'+I('left')+' Dashboard</button><button class="btn sm soft" data-act="edit">'+I(editing?'check':'edit')+(editing?' Preview':' Edit text on page')+'</button><span class="st" data-pubst>'+pubHtml()+'</span></div>';
 }
-function changed(re){dirty=true;editSeq++;try{localStorage.setItem(DRAFT_KEY,JSON.stringify(S))}catch(e){}
+var TTFIX={};
+function fixShortLinks(){var lists=['videos','places','news','social','hotels','stays','festivals'];(S.pages||[]).forEach(function(pg){if(pg.list)lists.push(pg.list)});
+  lists.forEach(function(k){(S[k]||[]).forEach(function(o){if(o&&isShortTT(o.link)&&!TTFIX[o.link]){var l0=o.link;TTFIX[l0]=1;resolveTT(l0).then(function(r){if(o.link!==l0)return;o.link=r.link;var need=!o.img&&!o.videoPoster;return (need?keepCover(r.thumb):Promise.resolve('')).then(function(cv){if(cv)o.img=cv;changed();toast('TikTok link ready to play on the website')})}).catch(function(){})}})})}
+function changed(re){setTimeout(fixShortLinks,50);dirty=true;editSeq++;try{localStorage.setItem(DRAFT_KEY,JSON.stringify(S))}catch(e){}
   if(re!==false)render();
   schedulePublish(re===false?2500:900);
 }
@@ -2229,7 +2241,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261003-1427',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261004-0046',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
