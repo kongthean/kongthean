@@ -958,8 +958,8 @@ function goBack(){var R=route();if(navDepth>0){navDepth-=2;history.back();return
 function header(R){
   var navIds=['destinations','temples','culture','food','stay','videos'];
   return '<header class="top"><div class="wrap"><a class="brand" href="#/"><span class="logo">'+(S.brand.logo?'<img alt="Thean logo" src="'+S.brand.logo+'">':'')+'</span><span><b>'+esc(S.brand.name)+'</b><small>'+esc(tr(S.brand.sub))+'</small></span></a>'+
-   '<nav class="nav" aria-label="Main">'+(R.name==='p'||R.name==='place'?backBtn():'')+navIds.map(function(id){var p=page(id);if(!p)return '';return '<a href="#/p/'+id+'" class="'+(R.name==='p'&&R.id===id?'on':'')+'">'+esc(tr(p.label))+'</a>'}).join('')+'</nav>'+
-   '<div class="tools">'+(R.name==='p'||R.name==='place'?backBtn():'')+'<div class="lang" role="group" aria-label="Language"><button data-lang="km" class="'+(lang==='km'?'on':'')+'">ខ្មែរ</button><button data-lang="en" class="'+(lang==='en'?'on':'')+'">EN</button></div>'+
+   '<nav class="nav" aria-label="Main">'+(R.name==='p'||R.name==='place'||R.name==='k'||R.name==='v'?backBtn():'')+navIds.map(function(id){var p=page(id);if(!p)return '';return '<a href="#/p/'+id+'" class="'+(R.name==='p'&&R.id===id?'on':'')+'">'+esc(tr(p.label))+'</a>'}).join('')+'</nav>'+
+   '<div class="tools">'+(R.name==='p'||R.name==='place'||R.name==='k'||R.name==='v'?backBtn():'')+'<div class="lang" role="group" aria-label="Language"><button data-lang="km" class="'+(lang==='km'?'on':'')+'">ខ្មែរ</button><button data-lang="en" class="'+(lang==='en'?'on':'')+'">EN</button></div>'+
    '<button class="ib" data-act="drawer" aria-label="'+esc(u('menu'))+'">'+I('menu')+'</button></div></div></header>';
 }
 
@@ -2150,7 +2150,10 @@ const FB_CONFIG = window.THEAN_FIREBASE;
 const ADMIN_PAGE = !!window.THEAN_ADMIN_PAGE;
 const T = window.TheanSite;
 let chat=null;
-const L = () => ((chat&&chat.lang)||T.lang)==='km'?'km':'en';
+let sesLang=null;
+const L = () => (sesLang||(chat&&chat.lang)||T.lang)==='km'?'km':'en';
+function detectLang(t){t=String(t||'');if(/[\u1780-\u17FF]/.test(t))return 'km';if(/[a-z]{3,}/i.test(t))return 'en';return null}
+function setLg(lg){if(!lg)return;sesLang=lg;if(chat&&chat.lang!==lg){chat.lang=lg;if(fb&&user&&!offline)fb.update(CP(),{lang:lg}).catch(()=>{})}}
 const W = {
  en:{title:'Chat with us',bot:'Assistant · instant answers',wait:'Connecting you to an agent…',live:'live agent',ph:'Type a message…',
    welcome:'សូមស្វាគមន៍! សូមជ្រើសរើសភាសាដែលអ្នកចង់ប្រើ។\n\nWelcome! Please select your preferred language.',
@@ -2237,7 +2240,7 @@ async function touch(extra){if(fb&&user&&chat)await fb.update(CP(),Object.assign
 const btnLive=lg=>[{l:w('bLive',lg),a:'live'}];
 async function pickLang(lg){
   try{T.setLang&&T.setLang(lg)}catch(e){}
-  try{await ensureChat(lg);await fb.update(CP(),{lang:lg});chat.lang=lg}catch(e){offline=true}
+  sesLang=lg;try{await ensureChat(lg);await fb.update(CP(),{lang:lg});chat.lang=lg}catch(e){offline=true}
   await say({from:'visitor',text:lg==='km'?'ភាសាខ្មែរ':'English'});
   await typeThen(1200,{from:'bot',text:w('intro',lg)});
   await touch({lastMsg:w('intro',lg).slice(0,120),lastFrom:'bot'});
@@ -2302,6 +2305,7 @@ async function send(text){
   text=String(text||'').trim().slice(0,1500);if(!text)return;
   const ta=root.querySelector('.tc-foot textarea');if(ta){ta.value='';ta.style.height=''}
   try{await ensureChat()}catch(e){offline=true}
+  setLg(detectLang(text));
   await say({from:'visitor',text});
   const live=chat&&(chat.status==='waiting'||chat.status==='assigned');
   if(!offline){const up={lastMsg:text.slice(0,120),lastFrom:'visitor',page:location.hash||'#/'};if(live)up.unreadAgent=INC(1);if(chat&&chat.status==='closed')up.status='bot';await touch(up)}
@@ -2317,6 +2321,7 @@ async function send(text){
   },650+Math.min(900,text.length*12));
 }
 async function act(a,label){
+  if(a.indexOf('lang:')!==0)setLg(detectLang(label));
   if(a.indexOf('lang:')===0)return pickLang(a.slice(5));
   if(a==='live')return goLive();
   if(a==='end')return endLive();
@@ -2638,7 +2643,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261004-0320',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261004-0350',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
