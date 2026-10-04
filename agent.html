@@ -119,6 +119,9 @@ label.f input,label.f textarea{border:1px solid var(--line);border-radius:12px;p
 .endopt button:hover{border-color:var(--stone)}.endopt small{display:block;color:var(--muted);font-size:.74rem;margin-top:4px}
 .agrow{display:flex;gap:10px;align-items:center;width:100%}
 .qrhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:.8rem;color:var(--muted);font-weight:600}
+.qlang{display:flex;gap:2px;background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:2px;margin-left:auto;margin-right:8px}
+.qrhead .qlang button{color:var(--muted);padding:3px 10px;border-radius:99px;font-size:.76rem}
+.qrhead .qlang button.on{background:var(--char);color:var(--char-ink)}
 .qrhead button{border:0;background:transparent;color:var(--accent);font-weight:600;cursor:pointer;font-size:.8rem}
 .comp{display:flex;gap:8px;padding:10px 12px;background:var(--surface);border-top:1px solid var(--line);align-items:flex-end}
 .comp textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:18px;padding:10px 14px;background:var(--bg);max-height:140px;min-height:44px;line-height:1.4}
@@ -451,7 +454,7 @@ const SYS={close:{en:()=>'This chat was closed. Thank you! Send a message any ti
 const pref=(k,d)=>{try{const v=localStorage.getItem('agent-'+k);return v==null?d:JSON.parse(v)}catch(e){return d}};
 const setPref=(k,v)=>{try{localStorage.setItem('agent-'+k,JSON.stringify(v))}catch(e){}};
 let wantOnline=true,connUnsub=null;
-let soundOn=pref('sound',true),waitMin=10;
+let soundOn=pref('sound',true),waitMin=10,qLang='auto',qlDrawn='';
 
 /* ---------- state ---------- */
 let me=null,agent=null,chats=[],firstSnap=true,sel=null,msgs=[],msgUnsub=null,chatUnsub=null,meUnsub=null,quick=DEFAULT_QUICK,closing=CLOSE_DEF,tab='open',search='',showQuick=pref('qr',true),beat=null,seen={};
@@ -598,7 +601,7 @@ function drawList(){
   l.querySelectorAll('.item').forEach(b=>b.onclick=()=>openChat(b.dataset.id));
 }
 function openChat(id){
-  sel=id;msgs=[];if(msgUnsub)msgUnsub();
+  if(sel!==id)qLang='auto';sel=id;msgs=[];if(msgUnsub)msgUnsub();
   root.querySelector('#main').classList.add('sel');
   drawList();drawConv();
   msgUnsub=DB.onMsgs('messages/'+id,list=>{msgs=list;drawMsgs()});
@@ -633,7 +636,7 @@ function drawConvHead(){
   const acc=root.querySelector('#acc');
   const mine=c.status==='assigned'&&c.agentUid===me.uid,other=c.status==='assigned'&&c.agentUid&&c.agentUid!==me.uid;
   acc.innerHTML=mine?'':'<div class="acceptbar"><span>'+(c.status==='waiting'?'<b>Waiting for an agent.</b> The customer does not know you are here until you open the chat.':other?'<b>'+esc(c.agentName||'Another agent')+'</b> is handling this chat. You are only viewing it.':c.status==='closed'?'This chat is closed. You are only viewing it.':'The customer is talking to the assistant. You are only viewing it.')+'</span><button class="btn ok sm" id="ac">'+I('check')+(other?' Take over':' Open chat')+'</button></div>';
-  const cp=root.querySelector('#comp'),qq=root.querySelector('#qr'),ab2=root.querySelector('#aib');if(cp)cp.hidden=!mine;if(ab2)ab2.hidden=!mine;if(qq)qq.hidden=!mine||!showQuick;if(qq&&mine&&showQuick&&!qq.innerHTML.trim())drawQuick();
+  const cp=root.querySelector('#comp'),qq=root.querySelector('#qr'),ab2=root.querySelector('#aib');if(cp)cp.hidden=!mine;if(ab2)ab2.hidden=!mine;if(qq)qq.hidden=!mine||!showQuick;if(qq&&mine&&showQuick&&(!qq.innerHTML.trim()||qlDrawn!==(c.lang==='km'?'km':'en')))drawQuick();
   const ab=acc.querySelector('#ac');if(ab)ab.onclick=()=>accept(c.id);
   const ty=typeof c.visitorTyping==='number'&&Date.now()-c.visitorTyping<6000;
   const mt=root.querySelector('#typ');if(mt)mt.hidden=!ty;
@@ -647,9 +650,12 @@ function drawMsgs(){
 function drawQuick(){
   const q=root.querySelector('#qr');if(!q)return;q.hidden=!showQuick;if(!showQuick)return;
   if(!(cur()&&cur().status==='assigned'&&cur().agentUid===me.uid)){q.hidden=true;return}
-  q.innerHTML='<div class="qrhead"><span>Quick replies · tap to send in the visitor’s language</span><button type="button" id="qe">Edit</button></div><div class="qrgrid">'+quick.map((x,i)=>'<button class="qrb" type="button" data-q="'+i+'" title="'+esc(x.en)+'"><span class="ic">'+I(x.icon)+'</span>'+esc(x.label)+'</button>').join('')+'</div>';
+  const cl=(cur()&&cur().lang==='km')?'km':'en',ql=qLang==='auto'?cl:qLang;qlDrawn=cl;
+  q.innerHTML='<div class="qrhead"><span>Quick replies</span><div class="qlang" role="group" aria-label="Send quick replies in">'+[['auto','Auto ('+(cl==='km'?'Khmer':'English')+')'],['km','ខ្មែរ'],['en','English']].map(o=>'<button type="button" data-ql="'+o[0]+'" class="'+(qLang===o[0]?'on':'')+'">'+esc(o[1])+'</button>').join('')+'</div><button type="button" id="qe">Edit</button></div><div class="qrgrid">'+quick.map((x,i)=>'<button class="qrb" type="button" data-q="'+i+'" title="'+esc(ql==='km'?(x.km||x.en):x.en)+'"><span class="ic">'+I(x.icon)+'</span>'+esc(x.label)+'</button>').join('')+'</div>';
   q.querySelector('#qe').onclick=editQuick;
-  q.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{const x=quick[+b.dataset.q],c=cur();let t=(c&&c.lang==='km'&&x.km)?x.km:x.en;
+  q.querySelectorAll('[data-ql]').forEach(b=>b.onclick=()=>{qLang=b.dataset.ql;drawQuick()});
+  q.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{const x=quick[+b.dataset.q],c=cur();const want=qLang==='auto'?((c&&c.lang==='km')?'km':'en'):qLang;let t=want==='km'?(x.km||''):(x.en||'');
+    if(!t){t=x.en||x.km||'';toast('This reply has no '+(want==='km'?'Khmer':'English')+' text yet. Tap Edit to add it. Sent in the other language for now.')}
     if(x.act==='ticket'){const tk=(c&&c.ticket)||newTicket();t=t.split('{ticket}').join(fmtTicket(tk));if(!c.ticket)DB.update('chats/'+c.id,{ticket:tk}).catch(()=>{});sendMsg(t);return}
     if(x.act&&x.act.indexOf('form:')===0){sendMsg(t,{form:x.act.slice(5)});return}
     if(x.send)sendMsg(t);else{const ta=root.querySelector('#ta');ta.value=t;ta.focus()}});
@@ -734,7 +740,7 @@ async function loadSite(){if(SITE.loaded)return;try{const c=await DB.get('site/c
 async function aiDraft(){
   const c=cur();if(!c)return;await loadSite();
   const vis=[];for(let i=msgs.length-1;i>=0;i--){const x=msgs[i];if(x.from==='visitor')vis.unshift(x.text);else if(x.from==='agent'&&vis.length)break}
-  const q=vis.slice(-3).join('\n'),lg=c.lang==='km'?'km':'en';
+  const q=vis.slice(-3).join('\n'),lg=qLang==='auto'?(c.lang==='km'?'km':'en'):qLang;
   if(aiFor!==q+sel){aiFor=q+sel;aiN=0}else aiN++;
   BOTLANG=lg;BOT.reset();
   const ta=root.querySelector('#ta');ta.value=draftReply(q,lg,aiN%3,c);ta.dispatchEvent(new Event('input'));ta.focus();
