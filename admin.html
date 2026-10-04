@@ -12,7 +12,13 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kongthean.com/">
 <meta property="og:site_name" content="Thean">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"TravelAgency","name":"Thean · Cambodia Traveler","alternateName":"ធាន","url":"https://kongthean.com/","description":"A Cambodian travel team sharing destinations, Angkor temple stories, Khmer culture, festivals, food, hotels and travel tips in English and Khmer.","areaServed":"Cambodia","email":"info@kongthean.com","sameAs":["https://www.facebook.com/fb.thean","https://www.tiktok.com/@tt.thean","https://www.youtube.com/@theancambodia","https://www.instagram.com/ig.thean","https://t.me/tg_thean"]}</script>
+<meta property="og:image" content="https://kongthean.com/logo.png">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TravelAgency","name":"Thean · Cambodia Traveler","alternateName":"ធាន","url":"https://kongthean.com/","logo":"https://kongthean.com/logo.png","image":"https://kongthean.com/logo.png","description":"A Cambodian travel team sharing destinations, Angkor temple stories, Khmer culture, festivals, food, hotels and travel tips in English and Khmer.","areaServed":"Cambodia","email":"info@kongthean.com","sameAs":["https://www.facebook.com/fb.thean","https://www.tiktok.com/@tt.thean","https://www.youtube.com/@theancambodia","https://www.instagram.com/ig.thean","https://t.me/tg_thean"]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Koulen&family=Kantumruy+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap">
@@ -3129,7 +3135,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261004-1256',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261004-1335',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
