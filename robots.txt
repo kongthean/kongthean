@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin.html
+Disallow: /agent
+Disallow: /agent.html
+
+Sitemap: https://kongthean.com/sitemap.xml
