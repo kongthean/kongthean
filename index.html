@@ -882,6 +882,27 @@ html[data-skin="apsara"][lang="km"] .emb{letter-spacing:0}
 /* chat header */
 [data-skin="apsara"] .tc-head{background:linear-gradient(160deg,#1f7a68,#0d1830)!important;color:#fbf3dc}
 @media (prefers-reduced-motion:reduce){[data-skin="apsara"] *,[data-skin="apsara"] *::before,[data-skin="apsara"] *::after{animation:none!important;transition:none!important}[data-skin="apsara"] .lant{display:none}}
+
+/* ===== Maintenance screen ===== */
+body.maint-on{overflow:hidden}
+body.maint-on #tc{z-index:90}
+#maint{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:20px 16px 110px;overflow:auto;background:color-mix(in srgb,var(--bg) 82%,transparent);-webkit-backdrop-filter:blur(10px) saturate(.7);backdrop-filter:blur(10px) saturate(.7)}
+#maint .mcard{width:min(520px,100%);background:var(--surface);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:28px 24px;text-align:center;display:grid;justify-items:center;gap:8px}
+#maint .logo{width:64px;height:64px}
+#maint .mico{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-size:1.6rem;margin-top:4px;animation:mspin 6s linear infinite}
+@keyframes mspin{to{transform:rotate(360deg)}}
+#maint h1{margin:6px 0 0;font-family:var(--display);font-weight:400;font-size:clamp(1.4rem,5vw,1.9rem);line-height:1.35;color:var(--ink)}
+#maint h2{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(1.25rem,4.4vw,1.6rem);letter-spacing:.03em;color:var(--ink)}
+#maint p{margin:0;color:var(--muted);font-size:.98rem;line-height:1.65;max-width:30rem;white-space:pre-line}
+#maint .mdiv{width:80px;height:1px;background:var(--line);margin:8px 0}
+#maint .mback{display:inline-flex;gap:6px;align-items:center;background:var(--bg2);border-radius:99px;padding:6px 14px;font-size:.88rem;font-weight:600;margin-top:4px}
+#maint .mchat{margin-top:12px;justify-content:center;text-align:left;padding:12px 20px}
+#maint .mchat span{display:grid;line-height:1.3}#maint .mchat small{font-weight:500;opacity:.8;font-size:.8rem}
+#maint .msoc{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;justify-content:center}
+#maint .msoc a{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--bg2);color:var(--ink);font-size:1.1rem;text-decoration:none}
+@media (prefers-reduced-motion:reduce){#maint .mico{animation:none}}
+.dmaint{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#b3362f;color:#fff;padding:10px 16px;font-size:.9rem}
+.dmaint span{flex:1;min-width:12rem}.dmaint .btn.sm{background:#fff;color:#b3362f}.dmaint .btn.soft{background:rgba(255,255,255,.18);color:#fff}
 </style>
 </head>
 <body>
@@ -969,6 +990,7 @@ var P={users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s
  wave:'<path d="M2.5 9c2.4 0 2.4-2 4.75-2S9.6 9 12 9s2.4-2 4.75-2S19.1 9 21.5 9M2.5 14c2.4 0 2.4-2 4.75-2S9.6 14 12 14s2.4-2 4.75-2 2.35 2 4.75 2M2.5 19c2.4 0 2.4-2 4.75-2S9.6 19 12 19s2.4-2 4.75-2 2.35 2 4.75 2"/>',
  hills:'<path d="M2 19l6-9 4 5 3-4 7 8z"/><circle cx="17" cy="6" r="2"/>'
 };
+P.gear='<circle cx="12" cy="12" r="3"/><path d="M12 2.8l1.6 2.4 2.8-.7.6 2.8 2.6 1.3-1.1 2.7 1.1 2.7-2.6 1.3-.6 2.8-2.8-.7L12 21.2l-1.6-2.4-2.8.7-.6-2.8L4.4 15.4l1.1-2.7-1.1-2.7L7 8.7l.6-2.8 2.8.7z"/>';
 P.trash='<path d="M4 7h16M10 11v6M14 11v6"/><path d="M6 7l1 12.5a1.5 1.5 0 0 0 1.5 1.5h7a1.5 1.5 0 0 0 1.5-1.5L18 7"/><path d="M9 7V4.5h6V7"/>';
 P.share='<circle cx="18" cy="5.5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="18.5" r="2.5"/><path d="M8.2 10.8l7.6-4.1M8.2 13.2l7.6 4.1"/>';
 P.bowl='<path d="M3 11.5h18a9 9 0 0 1-18 0z"/><path d="M8 20.5h8M9 3.5c-.8 1 .8 2-.1 3.2M12.5 3.5c-.8 1 .8 2-.1 3.2M16 3.5c-.8 1 .8 2-.1 3.2"/>';
@@ -1019,6 +1041,23 @@ window.TheanSite={get S(){return S},get lang(){return lang},icon:I,esc:esc,linkO
   setLang:function(l){if(l!==lang){lang=l;try{localStorage.setItem('thean-lang',lang)}catch(x){}render()}},
   setState:function(c,o){if(!c||typeof c!=='object')return;if(o&&o.v&&o.v===liveV)return;liveV=o&&o.v||liveV;var m=Object.assign({},EMBED,upgrade(JSON.parse(JSON.stringify(c))));BASE=m;if(!(admin&&dirty)){S=m;render()}}};
 window.TheanProv=PROV;
+/* ---------- maintenance mode ---------- */
+var MAINT=null;
+function maintPreview(){return /[?&]preview\b/.test(location.search||'')}
+var MT={en:{t:'Our website is under maintenance',p:'We are improving our website and will be back very soon. Thank you for your patience.',c:'You can still chat with our team.'},km:{t:'គេហទំព័ររបស់យើងកំពុងធ្វើការថែទាំ',p:'យើងកំពុងកែលម្អគេហទំព័រ ហើយនឹងត្រឡប់មកវិញក្នុងពេលឆាប់ៗនេះ។ សូមអរគុណចំពោះការអត់ធ្មត់របស់អ្នក។',c:'អ្នកនៅតែអាចជជែកជាមួយក្រុមការងាររបស់យើងបាន។'}};
+function showMaint(){var el=document.getElementById('maint'),on=!!(MAINT&&MAINT.on)&&!ADMIN_PAGE&&!maintPreview();
+  document.body.classList.toggle('maint-on',on);try{app.inert=on}catch(e){}
+  if(!on){if(el)el.remove();return}
+  if(!el){el=document.createElement('div');el.id='maint';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-label',MT.en.t);document.body.appendChild(el)}
+  var L=S.links||{},m=MAINT,soc=['facebook','telegram','tiktok','youtube','instagram'].filter(function(k){return L[k]});
+  el.innerHTML='<div class="mcard">'+(S.brand.logo?'<span class="logo"><img alt="" src="'+S.brand.logo+'"></span>':'')+'<div class="mico">'+I('gear')+'</div>'+
+    '<h1 lang="km">'+esc(MT.km.t)+'</h1><p lang="km">'+esc(String(m.km||'').trim()||MT.km.p)+'</p><div class="mdiv"></div>'+
+    '<h2 lang="en">'+esc(MT.en.t)+'</h2><p lang="en">'+esc(String(m.en||'').trim()||MT.en.p)+'</p>'+
+    (m.backEn||m.backKm?'<div class="mback">'+I('clock')+'<span>'+esc(m.backKm||'')+(m.backKm&&m.backEn?' · ':'')+esc(m.backEn||'')+'</span></div>':'')+
+    '<button type="button" class="btn mchat" data-mchat>'+I('chat')+'<span>'+esc(MT.km.c)+'<small>'+esc(MT.en.c)+'</small></span></button>'+
+    (soc.length?'<div class="msoc">'+soc.map(function(k){return '<a class="'+k+'" target="_blank" rel="noopener" aria-label="'+k+'" href="'+esc(linkOf(k,L[k]))+'">'+I(k)+'</a>'}).join('')+'</div>':'')+'</div>';
+  el.querySelector('[data-mchat]').onclick=function(){if(window.TheanChat)window.TheanChat.open()}}
+window.TheanSite.setMaint=function(v){MAINT=v||null;showMaint();if(admin&&adminView==='dash')render()};
 
 /* ---------- routing ---------- */
 function route(){var h=location.hash.replace(/^#\/?/,'');var p=h.split('/');return {name:p[0]||'home',id:p[1]||'',sub:p[2]||''}}
@@ -1813,6 +1852,8 @@ app.addEventListener('click',function(e){
     case 'back':e.preventDefault();goBack();return;
     case 'tilestyle':tileStyleForm();return;
     case 'skinform':skinForm();return;
+    case 'maint':maintToggle();return;
+    case 'maintedit':maintEdit();return;
     case 'msghide':S.message.show=false;changed();toast('Hidden. Visitors no longer see this section.');return;
     case 'msgshow':S.message.show=true;changed();toast(String(S.message.km||S.message.en||'').trim()||S.message.video?'Shown on the website':'Shown. Add the message text so visitors can see it.');return;
     case 'links':linksForm();return;
@@ -1842,6 +1883,7 @@ function composeText(f){var k=f.dataset.form,n=(f.querySelector('#c-name-'+k)||{
 /* =================== OWNER EDITOR =================== */
 function enterAdmin(u){
   adminUser=u;admin=true;adminView='dash';editing=false;
+  try{if(window.TheanAdmin&&window.TheanAdmin.onMaint&&!window.__mSub){window.__mSub=1;window.TheanAdmin.onMaint(function(v){MAINT=v||null;if(admin&&adminView==='dash')render()})}}catch(e){}
   try{var d=localStorage.getItem(DRAFT_KEY);if(d){S=Object.assign({},EMBED,upgrade(JSON.parse(d)));dirty=true}}catch(e){}
   render();
   if(dirty){toast('Saving the changes you made last time…');schedulePublish(500);setTimeout(maybeAuto,1500)}
@@ -2060,10 +2102,10 @@ function dashSection(){
   var sec=dashSec,h='';
   if(sec==='overview'){
     var mb=JSON.stringify(S).length/1048576;
-    h+='<div class="dwelcome"><h2>Hello'+(adminUser&&adminUser.agent&&adminUser.agent.name?', '+esc(adminUser.agent.name):'')+' 👋</h2><p>Everything you change here <b>saves and goes live automatically</b> within a few seconds. Watch the status at the top: <b>Live on the website</b> means visitors can see it.</p></div>';
+    h+='<div class="dwelcome"><h2>Hello'+(adminUser&&adminUser.agent&&adminUser.agent.name?', '+esc(adminUser.agent.name):'')+'</h2><p>Everything you change here <b>saves and goes live automatically</b> within a few seconds. Watch the status at the top: <b>Live on the website</b> means visitors can see it.</p></div>';
     var need=photoTargets().length;
-    h+='<div class="autobox"><span style="font-size:1.8rem">✨</span><div><b>HD photos & videos</b><small style="color:var(--muted)">'+(need?need+' places, slides or videos have no photo yet. Add free HD photos from Wikimedia Commons in one tap.':'Every place has a photo. You can change any photo with <b>Online photo</b>.')+'</small></div>'+(need?'<button class="btn" data-act="autophotos">'+I('image')+' Add HD photos</button>':'')+'</div>';
-    h+='<h3 class="dsub">Quick actions</h3><div class="dcards">'+dCard('calendar','Add a post','News, trips, events with photos & video','data-add="news:"')+dCard('video','Add a video','Upload from your phone or paste a link','data-add="videos:"')+dCard('pin','Add a place','Destination, temple or culture story','data-add="places:destination"')+dCard('star','Home page','Slideshow, announcement, message of gratitude','data-dash="home"')+dCard('bell','Edit announcement','The red/dark bar under the slideshow','data-dash="texts"')+dCard('menu','Add a menu page','New icon in the menu with its own posts','data-add="pages:custom"')+'</div>';
+    h+='<div class="autobox"><span style="font-size:1.8rem;color:var(--accent)">'+I('image')+'</span><div><b>HD photos & videos</b><small style="color:var(--muted)">'+(need?need+' places, slides or videos have no photo yet. Add free HD photos from Wikimedia Commons in one tap.':'Every place has a photo. You can change any photo with <b>Online photo</b>.')+'</small></div>'+(need?'<button class="btn" data-act="autophotos">'+I('image')+' Add HD photos</button>':'')+'</div>';
+    h+='<h3 class="dsub">Quick actions</h3><div class="dcards">'+maintCard()+dCard('calendar','Add a post','News, trips, events with photos & video','data-add="news:"')+dCard('video','Add a video','Upload from your phone or paste a link','data-add="videos:"')+dCard('pin','Add a place','Destination, temple or culture story','data-add="places:destination"')+dCard('star','Home page','Slideshow, announcement, message of gratitude','data-dash="home"')+dCard('bell','Edit announcement','The red/dark bar under the slideshow','data-dash="texts"')+dCard('menu','Add a menu page','New icon in the menu with its own posts','data-add="pages:custom"')+'</div>';
     h+='<h3 class="dsub">Your website</h3><div class="dstats">'+[['Posts',(S.news||[]).length+(S.social||[]).length+S.pages.reduce(function(a,p){return a+(p.custom&&S[p.list]?S[p.list].length:0)},0),'posts'],['Videos',(S.videos||[]).length,'videos'],['Places',S.places.length,'places'],['Menu pages',S.pages.length,'pages'],['Slides',S.slides.length,'home']].map(function(r){return '<button class="dstat" data-dash="'+r[2]+'"><b>'+r[1]+'</b><span>'+r[0]+'</span></button>'}).join('')+'</div>';
     h+='<div class="dnote">'+(mediaOK()?'Photo & video storage is connected (Cloudinary).':'⚠️ Photo & video storage is not connected yet. <button class="btn sm" data-act="media">Set up now</button>')+'<br>Website data size: <b>'+mb.toFixed(1)+' MB</b>'+(mb>8?' — large. New photos go to Cloudinary once it is connected, which keeps the site fast.':' — good.')+'</div>';
   }
@@ -2119,7 +2161,7 @@ function dashSection(){
   }
   else if(sec==='settings'){
     h+=dHead('Contact & settings','Links, logo, storage and your team.');
-    h+='<div class="dcards">'+dCard('menu','Menu icon style','Colour, photo, outline or classic grey','data-act="tilestyle"')+dCard('star','Website theme','Default for visitors: '+({heritage:'Khmer Heritage',apsara:'Apsara Night'}[S.ui&&S.ui.skin]||'Classic')+'. Visitors can switch at the bottom of the page.','data-act="skinform"')+dCard('link','Contact links & numbers','Facebook, Telegram, phone, email, follower count…','data-act="links"')+dCard('image','Logo','The round logo at the top','data-act="logo"')+dCard('pin','Map image','Picture on the Cambodia map section','data-act="mapimg"')+dCard('video','Photo & video storage',mediaOK()?'Connected ('+esc(S.media.cloud)+')':'Not connected: tap to set up','data-act="media"')+dCard('users','Team & chat inbox','Invite staff, answer customers','onclick="location.href=\'agent\'"')+dCard('download','Backup copy','Download a copy of the website','data-act="export"')+'</div>';
+    h+='<div class="dcards">'+dCard('menu','Menu icon style','Colour, photo, outline or classic grey','data-act="tilestyle"')+maintCard()+dCard('star','Website theme','Default for visitors: '+({heritage:'Khmer Heritage',apsara:'Apsara Night'}[S.ui&&S.ui.skin]||'Classic')+'. Visitors can switch at the bottom of the page.','data-act="skinform"')+dCard('link','Contact links & numbers','Facebook, Telegram, phone, email, follower count…','data-act="links"')+dCard('image','Logo','The round logo at the top','data-act="logo"')+dCard('pin','Map image','Picture on the Cambodia map section','data-act="mapimg"')+dCard('video','Photo & video storage',mediaOK()?'Connected ('+esc(S.media.cloud)+')':'Not connected: tap to set up','data-act="media"')+dCard('users','Team & chat inbox','Invite staff, answer customers','onclick="location.href=\'agent\'"')+dCard('download','Backup copy','Download a copy of the website','data-act="export"')+'</div>';
   }
   return h;
 }
@@ -2127,8 +2169,8 @@ function textRows(q){q=String(q||'').toLowerCase();var keys=Object.keys(UI.en).f
   return keys.map(function(k){return '<div class="drow"><input data-tp="ui.'+k+'" data-l="en" value="'+esc(u2(k,'en'))+'" aria-label="English"><input data-tp="ui.'+k+'" data-l="km" value="'+esc(u2(k,'km'))+'" aria-label="Khmer"></div>'}).join('')||'<div class="dempty">No match.</div>'}
 function renderDash(){
   return '<div class="dash"><header class="dtop"><span class="logo">'+(S.brand.logo?'<img alt="" src="'+S.brand.logo+'">':'')+'</span><div class="dttl"><b>Website editor</b><small>'+esc((adminUser&&adminUser.agent&&adminUser.agent.name)||'')+'</small></div><span class="dpub" data-pubst>'+pubHtml()+'</span>'+
-    '<div class="dtools"><a class="btn sm soft" target="_blank" href="./">'+I('globe')+' View website</a><a class="btn sm soft" target="_blank" href="./#check">'+I('info')+' Check website</a><button class="btn sm soft" data-act="pagemode">'+I('edit')+' Edit on page</button><a class="btn sm soft" href="agent">'+I('chat')+' Inbox</a><button class="btn sm soft" data-act="exit">Sign out</button></div></header>'+
-    '<div class="derr" data-puberr hidden></div>'+
+    '<div class="dtools"><a class="btn sm soft" target="_blank" href="./'+(MAINT&&MAINT.on?'?preview=1':'')+'">'+I('globe')+(MAINT&&MAINT.on?' Preview website':' View website')+'</a><a class="btn sm soft" target="_blank" href="./#check">'+I('info')+' Check website</a><button class="btn sm soft" data-act="pagemode">'+I('edit')+' Edit on page</button><a class="btn sm soft" href="agent">'+I('chat')+' Inbox</a><button class="btn sm soft" data-act="exit">Sign out</button></div></header>'+
+    '<div class="derr" data-puberr hidden></div>'+(MAINT&&MAINT.on?'<div class="dmaint">'+I('gear')+'<span><b>Maintenance mode is ON.</b> Visitors see the maintenance screen and can only use the chat.</span><button class="btn sm soft" data-act="maintedit">Edit message</button><button class="btn sm" data-act="maint">Turn off</button></div>':'')+
     '<div class="dbody"><nav class="dnav">'+DSECS.map(function(x){return '<button class="'+(dashSec===x[0]?'on':'')+'" data-dash="'+x[0]+'">'+I(x[1])+'<span>'+esc(x[2])+'</span></button>'}).join('')+'</nav><main class="dmain">'+dashSection()+'</main></div></div>';
 }
 app.addEventListener('input',function(e){if(e.target.id==='dsq'){dashFilter.q=e.target.value;var r=document.getElementById('dsr');if(r)r.innerHTML=textRows(e.target.value)}});
@@ -2172,6 +2214,15 @@ function slidesForm(){
     if(b.dataset.snov!=null){delete L[+b.dataset.snov].video;draw()}
     if(b.hasAttribute('data-ok')){S.slides=L;cur=0;m.remove();changed()}});
 }
+function maintCard(){var on=MAINT&&MAINT.on;return dCard('gear','Maintenance mode',on?'ON: visitors see the maintenance screen. Tap to turn off.':'Off. Tap once to show visitors a maintenance screen (chat still works).','data-act="maint"')}
+function maintSet(v,msg){if(!window.TheanAdmin||!window.TheanAdmin.setMaint){toast('Not connected yet, try again in a moment');return}
+  window.TheanAdmin.setMaint(v).then(function(){toast(msg)}).catch(function(e){toast(/permission/i.test(String(e&&(e.code||e.message)))?'Only the owner can change maintenance mode':'Not saved: '+(e&&(e.code||e.message)))})}
+function maintToggle(){var cur=Object.assign({},MAINT||{});cur.on=!cur.on;cur.at=Date.now();maintSet(cur,cur.on?'Maintenance mode is ON. Visitors now see the maintenance screen.':'Maintenance mode is OFF. The website is open again.')}
+function maintEdit(){var c=MAINT||{};var m=modal('Maintenance message','<p style="margin:0 0 6px;color:var(--muted)">Leave empty to use the standard message. Both languages are shown to visitors.</p>'+
+  fieldHtml(['msg','Message','biarea'],{en:c.en||'',km:c.km||''})+fieldHtml(['back','Expected back (optional, e.g. "Back at 6 PM")','bi'],{en:c.backEn||'',km:c.backKm||''})+
+  '<label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-mon style="width:auto"'+(c.on?' checked':'')+'> Maintenance mode is ON</label><div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-mok>Save</button></div>');
+  m.querySelector('[data-mok]').onclick=function(){var g=function(k,l){return m.querySelector('[data-k="'+k+'"][data-l="'+l+'"]').value.trim()};
+    var v={on:m.querySelector('[data-mon]').checked,en:g('msg','en'),km:g('msg','km'),backEn:g('back','en'),backKm:g('back','km'),at:Date.now()};m.remove();maintSet(v,v.on?'Saved. Maintenance mode is ON.':'Saved. Maintenance mode is OFF.')}}
 function skinForm(){var k=(S.ui&&S.ui.skin)||'classic';
   var m=modal('Website theme','<p style="margin:0 0 12px;color:var(--muted)">Choose the look new visitors see first. Each visitor can still change it with the Theme switch at the very bottom of the website.</p><div style="display:grid;gap:10px">'+[['classic','Classic','Misty stone greys, the original look'],['heritage','Khmer Heritage','Sandstone, gold and lacquer red with Khmer ornament'],['apsara','Apsara Night','Jade, lotus and night-sky indigo with gold kbach, floating lanterns and twinkling stars']].map(function(o){return '<button type="button" class="skpick'+(k===o[0]?' on':'')+'" data-sk="'+o[0]+'"><i class="sw sw-'+o[0]+'"></i><span><b>'+o[1]+'</b><small>'+o[2]+'</small></span></button>'}).join('')+'</div>');
   m.addEventListener('click',function(e){var b=e.target.closest('[data-sk]');if(!b)return;S.ui=S.ui||{};S.ui.skin=b.dataset.sk;try{localStorage.removeItem('thean-skin')}catch(x){}m.remove();changed();toast('Theme set to '+({heritage:'Khmer Heritage',apsara:'Apsara Night'}[b.dataset.sk]||'Classic'))})}
@@ -2804,11 +2855,12 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261004-0709',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261004-0726',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
   try{SYNC.step='loading Firebase';await loadFb();
+    if(!ADMIN_PAGE){try{fb.on('settings/public/maintenance',v=>{try{T.setMaint&&T.setMaint(v)}catch(e){}})}catch(e){}}
     SYNC.step='reading version';const v=await fb.get('site/version');SYNC.serverV=v||null;
     if(!v){SYNC.step='checking saved content';const c0=await fb.get('site/content');if(!c0){SYNC.step='done: nothing published yet';return}T.setState(c0,{live:true,v:1});SYNC.applied='from the server (old save)';SYNC.step='done: saved content shown';return}
     if(c&&c.v===v){SYNC.step='done: already up to date';return}
@@ -2835,6 +2887,8 @@ if(ADMIN_PAGE){
     async version(){await loadFb();return await fb.get('site/version')},
     async content(){await loadFb();return await fb.get('site/content')},
     async logout(){await loadFb();await fb.A.signOut(fb.auth)},
+    async setMaint(v){await loadFb();await fb.set('settings/public/maintenance',v)},
+    onMaint(cb){loadFb().then(()=>fb.on('settings/public/maintenance',cb)).catch(()=>{})},
     async publish(S){await loadFb();
       const to=new Promise((_,rej)=>setTimeout(()=>rej(new Error('network: the server did not answer in 40 seconds')),40000));
       const now=Date.now();
