@@ -102,6 +102,10 @@ label.f input,label.f textarea{border:1px solid var(--line);border-radius:12px;p
 .m.agent{align-self:flex-end;background:var(--char);color:var(--char-ink);border-bottom-right-radius:4px}
 .m .by{display:block;font-size:.7rem;font-weight:700;opacity:.65;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em}
 .m time{display:block;font-size:.66rem;opacity:.55;margin-top:2px;text-align:right}
+.m .ftag{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:.75rem;opacity:.8}
+.m .mimgs{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.m .mimgs img{width:120px;height:90px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+.m.freply{border-color:var(--accent)}
+.info .tk{font-weight:600;color:var(--ink)}.info .tk.rep{color:var(--danger)}
 .sys{align-self:center;font-size:.78rem;color:var(--muted);background:var(--bg2);border-radius:12px;padding:5px 12px;text-align:center;max-width:90%}
 .typing{align-self:flex-start;font-size:.8rem;color:var(--muted);font-style:italic}
 .acceptbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:12px 14px;background:var(--wait-soft);color:var(--ink);border-top:1px solid var(--line)}
@@ -179,6 +183,7 @@ async function makeDB(cfg,name){
     onConnected:cb=>d.onValue(R('.info/connected'),s=>cb(!!s.val())),
     remove:p=>d.remove(R(p)),
     tx:async(p,fn)=>{const r=await d.runTransaction(R(p),fn);return {committed:r.committed,val:r.snapshot.val()}},
+    findEq:async(p,field,val)=>{const sn=await d.get(d.query(R(p),d.orderByChild(field),d.equalTo(val)));return list(sn)},
     createUser:(e,pw)=>au.createUserWithEmailAndPassword(au.getAuth(a),e,pw)
   };
 }
@@ -399,7 +404,8 @@ function c2Find(t){const C=(T.S&&T.S.c2)||{};let best=null,sc=0;
   return best}
 
 return {bot:bot,reset:function(){PLAN=null}}})(SITE,()=>BOTLANG);
-const QICONS=['wave','clock','bed','sun','pin','phone','mail','check','heart','temple','money','car','info','bolt','chat'];
+P.form='<rect x="4.5" y="3.5" width="15" height="17" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>';P.flag='<path d="M5 21V4"/><path d="M5 4.5h11l-2 4 2 4H5"/>';P.ticket='<path d="M3.5 8V6.5h17V8a2 2 0 0 0 0 4v0a2 2 0 0 0 0 4v1.5h-17V16a2 2 0 0 0 0-4 2 2 0 0 0 0-4z"/><path d="M14 7v10" stroke-dasharray="1.5 2"/>';if(!P.user)P.user='<circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/>';
+const QICONS=['form','flag','ticket','user','wave','clock','bed','sun','pin','phone','mail','check','heart','temple','money','car','info','bolt','chat'];
 const I=n=>'<svg class="i" viewBox="0 0 24 24" aria-hidden="true">'+(P[n]||P.info)+'</svg>';
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
@@ -417,6 +423,15 @@ const DEFAULT_QUICK=[
  {icon:'heart',label:'Pleasure',send:true,en:"It was a pleasure helping you. Message us any time if you need anything else!",km:"រីករាយណាស់ដែលបានជួយអ្នក។ ផ្ញើសារមកយើងពេលណាក៏បាន ប្រសិនបើត្រូវការអ្វីបន្ថែម!"},
  {icon:'clock',label:'No reply',send:true,en:"Since we haven't heard back from you, we will close this chat now. Feel free to message us again any time. Thank you!",km:"ដោយសារយើងមិនទាន់ទទួលបានការឆ្លើយតបពីអ្នក យើងនឹងបិទការជជែកនេះ។ សូមផ្ញើសារមកម្ដងទៀតពេលណាក៏បាន។ អរគុណ!"}
 ];
+const FORM_QUICK=[
+ {icon:'form',label:'Customer details form',act:'form:contact',send:true,en:"To help you better, please fill in your details below and tap Send.",km:"ដើម្បីជួយអ្នកបានល្អ សូមបំពេញព័ត៌មានរបស់អ្នកខាងក្រោម ហើយចុច ផ្ញើ។"},
+ {icon:'ticket',label:'Ticket ID',act:'ticket',send:true,en:"Your ticket ID is {ticket}. Please keep this number. When you contact us again, send it in this chat and our team will continue from where we left off.",km:"លេខសំបុត្ររបស់អ្នកគឺ {ticket}។ សូមរក្សាលេខនេះទុក។ នៅពេលអ្នកទាក់ទងមកម្ដងទៀត សូមផ្ញើលេខនេះក្នុងការជជែក ហើយក្រុមការងាររបស់យើងនឹងបន្តពីកន្លែងដែលបានបញ្ឈប់។"},
+ {icon:'flag',label:'Content report form',act:'form:report',send:true,en:"Thank you for letting us know. To investigate, please fill in the form below: the link to the content on our website or page, the link or screenshot of your original, the details, what you would like us to do (give credit or remove it), and your contact information.",km:"អរគុណដែលបានប្រាប់យើង។ ដើម្បីពិនិត្យ សូមបំពេញទម្រង់ខាងក្រោម៖ តំណនៃមាតិកានៅលើគេហទំព័រ ឬទំព័ររបស់យើង តំណ ឬរូបថតអេក្រង់នៃស្នាដៃដើមរបស់អ្នក ព័ត៌មានលម្អិត អ្វីដែលអ្នកចង់ឱ្យយើងធ្វើ (ដាក់ឈ្មោះម្ចាស់ ឬលុបចេញ) និងព័ត៌មានទំនាក់ទំនងរបស់អ្នក។"}];
+DEFAULT_QUICK.splice(5,0,...FORM_QUICK);
+const AUTO_END={en:'This chat was closed automatically after {min} minutes without new messages. Send us a message any time if you need more help.',km:'ការជជែកនេះត្រូវបានបិទដោយស្វ័យប្រវត្តិ បន្ទាប់ពី {min} នាទីដោយគ្មានសារថ្មី។ សូមផ្ញើសារមកយើងពេលណាក៏បាន ប្រសិនបើត្រូវការជំនួយបន្ថែម។'};
+let autoMin=30;
+function newTicket(){const a=new Uint32Array(4);crypto.getRandomValues(a);let t='';for(const x of a)t+=String(x%10000).padStart(4,'0');if(t[0]==='0')t='1'+t.slice(1);return t}
+function fmtTicket(t){return String(t||'').replace(/\D/g,'').replace(/(\d{4})(?=\d)/g,'$1 ')}
 const LEAVE_DEF={en:'{name} has left the chat.',km:'{name} បានចាកចេញពីការជជែក។'};
 const CLOSE_DEF=[
  {en:"Thank you for chatting with us! Have a wonderful trip ",km:"អរគុណសម្រាប់ការជជែកជាមួយយើង! សូមឱ្យដំណើររបស់អ្នករីករាយ "},
@@ -491,9 +506,10 @@ function start(){
   beat=setInterval(()=>{if(agent&&agent.online)DB.update('agents/'+me.uid,{lastSeen:TS}).catch(()=>{})},60000);
   connUnsub=DB.onConnected(c=>{if(c&&wantOnline){DB.onDisconnect('agents/'+me.uid,{online:false,lastSeen:TS});DB.update('agents/'+me.uid,{online:true,lastSeen:TS}).catch(()=>{})}});
   meUnsub=DB.on('agents/'+me.uid,v=>{if(v){agent=v;drawTop()}});
-  DB.get('settings/public').then(v=>{if(v&&v.waitMin)waitMin=+v.waitMin||10}).catch(()=>{});
+  DB.get('settings/public').then(v=>{if(v&&v.waitMin)waitMin=+v.waitMin||10;if(v&&v.autoMin)autoMin=+v.autoMin||30}).catch(()=>{});
   setInterval(expireWaiting,30000);
   DB.get('settings/quick').then(v=>{if(v&&Array.isArray(v.items)&&v.items.length){quick=v.items;
+      if(!v.formsMerged){const has=new Set(quick.map(x=>x.act).filter(Boolean));const add=FORM_QUICK.filter(x=>!has.has(x.act));quick=add.concat(quick);DB.update('settings/quick',{items:quick,formsMerged:true,updatedAt:TS}).catch(()=>{})}
       if(!v.goodbyeMerged){const have=new Set(quick.map(x=>x.en));const add=(Array.isArray(v.closing)&&v.closing.length?v.closing:CLOSE_DEF).filter(x=>x.en&&!have.has(x.en)).map((x,i)=>({icon:['check','chat','heart','clock'][i%4],label:['Goodbye','Will contact','Pleasure','No reply'][i]||'Goodbye',send:true,en:x.en,km:x.km||''}));
         quick=quick.concat(add);DB.set('settings/quick',{items:quick,goodbyeMerged:true,updatedAt:TS}).catch(()=>{})}}
       drawConv()}).catch(()=>{});
@@ -502,10 +518,11 @@ function start(){
       const id=d.id,prev=seen[id];
       if(!firstSnap){
         if(d.status==='assigned'&&d.agentUid===me.uid&&prev&&prev.agentUid!==me.uid&&d.transferFrom){alertNew('Chat transferred to you',vName(d)+' · from '+d.transferFrom,id)}
+        else if(d.reportOpen&&prev&&!prev.reportOpen){alertNew('New content report',vName(d)+' sent a content report',id)}
         else if(d.status==='waiting'&&(!prev||prev.status!=='waiting')){alertNew('New live chat request',vName(d)+' wants to talk to an agent',id)}
         else if(d.lastFrom==='visitor'&&(d.status==='assigned'||d.status==='waiting')&&(!prev||prev.lastMsg!==d.lastMsg)&&!(sel===id&&!document.hidden))alertNew(''+vName(d),d.lastMsg,id);
       }
-      seen[id]={status:d.status,lastMsg:d.lastMsg,agentUid:d.agentUid||null};
+      seen[id]={status:d.status,lastMsg:d.lastMsg,agentUid:d.agentUid||null,reportOpen:!!d.reportOpen};
     });
     chats=list;
     expireWaiting();
@@ -517,6 +534,11 @@ const expiring=new Set();
 async function expireWaiting(){
   const now=Date.now();
   for(const c of chats){
+    if(c.status==='assigned'&&c.updatedAt&&now-ms(c.updatedAt)>=autoMin*60000&&!expiring.has(c.id)){
+      expiring.add(c.id);
+      try{const r=await DB.tx('chats/'+c.id+'/status',cur=>cur===null?null:(cur==='assigned'?'closed':undefined));
+        if(r.committed&&r.val==='closed'){const lg=c.lang==='km'?'km':'en';await DB.push('messages/'+c.id,{from:'bot',text:AUTO_END[lg].split('{min}').join(lg==='km'?String(autoMin).replace(/\d/g,d=>'០១២៣៤៥៦៧៨៩'[d]):autoMin),auto:true,ts:TS});await DB.update('chats/'+c.id,{closedAt:TS,updatedAt:TS,lastMsg:'Closed automatically after '+autoMin+' min without messages',lastFrom:'system',unreadAgent:0})}}catch(e){}
+      expiring.delete(c.id);continue}
     if(c.status!=='waiting'||!c.requestedAt||now-ms(c.requestedAt)<waitMin*60000||expiring.has(c.id))continue;
     expiring.add(c.id);
     try{const r=await DB.tx('chats/'+c.id+'/status',cur=>cur===null?null:(cur==='waiting'?'bot':undefined));
@@ -527,11 +549,11 @@ async function expireWaiting(){
 function setOnline(v,quiet){wantOnline=v;DB.update('agents/'+me.uid,{online:v,lastSeen:TS,email:me.email||''}).then(()=>{if(!quiet)toast(v?'You are available. Visitors can reach you.':'You are away. Visitors are told you will reply later.')}).catch(e=>toast('Could not change status: '+(e.code||e.message)))}
 
 function drawShell(){
-  root.innerHTML='<div class="app"><header class="top" id="top"></header><div class="main" id="main"><aside class="side"><div class="tabs" id="tabs"></div><div class="search"><input id="q" placeholder="Search name or message" aria-label="Search chats"></div><div class="list" id="list"></div></aside><section class="conv" id="conv"></section></div></div>';
-  root.querySelector('#q').oninput=e=>{search=e.target.value.toLowerCase();drawList()};
+  root.innerHTML='<div class="app"><header class="top" id="top"></header><div class="main" id="main"><aside class="side"><div class="tabs" id="tabs"></div><div class="search"><input id="q" placeholder="Search name, message or ticket ID" aria-label="Search chats"></div><div class="list" id="list"></div></aside><section class="conv" id="conv"></section></div></div>';
+  root.querySelector('#q').oninput=e=>{search=e.target.value.toLowerCase();if(search.replace(/\D/g,'').length===16&&tab!=='all')tab='all';drawList();ticketLookup()};
   drawTop();drawList();drawConv();
 }
-function counts(){const c={waiting:0,mine:0,open:0,unread:0};chats.forEach(x=>{if(x.status==='waiting')c.waiting++;if(x.status==='assigned'&&x.agentUid===me.uid)c.mine++;if(x.status==='waiting'||x.status==='assigned')c.open++;c.unread+=x.status!=='closed'&&x.status!=='bot'?(x.unreadAgent||0):0});return c}
+function counts(){const c={waiting:0,mine:0,open:0,unread:0,reports:0};chats.forEach(x=>{if(x.reportOpen)c.reports++;if(x.status==='waiting')c.waiting++;if(x.status==='assigned'&&x.agentUid===me.uid)c.mine++;if(x.status==='waiting'||x.status==='assigned')c.open++;c.unread+=x.status!=='closed'&&x.status!=='bot'?(x.unreadAgent||0):0});return c}
 function drawTop(){
   const t=root.querySelector('#top');if(!t)return;const c=counts(),on=agent&&agent.online;
   t.innerHTML='<div class="ttl"><span class="logo">T</span><div><b>THEAN</b><small>Inbox · '+esc((agent&&agent.name)||me.email)+'</small></div></div>'+
@@ -549,21 +571,26 @@ function drawTop(){
   t.querySelector('#tm').onclick=team;
   t.querySelector('#lo').onclick=async()=>{wantOnline=false;await DB.update('agents/'+me.uid,{online:false}).catch(()=>{});A.signOut(auth)};
 }
-const TABS=[['open','Open'],['waiting','Waiting'],['mine','Mine'],['bot','Bot only'],['closed','Closed']];
+const TABS=[['open','Open'],['waiting','Waiting'],['mine','Mine'],['reports','Reports'],['bot','Bot only'],['closed','Closed']];
 function filtered(){return chats.filter(c=>{
-  if(tab==='open'&&!(c.status==='waiting'||c.status==='assigned'))return false;
+  if(tab==='open'&&!(c.status==='waiting'||c.status==='assigned'||c.reportOpen))return false;
   if(tab==='waiting'&&c.status!=='waiting')return false;
   if(tab==='mine'&&!(c.status==='assigned'&&c.agentUid===me.uid))return false;
   if(tab==='bot'&&c.status!=='bot')return false;
+  if(tab==='reports'&&!c.reportOpen)return false;
   if(tab==='closed'&&c.status!=='closed')return false;
-  if(search&&!((c.name||'')+' '+(c.lastMsg||'')+' '+(c.contact||'')).toLowerCase().includes(search))return false;return true})}
+  if(search){const sd=search.replace(/\D/g,'');if(!(((c.name||'')+' '+(c.lastMsg||'')+' '+(c.contact||'')+' '+((c.customer&&c.customer.email)||'')).toLowerCase().includes(search)||(sd.length>=6&&(String(c.ticket||'').includes(sd)||String(c.followTicket||'').includes(sd)))))return false}return true})}
+let tFound=[],tLook='';
+async function ticketLookup(){const sd=search.replace(/\D/g,'');if(sd.length!==16||tLook===sd)return;tLook=sd;
+  if(chats.some(c=>c.ticket===sd))return;
+  try{const r=await DB.findEq('chats','ticket',sd);if(r.length){r.forEach(x=>{if(!chats.some(c=>c.id===x.id))chats.push(x)});tab='all';drawList();toast('Found the chat for ticket '+fmtTicket(sd))}else toast('No chat found with ticket '+fmtTicket(sd))}catch(e){toast('Could not search tickets: '+(e.code||e.message))}}
 function vName(c){return c.name||('Visitor '+c.id.slice(0,4).toUpperCase())}
 function ago(ts){if(!ts)return 'now';const s=(Date.now()-ms(ts))/1000;if(s<60)return 'now';if(s<3600)return Math.floor(s/60)+'m';if(s<86400)return Math.floor(s/3600)+'h';return Math.floor(s/86400)+'d'}
 const SCOL={waiting:'var(--wait)',assigned:'var(--ok)',bot:'#7fb3d5',closed:'var(--line)'};
 function drawList(){
   const tb=root.querySelector('#tabs'),l=root.querySelector('#list');if(!tb)return;
-  const all={open:0,waiting:0,mine:0,bot:0,closed:0};chats.forEach(c=>{if(c.status==='waiting'||c.status==='assigned')all.open++;if(all[c.status]!=null&&c.status!=='assigned')all[c.status]++;if(c.status==='assigned'&&c.agentUid===me.uid)all.mine++});
-  tb.innerHTML=TABS.map(t=>'<button data-tab="'+t[0]+'" class="'+(tab===t[0]?'on':'')+'">'+t[1]+'<span class="c'+(t[0]==='waiting'&&all.waiting?' hot':'')+'">'+all[t[0]]+'</span></button>').join('');
+  const all={open:0,waiting:0,mine:0,bot:0,closed:0,reports:0};chats.forEach(c=>{if(c.reportOpen)all.reports++;if(c.status==='waiting'||c.status==='assigned'||c.reportOpen)all.open++;if(all[c.status]!=null&&c.status!=='assigned')all[c.status]++;if(c.status==='assigned'&&c.agentUid===me.uid)all.mine++});
+  tb.innerHTML=TABS.map(t=>'<button data-tab="'+t[0]+'" class="'+(tab===t[0]?'on':'')+'">'+t[1]+'<span class="c'+((t[0]==='waiting'&&all.waiting)||(t[0]==='reports'&&all.reports)?' hot':'')+'">'+all[t[0]]+'</span></button>').join('');
   tb.querySelectorAll('button').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;drawList()});
   const f=filtered();
   l.innerHTML=f.length?f.map(c=>'<button class="item'+(sel===c.id?' on':'')+'" data-id="'+c.id+'"><span class="av">'+esc(vName(c)[0])+'<span class="st" style="background:'+(SCOL[c.status]||'var(--line)')+'"></span></span><span style="min-width:0"><span class="nm"><span>'+esc(vName(c))+'</span><span class="pill '+esc(c.status)+'">'+esc(c.status==='assigned'?'live':c.status)+'</span></span><span class="lm">'+(c.lastFrom==='agent'?'You: ':c.lastFrom==='bot'?'Bot: ':'')+esc(c.lastMsg||'…')+'</span></span><span class="rt">'+ago(c.updatedAt)+(c.unreadAgent&&c.status!=='bot'?'<span class="ub">'+c.unreadAgent+'</span>':'')+'</span></button>').join('')
@@ -598,12 +625,15 @@ function drawConvHead(){
   const cl=h.querySelector('#cl');if(cl)cl.onclick=()=>closeChat(c.id);
   const trb=h.querySelector('#tr');if(trb)trb.onclick=()=>transferSheet(c.id);
   const inf=root.querySelector('#inf');
-  inf.innerHTML=(c.contact?'<span>'+I('phone')+esc(c.contact)+'</span><button data-copy="'+esc(c.contact)+'">Copy</button>':'<span>'+I('user')+'No contact given</span>')+'<span>'+I('info')+(c.lang==='km'?'Khmer':'English')+'</span>'+(c.page?'<span>'+I('pin')+esc(c.page)+'</span>':'')+(c.ua&&/iPhone|Android/i.test(c.ua)?'<span>Mobile</span>':'<span>Desktop</span>');
+  const cu=c.customer||{};
+  inf.innerHTML=(c.ticket?'<span class="tk">'+I('ticket')+'Ticket '+esc(fmtTicket(c.ticket))+'</span><button data-copy="'+esc(c.ticket)+'">Copy</button>':'')+(c.followTicket?'<span class="tk">'+I('ticket')+'Follow-up of '+esc(fmtTicket(c.followTicket))+'</span><button data-find="'+esc(c.followTicket)+'">Find</button>':'')+(c.reportOpen?'<span class="tk rep">'+I('flag')+'Content report</span><button data-resolve>Mark resolved</button>':'')+(cu.email?'<span>'+I('mail')+esc(cu.email)+'</span><button data-copy="'+esc(cu.email)+'">Copy</button>':'')+(c.contact&&c.contact!==cu.email?'<span>'+I('phone')+esc(c.contact)+'</span><button data-copy="'+esc(c.contact)+'">Copy</button>':(cu.email?'':'<span>'+I('user')+'No contact given</span>'))+'<span>'+I('info')+(c.lang==='km'?'Khmer':'English')+'</span>'+(c.page?'<span>'+I('pin')+esc(c.page)+'</span>':'')+(c.ua&&/iPhone|Android/i.test(c.ua)?'<span>Mobile</span>':'<span>Desktop</span>');
   inf.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>copy(b.dataset.copy));
+  inf.querySelectorAll('[data-find]').forEach(b=>b.onclick=()=>{const q=root.querySelector('#q');q.value=b.dataset.find;search=b.dataset.find;tab='all';tLook='';drawList();ticketLookup()});
+  inf.querySelectorAll('[data-resolve]').forEach(b=>b.onclick=()=>DB.update('chats/'+c.id,{reportOpen:false,reportDoneAt:TS}).then(()=>toast('Report marked as resolved')).catch(e=>toast('Not saved: '+(e.code||e.message))));
   const acc=root.querySelector('#acc');
   const mine=c.status==='assigned'&&c.agentUid===me.uid,other=c.status==='assigned'&&c.agentUid&&c.agentUid!==me.uid;
   acc.innerHTML=mine?'':'<div class="acceptbar"><span>'+(c.status==='waiting'?'<b>Waiting for an agent.</b> The customer does not know you are here until you open the chat.':other?'<b>'+esc(c.agentName||'Another agent')+'</b> is handling this chat. You are only viewing it.':c.status==='closed'?'This chat is closed. You are only viewing it.':'The customer is talking to the assistant. You are only viewing it.')+'</span><button class="btn ok sm" id="ac">'+I('check')+(other?' Take over':' Open chat')+'</button></div>';
-  const cp=root.querySelector('#comp'),qq=root.querySelector('#qr'),ab2=root.querySelector('#aib');if(cp)cp.hidden=!mine;if(ab2)ab2.hidden=!mine;if(qq)qq.hidden=!mine||!showQuick;
+  const cp=root.querySelector('#comp'),qq=root.querySelector('#qr'),ab2=root.querySelector('#aib');if(cp)cp.hidden=!mine;if(ab2)ab2.hidden=!mine;if(qq)qq.hidden=!mine||!showQuick;if(qq&&mine&&showQuick&&!qq.innerHTML.trim())drawQuick();
   const ab=acc.querySelector('#ac');if(ab)ab.onclick=()=>accept(c.id);
   const ty=typeof c.visitorTyping==='number'&&Date.now()-c.visitorTyping<6000;
   const mt=root.querySelector('#typ');if(mt)mt.hidden=!ty;
@@ -611,7 +641,7 @@ function drawConvHead(){
 function tm(ts){const d=new Date(ms(ts));return d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}
 function drawMsgs(){
   const box=root.querySelector('#msgs');if(!box)return;const atEnd=box.scrollHeight-box.scrollTop-box.clientHeight<80;
-  box.innerHTML=msgs.map(m=>m.from==='system'?'<div class="sys">'+esc(m.text)+'</div>':'<div class="m '+(m.from==='visitor'?'vis':m.from)+'"><span class="by">'+(m.from==='visitor'?esc(vName(cur()||{id:'????'})):m.from==='bot'?'Bot':esc(m.agentName||'Agent'))+'</span>'+esc(m.text)+(m.btns&&m.btns.length?'<span style="display:block;margin-top:6px;font-size:.75rem;opacity:.75">Buttons: '+m.btns.map(b=>esc(b.l)).join(' · ')+'</span>':'')+'<time>'+tm(m.ts)+'</time></div>').join('')+'<div class="typing" id="typ" hidden>Visitor is typing…</div>';
+  box.innerHTML=msgs.map(m=>m.from==='system'?'<div class="sys">'+esc(m.text)+'</div>':'<div class="m '+(m.from==='visitor'?'vis':m.from)+(m.formReply?' freply':'')+'"><span class="by">'+(m.from==='visitor'?esc(vName(cur()||{id:'????'}))+(m.formReply?' · form answer':''):m.from==='bot'?'Bot':esc(m.agentName||'Agent'))+'</span>'+esc(m.text)+(m.form&&m.from!=='visitor'?'<span class="ftag">'+I('form')+(m.form==='report'?'Content report form sent':'Customer details form sent')+(msgs.some(x=>x.formReply===m.id)?' · answered':' · waiting for the customer')+'</span>':'')+(Array.isArray(m.imgs)&&m.imgs.length?'<span class="mimgs">'+m.imgs.map(u=>/^https:\/\//.test(u)?'<a href="'+esc(u)+'" target="_blank" rel="noopener"><img alt="Screenshot" src="'+esc(u)+'"></a>':'').join('')+'</span>':'')+(m.btns&&m.btns.length?'<span style="display:block;margin-top:6px;font-size:.75rem;opacity:.75">Buttons: '+m.btns.map(b=>esc(b.l)).join(' · ')+'</span>':'')+'<time>'+tm(m.ts)+'</time></div>').join('')+'<div class="typing" id="typ" hidden>Visitor is typing…</div>';
   if(atEnd||msgs.length<30)box.scrollTop=box.scrollHeight;drawConvHead();
 }
 function drawQuick(){
@@ -619,7 +649,10 @@ function drawQuick(){
   if(!(cur()&&cur().status==='assigned'&&cur().agentUid===me.uid)){q.hidden=true;return}
   q.innerHTML='<div class="qrhead"><span>Quick replies · tap to send in the visitor’s language</span><button type="button" id="qe">Edit</button></div><div class="qrgrid">'+quick.map((x,i)=>'<button class="qrb" type="button" data-q="'+i+'" title="'+esc(x.en)+'"><span class="ic">'+I(x.icon)+'</span>'+esc(x.label)+'</button>').join('')+'</div>';
   q.querySelector('#qe').onclick=editQuick;
-  q.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{const x=quick[+b.dataset.q],c=cur();const t=(c&&c.lang==='km'&&x.km)?x.km:x.en;if(x.send)sendMsg(t);else{const ta=root.querySelector('#ta');ta.value=t;ta.focus()}});
+  q.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{const x=quick[+b.dataset.q],c=cur();let t=(c&&c.lang==='km'&&x.km)?x.km:x.en;
+    if(x.act==='ticket'){const tk=(c&&c.ticket)||newTicket();t=t.split('{ticket}').join(fmtTicket(tk));if(!c.ticket)DB.update('chats/'+c.id,{ticket:tk}).catch(()=>{});sendMsg(t);return}
+    if(x.act&&x.act.indexOf('form:')===0){sendMsg(t,{form:x.act.slice(5)});return}
+    if(x.send)sendMsg(t);else{const ta=root.querySelector('#ta');ta.value=t;ta.focus()}});
 }
 
 /* ---------- actions ---------- */
@@ -635,12 +668,12 @@ async function accept(id){
     toast('You opened the chat. The customer can see you joined.');
   }catch(e){toast('Could not open the chat: '+(e.code||e.message))}
 }
-async function sendMsg(text){
+async function sendMsg(text,extra){
   text=String(text||'').trim();const c=cur();if(!text||!c)return;
   const ta=root.querySelector('#ta');if(ta){ta.value='';ta.style.height=''}
   try{
     if(c.status!=='assigned'||c.agentUid!==me.uid){toast('Tap “Open chat” first');if(ta)ta.value=text;return}
-    await DB.push('messages/'+c.id,{from:'agent',text:text.slice(0,2000),agentName:(agent&&agent.name)||'Agent',agentUid:me.uid,ts:TS});
+    await DB.push('messages/'+c.id,Object.assign({from:'agent',text:text.slice(0,2000),agentName:(agent&&agent.name)||'Agent',agentUid:me.uid,ts:TS},extra||{}));
     await DB.update('chats/'+c.id,{lastMsg:text.slice(0,120),lastFrom:'agent',updatedAt:TS,unreadVisitor:INC(1),unreadAgent:0});
   }catch(e){toast('Not sent: '+(e.code||e.message));if(ta)ta.value=text}
 }
@@ -777,7 +810,7 @@ function settings(){
    '<label class="f">Same message in Khmer<input id="lk" value="'+esc(a.leaveKm||LEAVE_DEF.km)+'"></label>'+
    '<div class="note" id="pv"></div>'+
    '<label class="toggle"><span><b>Sound alerts</b><small>Play a chime for new chats and messages on this device.</small></span><input type="checkbox" id="so"'+(soundOn?' checked':'')+'></label>'+
-   (isOwner()?'<label class="f">Minutes to wait for an agent before telling the customer all agents are busy (whole team)<input id="wm" type="number" min="1" max="120" value="'+waitMin+'"></label>':'')+
+   (isOwner()?'<label class="f">Minutes to wait for an agent before telling the customer all agents are busy (whole team)<input id="wm" type="number" min="1" max="120" value="'+waitMin+'"></label><label class="f">Close a live chat automatically after this many minutes without new messages (whole team)<input id="am" type="number" min="5" max="240" value="'+autoMin+'"></label>':'')+
    '<div class="note">Alerts work while this page is open (a browser tab or the Home Screen app). Tip: on your phone, use <b>Share → Add to Home Screen</b> so the inbox opens like an app.</div>'+
    '<div class="row"><button class="btn soft" data-close type="button">Cancel</button><button class="btn" id="sv" type="button">Save</button></div>');
   const pv=()=>{const n=m.querySelector('#nm').value.trim()||'Agent';m.querySelector('#pv').innerHTML='<b>Preview:</b> '+esc((m.querySelector('#je').value||JOIN_DEF.en).split('{name}').join(n))+' … '+esc((m.querySelector('#le').value||LEAVE_DEF.en).split('{name}').join(n))+'<br><small>Write <code>{name}</code> where your name should appear.</small>'};
@@ -786,6 +819,7 @@ function settings(){
     const up={name:(m.querySelector('#nm').value.trim()||'Agent').slice(0,40),joinEn:m.querySelector('#je').value.trim().slice(0,200)||JOIN_DEF.en,joinKm:m.querySelector('#jk').value.trim().slice(0,200)||JOIN_DEF.km,leaveEn:m.querySelector('#le').value.trim().slice(0,200)||LEAVE_DEF.en,leaveKm:m.querySelector('#lk').value.trim().slice(0,200)||LEAVE_DEF.km};
     try{await DB.update('agents/'+me.uid,up);
       const wm=m.querySelector('#wm');if(wm){const v=Math.max(1,Math.min(120,parseInt(wm.value,10)||10));await DB.update('settings/public',{waitMin:v});waitMin=v}
+      const am=m.querySelector('#am');if(am){const v2=Math.max(5,Math.min(240,parseInt(am.value,10)||30));await DB.update('settings/public',{autoMin:v2});autoMin=v2}
       m.remove();toast('Saved');drawTop()}catch(e){toast('Not saved: '+(e.code||e.message))}};
 }
 async function team(){
@@ -818,7 +852,7 @@ function editQuick(){
     if(b.dataset.mv!=null){const i=+b.dataset.mv,j=i+(+b.dataset.d);if(j>=0&&j<L.length){[L[i],L[j]]=[L[j],L[i]];draw()}}
     if(b.id==='qa'){L.push({icon:'chat',label:'New reply',send:true,en:'',km:''});draw()}
     if(b.id==='qd'){L=JSON.parse(JSON.stringify(DEFAULT_QUICK));draw()}
-    if(b.id==='qs'){DB.set('settings/quick',{items:L.filter(x=>x.en||x.km),goodbyeMerged:true,updatedAt:TS}).then(()=>{quick=L.filter(x=>x.en||x.km);m.remove();drawQuick();toast('Quick replies saved')}).catch(e=>toast('Not saved: '+(e.code||e.message)))}});
+    if(b.id==='qs'){DB.set('settings/quick',{items:L.filter(x=>x.en||x.km),goodbyeMerged:true,formsMerged:true,updatedAt:TS}).then(()=>{quick=L.filter(x=>x.en||x.km);m.remove();drawQuick();toast('Quick replies saved')}).catch(e=>toast('Not saved: '+(e.code||e.message)))}});
 }
 
 /* ---------- misc ---------- */
