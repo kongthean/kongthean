@@ -2149,7 +2149,8 @@ const ADMIN_PAGE = !!window.THEAN_ADMIN_PAGE;
 const T = window.TheanSite;
 let chat=null;
 let sesLang=null;
-const L = () => (sesLang||(chat&&chat.lang)||T.lang)==='km'?'km':'en';
+let siteLangSeen=T.lang;
+const L = () => (sesLang||T.lang)==='km'?'km':'en';
 function detectLang(t){t=String(t||'');if(/[\u1780-\u17FF]/.test(t))return 'km';if(/[a-z]{3,}/i.test(t))return 'en';return null}
 function setLg(lg){if(!lg)return;sesLang=lg;if(chat&&chat.lang!==lg){chat.lang=lg;if(fb&&user&&!offline)fb.update(CP(),{lang:lg}).catch(()=>{})}}
 const W = {
@@ -2267,7 +2268,6 @@ async function touch(extra){if(fb&&user&&chat)await fb.update(CP(),Object.assign
 /* ---------------- flows ---------------- */
 const btnLive=lg=>[{l:w('bLive',lg),a:'live'}];
 async function pickLang(lg){
-  try{T.setLang&&T.setLang(lg)}catch(e){}
   sesLang=lg;try{await ensureChat(lg);await fb.update(CP(),{lang:lg});chat.lang=lg}catch(e){offline=true}
   await say({from:'visitor',text:lg==='km'?'ភាសាខ្មែរ':'English'});
   await typeThen(1200,{from:'bot',text:w('intro',lg)});
@@ -2370,7 +2370,7 @@ const KW={
  bye:['bye','goodbye','see you','លាហើយ','លាសិនហើយ'],
  greet:['hello','hi ','hey','good morning','good afternoon','sus dey','សួស្ដី','ជម្រាបសួរ','សួស្តី'],
  thanks:['thank','thx','អរគុណ'],
- agent:['agent','human','real person','someone','talk to agent','live agent','person','people','staff','representative','customer service','support team','admin','contact agent','ភ្នាក់ងារផ្ទាល់','បុគ្គលិក','និយាយផ្ទាល់','speak','call me','មនុស្ស','ភ្នាក់ងារ','និយាយជាមួយ'],
+ agent:['agent','human','real person','talk to someone','speak to someone','talk to a person','speak to a person','talk to agent','live agent','live chat','staff member','representative','customer service','support team','contact agent','talk to your team','speak with your team','ភ្នាក់ងារផ្ទាល់','បុគ្គលិក','និយាយផ្ទាល់','call me','ភ្នាក់ងារ','និយាយជាមួយមនុស្ស','និយាយជាមួយភ្នាក់ងារ','និយាយជាមួយបុគ្គលិក'],
  t1:['best time','when to','season','weather','rain','month','hot','cold','climate','រដូវ','ពេលល្អ','ពេលណា','អាកាសធាតុ','ភ្លៀង'],
  t2:['visa','passport','evisa','ទិដ្ឋាការ','លិខិតឆ្លងដែន'],
  t3:['money','dollar','riel','atm','currency','cash','pay','khqr','លុយ','ប្រាក់','ដុល្លារ','រៀល'],
@@ -2526,6 +2526,12 @@ function buildPlan(n,I,mon,lg){
 let PLAN=null;
 function bot(text){
   const lg=hasKm(text)?'km':L(),km=lg==='km',t=' '+norm(text)+' ',S=T.S||{};
+  /* Angkor Pass */
+  if((has(t,['angkor pass','angkor ticket','entrance fee','entry fee','admission','សំបុត្រ','ticket','pass '])&&has(t,['angkor','angor','temple','ប្រាសាទ','អង្គរ','pass']))||has(t,['angkor pass'])){
+    const loc=has(t,['local','locals','cambodian','khmer people','khmer citizen','khmer national','national id','citizen','ខ្មែរ','ពលរដ្ឋ','អ្នកស្រុក','ប្រជាជន']);
+    const base=km?'ភ្ញៀវបរទេសត្រូវមានសំបុត្រអង្គរ (Angkor Pass)៖ ៣៧ ដុល្លារសម្រាប់ ១ ថ្ងៃ ៦២ ដុល្លារសម្រាប់ ៣ ថ្ងៃ (ប្រើក្នុងរយៈពេល ១០ ថ្ងៃ) និង ៧២ ដុល្លារសម្រាប់ ៧ ថ្ងៃ (ប្រើក្នុងរយៈពេល ៣០ ថ្ងៃ)។ កុមារអាយុក្រោម ១២ ឆ្នាំ ចូលដោយឥតគិតថ្លៃ ដោយបង្ហាញលិខិតឆ្លងដែន។ សូមទិញសំបុត្រតែនៅការិយាល័យលក់សំបុត្រអង្គរផ្លូវការ ឬគេហទំព័រផ្លូវការរបស់អង្គរអង់ទែប្រាយប៉ុណ្ណោះ។':'Foreign visitors need an Angkor Pass: $37 for 1 day, $62 for 3 days (use within 10 days) and $72 for 7 days (use within 30 days). Children under 12 enter free with their passport. Buy passes only at the official Angkor Ticket Office or on the official Angkor Enterprise website.';
+    const lead=loc?(km?'ពលរដ្ឋខ្មែរមិនចាំបាច់ទិញសំបុត្រអង្គរទេ។ ជនជាតិខ្មែរអាចចូលទស្សនាតំបន់អង្គរដោយឥតគិតថ្លៃ សូមយកអត្តសញ្ញាណប័ណ្ណសញ្ជាតិខ្មែរតាមខ្លួន ព្រោះបុគ្គលិកអាចសុំពិនិត្យ។\n\n':'Cambodian citizens do not need an Angkor Pass. Khmer nationals visit the Angkor temples free of charge; just bring your Khmer national ID card, as staff may ask to see it.\n\n'):'';
+    return {text:lead+base+(km?'\n\nកន្លែងល្អៗនៅអង្គរ មាននៅទំព័រ ប្រវត្តិសាស្ត្រ។':'\n\nSee our favourite Angkor temples on the Historical page.'),links:[[km?'ប្រវត្តិសាស្ត្រ':'Historical','#/p/temples']]}}
   /* trip planner */
   const dd=daysOf(t),wantsPlan=(has(t,PLANK)&&(dd||has(t,['plan','itinerary','schedule','កាលវិភាគ','ផែនការ','រៀបចំ'])))||(dd>0&&(Object.keys(interestsOf(t)).length>0||has(t,['i have','we have','ខ្ញុំមាន','យើងមាន','trip','travel','visit','holiday','vacation','tour','cambodia','siem reap','ដំណើរ','ទៅលេង','កម្សាន្ត','កម្ពុជា','សៀមរាប'])));
   if(wantsPlan||(PLAN&&(daysOf(t,true)||Object.keys(interestsOf(t)).length))){
@@ -2666,14 +2672,14 @@ function toggle(v){
   draw(true);
 }
 window.TheanChat={open:()=>toggle(true),toggle:()=>toggle(),close:()=>toggle(false)};
-document.addEventListener('thean:render',()=>{const p=root.querySelector('.tc-panel');if(p){lastBody='';draw(false)}else draw()});
+document.addEventListener('thean:render',()=>{if(T.lang!==siteLangSeen){siteLangSeen=T.lang;sesLang=null;if(chat&&chat.lang!==L()&&fb&&user)fb.update(CP(),{lang:L()}).catch(()=>{})}const p=root.querySelector('.tc-panel');if(p){lastBody='';draw(false)}else draw()});
 /* returning visitor: reconnect quietly so agent replies show a badge */
 if(!ADMIN_PAGE&&started()){authUser().then(u=>{if(u&&u.isAnonymous){user=u;return fb.get(CP()).then(v=>{if(v){chat=v;listen();fb.get('settings/public').then(s=>{if(s&&s.waitMin)waitMin=+s.waitMin||10;if(s&&s.autoMin)autoMin=+s.autoMin||30}).catch(()=>{})}})}}).catch(()=>{})}
 draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261004-0411',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261004-0435',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
