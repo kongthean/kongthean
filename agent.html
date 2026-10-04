@@ -209,7 +209,8 @@ const SITE={S:{}};let BOTLANG='en';
 const BOT=(function(T,L){
 /* ---------------- smart bot ---------------- */
 function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')}
-const GREET={en:'Hello! How can I help you today? I can assist you with:\n• Planning your trip day by day\n• Destinations, temples and the best time to visit\n• Hotels and restaurants\n• Khmer culture, festivals, dances and food\n• Travel tips and how to contact us\n\nJust type your question, or tap «Talk to Live Agent» to chat with our team.',km:'សួស្ដី! តើខ្ញុំអាចជួយអ្វីអ្នកបានខ្លះថ្ងៃនេះ? ខ្ញុំអាចជួយអ្នកអំពី៖\n• រៀបចំកាលវិភាគដំណើរតាមថ្ងៃនីមួយៗ\n• គោលដៅទេសចរណ៍ ប្រាសាទ និងពេលល្អសម្រាប់ទស្សនា\n• សណ្ឋាគារ និងភោជនីយដ្ឋាន\n• វប្បធម៌ ពិធីបុណ្យ របាំ និងម្ហូបខ្មែរ\n• គន្លឹះធ្វើដំណើរ និងរបៀបទាក់ទងយើង\n\nសូមសរសេរសំណួររបស់អ្នក ឬចុច «និយាយជាមួយភ្នាក់ងារផ្ទាល់» ដើម្បីជជែកជាមួយក្រុមការងាររបស់យើង។'};
+const CAPS={en:'I can assist you with:\n• Planning your trip day by day\n• Destinations, temples and the best time to visit\n• Hotels and restaurants\n• Khmer culture, festivals, dances and food\n• Travel tips and how to contact us\n\nJust type your question, or tap «Talk to Live Agent» to chat with our team.',km:'ខ្ញុំអាចជួយអ្នកអំពី៖\n• រៀបចំកាលវិភាគដំណើរតាមថ្ងៃនីមួយៗ\n• គោលដៅទេសចរណ៍ ប្រាសាទ និងពេលល្អសម្រាប់ទស្សនា\n• សណ្ឋាគារ និងភោជនីយដ្ឋាន\n• វប្បធម៌ ពិធីបុណ្យ របាំ និងម្ហូបខ្មែរ\n• គន្លឹះធ្វើដំណើរ និងរបៀបទាក់ទងយើង\n\nសូមសរសេរសំណួររបស់អ្នក ឬចុច «និយាយជាមួយភ្នាក់ងារផ្ទាល់» ដើម្បីជជែកជាមួយក្រុមការងាររបស់យើង។'};
+function hello(lg){const h=new Date().getHours();if(lg==='km')return (h<12?'អរុណសួស្ដី':h<18?'ទិវាសួស្ដី':'សាយណ្ហសួស្ដី')+'! ខ្ញុំជាជំនួយការនិម្មិតរបស់អ្នកថ្ងៃនេះ។ តើខ្ញុំអាចជួយអ្វីអ្នកបានខ្លះ?';return (h<12?'Good morning':h<18?'Good afternoon':'Good evening')+"! I'm your virtual assistant today. How can I help you?"}
 const hasKm=s=>/[ក-៿]/.test(s);
 function tr(o,lg){if(!o)return '';if(typeof o==='string')return o;return o[lg]||o.en||o.km||''}
 const KW={
@@ -270,13 +271,13 @@ function bot0(text){
   if(has(t,KW.who))return {text:km?'ខ្ញុំជាជំនួយការស្វ័យប្រវត្តិរបស់ក្រុម Thean។ ខ្ញុំអាចឆ្លើយសំណួរអំពីការធ្វើដំណើរនៅកម្ពុជា។ ប្រសិនបើអ្នកចង់និយាយជាមួយមនុស្ស គ្រាន់តែប្រាប់ខ្ញុំ។':"I'm the Thean team's virtual assistant. I can answer questions about travelling in Cambodia. If you'd like to talk to a person, just tell me."};
   if(has(t,KW.bye))return {text:km?'លាសិនហើយ! សូមឱ្យដំណើររបស់អ្នករីករាយ។':'Goodbye! Have a wonderful trip.'};
   if(has(t,KW.thanks))return {text:km?'មិនអីទេ! រីករាយនឹងដំណើររបស់អ្នក។':"You're welcome! Enjoy your trip."};
-  if(has(t,KW.greet))return {text:km?GREET.km:GREET.en,more:true};
+  if(has(t,KW.greet))return {text:hello(km?'km':'en'),caps:true};
   const prov=(window.TheanProv||[]).find(pr=>t.includes(norm(pr[0]))||t.includes(pr[1]));
   if(prov){const inP=(S.places||[]).filter(x=>norm(tr(x.region,'en')).includes(norm(prov[0])));if(inP.length)return listAnswer(inP,lg,(km?'នៅ ':'In ')+(km?prov[1]:prov[0])+':',[km?'គោលដៅ':'Destinations','#/p/destinations']);
     return {text:(km?'យើងមិនទាន់មានមគ្គុទ្ទេសក៍សម្រាប់ ':'We don\'t have a guide for ')+(km?prov[1]:prov[0])+(km?' នៅឡើយទេ ប៉ុន្តែភ្នាក់ងាររបស់យើងអាចជួយអ្នកបាន។':' yet, but our agents can help you.'),live:true,links:[[km?'បើកផែនទី':'Open map','https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(prov[0]+', Cambodia')]]}}
   if(has(t,KW.where))return listAnswer((S.places||[]).filter(x=>x.featured),lg,km?'កន្លែងដែលយើងចូលចិត្តបំផុត៖':'Our favourite places right now:',[km?'គោលដៅទាំងអស់':'All destinations','#/p/destinations']);
   if(has(t,KW.ok))return {text:km?'ល្អណាស់! មានអ្វីផ្សេងទៀតដែលខ្ញុំអាចជួយបានទេ?':'Great! Is there anything else I can help you with?'};
-  return {text:km?'សុំទោស ខ្ញុំមិនប្រាកដអំពីសំណួរនេះទេ។ ខ្ញុំអាចប្រាប់អ្នកអំពីគោលដៅ ប្រាសាទ ពេលល្អសម្រាប់ធ្វើដំណើរ ទិដ្ឋាការ ឬសណ្ឋាគារ។ ឬនិយាយជាមួយភ្នាក់ងារផ្ទាល់។':"I'm not sure about that one. I can help with destinations, temples, the best time to go, visas or hotels. Or you can talk to a live agent.",live:true,fallback:true};
+  return {text:km?'សូមអភ័យទោស ខ្ញុំមិនទាន់មានចម្លើយសម្រាប់សំណួរនេះនៅឡើយទេ។':"Sorry, I don't have an answer for that yet.",caps:true,live:true,fallback:true};
 }
 
 /* ---------- more knowledge: culture, festivals, trip planner (Oct 2026) ---------- */
