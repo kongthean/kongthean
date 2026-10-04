@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script>try{(function(){var k=localStorage.getItem("thean-skin");if(k==="heritage"||k==="classic")document.documentElement.setAttribute("data-skin",k)})()}catch(e){}</script>
+<script>try{(function(){var k=localStorage.getItem("thean-skin");if(k==="heritage"||k==="classic"||k==="apsara")document.documentElement.setAttribute("data-skin",k)})()}catch(e){}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Thean · Cambodia Traveler</title>
 <meta name="description" content="Thean – a Cambodian travel team sharing scenic routes, temples, travel spots and peaceful places across Cambodia.">
@@ -595,6 +595,14 @@ body.admin #tc{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 .tc-thumbs{display:flex;gap:6px}.tc-thumbs img,.tc-imgs img{width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
 .tc-imgs{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 .tc-fdone{display:block;margin-top:8px;font-size:.8rem;font-weight:600;color:var(--ok)}
+.tc-clr{border:0;background:rgba(255,255,255,.14);color:inherit;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;cursor:pointer;font-size:1.1rem;flex:none;margin-left:auto}
+.tc-clr:hover{background:rgba(255,255,255,.25)}
+.tc-clr+.tc-x{margin-left:6px}
+.tc-confirm{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 14px;background:var(--accent-soft);border-bottom:1px solid var(--line);font-size:.86rem;color:var(--ink)}
+.tc-confirm[hidden]{display:none}
+.tc-confirm span{flex:1 1 100%}
+.tc-confirm button{border:0;border-radius:10px;padding:7px 14px;font-weight:600;cursor:pointer;font-family:inherit;font-size:.85rem}
+.tc-cyes{background:var(--danger);color:#fff}.tc-cno{background:var(--surface);color:var(--ink)}
 .tc-btns{display:grid;gap:6px;margin-top:10px}
 .tc-btns button{border:0;background:var(--surface);color:var(--ink);border-radius:12px;padding:10px 12px;font-weight:600;font-size:.88rem;cursor:pointer;box-shadow:0 1px 0 var(--line);font-family:inherit}
 .tc-btns button:hover{background:var(--bg)}
@@ -659,6 +667,13 @@ footer .copy>span{opacity:.55}
 .skpick .sw{width:30px;height:30px}
 .skpick b{display:block}.skpick small{color:var(--muted)}
 
+/* ===== Khmer ornament masks (shared by themes) ===== */
+:root{
+  --kbach:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='14' viewBox='0 0 40 14'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 1.5c2.2 2.6 4.2 4.2 4.2 7 0 2.2-1.9 3.6-4.2 3.6s-4.2-1.4-4.2-3.6c0-2.8 2-4.4 4.2-7z'/%3E%3Cpath d='M20 6v4.6'/%3E%3Cpath d='M15.8 9.6c-2.5-.3-4.6-2-4.6-4.2 0-1.5 1.2-2.4 2.4-2.1'/%3E%3Cpath d='M24.2 9.6c2.5-.3 4.6-2 4.6-4.2 0-1.5-1.2-2.4-2.4-2.1'/%3E%3Cpath d='M0 13.2h40'/%3E%3C/g%3E%3Cpath d='M0 5.6l2.2 2.6L0 10.8zM40 5.6l-2.2 2.6 2.2 2.6z'/%3E%3C/svg%3E");
+  --flour:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='12' viewBox='0 0 120 12'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.2' stroke-linecap='round'%3E%3Cpath d='M2 6h38M80 6h38'/%3E%3Cpath d='M60 1c2.6 2.4 4 4 4 5.6S62.3 10.5 60 11c-2.3-.5-4-2.8-4-4.4S57.4 3.4 60 1z'/%3E%3Cpath d='M55.5 8.6C52 8.4 49 7 47.5 5.2M64.5 8.6C68 8.4 71 7 72.5 5.2'/%3E%3C/g%3E%3Cpath d='M42 6l2-2 2 2-2 2zM74 6l2-2 2 2-2 2z'/%3E%3C/svg%3E");
+  --finial:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='14' viewBox='0 0 20 14'%3E%3Cpath d='M10 0c1.6 2.4 3.4 3.8 3.4 6.4 0 1.7-1 2.9-2.2 3.4.9.2 1.6.4 2.3 1.2H6.5c.7-.8 1.4-1 2.3-1.2-1.2-.5-2.2-1.7-2.2-3.4C6.6 3.8 8.4 2.4 10 0zM2 14c1.5-2.6 4-3.6 8-3.6s6.5 1 8 3.6z'/%3E%3C/svg%3E");
+  --lotusm:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='14' viewBox='0 0 24 14'%3E%3Cpath d='M12 0c2 2.2 3 4.3 3 6.6 0 2.6-1.4 4.8-3 6.4-1.6-1.6-3-3.8-3-6.4C9 4.3 10 2.2 12 0z'/%3E%3Cpath d='M8 5.2C5.6 4.6 3.4 5 2 5.8c.6 4.4 4.4 7.6 10 8.2-2.4-1.8-4.2-4.4-4-8.8zM16 5.2c2.4-.6 4.6-.2 6 .6-.6 4.4-4.4 7.6-10 8.2 2.4-1.8 4.2-4.4 4-8.8z'/%3E%3C/svg%3E");
+}
 /* ===== Khmer Heritage theme ===== */
 :root[data-skin="heritage"]{
   --bg:#f5ecdc; --bg2:#ecdfc6; --surface:#fffaf0; --ink:#2b1d12; --muted:#76604a; --line:#e2cfab;
@@ -668,9 +683,6 @@ footer .copy>span{opacity:.55}
   --shadow:0 10px 30px rgba(70,40,15,.16);
   --display:'Cinzel','Moul','Koulen',Georgia,serif;
   --r:14px;
-  --kbach:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='14' viewBox='0 0 40 14'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 1.5c2.2 2.6 4.2 4.2 4.2 7 0 2.2-1.9 3.6-4.2 3.6s-4.2-1.4-4.2-3.6c0-2.8 2-4.4 4.2-7z'/%3E%3Cpath d='M20 6v4.6'/%3E%3Cpath d='M15.8 9.6c-2.5-.3-4.6-2-4.6-4.2 0-1.5 1.2-2.4 2.4-2.1'/%3E%3Cpath d='M24.2 9.6c2.5-.3 4.6-2 4.6-4.2 0-1.5-1.2-2.4-2.4-2.1'/%3E%3Cpath d='M0 13.2h40'/%3E%3C/g%3E%3Cpath d='M0 5.6l2.2 2.6L0 10.8zM40 5.6l-2.2 2.6 2.2 2.6z'/%3E%3C/svg%3E");
-  --flour:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='12' viewBox='0 0 120 12'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.2' stroke-linecap='round'%3E%3Cpath d='M2 6h38M80 6h38'/%3E%3Cpath d='M60 1c2.6 2.4 4 4 4 5.6S62.3 10.5 60 11c-2.3-.5-4-2.8-4-4.4S57.4 3.4 60 1z'/%3E%3Cpath d='M55.5 8.6C52 8.4 49 7 47.5 5.2M64.5 8.6C68 8.4 71 7 72.5 5.2'/%3E%3C/g%3E%3Cpath d='M42 6l2-2 2 2-2 2zM74 6l2-2 2 2-2 2z'/%3E%3C/svg%3E");
-  --finial:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='14' viewBox='0 0 20 14'%3E%3Cpath d='M10 0c1.6 2.4 3.4 3.8 3.4 6.4 0 1.7-1 2.9-2.2 3.4.9.2 1.6.4 2.3 1.2H6.5c.7-.8 1.4-1 2.3-1.2-1.2-.5-2.2-1.7-2.2-3.4C6.6 3.8 8.4 2.4 10 0zM2 14c1.5-2.6 4-3.6 8-3.6s6.5 1 8 3.6z'/%3E%3C/svg%3E");
 }
 @media (prefers-color-scheme:dark){:root[data-skin="heritage"]:not([data-theme="light"]){
   --bg:#17100b; --bg2:#1f160f; --surface:#261b12; --ink:#f3e6cf; --muted:#c3aa86; --line:#3e2c1c;
@@ -775,6 +787,101 @@ a.kdate.klink:hover{background:var(--bg2)}
 @media(max-width:520px){.emgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.emcard{padding:12px}.emcard .emn{font-size:1.35rem}.emcard small{font-size:.76rem}}
 .fact span a{color:var(--accent);text-underline-offset:3px;word-break:break-word}
 [data-skin="heritage"] .karr{background:var(--accent-soft);color:var(--hd)}
+
+/* ===== Apsara Night theme (jade, lotus, gold kbach, live lanterns and stars) ===== */
+.lant{display:none}
+.sw-apsara{background:linear-gradient(135deg,#1f7a68 50%,#14203a 50%);box-shadow:0 0 0 1px #e9c46a}
+:root[data-skin="apsara"]{
+  --bg:#eef4f0; --bg2:#e1ece6; --surface:#fbfdfb; --ink:#0f2e29; --muted:#4c6862; --line:#cfe1d8;
+  --stone:#2a7a69; --stone-d:#0f4a40; --char:#0f3d36; --char-ink:#f8f1dc;
+  --accent:#a8781f; --accent-soft:#f3e9cf; --mist1:#dceae3; --mist2:#bcd6ca; --mist3:#8fb5a6;
+  --gold:#c9a24a; --gold2:#f0d78c; --jade:#1f7a68; --jade2:#0f4a40; --lotus:#d9768f; --night:#0d1830; --hd:#0f4a40;
+  --shadow:0 10px 30px rgba(15,60,50,.16); --display:'Marcellus','Moul','Koulen',Georgia,serif; --r:18px}
+@media (prefers-color-scheme:dark){:root[data-skin="apsara"]:not([data-theme="light"]){
+  --bg:#0a1222; --bg2:#0f1a2f; --surface:#132038; --ink:#f0e9d6; --muted:#a7b2c8; --line:#22314e;
+  --stone:#2a6f79; --stone-d:#123049; --char:#e9c46a; --char-ink:#0a1222;
+  --accent:#e9c46a; --accent-soft:#1d2a44; --mist1:#18253e; --mist2:#22324f; --mist3:#33476a; --hd:#f0d78c;
+  --shadow:0 10px 30px rgba(0,0,0,.5); color-scheme:dark}}
+:root[data-skin="apsara"][data-theme="dark"]{
+  --bg:#0a1222; --bg2:#0f1a2f; --surface:#132038; --ink:#f0e9d6; --muted:#a7b2c8; --line:#22314e;
+  --stone:#2a6f79; --stone-d:#123049; --char:#e9c46a; --char-ink:#0a1222;
+  --accent:#e9c46a; --accent-soft:#1d2a44; --mist1:#18253e; --mist2:#22324f; --mist3:#33476a; --hd:#f0d78c;
+  --shadow:0 10px 30px rgba(0,0,0,.5); color-scheme:dark}
+@keyframes apsShimmer{0%{background-position:0% 0}100%{background-position:-200% 0}}
+@keyframes apsGlow{0%,100%{box-shadow:inset 0 0 0 1.5px rgba(240,215,140,.85),0 6px 14px -6px rgba(10,40,35,.5),0 0 0 0 rgba(240,215,140,0)}50%{box-shadow:inset 0 0 0 1.5px rgba(240,215,140,.95),0 6px 14px -6px rgba(10,40,35,.5),0 0 18px 2px rgba(240,215,140,.35)}}
+@keyframes apsRise{0%{bottom:-6%;margin-left:0;opacity:0}12%{opacity:.95}50%{margin-left:14px}85%{opacity:.8}100%{bottom:104%;margin-left:-6px;opacity:0}}
+@keyframes apsFlicker{0%,100%{filter:drop-shadow(0 0 6px rgba(255,190,90,.9))}50%{filter:drop-shadow(0 0 12px rgba(255,210,120,1))}}
+@keyframes apsTwinkle{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes apsPulse{0%,100%{box-shadow:0 0 0 0 rgba(233,196,106,.55),0 10px 26px rgba(10,30,40,.35)}60%{box-shadow:0 0 0 12px rgba(233,196,106,0),0 10px 26px rgba(10,30,40,.35)}}
+[data-skin="apsara"] .emb{letter-spacing:.05em}
+html[data-skin="apsara"][lang="km"] .emb{letter-spacing:0}
+[data-skin="apsara"] .sh h2.emb{color:var(--hd)}
+[data-skin="apsara"] .sh h2.emb::after{content:"";display:block;width:120px;height:12px;margin-top:10px;background:linear-gradient(90deg,var(--gold) 0%,#fff4c9 25%,var(--gold) 50%,var(--gold) 100%);background-size:200% 100%;animation:apsShimmer 5s linear infinite;-webkit-mask:var(--flour) no-repeat left center/contain;mask:var(--flour) no-repeat left center/contain}
+[data-skin="apsara"] .kick{color:var(--accent)}
+[data-skin="apsara"] .hcap .kick,[data-skin="apsara"] .pbanner .kick{color:#f0d78c;opacity:1}
+/* header */
+[data-skin="apsara"] .top{border-bottom:0;box-shadow:0 1px 0 color-mix(in srgb,var(--gold) 45%,transparent)}
+[data-skin="apsara"] .top::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:12px;pointer-events:none;background:linear-gradient(90deg,var(--gold) 0%,#fff4c9 15%,var(--gold) 30%,var(--gold) 100%);background-size:200% 100%;animation:apsShimmer 7s linear infinite;-webkit-mask:var(--kbach) repeat-x center/40px 12px;mask:var(--kbach) repeat-x center/40px 12px}
+[data-skin="apsara"] .logo{box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--gold),0 0 12px rgba(233,196,106,.45)}
+[data-skin="apsara"] .brand b{color:var(--hd)}
+[data-skin="apsara"] .lang{border-color:color-mix(in srgb,var(--gold) 55%,transparent)}
+[data-skin="apsara"] .lang button.on{background:linear-gradient(160deg,var(--jade),var(--jade2));color:#f8f1dc}
+[data-skin="apsara"] .ib,[data-skin="apsara"] .navback{background:var(--accent-soft);color:var(--hd);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--gold) 55%,transparent)}
+/* buttons with gold hairline and a light sweep */
+[data-skin="apsara"] .btn{position:relative;overflow:hidden;background:linear-gradient(160deg,#25907a,#0f4a40);color:#fbf3dc;box-shadow:inset 0 0 0 1px rgba(240,215,140,.8),inset 0 0 0 3px #0f4a40,inset 0 0 0 4px rgba(240,215,140,.35)}
+[data-skin="apsara"] .btn::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,244,200,.45),transparent);transform:skewX(-20deg);transition:left .7s ease;pointer-events:none}
+[data-skin="apsara"] .btn:hover::after{left:130%}
+[data-skin="apsara"] .btn.soft{background:var(--accent-soft);color:var(--ink);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--gold) 70%,transparent)}
+[data-skin="apsara"] .btn.light{background:linear-gradient(180deg,#fffaf0,#f3e5c0);color:#0f4a40;box-shadow:inset 0 0 0 1px #c9a24a,inset 0 0 0 3px #fbf3dc,inset 0 0 0 4px rgba(201,162,74,.5)}
+[data-skin="apsara"] .btn.ghost{background:transparent;color:inherit;box-shadow:inset 0 0 0 1.5px currentColor}
+[data-skin="apsara"] .btn.del{background:transparent;color:var(--danger);box-shadow:inset 0 0 0 1.5px var(--danger)}
+[data-skin="apsara"] .chatbtn,[data-skin="apsara"] .tc-fab{background:linear-gradient(160deg,#25907a,#0f4a40)!important;color:#fbf3dc!important;animation:apsPulse 3.2s ease-out infinite}
+/* menu tiles: lotus-petal niches with a lotus crown and a breathing glow */
+[data-skin="apsara"] .tiles .tile .ic,[data-skin="apsara"] .drawer .tile .ic{position:relative;overflow:visible;border-radius:50% 50% 20px 20px/56% 56% 20px 20px;background:radial-gradient(120% 90% at 50% 15%,#2c9c84 0%,#145a4c 55%,#0d3a37 100%)!important;color:#f3dc95!important;border:0!important;animation:apsGlow 5s ease-in-out infinite}
+[data-skin="apsara"] .tiles .tile:nth-child(3n+2) .ic{animation-delay:-1.6s}[data-skin="apsara"] .tiles .tile:nth-child(3n) .ic{animation-delay:-3.2s}
+[data-skin="apsara"] .tiles .tile .ic::before{content:"";position:absolute;top:-12px;left:50%;width:24px;height:14px;margin-left:-12px;background:linear-gradient(180deg,#f7a9bb,var(--lotus));-webkit-mask:var(--lotusm) no-repeat center/contain;mask:var(--lotusm) no-repeat center/contain}
+[data-skin="apsara"] .tiles .tile .ic svg{filter:none}
+[data-skin="apsara"] .tiles .tile .ic svg .d{opacity:.25}
+[data-skin="apsara"] .tiles{row-gap:30px;padding-top:6px}[data-skin="apsara"] .tiles.row{padding-top:16px}
+[data-skin="apsara"] .tile:hover .ic{transform:translateY(-4px)}
+/* cards and sections */
+[data-skin="apsara"] .card{border-color:color-mix(in srgb,var(--gold) 32%,var(--line))}
+[data-skin="apsara"] .card:hover{box-shadow:0 14px 30px -12px rgba(15,74,64,.35),0 0 0 1px color-mix(in srgb,var(--gold) 55%,transparent)}
+[data-skin="apsara"] .card .ph{border-bottom:2px solid color-mix(in srgb,var(--gold) 60%,transparent)}
+[data-skin="apsara"] .chip.on,[data-skin="apsara"] .ytabs button.on{background:linear-gradient(160deg,var(--jade),var(--jade2));color:#fbf3dc;border-color:var(--gold)}
+[data-skin="apsara"] .ctabs a{border-color:color-mix(in srgb,var(--gold) 38%,var(--line))}
+[data-skin="apsara"] .ctabs .cic{border-radius:50% 50% 10px 10px/55% 55% 10px 10px;background:radial-gradient(120% 90% at 50% 15%,#2c9c84,#0d3a37);color:#f3dc95;box-shadow:inset 0 0 0 1px rgba(240,215,140,.8)}
+[data-skin="apsara"] .ctabs a.on{background:linear-gradient(160deg,var(--jade),var(--jade2));color:#fbf3dc;border-color:var(--gold)}
+[data-skin="apsara"] .ctabs a.on .cic{background:rgba(240,215,140,.18)}
+[data-skin="apsara"] .karr,[data-skin="apsara"] .kcount,[data-skin="apsara"] .ctabs em{background:var(--accent-soft);color:var(--hd)}
+[data-skin="apsara"] .tl::before{background:linear-gradient(var(--gold),color-mix(in srgb,var(--lotus) 40%,transparent))}
+[data-skin="apsara"] .ev::before{border-color:var(--lotus);background:var(--surface);box-shadow:0 0 0 4px color-mix(in srgb,var(--lotus) 22%,transparent);animation:apsTwinkle 3s ease-in-out infinite}
+[data-skin="apsara"] .stat b{color:var(--hd)}
+[data-skin="apsara"] .stats{border-color:color-mix(in srgb,var(--gold) 45%,var(--line))}
+[data-skin="apsara"] .notice{background:linear-gradient(90deg,#0f4a40,#1f7a68);color:#fbf3dc}
+[data-skin="apsara"] .sheet{border:1px solid color-mix(in srgb,var(--gold) 45%,transparent)}
+[data-skin="apsara"] .shbtn.onph{background:rgba(15,74,64,.75);color:#f3dc95;box-shadow:inset 0 0 0 1px rgba(240,215,140,.7)}
+[data-skin="apsara"] .band{background:radial-gradient(120% 140% at 85% 0%,#1f7a68 0%,#0f3d36 45%,#0d1830 100%);position:relative;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(240,215,140,.6),inset 0 0 0 5px #0f3d36,inset 0 0 0 6px rgba(240,215,140,.35)}
+[data-skin="apsara"] .band::before{content:"";position:absolute;left:0;right:0;top:8px;height:12px;background:linear-gradient(90deg,var(--gold2) 0%,#fff 15%,var(--gold2) 30%,var(--gold2) 100%);background-size:200% 100%;animation:apsShimmer 8s linear infinite;opacity:.6;-webkit-mask:var(--kbach) repeat-x center/40px 12px;mask:var(--kbach) repeat-x center/40px 12px}
+/* banners & hero: floating lantern lights (like the Water Festival) */
+[data-skin="apsara"] .lant{display:block;position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+[data-skin="apsara"] .lant i{position:absolute;left:var(--x);bottom:-6%;width:calc(12px * var(--s));height:calc(16px * var(--s));border-radius:50% 50% 42% 42%;background:radial-gradient(circle at 50% 38%,#fffbe6 0%,#ffd77a 32%,rgba(255,170,70,.55) 58%,rgba(255,150,60,0) 74%);opacity:0;animation:apsRise var(--d) linear infinite,apsFlicker 2.4s ease-in-out infinite;animation-delay:var(--dl),var(--dl)}
+[data-skin="apsara"] .pbanner::before{content:"";position:absolute;left:0;right:0;bottom:0;height:14px;z-index:4;background:linear-gradient(90deg,var(--gold2) 0%,#fff 15%,var(--gold2) 30%,var(--gold2) 100%);background-size:200% 100%;animation:apsShimmer 7s linear infinite;opacity:.9;-webkit-mask:var(--kbach) repeat-x bottom/40px 14px;mask:var(--kbach) repeat-x bottom/40px 14px}
+[data-skin="apsara"] .pbanner::after{background:linear-gradient(180deg,rgba(13,24,48,.1),rgba(13,24,48,.78))}
+[data-skin="apsara"] .pbanner .pic{border-radius:50% 50% 14px 14px/52% 52% 14px 14px;background:rgba(15,74,64,.55);border:1px solid rgba(240,215,140,.75);color:#f3dc95}
+[data-skin="apsara"] .bshare{border-color:rgba(240,215,140,.7);background:rgba(13,24,48,.45);color:#fbf3dc}
+[data-skin="apsara"] .hero .dots button.on{background:var(--gold2)}
+/* footer: night sky with twinkling stars */
+[data-skin="apsara"] footer{position:relative;overflow:hidden;background:radial-gradient(120% 80% at 80% 0%,#173257 0%,#0d1830 55%,#080f20 100%);color:#efe6cf;--char:#0d1830;--char-ink:#efe6cf}
+[data-skin="apsara"] footer::before{content:"";position:absolute;left:0;right:0;top:-1px;height:14px;z-index:1;background:linear-gradient(90deg,var(--gold2) 0%,#fff 15%,var(--gold2) 30%,var(--gold2) 100%);background-size:200% 100%;animation:apsShimmer 9s linear infinite;-webkit-mask:var(--kbach) repeat-x top/40px 14px;mask:var(--kbach) repeat-x top/40px 14px}
+[data-skin="apsara"] footer::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(1.5px 1.5px at 8% 22%,#fff,transparent),radial-gradient(1px 1px at 18% 64%,#fff,transparent),radial-gradient(1.5px 1.5px at 31% 36%,#ffeeb8,transparent),radial-gradient(1px 1px at 44% 80%,#fff,transparent),radial-gradient(2px 2px at 57% 18%,#fff6d6,transparent),radial-gradient(1px 1px at 66% 52%,#fff,transparent),radial-gradient(1.5px 1.5px at 78% 28%,#fff,transparent),radial-gradient(1px 1px at 88% 70%,#ffeeb8,transparent),radial-gradient(1.5px 1.5px at 94% 12%,#fff,transparent),radial-gradient(1px 1px at 4% 88%,#fff,transparent);animation:apsTwinkle 4s ease-in-out infinite}
+[data-skin="apsara"] footer .wrap{position:relative;z-index:2}
+[data-skin="apsara"] footer h4{color:var(--gold2);opacity:.9}
+[data-skin="apsara"] footer .brand b{color:#f0d78c}
+[data-skin="apsara"] footer .soc a{border-color:color-mix(in srgb,var(--gold2) 45%,transparent);color:var(--gold2)}
+/* chat header */
+[data-skin="apsara"] .tc-head{background:linear-gradient(160deg,#1f7a68,#0d1830)!important;color:#fbf3dc}
+@media (prefers-reduced-motion:reduce){[data-skin="apsara"] *,[data-skin="apsara"] *::before,[data-skin="apsara"] *::after{animation:none!important;transition:none!important}[data-skin="apsara"] .lant{display:none}}
 </style>
 </head>
 <body>
@@ -807,8 +914,8 @@ var app=document.getElementById('app');
 
 /* ---------- UI words ---------- */
 var UI={
-en:{storiesKick:'Angkor',latestKick:'News & stories',home:'Home',explore:'Explore',menuSub:'Everything on this site, one tap away',followers:'Followers',postsN:'Posts',provinces:'Provinces',temples:'Temples & sites',featured:'Featured places',featuredSub:'Where to go next',seeAll:'See all',season:'When to visit',seasonSub:'Cambodia has three seasons',cool:'Cool & dry',hot:'Hot',wet:'Green / rainy',bestTime:'Best time',gettingThere:'Getting there',region:'Province',built:'Built',openMap:'Open in Google Maps',tip:'Our tip',related:'You may also like',watch:'Watch video',videos:'Videos',map:'Cambodia map',mapSub:'Tap a province to open it on the map',tribute:'A message of gratitude',stories:'Temple stories',chatTitle:'Chat with us',chatSub:'Online · our team usually replies within hours',chatPick:'What do you want to talk about?',chatHow:'Choose where to continue the conversation:',copy:'Copy',copied:'Copied',empty:'Nothing here yet.',back:'Back',all:'All',name:'Your name',message:'Message',sendEmail:'Send by email',sendMsgr:'Copy & open Messenger',rate:'How was your experience?',thanks:'Thank you!',menu:'Menu',close:'Close',readMore:'Read more',joinTrip:'Plan a trip with us',joinTripSub:'Ask about routes, places to stay or collaborations.',startChat:'Start a chat',exploreBtn:'Explore destinations',watchBtn:'Watch videos',quickLinks:'Pages',follow:'Follow',followUs:'Follow & contact us',aboutShort:'A Cambodian travel team sharing scenic routes, travel spots and peaceful places.',rights:'All rights reserved.',festivals:'Festivals through the year',arts:'Arts & living traditions',areas:'Where to stay, by area',picks:'Our picks',support:'Ways to support',payInfo:'Scan to support',giveWell:'Give responsibly',whatIDo:'What we share',collab:'Work with us',contactWays:'Reach us',writeMe:'Write to us',facebook:'Facebook',messenger:'Messenger',telegram:'Telegram',tiktok:'TikTok',youtube:'YouTube',instagram:'Instagram',email:'Email',phone:'Phone',address:'Address',website:'Website',topicTrip:'Plan a trip',topicCollab:'Collaboration',topicHotel:'Hotels',topicOther:'Something else',accountName:'Account name',accountNo:'Account number',latest:'Latest',filter:'Filter',share:'Share',shareThis:'Share with friends',copyLink:'Copy link',linkCopied:'Link copied',theme:'Theme',skinClassic:'Classic',skinHeritage:'Khmer Heritage',cultureKick:'Khmer culture',cultureHome:'Explore Khmer culture',inThis:'In this section',nextSec:'Next'},
-km:{storiesKick:'អង្គរ',latestKick:'ព័ត៌មាន និងរឿងរ៉ាវ',home:'ទំព័រដើម',explore:'ស្វែងយល់',menuSub:'គ្រប់យ៉ាងនៅលើគេហទំព័រនេះ ក្នុងមួយចុច',followers:'អ្នកតាមដាន',postsN:'ការបង្ហោះ',provinces:'ខេត្ត-រាជធានី',temples:'ប្រាសាទ និងរមណីយដ្ឋាន',featured:'កន្លែងពិសេស',featuredSub:'ទៅណាបន្ទាប់?',seeAll:'មើលទាំងអស់',season:'ពេលល្អសម្រាប់ទស្សនា',seasonSub:'កម្ពុជាមានបីរដូវ',cool:'រដូវត្រជាក់',hot:'រដូវក្ដៅ',wet:'រដូវវស្សា',bestTime:'ពេលល្អបំផុត',gettingThere:'របៀបធ្វើដំណើរ',region:'ខេត្ត',built:'កសាងឡើង',openMap:'បើកក្នុង Google Maps',tip:'គន្លឹះពីយើង',related:'កន្លែងផ្សេងទៀត',watch:'មើលវីដេអូ',videos:'វីដេអូ',map:'ផែនទីកម្ពុជា',mapSub:'ចុចលើខេត្ត ដើម្បីបើកលើផែនទី',tribute:'សារដឹងគុណ',stories:'រឿងរ៉ាវប្រាសាទ',chatTitle:'ជជែកជាមួយយើង',chatSub:'អនឡាញ · ជាធម្មតាឆ្លើយតបក្នុងរយៈពេលប៉ុន្មានម៉ោង',chatPick:'តើអ្នកចង់និយាយអំពីអ្វី?',chatHow:'ជ្រើសរើសកន្លែងបន្តការសន្ទនា៖',copy:'ចម្លង',copied:'បានចម្លង',empty:'មិនទាន់មានអ្វីនៅទីនេះទេ។',back:'ត្រឡប់',all:'ទាំងអស់',name:'ឈ្មោះរបស់អ្នក',message:'សារ',sendEmail:'ផ្ញើតាមអ៊ីមែល',sendMsgr:'ចម្លង ហើយបើក Messenger',rate:'តើបទពិសោធន៍របស់អ្នកយ៉ាងដូចម្ដេច?',thanks:'អរគុណ!',menu:'ម៉ឺនុយ',close:'បិទ',readMore:'អានបន្ត',joinTrip:'រៀបចំដំណើរជាមួយយើង',joinTripSub:'សួរយើងអំពីផ្លូវធ្វើដំណើរ កន្លែងស្នាក់នៅ ឬការសហការ។',startChat:'ចាប់ផ្ដើមជជែក',exploreBtn:'ស្វែងរកគោលដៅ',watchBtn:'មើលវីដេអូ',quickLinks:'ទំព័រ',follow:'តាមដាន',followUs:'តាមដាន និងទាក់ទងយើង',aboutShort:'ក្រុមការងារធ្វើដំណើរកម្ពុជា ចែករំលែកផ្លូវទេសភាព កន្លែងទេសចរណ៍ និងទីកន្លែងស្ងប់ស្ងាត់។',rights:'រក្សាសិទ្ធិគ្រប់យ៉ាង។',festivals:'ពិធីបុណ្យពេញមួយឆ្នាំ',arts:'សិល្បៈ និងប្រពៃណីរស់',areas:'កន្លែងស្នាក់នៅតាមតំបន់',picks:'ជម្រើសរបស់យើង',support:'វិធីគាំទ្រ',payInfo:'ស្កេនដើម្បីគាំទ្រ',giveWell:'បរិច្ចាគឱ្យបានត្រឹមត្រូវ',whatIDo:'អ្វីដែលយើងចែករំលែក',collab:'សហការជាមួយយើង',contactWays:'ទាក់ទងយើង',writeMe:'សរសេរមកយើង',facebook:'Facebook',messenger:'Messenger',telegram:'Telegram',tiktok:'TikTok',youtube:'YouTube',instagram:'Instagram',email:'អ៊ីមែល',phone:'ទូរស័ព្ទ',address:'អាសយដ្ឋាន',website:'គេហទំព័រ',topicTrip:'រៀបចំដំណើរ',topicCollab:'ការសហការ',topicHotel:'សណ្ឋាគារ',topicOther:'ផ្សេងៗ',accountName:'ឈ្មោះគណនី',accountNo:'លេខគណនី',latest:'ថ្មីៗ',filter:'តម្រង',share:'ចែករំលែក',shareThis:'ចែករំលែកទៅមិត្តភក្តិ',copyLink:'ចម្លងតំណ',linkCopied:'បានចម្លងតំណ',theme:'រចនាប័ទ្ម',skinClassic:'បុរាណ',skinHeritage:'បេតិកភណ្ឌខ្មែរ',cultureKick:'វប្បធម៌ខ្មែរ',cultureHome:'ស្វែងយល់វប្បធម៌ខ្មែរ',inThis:'នៅក្នុងផ្នែកនេះ',nextSec:'បន្ទាប់'}
+en:{storiesKick:'Angkor',latestKick:'News & stories',home:'Home',explore:'Explore',menuSub:'Everything on this site, one tap away',followers:'Followers',postsN:'Posts',provinces:'Provinces',temples:'Temples & sites',featured:'Featured places',featuredSub:'Where to go next',seeAll:'See all',season:'When to visit',seasonSub:'Cambodia has three seasons',cool:'Cool & dry',hot:'Hot',wet:'Green / rainy',bestTime:'Best time',gettingThere:'Getting there',region:'Province',built:'Built',openMap:'Open in Google Maps',tip:'Our tip',related:'You may also like',watch:'Watch video',videos:'Videos',map:'Cambodia map',mapSub:'Tap a province to open it on the map',tribute:'A message of gratitude',stories:'Temple stories',chatTitle:'Chat with us',chatSub:'Online · our team usually replies within hours',chatPick:'What do you want to talk about?',chatHow:'Choose where to continue the conversation:',copy:'Copy',copied:'Copied',empty:'Nothing here yet.',back:'Back',all:'All',name:'Your name',message:'Message',sendEmail:'Send by email',sendMsgr:'Copy & open Messenger',rate:'How was your experience?',thanks:'Thank you!',menu:'Menu',close:'Close',readMore:'Read more',joinTrip:'Plan a trip with us',joinTripSub:'Ask about routes, places to stay or collaborations.',startChat:'Start a chat',exploreBtn:'Explore destinations',watchBtn:'Watch videos',quickLinks:'Pages',follow:'Follow',followUs:'Follow & contact us',aboutShort:'A Cambodian travel team sharing scenic routes, travel spots and peaceful places.',rights:'All rights reserved.',festivals:'Festivals through the year',arts:'Arts & living traditions',areas:'Where to stay, by area',picks:'Our picks',support:'Ways to support',payInfo:'Scan to support',giveWell:'Give responsibly',whatIDo:'What we share',collab:'Work with us',contactWays:'Reach us',writeMe:'Write to us',facebook:'Facebook',messenger:'Messenger',telegram:'Telegram',tiktok:'TikTok',youtube:'YouTube',instagram:'Instagram',email:'Email',phone:'Phone',address:'Address',website:'Website',topicTrip:'Plan a trip',topicCollab:'Collaboration',topicHotel:'Hotels',topicOther:'Something else',accountName:'Account name',accountNo:'Account number',latest:'Latest',filter:'Filter',share:'Share',shareThis:'Share with friends',copyLink:'Copy link',linkCopied:'Link copied',theme:'Theme',skinClassic:'Classic',skinHeritage:'Khmer Heritage',skinApsara:'Apsara Night',cultureKick:'Khmer culture',cultureHome:'Explore Khmer culture',inThis:'In this section',nextSec:'Next'},
+km:{storiesKick:'អង្គរ',latestKick:'ព័ត៌មាន និងរឿងរ៉ាវ',home:'ទំព័រដើម',explore:'ស្វែងយល់',menuSub:'គ្រប់យ៉ាងនៅលើគេហទំព័រនេះ ក្នុងមួយចុច',followers:'អ្នកតាមដាន',postsN:'ការបង្ហោះ',provinces:'ខេត្ត-រាជធានី',temples:'ប្រាសាទ និងរមណីយដ្ឋាន',featured:'កន្លែងពិសេស',featuredSub:'ទៅណាបន្ទាប់?',seeAll:'មើលទាំងអស់',season:'ពេលល្អសម្រាប់ទស្សនា',seasonSub:'កម្ពុជាមានបីរដូវ',cool:'រដូវត្រជាក់',hot:'រដូវក្ដៅ',wet:'រដូវវស្សា',bestTime:'ពេលល្អបំផុត',gettingThere:'របៀបធ្វើដំណើរ',region:'ខេត្ត',built:'កសាងឡើង',openMap:'បើកក្នុង Google Maps',tip:'គន្លឹះពីយើង',related:'កន្លែងផ្សេងទៀត',watch:'មើលវីដេអូ',videos:'វីដេអូ',map:'ផែនទីកម្ពុជា',mapSub:'ចុចលើខេត្ត ដើម្បីបើកលើផែនទី',tribute:'សារដឹងគុណ',stories:'រឿងរ៉ាវប្រាសាទ',chatTitle:'ជជែកជាមួយយើង',chatSub:'អនឡាញ · ជាធម្មតាឆ្លើយតបក្នុងរយៈពេលប៉ុន្មានម៉ោង',chatPick:'តើអ្នកចង់និយាយអំពីអ្វី?',chatHow:'ជ្រើសរើសកន្លែងបន្តការសន្ទនា៖',copy:'ចម្លង',copied:'បានចម្លង',empty:'មិនទាន់មានអ្វីនៅទីនេះទេ។',back:'ត្រឡប់',all:'ទាំងអស់',name:'ឈ្មោះរបស់អ្នក',message:'សារ',sendEmail:'ផ្ញើតាមអ៊ីមែល',sendMsgr:'ចម្លង ហើយបើក Messenger',rate:'តើបទពិសោធន៍របស់អ្នកយ៉ាងដូចម្ដេច?',thanks:'អរគុណ!',menu:'ម៉ឺនុយ',close:'បិទ',readMore:'អានបន្ត',joinTrip:'រៀបចំដំណើរជាមួយយើង',joinTripSub:'សួរយើងអំពីផ្លូវធ្វើដំណើរ កន្លែងស្នាក់នៅ ឬការសហការ។',startChat:'ចាប់ផ្ដើមជជែក',exploreBtn:'ស្វែងរកគោលដៅ',watchBtn:'មើលវីដេអូ',quickLinks:'ទំព័រ',follow:'តាមដាន',followUs:'តាមដាន និងទាក់ទងយើង',aboutShort:'ក្រុមការងារធ្វើដំណើរកម្ពុជា ចែករំលែកផ្លូវទេសភាព កន្លែងទេសចរណ៍ និងទីកន្លែងស្ងប់ស្ងាត់។',rights:'រក្សាសិទ្ធិគ្រប់យ៉ាង។',festivals:'ពិធីបុណ្យពេញមួយឆ្នាំ',arts:'សិល្បៈ និងប្រពៃណីរស់',areas:'កន្លែងស្នាក់នៅតាមតំបន់',picks:'ជម្រើសរបស់យើង',support:'វិធីគាំទ្រ',payInfo:'ស្កេនដើម្បីគាំទ្រ',giveWell:'បរិច្ចាគឱ្យបានត្រឹមត្រូវ',whatIDo:'អ្វីដែលយើងចែករំលែក',collab:'សហការជាមួយយើង',contactWays:'ទាក់ទងយើង',writeMe:'សរសេរមកយើង',facebook:'Facebook',messenger:'Messenger',telegram:'Telegram',tiktok:'TikTok',youtube:'YouTube',instagram:'Instagram',email:'អ៊ីមែល',phone:'ទូរស័ព្ទ',address:'អាសយដ្ឋាន',website:'គេហទំព័រ',topicTrip:'រៀបចំដំណើរ',topicCollab:'ការសហការ',topicHotel:'សណ្ឋាគារ',topicOther:'ផ្សេងៗ',accountName:'ឈ្មោះគណនី',accountNo:'លេខគណនី',latest:'ថ្មីៗ',filter:'តម្រង',share:'ចែករំលែក',shareThis:'ចែករំលែកទៅមិត្តភក្តិ',copyLink:'ចម្លងតំណ',linkCopied:'បានចម្លងតំណ',theme:'រចនាប័ទ្ម',skinClassic:'បុរាណ',skinHeritage:'បេតិកភណ្ឌខ្មែរ',skinApsara:'រាត្រីអប្សរា',cultureKick:'វប្បធម៌ខ្មែរ',cultureHome:'ស្វែងយល់វប្បធម៌ខ្មែរ',inThis:'នៅក្នុងផ្នែកនេះ',nextSec:'បន្ទាប់'}
 };
 function u(k){var o=S.ui&&S.ui[k];if(o&&o[lang])return o[lang];return (UI[lang]&&UI[lang][k])||UI.en[k]||k}
 function ut(k){return admin?'<span data-edit="ui.'+k+'">'+esc(u(k))+'</span>':esc(u(k))}
@@ -862,6 +969,7 @@ var P={users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s
  wave:'<path d="M2.5 9c2.4 0 2.4-2 4.75-2S9.6 9 12 9s2.4-2 4.75-2S19.1 9 21.5 9M2.5 14c2.4 0 2.4-2 4.75-2S9.6 14 12 14s2.4-2 4.75-2 2.35 2 4.75 2M2.5 19c2.4 0 2.4-2 4.75-2S9.6 19 12 19s2.4-2 4.75-2 2.35 2 4.75 2"/>',
  hills:'<path d="M2 19l6-9 4 5 3-4 7 8z"/><circle cx="17" cy="6" r="2"/>'
 };
+P.trash='<path d="M4 7h16M10 11v6M14 11v6"/><path d="M6 7l1 12.5a1.5 1.5 0 0 0 1.5 1.5h7a1.5 1.5 0 0 0 1.5-1.5L18 7"/><path d="M9 7V4.5h6V7"/>';
 P.share='<circle cx="18" cy="5.5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="18.5" r="2.5"/><path d="M8.2 10.8l7.6-4.1M8.2 13.2l7.6 4.1"/>';
 P.bowl='<path d="M3 11.5h18a9 9 0 0 1-18 0z"/><path d="M8 20.5h8M9 3.5c-.8 1 .8 2-.1 3.2M12.5 3.5c-.8 1 .8 2-.1 3.2M16 3.5c-.8 1 .8 2-.1 3.2"/>';
 function I(n){return '<svg class="i" viewBox="0 0 24 24" aria-hidden="true">'+(P[n]||P.info)+'</svg>'}
@@ -1010,7 +1118,7 @@ function drawerHtml(){
 function renderHome(){
   var h='';
   /* hero */
-  h+='<div class="hero">';
+  h+='<div class="hero">'+lantHtml();
   S.slides.forEach(function(s,i){h+='<div class="slide'+(s.fit&&!s.video?' fit':'')+(i===cur?' on':'')+'">'+(s.fit&&!s.video?'<div class="bg" style="background-image:url('+s.img+')"></div>':'')+(s.video?'<video src="'+esc(s.video)+'"'+(s.img?' poster="'+s.img+'"':'')+' autoplay muted loop playsinline preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"></video>':s.img?'<img alt="" src="'+s.img+'"'+(i?' loading="lazy"':'')+'>':'<div class="sart">'+art('temple','sl'+i)+'</div>')+'</div>'});
   var s0=S.slides[cur]||{};
   h+='<div class="hcap"><div class="wrap"><div class="kick" id="hkick">'+esc(tr(s0.kick))+'</div><h1 class="emb" id="htitle">'+esc(tr(s0.cap))+'</h1><div class="cta"><a class="btn light" href="#/p/destinations">'+I('compass')+ut('exploreBtn')+'</a><a class="btn ghost" style="color:#fff" href="#/p/videos">'+I('play')+ut('watchBtn')+'</a>'+(admin?'<button class="btn soft aonly" data-act="slides">'+I('image')+' Edit slideshow</button>':'')+'</div></div></div>';
@@ -1095,7 +1203,7 @@ function videoFeature(v,small,edAct){
 
 /* ---------- PAGE ---------- */
 function banner(p,title,icon,img,kind,crumbs,sharePath){
-  return '<div class="pbanner">'+(img?'<img alt="" src="'+img+'">':art(kind||'hills',p))+'<div class="wrap">'+(crumbs?'<div class="crumb">'+String(crumbs).replace(/^\s*\/\s*/,'')+'</div>':'')+(icon?'<div class="pic">'+I(icon)+'</div>':'')+'<h1 class="emb">'+esc(title)+'</h1>'+(sharePath?'<button type="button" class="bshare" data-share="'+esc(sharePath)+'" data-st="'+esc(title)+'" aria-label="'+esc(u('share'))+'">'+I('share')+'<span>'+esc(u('share'))+'</span></button>':'')+'</div></div>';
+  return '<div class="pbanner">'+(img?'<img alt="" src="'+img+'">':art(kind||'hills',p))+lantHtml()+'<div class="wrap">'+(crumbs?'<div class="crumb">'+String(crumbs).replace(/^\s*\/\s*/,'')+'</div>':'')+(icon?'<div class="pic">'+I(icon)+'</div>':'')+'<h1 class="emb">'+esc(title)+'</h1>'+(sharePath?'<button type="button" class="bshare" data-share="'+esc(sharePath)+'" data-st="'+esc(title)+'" aria-label="'+esc(u('share'))+'">'+I('share')+'<span>'+esc(u('share'))+'</span></button>':'')+'</div></div>';
 }
 function siteBase(){var w=String(S.links&&S.links.website||'kongthean.com').replace(/^https?:\/\//,'').replace(/\/+$/,'')||'kongthean.com';return 'https://'+w+'/'}
 function shareUrl(path){path=String(path||'').replace(/^#?\/?/,'');return siteBase()+(path?'?go='+path.split('/').map(encodeURIComponent).join('/'):'')}
@@ -1110,9 +1218,11 @@ function doShare(path,title){var link=shareUrl(path),t=(title?title+' · ':'')+'
   m.addEventListener('click',function(e){var b=e.target.closest('[data-copy],[data-more]');if(!b)return;if(b.hasAttribute('data-more')){navigator.share({title:t,text:t,url:link}).catch(function(){});return}copyText(link,function(){b.querySelector('span').textContent=u('linkCopied');toast(u('linkCopied'))})})}
 
 /* ---------- theme (skin) ---------- */
-function skinNow(){var k='';try{k=localStorage.getItem('thean-skin')||''}catch(e){}return k==='heritage'||k==='classic'?k:((S.ui&&S.ui.skin)||'classic')}
-function applySkin(k){var r=document.documentElement;if(k==='heritage'){r.setAttribute('data-skin','heritage');if(!document.getElementById('hfont')){var l=document.createElement('link');l.id='hfont';l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Moul&display=swap';document.head.appendChild(l)}}else r.setAttribute('data-skin','classic')}
-function skinSwitch(){var k=skinNow();return '<div class="skinsw" role="group" aria-label="'+esc(u('theme'))+'"><span class="sklbl">'+esc(u('theme'))+'</span>'+[['classic','skinClassic'],['heritage','skinHeritage']].map(function(o){return '<button type="button" class="'+(k===o[0]?'on':'')+'" data-skin="'+o[0]+'" aria-pressed="'+(k===o[0])+'"><i class="sw sw-'+o[0]+'"></i>'+esc(u(o[1]))+'</button>'}).join('')+'</div>'}
+function skinNow(){var k='';try{k=localStorage.getItem('thean-skin')||''}catch(e){}return k==='heritage'||k==='classic'||k==='apsara'?k:((S.ui&&S.ui.skin)||'classic')}
+function applySkin(k){var r=document.documentElement;k=k==='heritage'||k==='apsara'?k:'classic';r.setAttribute('data-skin',k);
+  var fonts={heritage:'family=Cinzel:wght@500;700&family=Moul',apsara:'family=Marcellus&family=Moul'};if(fonts[k]&&!document.getElementById('hf-'+k)){var l=document.createElement('link');l.id='hf-'+k;l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?'+fonts[k]+'&display=swap';document.head.appendChild(l)}}
+function lantHtml(){return '<div class="lant" aria-hidden="true">'+[[6,13,-2,.9],[15,17,-9,.7],[24,12,-5,1.1],[36,19,-14,.8],[47,14,-7,1],[58,16,-11,.75],[69,12,-3,1.15],[80,18,-15,.85],[91,15,-6,.95]].map(function(a){return '<i style="--x:'+a[0]+'%;--d:'+a[1]+'s;--dl:'+a[2]+'s;--s:'+a[3]+'"></i>'}).join('')+'</div>'}
+function skinSwitch(){var k=skinNow();return '<div class="skinsw" role="group" aria-label="'+esc(u('theme'))+'"><span class="sklbl">'+esc(u('theme'))+'</span>'+[['classic','skinClassic'],['heritage','skinHeritage'],['apsara','skinApsara']].map(function(o){return '<button type="button" class="'+(k===o[0]?'on':'')+'" data-skin="'+o[0]+'" aria-pressed="'+(k===o[0])+'"><i class="sw sw-'+o[0]+'"></i>'+esc(u(o[1]))+'</button>'}).join('')+'</div>'}
 function renderPage(p,R){
   var i=S.pages.indexOf(p),h='';
   var bimg=p.img||(p.bannerFrom&&placeById(p.bannerFrom)&&placeById(p.bannerFrom).img)||'';
@@ -2009,7 +2119,7 @@ function dashSection(){
   }
   else if(sec==='settings'){
     h+=dHead('Contact & settings','Links, logo, storage and your team.');
-    h+='<div class="dcards">'+dCard('menu','Menu icon style','Colour, photo, outline or classic grey','data-act="tilestyle"')+dCard('star','Website theme','Default for visitors: '+((S.ui&&S.ui.skin)==='heritage'?'Khmer Heritage':'Classic')+'. Visitors can switch at the bottom of the page.','data-act="skinform"')+dCard('link','Contact links & numbers','Facebook, Telegram, phone, email, follower count…','data-act="links"')+dCard('image','Logo','The round logo at the top','data-act="logo"')+dCard('pin','Map image','Picture on the Cambodia map section','data-act="mapimg"')+dCard('video','Photo & video storage',mediaOK()?'Connected ('+esc(S.media.cloud)+')':'Not connected: tap to set up','data-act="media"')+dCard('users','Team & chat inbox','Invite staff, answer customers','onclick="location.href=\'agent\'"')+dCard('download','Backup copy','Download a copy of the website','data-act="export"')+'</div>';
+    h+='<div class="dcards">'+dCard('menu','Menu icon style','Colour, photo, outline or classic grey','data-act="tilestyle"')+dCard('star','Website theme','Default for visitors: '+({heritage:'Khmer Heritage',apsara:'Apsara Night'}[S.ui&&S.ui.skin]||'Classic')+'. Visitors can switch at the bottom of the page.','data-act="skinform"')+dCard('link','Contact links & numbers','Facebook, Telegram, phone, email, follower count…','data-act="links"')+dCard('image','Logo','The round logo at the top','data-act="logo"')+dCard('pin','Map image','Picture on the Cambodia map section','data-act="mapimg"')+dCard('video','Photo & video storage',mediaOK()?'Connected ('+esc(S.media.cloud)+')':'Not connected: tap to set up','data-act="media"')+dCard('users','Team & chat inbox','Invite staff, answer customers','onclick="location.href=\'agent\'"')+dCard('download','Backup copy','Download a copy of the website','data-act="export"')+'</div>';
   }
   return h;
 }
@@ -2063,8 +2173,8 @@ function slidesForm(){
     if(b.hasAttribute('data-ok')){S.slides=L;cur=0;m.remove();changed()}});
 }
 function skinForm(){var k=(S.ui&&S.ui.skin)||'classic';
-  var m=modal('Website theme','<p style="margin:0 0 12px;color:var(--muted)">Choose the look new visitors see first. Each visitor can still change it with the Theme switch at the very bottom of the website.</p><div style="display:grid;gap:10px">'+[['classic','Classic','Misty stone greys, the original look'],['heritage','Khmer Heritage','Sandstone, gold and lacquer red with Khmer ornament']].map(function(o){return '<button type="button" class="skpick'+(k===o[0]?' on':'')+'" data-sk="'+o[0]+'"><i class="sw sw-'+o[0]+'"></i><span><b>'+o[1]+'</b><small>'+o[2]+'</small></span></button>'}).join('')+'</div>');
-  m.addEventListener('click',function(e){var b=e.target.closest('[data-sk]');if(!b)return;S.ui=S.ui||{};S.ui.skin=b.dataset.sk;try{localStorage.removeItem('thean-skin')}catch(x){}m.remove();changed();toast('Theme set to '+(b.dataset.sk==='heritage'?'Khmer Heritage':'Classic'))})}
+  var m=modal('Website theme','<p style="margin:0 0 12px;color:var(--muted)">Choose the look new visitors see first. Each visitor can still change it with the Theme switch at the very bottom of the website.</p><div style="display:grid;gap:10px">'+[['classic','Classic','Misty stone greys, the original look'],['heritage','Khmer Heritage','Sandstone, gold and lacquer red with Khmer ornament'],['apsara','Apsara Night','Jade, lotus and night-sky indigo with gold kbach, floating lanterns and twinkling stars']].map(function(o){return '<button type="button" class="skpick'+(k===o[0]?' on':'')+'" data-sk="'+o[0]+'"><i class="sw sw-'+o[0]+'"></i><span><b>'+o[1]+'</b><small>'+o[2]+'</small></span></button>'}).join('')+'</div>');
+  m.addEventListener('click',function(e){var b=e.target.closest('[data-sk]');if(!b)return;S.ui=S.ui||{};S.ui.skin=b.dataset.sk;try{localStorage.removeItem('thean-skin')}catch(x){}m.remove();changed();toast('Theme set to '+({heritage:'Khmer Heritage',apsara:'Apsara Night'}[b.dataset.sk]||'Classic'))})}
 function tileStyleForm(){
   var opts=[['classic','Classic grey','The original grey buttons'],['color','Colour','Each icon has its own soft colour'],['photo','Photo','Round photo of each page with a small icon'],['outline','Outline','Clean white buttons with dark icons']];
   var sample=S.pages.slice(0,4);
@@ -2169,7 +2279,7 @@ const W = {
    tNotFound:'Sorry, we could not find a case with ticket ID {t}. Please check the number, or talk to our team.',
    tClosed:'Your case with ticket ID {t} was solved and closed on {d}. Would you like to reopen the case or talk to a live agent?',
    tReopened:'Your case has been reopened. Your new ticket ID is {t}. Please keep this number. We are connecting you to our team now.',
-   bReopen:'Reopen my case',
+   bReopen:'Reopen my case',clr:'Clear chat',clrQ:'Clear this conversation from your screen?',clrQLive:'This ends your live chat and clears the conversation from your screen. Continue?',clrYes:'Clear',clrNo:'Cancel',
    reportAsk:'We are sorry to hear that. Please fill in this form so our team can check it. We take every report seriously and will give credit or remove the content where it is right to do so.',
    reportDone:'Thank you. We received your report. Your ticket ID is {t}. Please keep this number. Our team will review your report and contact you by phone or email as soon as possible.',
    contactDone:'Thank you. We received your details.',
@@ -2190,7 +2300,7 @@ const W = {
    tNotFound:'សូមអភ័យទោស យើងរកមិនឃើញករណីដែលមានលេខសំបុត្រ {t} ទេ។ សូមពិនិត្យលេខម្ដងទៀត ឬនិយាយជាមួយក្រុមការងាររបស់យើង។',
    tClosed:'ករណីរបស់អ្នក ដែលមានលេខសំបុត្រ {t} ត្រូវបានដោះស្រាយ និងបិទនៅថ្ងៃ {d}។ តើអ្នកចង់បើកករណីនេះឡើងវិញ ឬនិយាយជាមួយភ្នាក់ងារផ្ទាល់?',
    tReopened:'ករណីរបស់អ្នកត្រូវបានបើកឡើងវិញ។ លេខសំបុត្រថ្មីរបស់អ្នកគឺ {t}។ សូមរក្សាលេខនេះទុក។ យើងកំពុងភ្ជាប់អ្នកទៅក្រុមការងារឥឡូវនេះ។',
-   bReopen:'បើកករណីរបស់ខ្ញុំឡើងវិញ',
+   bReopen:'បើកករណីរបស់ខ្ញុំឡើងវិញ',clr:'សម្អាតការជជែក',clrQ:'សម្អាតការសន្ទនានេះពីអេក្រង់របស់អ្នក?',clrQLive:'សកម្មភាពនេះនឹងបញ្ចប់ការជជែកផ្ទាល់ ហើយសម្អាតការសន្ទនាពីអេក្រង់របស់អ្នក។ បន្តទេ?',clrYes:'សម្អាត',clrNo:'បោះបង់',
    reportAsk:'យើងសោកស្ដាយដែលបានឮដូច្នេះ។ សូមបំពេញទម្រង់នេះ ដើម្បីឱ្យក្រុមការងាររបស់យើងពិនិត្យ។ យើងយកចិត្តទុកដាក់លើរាល់របាយការណ៍ ហើយនឹងដាក់ឈ្មោះម្ចាស់ ឬលុបមាតិកាចេញ នៅពេលដែលត្រឹមត្រូវ។',
    reportDone:'អរគុណ។ យើងបានទទួលរបាយការណ៍របស់អ្នក។ លេខសំបុត្ររបស់អ្នកគឺ {t}។ សូមរក្សាលេខនេះទុក។ ក្រុមការងាររបស់យើងនឹងពិនិត្យ ហើយទាក់ទងអ្នកតាមទូរស័ព្ទ ឬអ៊ីមែលឱ្យបានឆាប់បំផុត។',
    contactDone:'អរគុណ។ យើងបានទទួលព័ត៌មានរបស់អ្នកហើយ។',
@@ -2204,6 +2314,11 @@ const STARTED='thean-chat-started', CACHE='thean-site-cache';
 /* ---------------- firebase ---------------- */
 let fb=null,fbP=null,user=null,msgs=[],unsub=[],botTyping=false,unread=0,peek=null,open=false,liveMode=false,waitMin=10,autoMin=30,local=[],offline=false;
 const FV={};
+let clearedAt=0;try{clearedAt=+localStorage.getItem('thean-chat-cleared')||0}catch(e){}
+async function clearChat(){const live=chat&&(chat.status==='waiting'||chat.status==='assigned');
+  if(live){try{await endLive()}catch(e){}}
+  clearedAt=Math.max(Date.now(),...msgs.map(m=>ms(m.ts)||0),...local.map(m=>ms(m.ts)||0))+1;try{localStorage.setItem('thean-chat-cleared',String(clearedAt))}catch(e){}
+  local=[];for(const k in FV)delete FV[k];sesLang=null;lastBody='';draw(true)}
 async function nextTicket(){const r=await fb.tx('counters/ticket',cur=>(typeof cur==='number'?cur:0)+1);if(!r.committed||typeof r.val!=='number')throw new Error('ticket');return String(r.val).padStart(16,'0')}
 const fmtT=t=>{const p=String(t||'').split('-');const b=p[0].replace(/\D/g,'').padStart(16,'0').replace(/(\d{4})(?=\d)/g,'$1 ');return p[1]?b+'-'+p[1]:b};
 const kmDig=x=>String(x).replace(/\d/g,d=>'០១២៣៤៥៦៧៨៩'[d]);
@@ -2267,11 +2382,13 @@ async function touch(extra){if(fb&&user&&chat)await fb.update(CP(),Object.assign
 
 /* ---------------- flows ---------------- */
 const btnLive=lg=>[{l:w('bLive',lg),a:'live'}];
+const capsMsg=lg=>typeThen(900,{from:'bot',text:CAPS[lg]||CAPS.en,btns:btnLive(lg).concat(w('opts',lg).map(o=>({l:o[1],a:'opt:'+o[0]})))});
 async function pickLang(lg){
   sesLang=lg;try{await ensureChat(lg);await fb.update(CP(),{lang:lg});chat.lang=lg}catch(e){offline=true}
   await say({from:'visitor',text:lg==='km'?'ភាសាខ្មែរ':'English'});
-  await typeThen(1200,{from:'bot',text:w('intro',lg)});
-  await touch({lastMsg:w('intro',lg).slice(0,120),lastFrom:'bot'});
+  await typeThen(1000,{from:'bot',text:hello(lg)});
+  await capsMsg(lg);
+  await touch({lastMsg:hello(lg).slice(0,120),lastFrom:'bot'});
 }
 async function goLive(){
   const lg=L();
@@ -2325,7 +2442,8 @@ async function option(key,label){
   await say({from:'visitor',text:label});
   botTyping=true;draw(true);
   setTimeout(async()=>{botTyping=false;const r=optAnswer(key,lg)||bot(label);
-    await say({from:'bot',text:r.text,links:(r.links||[]).map(x=>({l:x[0],h:x[1]})),btns:r.live?btnLive(lg):undefined});
+    await say({from:'bot',text:r.text,links:(r.links||[]).map(x=>({l:x[0],h:x[1]})),btns:r.live&&!r.caps?btnLive(lg):undefined});
+    if(r.caps)await capsMsg(lg);
     await touch({lastMsg:r.text.slice(0,120),lastFrom:'bot'});
   },600);
 }
@@ -2343,7 +2461,8 @@ async function send(text){
   if(REPORT_RE.test(text)){const lg=hasKm(text)?'km':L();await typeThen(900,{from:'bot',text:w('reportAsk',lg),form:'report'});await touch({lastMsg:'Content report form shown',lastFrom:'bot'});return}
   botTyping=true;draw(true);
   setTimeout(async()=>{botTyping=false;const lg=hasKm(text)?'km':L();const r=bot(text);
-    await say({from:'bot',text:r.text,links:(r.links||[]).map(x=>({l:x[0],h:x[1]})),btns:r.live?btnLive(lg):(r.more?btnLive(lg).concat(w('opts',lg).map(o=>({l:o[1],a:'opt:'+o[0]}))):undefined)});
+    await say({from:'bot',text:r.text,links:(r.links||[]).map(x=>({l:x[0],h:x[1]})),btns:r.caps?undefined:r.live?btnLive(lg):(r.more?btnLive(lg).concat(w('opts',lg).map(o=>({l:o[1],a:'opt:'+o[0]}))):undefined)});
+    if(r.caps)await capsMsg(lg);
     await touch({lastMsg:r.text.slice(0,120),lastFrom:'bot'});
   },650+Math.min(900,text.length*12));
 }
@@ -2359,7 +2478,8 @@ async function act(a,label){
 
 /* ---------------- smart bot ---------------- */
 function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')}
-const GREET={en:'Hello! How can I help you today? I can assist you with:\n• Planning your trip day by day\n• Destinations, temples and the best time to visit\n• Hotels and restaurants\n• Khmer culture, festivals, dances and food\n• Travel tips and how to contact us\n\nJust type your question, or tap «Talk to Live Agent» to chat with our team.',km:'សួស្ដី! តើខ្ញុំអាចជួយអ្វីអ្នកបានខ្លះថ្ងៃនេះ? ខ្ញុំអាចជួយអ្នកអំពី៖\n• រៀបចំកាលវិភាគដំណើរតាមថ្ងៃនីមួយៗ\n• គោលដៅទេសចរណ៍ ប្រាសាទ និងពេលល្អសម្រាប់ទស្សនា\n• សណ្ឋាគារ និងភោជនីយដ្ឋាន\n• វប្បធម៌ ពិធីបុណ្យ របាំ និងម្ហូបខ្មែរ\n• គន្លឹះធ្វើដំណើរ និងរបៀបទាក់ទងយើង\n\nសូមសរសេរសំណួររបស់អ្នក ឬចុច «និយាយជាមួយភ្នាក់ងារផ្ទាល់» ដើម្បីជជែកជាមួយក្រុមការងាររបស់យើង។'};
+const CAPS={en:'I can assist you with:\n• Planning your trip day by day\n• Destinations, temples and the best time to visit\n• Hotels and restaurants\n• Khmer culture, festivals, dances and food\n• Travel tips and how to contact us\n\nJust type your question, or tap «Talk to Live Agent» to chat with our team.',km:'ខ្ញុំអាចជួយអ្នកអំពី៖\n• រៀបចំកាលវិភាគដំណើរតាមថ្ងៃនីមួយៗ\n• គោលដៅទេសចរណ៍ ប្រាសាទ និងពេលល្អសម្រាប់ទស្សនា\n• សណ្ឋាគារ និងភោជនីយដ្ឋាន\n• វប្បធម៌ ពិធីបុណ្យ របាំ និងម្ហូបខ្មែរ\n• គន្លឹះធ្វើដំណើរ និងរបៀបទាក់ទងយើង\n\nសូមសរសេរសំណួររបស់អ្នក ឬចុច «និយាយជាមួយភ្នាក់ងារផ្ទាល់» ដើម្បីជជែកជាមួយក្រុមការងាររបស់យើង។'};
+function hello(lg){const h=new Date().getHours();if(lg==='km')return (h<12?'អរុណសួស្ដី':h<18?'ទិវាសួស្ដី':'សាយណ្ហសួស្ដី')+'! ខ្ញុំជាជំនួយការនិម្មិតរបស់អ្នកថ្ងៃនេះ។ តើខ្ញុំអាចជួយអ្វីអ្នកបានខ្លះ?';return (h<12?'Good morning':h<18?'Good afternoon':'Good evening')+"! I'm your virtual assistant today. How can I help you?"}
 const hasKm=s=>/[ក-៿]/.test(s);
 function tr(o,lg){if(!o)return '';if(typeof o==='string')return o;return o[lg]||o.en||o.km||''}
 const KW={
@@ -2420,13 +2540,13 @@ function bot0(text){
   if(has(t,KW.who))return {text:km?'ខ្ញុំជាជំនួយការស្វ័យប្រវត្តិរបស់ក្រុម Thean។ ខ្ញុំអាចឆ្លើយសំណួរអំពីការធ្វើដំណើរនៅកម្ពុជា។ ប្រសិនបើអ្នកចង់និយាយជាមួយមនុស្ស គ្រាន់តែប្រាប់ខ្ញុំ។':"I'm the Thean team's virtual assistant. I can answer questions about travelling in Cambodia. If you'd like to talk to a person, just tell me."};
   if(has(t,KW.bye))return {text:km?'លាសិនហើយ! សូមឱ្យដំណើររបស់អ្នករីករាយ។':'Goodbye! Have a wonderful trip.'};
   if(has(t,KW.thanks))return {text:km?'មិនអីទេ! រីករាយនឹងដំណើររបស់អ្នក។':"You're welcome! Enjoy your trip."};
-  if(has(t,KW.greet))return {text:km?GREET.km:GREET.en,more:true};
+  if(has(t,KW.greet))return {text:hello(km?'km':'en'),caps:true};
   const prov=(window.TheanProv||[]).find(pr=>t.includes(norm(pr[0]))||t.includes(pr[1]));
   if(prov){const inP=(S.places||[]).filter(x=>norm(tr(x.region,'en')).includes(norm(prov[0])));if(inP.length)return listAnswer(inP,lg,(km?'នៅ ':'In ')+(km?prov[1]:prov[0])+':',[km?'គោលដៅ':'Destinations','#/p/destinations']);
     return {text:(km?'យើងមិនទាន់មានមគ្គុទ្ទេសក៍សម្រាប់ ':'We don\'t have a guide for ')+(km?prov[1]:prov[0])+(km?' នៅឡើយទេ ប៉ុន្តែភ្នាក់ងាររបស់យើងអាចជួយអ្នកបាន។':' yet, but our agents can help you.'),live:true,links:[[km?'បើកផែនទី':'Open map','https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(prov[0]+', Cambodia')]]}}
   if(has(t,KW.where))return listAnswer((S.places||[]).filter(x=>x.featured),lg,km?'កន្លែងដែលយើងចូលចិត្តបំផុត៖':'Our favourite places right now:',[km?'គោលដៅទាំងអស់':'All destinations','#/p/destinations']);
   if(has(t,KW.ok))return {text:km?'ល្អណាស់! មានអ្វីផ្សេងទៀតដែលខ្ញុំអាចជួយបានទេ?':'Great! Is there anything else I can help you with?'};
-  return {text:km?'សុំទោស ខ្ញុំមិនប្រាកដអំពីសំណួរនេះទេ។ ខ្ញុំអាចប្រាប់អ្នកអំពីគោលដៅ ប្រាសាទ ពេលល្អសម្រាប់ធ្វើដំណើរ ទិដ្ឋាការ ឬសណ្ឋាគារ។ ឬនិយាយជាមួយភ្នាក់ងារផ្ទាល់។':"I'm not sure about that one. I can help with destinations, temples, the best time to go, visas or hotels. Or you can talk to a live agent.",live:true,fallback:true};
+  return {text:km?'សូមអភ័យទោស ខ្ញុំមិនទាន់មានចម្លើយសម្រាប់សំណួរនេះនៅឡើយទេ។':"Sorry, I don't have an answer for that yet.",caps:true,live:true,fallback:true};
 }
 
 /* ---------- more knowledge: culture, festivals, trip planner (Oct 2026) ---------- */
@@ -2635,9 +2755,13 @@ function draw(scroll){
   if(!open){wrap.innerHTML=peek?'<div class="tc-peek" role="status"><b>'+esc(w('peek'))+'</b>'+esc(String(peek.text).slice(0,120))+'</div>':'';const pk=wrap.querySelector('.tc-peek');if(pk)pk.onclick=()=>toggle(true);lastBody='';return}
   let panel=wrap.querySelector('.tc-panel');
   if(!panel){
-    wrap.innerHTML='<div class="tc-panel" role="dialog" aria-label="'+esc(w('title'))+'"><div class="tc-head"><span class="logo">'+(logo?'<img alt="" src="'+logo+'">':'')+'</span><div class="who"><b></b><small></small></div><button class="tc-x" type="button" aria-label="Close">'+I('close')+'</button></div><div class="tc-body" aria-live="polite"></div><form class="tc-foot"><textarea rows="1" aria-label="Message"></textarea><button class="tc-send" type="submit" aria-label="Send">'+I('arrow')+'</button></form></div>';
+    wrap.innerHTML='<div class="tc-panel" role="dialog" aria-label="'+esc(w('title'))+'"><div class="tc-head"><span class="logo">'+(logo?'<img alt="" src="'+logo+'">':'')+'</span><div class="who"><b></b><small></small></div><button class="tc-clr" type="button">'+I('trash')+'</button><button class="tc-x" type="button" aria-label="Close">'+I('close')+'</button></div><div class="tc-confirm" hidden><span></span><button type="button" class="tc-cyes"></button><button type="button" class="tc-cno"></button></div><div class="tc-body" aria-live="polite"></div><form class="tc-foot"><textarea rows="1" aria-label="Message"></textarea><button class="tc-send" type="submit" aria-label="Send">'+I('arrow')+'</button></form></div>';
     panel=wrap.querySelector('.tc-panel');
     panel.querySelector('.tc-x').onclick=()=>toggle(false);
+    const cf=panel.querySelector('.tc-confirm');
+    panel.querySelector('.tc-clr').onclick=()=>{const lg=L(),live=chat&&(chat.status==='waiting'||chat.status==='assigned');cf.querySelector('span').textContent=w(live?'clrQLive':'clrQ',lg);cf.querySelector('.tc-cyes').textContent=w('clrYes',lg);cf.querySelector('.tc-cno').textContent=w('clrNo',lg);cf.hidden=false};
+    cf.querySelector('.tc-cno').onclick=()=>{cf.hidden=true};
+    cf.querySelector('.tc-cyes').onclick=async()=>{cf.hidden=true;await clearChat()};
     const f=panel.querySelector('form'),ta=f.querySelector('textarea');
     f.onsubmit=e=>{e.preventDefault();send(ta.value)};
     ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&window.innerWidth>520){e.preventDefault();send(ta.value)}});
@@ -2653,10 +2777,11 @@ function draw(scroll){
       const b=e.target.closest('[data-act]');if(b){b.disabled=true;act(b.dataset.act,b.textContent).catch(()=>{}).finally(()=>{b.disabled=false})}});
   }
   panel.querySelector('.tc-head b').textContent=w('title');
+  {const cb=panel.querySelector('.tc-clr');cb.setAttribute('aria-label',w('clr'));cb.title=w('clr')}
   panel.querySelector('.tc-head small').innerHTML=statusLine();
   panel.querySelector('.tc-foot textarea').placeholder=w('ph');
   const welcome={id:'w',from:'bot',text:w('welcome'),ts:0,btns:[{l:'ភាសាខ្មែរ',a:'lang:km'},{l:'English',a:'lang:en'}]};
-  const all=[welcome].concat(msgs,local).sort((a,b)=>(a.id==='w'?-1:b.id==='w'?1:ms(a.ts)-ms(b.ts)));
+  const all=[welcome].concat(msgs.filter(m=>!clearedAt||ms(m.ts)>clearedAt),local.filter(m=>!clearedAt||ms(m.ts)>clearedAt)).sort((a,b)=>(a.id==='w'?-1:b.id==='w'?1:ms(a.ts)-ms(b.ts)));
   let lastBtn=-1;all.forEach((m,i)=>{if(m.btns&&m.btns.length)lastBtn=i});
   let h=all.map((m,i)=>msgHtml(m,i===lastBtn)).join('');
   if(botTyping)h+='<div class="tc-typing" aria-label="'+esc(w('typing'))+'"><i></i><i></i><i></i></div>';
@@ -2679,7 +2804,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261004-0435',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261004-0709',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
