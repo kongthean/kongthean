@@ -2155,7 +2155,7 @@ function setLg(lg){if(!lg)return;sesLang=lg;if(chat&&chat.lang!==lg){chat.lang=l
 const W = {
  en:{title:'Chat with us',bot:'Assistant · instant answers',wait:'Connecting you to an agent…',live:'live agent',ph:'Type a message…',
    welcome:'សូមស្វាគមន៍! សូមជ្រើសរើសភាសាដែលអ្នកចង់ប្រើ។\n\nWelcome! Please select your preferred language.',
-   intro:'Hi there! Thanks for visiting. How can we help you today? You can ask about destinations, temples, the best time to travel, where to stay and Khmer culture, or tell us how many days you have and we will plan your trip day by day.',
+   intro:'Hello! How can I help you today? I can assist you with:\n• Planning your trip day by day\n• Destinations, temples and the best time to visit\n• Hotels and restaurants\n• Khmer culture, festivals, dances and food\n• Travel tips and how to contact us\n\nJust type your question, or tap «Talk to Live Agent» to chat with our team.',
    hold1:'Our next available agent will assist you shortly.',hold2:'Please hold on! Our system is connecting you to an available agent. Thank you!',
    busy:'Sorry, all our agents are busy right now. Please try again later. You can keep chatting with me in the meantime.',
    ended:'Your chat session has ended. Thank you for contacting us today.',endedSys:'The customer ended the live chat.',
@@ -2164,7 +2164,11 @@ const W = {
    bLive:'Talk to Live Agent',bMore:'More Options',bEnd:'End Live Chat',
    opts:[['plan','Plan my trip'],['culture','Culture & traditions'],['dest','Destinations'],['time','Best time to visit'],['stay','Where to stay'],['tips','Travel tips'],['contact','Contact']],
    autoEnd:'This chat was closed automatically after {min} minutes without new messages. Send us a message any time if you need more help.',
-   follow:'Thank you. We found your ticket number {t}. We are connecting you to our team so they can continue from where we left off.',
+   follow:'Thank you. We found your case with ticket ID {t}. It is still open, so we are connecting you to our team to continue from where we left off.',
+   tNotFound:'Sorry, we could not find a case with ticket ID {t}. Please check the number, or talk to our team.',
+   tClosed:'Your case with ticket ID {t} was solved and closed on {d}. Would you like to reopen the case or talk to a live agent?',
+   tReopened:'Your case has been reopened. Your new ticket ID is {t}. Please keep this number. We are connecting you to our team now.',
+   bReopen:'Reopen my case',
    reportAsk:'We are sorry to hear that. Please fill in this form so our team can check it. We take every report seriously and will give credit or remove the content where it is right to do so.',
    reportDone:'Thank you. We received your report. Your ticket ID is {t}. Please keep this number. Our team will review your report and contact you by phone or email as soon as possible.',
    contactDone:'Thank you. We received your details.',
@@ -2172,7 +2176,7 @@ const W = {
    F:{name:'Full name',phone:'Phone number',email:'Email',other:'Telegram, WhatsApp or other',ours:'Link to the content on our website or page',orig:'Link to your original post',details:'Details: what was used and when',want:'What would you like us to do?',wCredit:'Give me credit',wRemove:'Remove the content',wOther:'Something else'}},
  km:{title:'ជជែកជាមួយយើង',bot:'ជំនួយការ · ឆ្លើយភ្លាមៗ',wait:'កំពុងភ្ជាប់ទៅភ្នាក់ងារ…',live:'ភ្នាក់ងារផ្ទាល់',ph:'សរសេរសារ…',
    welcome:'សូមស្វាគមន៍! សូមជ្រើសរើសភាសាដែលអ្នកចង់ប្រើ។\n\nWelcome! Please select your preferred language.',
-   intro:'សួស្ដី! អរគុណដែលបានមកលេង។ តើយើងអាចជួយអ្វីបានខ្លះថ្ងៃនេះ? អ្នកអាចសួរអំពីគោលដៅ ប្រាសាទ ពេលល្អសម្រាប់ធ្វើដំណើរ កន្លែងស្នាក់នៅ និងវប្បធម៌ខ្មែរ ឬប្រាប់យើងថាអ្នកមានពេលប៉ុន្មានថ្ងៃ យើងនឹងរៀបចំកាលវិភាគដំណើរជូនតាមថ្ងៃនីមួយៗ។',
+   intro:'សួស្ដី! តើខ្ញុំអាចជួយអ្វីអ្នកបានខ្លះថ្ងៃនេះ? ខ្ញុំអាចជួយអ្នកអំពី៖\n• រៀបចំកាលវិភាគដំណើរតាមថ្ងៃនីមួយៗ\n• គោលដៅទេសចរណ៍ ប្រាសាទ និងពេលល្អសម្រាប់ទស្សនា\n• សណ្ឋាគារ និងភោជនីយដ្ឋាន\n• វប្បធម៌ ពិធីបុណ្យ របាំ និងម្ហូបខ្មែរ\n• គន្លឹះធ្វើដំណើរ និងរបៀបទាក់ទងយើង\n\nសូមសរសេរសំណួររបស់អ្នក ឬចុច «និយាយជាមួយភ្នាក់ងារផ្ទាល់» ដើម្បីជជែកជាមួយក្រុមការងាររបស់យើង។',
    hold1:'ភ្នាក់ងារដែលទំនេរបន្ទាប់ នឹងជួយអ្នកក្នុងពេលឆាប់ៗនេះ។',hold2:'សូមរង់ចាំបន្តិច! ប្រព័ន្ធរបស់យើងកំពុងភ្ជាប់អ្នកទៅភ្នាក់ងារដែលទំនេរ។ អរគុណ!',
    busy:'សូមអភ័យទោស ភ្នាក់ងាររបស់យើងទាំងអស់កំពុងរវល់នៅពេលនេះ។ សូមព្យាយាមម្ដងទៀតនៅពេលក្រោយ។ អ្នកអាចបន្តជជែកជាមួយខ្ញុំក្នុងពេលនេះ។',
    ended:'វគ្គជជែករបស់អ្នកបានបញ្ចប់។ អរគុណសម្រាប់ការទាក់ទងមកយើងនៅថ្ងៃនេះ។',endedSys:'អតិថិជនបានបញ្ចប់ការជជែកផ្ទាល់។',
@@ -2181,7 +2185,11 @@ const W = {
    bLive:'និយាយជាមួយភ្នាក់ងារផ្ទាល់',bMore:'ជម្រើសផ្សេងៗ',bEnd:'បញ្ចប់ការជជែកផ្ទាល់',
    opts:[['plan','រៀបចំដំណើររបស់ខ្ញុំ'],['culture','វប្បធម៌ និងប្រពៃណី'],['dest','គោលដៅទេសចរណ៍'],['time','ពេលល្អសម្រាប់ទស្សនា'],['stay','កន្លែងស្នាក់នៅ'],['tips','គន្លឹះធ្វើដំណើរ'],['contact','ទំនាក់ទំនង']],
    autoEnd:'ការជជែកនេះត្រូវបានបិទដោយស្វ័យប្រវត្តិ បន្ទាប់ពី {min} នាទីដោយគ្មានសារថ្មី។ សូមផ្ញើសារមកយើងពេលណាក៏បាន ប្រសិនបើត្រូវការជំនួយបន្ថែម។',
-   follow:'អរគុណ។ យើងបានទទួលលេខសំបុត្ររបស់អ្នក {t}។ យើងកំពុងភ្ជាប់អ្នកទៅក្រុមការងារ ដើម្បីបន្តពីកន្លែងដែលបានបញ្ឈប់។',
+   follow:'អរគុណ។ យើងបានរកឃើញករណីរបស់អ្នក ដែលមានលេខសំបុត្រ {t}។ ករណីនេះនៅបើកនៅឡើយ ដូច្នេះយើងកំពុងភ្ជាប់អ្នកទៅក្រុមការងារ ដើម្បីបន្តពីកន្លែងដែលបានបញ្ឈប់។',
+   tNotFound:'សូមអភ័យទោស យើងរកមិនឃើញករណីដែលមានលេខសំបុត្រ {t} ទេ។ សូមពិនិត្យលេខម្ដងទៀត ឬនិយាយជាមួយក្រុមការងាររបស់យើង។',
+   tClosed:'ករណីរបស់អ្នក ដែលមានលេខសំបុត្រ {t} ត្រូវបានដោះស្រាយ និងបិទនៅថ្ងៃ {d}។ តើអ្នកចង់បើកករណីនេះឡើងវិញ ឬនិយាយជាមួយភ្នាក់ងារផ្ទាល់?',
+   tReopened:'ករណីរបស់អ្នកត្រូវបានបើកឡើងវិញ។ លេខសំបុត្រថ្មីរបស់អ្នកគឺ {t}។ សូមរក្សាលេខនេះទុក។ យើងកំពុងភ្ជាប់អ្នកទៅក្រុមការងារឥឡូវនេះ។',
+   bReopen:'បើកករណីរបស់ខ្ញុំឡើងវិញ',
    reportAsk:'យើងសោកស្ដាយដែលបានឮដូច្នេះ។ សូមបំពេញទម្រង់នេះ ដើម្បីឱ្យក្រុមការងាររបស់យើងពិនិត្យ។ យើងយកចិត្តទុកដាក់លើរាល់របាយការណ៍ ហើយនឹងដាក់ឈ្មោះម្ចាស់ ឬលុបមាតិកាចេញ នៅពេលដែលត្រឹមត្រូវ។',
    reportDone:'អរគុណ។ យើងបានទទួលរបាយការណ៍របស់អ្នក។ លេខសំបុត្ររបស់អ្នកគឺ {t}។ សូមរក្សាលេខនេះទុក។ ក្រុមការងាររបស់យើងនឹងពិនិត្យ ហើយទាក់ទងអ្នកតាមទូរស័ព្ទ ឬអ៊ីមែលឱ្យបានឆាប់បំផុត។',
    contactDone:'អរគុណ។ យើងបានទទួលព័ត៌មានរបស់អ្នកហើយ។',
@@ -2195,8 +2203,30 @@ const STARTED='thean-chat-started', CACHE='thean-site-cache';
 /* ---------------- firebase ---------------- */
 let fb=null,fbP=null,user=null,msgs=[],unsub=[],botTyping=false,unread=0,peek=null,open=false,liveMode=false,waitMin=10,autoMin=30,local=[],offline=false;
 const FV={};
-function newTicket(){const a=new Uint32Array(4);crypto.getRandomValues(a);let t='';for(const x of a)t+=String(x%10000).padStart(4,'0');if(t[0]==='0')t='1'+t.slice(1);return t}
-const fmtT=t=>String(t||'').replace(/\D/g,'').replace(/(\d{4})(?=\d)/g,'$1 ');
+async function nextTicket(){const r=await fb.tx('counters/ticket',cur=>(typeof cur==='number'?cur:0)+1);if(!r.committed||typeof r.val!=='number')throw new Error('ticket');return String(r.val).padStart(16,'0')}
+const fmtT=t=>{const p=String(t||'').split('-');const b=p[0].replace(/\D/g,'').padStart(16,'0').replace(/(\d{4})(?=\d)/g,'$1 ');return p[1]?b+'-'+p[1]:b};
+const kmDig=x=>String(x).replace(/\d/g,d=>'០១២៣៤៥៦៧៨៩'[d]);
+function fmtDate(v,lg){const d=new Date(ms(v));const p=n=>String(n).padStart(2,'0');let h=d.getHours(),ap=h<12?'AM':'PM';h=h%12||12;
+  if(lg==='km')return kmDig(p(d.getDate())+'/'+p(d.getMonth()+1)+'/'+d.getFullYear()+' ម៉ោង '+h+':'+p(d.getMinutes()))+' '+(ap==='AM'?'ព្រឹក':'ល្ងាច');
+  return d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})+' at '+h+':'+p(d.getMinutes())+' '+ap}
+async function ticketFlow(base,lg){
+  let rec=null;try{rec=await fb.get('tickets/'+base)}catch(e){}
+  if(!rec){await typeThen(900,{from:'bot',text:w('tNotFound',lg).split('{t}').join(fmtT(base)),btns:btnLive(lg).concat([{l:w('bMore',lg),a:'more'}])});return}
+  const cur=rec.cur||base;
+  if(rec.status==='closed'){await touch({followTicket:base,lastMsg:'Asked about closed case '+fmtT(cur),lastFrom:'visitor'});
+    await typeThen(1000,{from:'bot',text:w('tClosed',lg).split('{t}').join(fmtT(cur)).split('{d}').join(rec.closedAt?fmtDate(rec.closedAt,lg):'—'),btns:[{l:w('bReopen',lg),a:'reopen:'+base}].concat(btnLive(lg),[{l:w('bMore',lg),a:'more'}])});return}
+  await fb.update(CP(),{followTicket:base,ticket:base,ticketCur:cur,ticketStatus:'open',status:'waiting',requestedAt:TS,updatedAt:TS,lastMsg:'Follow-up of ticket '+fmtT(cur),lastFrom:'visitor',unreadAgent:INC(1)});
+  await typeThen(900,{from:'bot',text:w('follow',lg).split('{t}').join(fmtT(cur))});await typeThen(1800,{from:'bot',text:w('hold1',lg),btns:[{l:w('bEnd',lg),a:'end'}]})}
+async function reopenCase(base){const lg=L();
+  try{await ensureChat()}catch(e){offline=true}
+  if(offline){local.push({from:'system',text:w('noLive',lg),alt:true,ts:Date.now()});draw(true);return}
+  let rec=null;try{rec=await fb.get('tickets/'+base)}catch(e){}
+  if(!rec){await typeThen(700,{from:'bot',text:w('tNotFound',lg).split('{t}').join(fmtT(base)),btns:btnLive(lg)});return}
+  if(rec.status!=='closed')return ticketFlow(base,lg);
+  const n=(rec.reopens||0)+1,cur=base+'-'+n;
+  try{await fb.update('tickets/'+base,{status:'open',reopens:n,cur,curChat:user.uid,reopenedAt:TS})}catch(e){await typeThen(700,{from:'bot',text:w('busy',lg),btns:btnLive(lg)});return}
+  await fb.update(CP(),{followTicket:base,ticket:base,ticketCur:cur,ticketStatus:'open',status:'waiting',requestedAt:TS,updatedAt:TS,lastMsg:'Reopened case '+fmtT(cur),lastFrom:'visitor',unreadAgent:INC(1)});
+  await typeThen(900,{from:'bot',text:w('tReopened',lg).split('{t}').join(fmtT(cur))});await typeThen(1600,{from:'bot',text:w('hold1',lg),btns:[{l:w('bEnd',lg),a:'end'}]})}
 const FORMS={contact:['name','phone','email','other'],report:['name','phone','email','ours','orig','details','want','files']};
 const REPORT_RE=/(copyright|without (my |our )?permission|stole|stolen|steal|my (own )?(photo|picture|video|content|post)s?|take ?down|remove my|give (me )?credit|ច្បាប់ចម្លង|រក្សាសិទ្ធិ|គ្មានការអនុញ្ញាត|មិនបានអនុញ្ញាត|លួច)/i;
 function loadFb(){if(fb)return Promise.resolve(fb);if(!fbP)fbP=makeDB(FB_CONFIG,'thean').then(x=>(fb=x));return fbP}
@@ -2308,13 +2338,12 @@ async function send(text){
   const live=chat&&(chat.status==='waiting'||chat.status==='assigned');
   if(!offline){const up={lastMsg:text.slice(0,120),lastFrom:'visitor',page:location.hash||'#/'};if(live)up.unreadAgent=INC(1);if(chat&&chat.status==='closed')up.status='bot';await touch(up)}
   if(live)return;
-  const tm=text.match(/(^|\D)(\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4})(\D|$)/);
-  if(tm&&!offline){const t=tm[2].replace(/\D/g,''),lg=L();await fb.update(CP(),{followTicket:t,status:'waiting',requestedAt:TS,updatedAt:TS,lastMsg:'Follow-up of ticket '+fmtT(t),lastFrom:'visitor',unreadAgent:INC(1)});
-    await typeThen(900,{from:'bot',text:w('follow',lg).split('{t}').join(fmtT(t))});await typeThen(1800,{from:'bot',text:w('hold1',lg),btns:[{l:w('bEnd',lg),a:'end'}]});return}
+  const tm=text.match(/(?:^|[^\d])((?:\d[ ]?){15}\d)(?![\d])/);
+  if(tm&&!offline){return ticketFlow(tm[1].replace(/\D/g,''),L())}
   if(REPORT_RE.test(text)){const lg=hasKm(text)?'km':L();await typeThen(900,{from:'bot',text:w('reportAsk',lg),form:'report'});await touch({lastMsg:'Content report form shown',lastFrom:'bot'});return}
   botTyping=true;draw(true);
   setTimeout(async()=>{botTyping=false;const lg=hasKm(text)?'km':L();const r=bot(text);
-    await say({from:'bot',text:r.text,links:(r.links||[]).map(x=>({l:x[0],h:x[1]})),btns:r.live?btnLive(lg):(r.more?w('opts',lg).map(o=>({l:o[1],a:'opt:'+o[0]})):undefined)});
+    await say({from:'bot',text:r.text,links:(r.links||[]).map(x=>({l:x[0],h:x[1]})),btns:r.live?btnLive(lg):(r.more?btnLive(lg).concat(w('opts',lg).map(o=>({l:o[1],a:'opt:'+o[0]}))):undefined)});
     await touch({lastMsg:r.text.slice(0,120),lastFrom:'bot'});
   },650+Math.min(900,text.length*12));
 }
@@ -2324,11 +2353,13 @@ async function act(a,label){
   if(a==='live')return goLive();
   if(a==='end')return endLive();
   if(a==='more')return more(label);
+  if(a.indexOf('reopen:')===0){await say({from:'visitor',text:label});return reopenCase(a.slice(7))}
   if(a.indexOf('opt:')===0)return option(a.slice(4),label);
 }
 
 /* ---------------- smart bot ---------------- */
 function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')}
+const GREET={en:'Hello! How can I help you today? I can assist you with:\n• Planning your trip day by day\n• Destinations, temples and the best time to visit\n• Hotels and restaurants\n• Khmer culture, festivals, dances and food\n• Travel tips and how to contact us\n\nJust type your question, or tap «Talk to Live Agent» to chat with our team.',km:'សួស្ដី! តើខ្ញុំអាចជួយអ្វីអ្នកបានខ្លះថ្ងៃនេះ? ខ្ញុំអាចជួយអ្នកអំពី៖\n• រៀបចំកាលវិភាគដំណើរតាមថ្ងៃនីមួយៗ\n• គោលដៅទេសចរណ៍ ប្រាសាទ និងពេលល្អសម្រាប់ទស្សនា\n• សណ្ឋាគារ និងភោជនីយដ្ឋាន\n• វប្បធម៌ ពិធីបុណ្យ របាំ និងម្ហូបខ្មែរ\n• គន្លឹះធ្វើដំណើរ និងរបៀបទាក់ទងយើង\n\nសូមសរសេរសំណួររបស់អ្នក ឬចុច «និយាយជាមួយភ្នាក់ងារផ្ទាល់» ដើម្បីជជែកជាមួយក្រុមការងាររបស់យើង។'};
 const hasKm=s=>/[ក-៿]/.test(s);
 function tr(o,lg){if(!o)return '';if(typeof o==='string')return o;return o[lg]||o.en||o.km||''}
 const KW={
@@ -2389,7 +2420,7 @@ function bot0(text){
   if(has(t,KW.who))return {text:km?'ខ្ញុំជាជំនួយការស្វ័យប្រវត្តិរបស់ក្រុម Thean។ ខ្ញុំអាចឆ្លើយសំណួរអំពីការធ្វើដំណើរនៅកម្ពុជា។ ប្រសិនបើអ្នកចង់និយាយជាមួយមនុស្ស គ្រាន់តែប្រាប់ខ្ញុំ។':"I'm the Thean team's virtual assistant. I can answer questions about travelling in Cambodia. If you'd like to talk to a person, just tell me."};
   if(has(t,KW.bye))return {text:km?'លាសិនហើយ! សូមឱ្យដំណើររបស់អ្នករីករាយ។':'Goodbye! Have a wonderful trip.'};
   if(has(t,KW.thanks))return {text:km?'មិនអីទេ! រីករាយនឹងដំណើររបស់អ្នក។':"You're welcome! Enjoy your trip."};
-  if(has(t,KW.greet))return {text:km?'សួស្ដី! តើអ្នកកំពុងគ្រោងទៅណា?':'Hello! Where are you thinking of going?'};
+  if(has(t,KW.greet))return {text:km?GREET.km:GREET.en,more:true};
   const prov=(window.TheanProv||[]).find(pr=>t.includes(norm(pr[0]))||t.includes(pr[1]));
   if(prov){const inP=(S.places||[]).filter(x=>norm(tr(x.region,'en')).includes(norm(prov[0])));if(inP.length)return listAnswer(inP,lg,(km?'នៅ ':'In ')+(km?prov[1]:prov[0])+':',[km?'គោលដៅ':'Destinations','#/p/destinations']);
     return {text:(km?'យើងមិនទាន់មានមគ្គុទ្ទេសក៍សម្រាប់ ':'We don\'t have a guide for ')+(km?prov[1]:prov[0])+(km?' នៅឡើយទេ ប៉ុន្តែភ្នាក់ងាររបស់យើងអាចជួយអ្នកបាន។':' yet, but our agents can help you.'),live:true,links:[[km?'បើកផែនទី':'Open map','https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(prov[0]+', Cambodia')]]}}
@@ -2571,9 +2602,10 @@ async function submitForm(box){const id=box.dataset.fid,kind=box.dataset.fk,lg=L
   await say({from:'visitor',text,formReply:id,form:kind,imgs:(v.imgs||[]).slice(0,3)});
   const cust={name:v.name.slice(0,80),phone:(v.phone||'').slice(0,40),email:(v.email||'').slice(0,80),other:(v.other||'').slice(0,80)};
   const live=chat&&(chat.status==='waiting'||chat.status==='assigned');
-  if(kind==='report'){const t=(chat&&chat.ticket)||newTicket();
-    if(!offline)await touch({name:cust.name,contact:cust.phone||cust.email,customer:cust,ticket:t,reportOpen:true,report:{ours:(v.ours||'').slice(0,300),orig:(v.orig||'').slice(0,300),want:v.want||'',at:TS},lastMsg:'Content report submitted',lastFrom:'visitor',unreadAgent:INC(1)});
-    await typeThen(900,{from:'bot',text:w('reportDone',lg).split('{t}').join(fmtT(t))});
+  if(kind==='report'){let t=chat&&chat.ticket&&chat.ticketStatus!=='closed'?(chat.ticketCur||chat.ticket):'';
+    if(!t&&!offline){try{t=await nextTicket();await fb.set('tickets/'+t,{n:Number(t),chatId:user.uid,status:'open',kind:'report',createdAt:TS})}catch(e){t=''}}
+    if(!offline)await touch({name:cust.name,contact:cust.phone||cust.email,customer:cust,ticket:String(t).split('-')[0],ticketCur:t,ticketStatus:'open',reportOpen:true,report:{ours:(v.ours||'').slice(0,300),orig:(v.orig||'').slice(0,300),want:v.want||'',at:TS},lastMsg:'Content report submitted',lastFrom:'visitor',unreadAgent:INC(1)});
+    await typeThen(900,{from:'bot',text:t?w('reportDone',lg).split('{t}').join(fmtT(t)):w('contactDone',lg)});
     if(offline){local.push({from:'system',text:w('noLive',lg),alt:true,ts:Date.now()});draw(true)}}
   else{if(!offline)await touch({name:cust.name,contact:cust.phone||cust.email,customer:cust,lastMsg:'Customer details sent',lastFrom:'visitor',unreadAgent:live?INC(1):0});
     if(!live)await typeThen(700,{from:'bot',text:w('contactDone',lg)})}
@@ -2641,7 +2673,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261004-0350',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261004-0411',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
