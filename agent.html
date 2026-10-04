@@ -105,7 +105,7 @@ label.f input,label.f textarea{border:1px solid var(--line);border-radius:12px;p
 .m .ftag{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:.75rem;opacity:.8}
 .m .mimgs{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.m .mimgs img{width:120px;height:90px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
 .m.freply{border-color:var(--accent)}
-.info .tk{font-weight:600;color:var(--ink)}.info .tk.rep{color:var(--danger)}
+.info .tk{font-weight:600;color:var(--ink)}.info .tk.done{color:var(--ok)}.info .tk.rep{color:var(--danger)}
 .sys{align-self:center;font-size:.78rem;color:var(--muted);background:var(--bg2);border-radius:12px;padding:5px 12px;text-align:center;max-width:90%}
 .typing{align-self:flex-start;font-size:.8rem;color:var(--muted);font-style:italic}
 .acceptbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:12px 14px;background:var(--wait-soft);color:var(--ink);border-top:1px solid var(--line)}
@@ -209,6 +209,7 @@ const SITE={S:{}};let BOTLANG='en';
 const BOT=(function(T,L){
 /* ---------------- smart bot ---------------- */
 function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')}
+const GREET={en:'Hello! How can I help you today? I can assist you with:\n• Planning your trip day by day\n• Destinations, temples and the best time to visit\n• Hotels and restaurants\n• Khmer culture, festivals, dances and food\n• Travel tips and how to contact us\n\nJust type your question, or tap «Talk to Live Agent» to chat with our team.',km:'សួស្ដី! តើខ្ញុំអាចជួយអ្វីអ្នកបានខ្លះថ្ងៃនេះ? ខ្ញុំអាចជួយអ្នកអំពី៖\n• រៀបចំកាលវិភាគដំណើរតាមថ្ងៃនីមួយៗ\n• គោលដៅទេសចរណ៍ ប្រាសាទ និងពេលល្អសម្រាប់ទស្សនា\n• សណ្ឋាគារ និងភោជនីយដ្ឋាន\n• វប្បធម៌ ពិធីបុណ្យ របាំ និងម្ហូបខ្មែរ\n• គន្លឹះធ្វើដំណើរ និងរបៀបទាក់ទងយើង\n\nសូមសរសេរសំណួររបស់អ្នក ឬចុច «និយាយជាមួយភ្នាក់ងារផ្ទាល់» ដើម្បីជជែកជាមួយក្រុមការងាររបស់យើង។'};
 const hasKm=s=>/[ក-៿]/.test(s);
 function tr(o,lg){if(!o)return '';if(typeof o==='string')return o;return o[lg]||o.en||o.km||''}
 const KW={
@@ -269,7 +270,7 @@ function bot0(text){
   if(has(t,KW.who))return {text:km?'ខ្ញុំជាជំនួយការស្វ័យប្រវត្តិរបស់ក្រុម Thean។ ខ្ញុំអាចឆ្លើយសំណួរអំពីការធ្វើដំណើរនៅកម្ពុជា។ ប្រសិនបើអ្នកចង់និយាយជាមួយមនុស្ស គ្រាន់តែប្រាប់ខ្ញុំ។':"I'm the Thean team's virtual assistant. I can answer questions about travelling in Cambodia. If you'd like to talk to a person, just tell me."};
   if(has(t,KW.bye))return {text:km?'លាសិនហើយ! សូមឱ្យដំណើររបស់អ្នករីករាយ។':'Goodbye! Have a wonderful trip.'};
   if(has(t,KW.thanks))return {text:km?'មិនអីទេ! រីករាយនឹងដំណើររបស់អ្នក។':"You're welcome! Enjoy your trip."};
-  if(has(t,KW.greet))return {text:km?'សួស្ដី! តើអ្នកកំពុងគ្រោងទៅណា?':'Hello! Where are you thinking of going?'};
+  if(has(t,KW.greet))return {text:km?GREET.km:GREET.en,more:true};
   const prov=(window.TheanProv||[]).find(pr=>t.includes(norm(pr[0]))||t.includes(pr[1]));
   if(prov){const inP=(S.places||[]).filter(x=>norm(tr(x.region,'en')).includes(norm(prov[0])));if(inP.length)return listAnswer(inP,lg,(km?'នៅ ':'In ')+(km?prov[1]:prov[0])+':',[km?'គោលដៅ':'Destinations','#/p/destinations']);
     return {text:(km?'យើងមិនទាន់មានមគ្គុទ្ទេសក៍សម្រាប់ ':'We don\'t have a guide for ')+(km?prov[1]:prov[0])+(km?' នៅឡើយទេ ប៉ុន្តែភ្នាក់ងាររបស់យើងអាចជួយអ្នកបាន។':' yet, but our agents can help you.'),live:true,links:[[km?'បើកផែនទី':'Open map','https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(prov[0]+', Cambodia')]]}}
@@ -433,8 +434,14 @@ const FORM_QUICK=[
 DEFAULT_QUICK.splice(5,0,...FORM_QUICK);
 const AUTO_END={en:'This chat was closed automatically after {min} minutes without new messages. Send us a message any time if you need more help.',km:'ការជជែកនេះត្រូវបានបិទដោយស្វ័យប្រវត្តិ បន្ទាប់ពី {min} នាទីដោយគ្មានសារថ្មី។ សូមផ្ញើសារមកយើងពេលណាក៏បាន ប្រសិនបើត្រូវការជំនួយបន្ថែម។'};
 let autoMin=30;
-function newTicket(){const a=new Uint32Array(4);crypto.getRandomValues(a);let t='';for(const x of a)t+=String(x%10000).padStart(4,'0');if(t[0]==='0')t='1'+t.slice(1);return t}
-function fmtTicket(t){return String(t||'').replace(/\D/g,'').replace(/(\d{4})(?=\d)/g,'$1 ')}
+async function nextTicket(){const r=await DB.tx('counters/ticket',cur=>(typeof cur==='number'?cur:0)+1);if(!r.committed||typeof r.val!=='number')throw new Error('ticket counter');return String(r.val).padStart(16,'0')}
+function fmtTicket(t){const p=String(t||'').split('-');const b=p[0].replace(/\D/g,'').padStart(16,'0').replace(/(\d{4})(?=\d)/g,'$1 ');return p[1]?b+'-'+p[1]:b}
+const SOLVED={en:'Your case {t} has been marked as solved. If you need more help, send this ticket ID in the chat any time and you can reopen it.',km:'ករណីរបស់អ្នក {t} ត្រូវបានដោះស្រាយរួចរាល់។ ប្រសិនបើអ្នកត្រូវការជំនួយបន្ថែម សូមផ្ញើលេខសំបុត្រនេះក្នុងការជជែកពេលណាក៏បាន ហើយអ្នកអាចបើកករណីនេះឡើងវិញបាន។'};
+async function solveCase(c){const base=c.ticket,lg=c.lang==='km'?'km':'en',cur=c.ticketCur||c.ticket;
+  try{if(base)await DB.update('tickets/'+base,{status:'closed',closedAt:TS,closedBy:(agent&&agent.name)||'Agent'});
+    await DB.update('chats/'+c.id,{ticketStatus:'closed',reportOpen:false,reportDoneAt:TS,updatedAt:TS});
+    if(base)await DB.push('messages/'+c.id,{from:'bot',text:SOLVED[lg].split('{t}').join(fmtTicket(cur)),ts:TS});
+    toast(base?'Case '+fmtTicket(cur)+' marked as solved':'Report marked as resolved')}catch(e){toast('Not saved: '+(e.code||e.message))}}
 const LEAVE_DEF={en:'{name} has left the chat.',km:'{name} បានចាកចេញពីការជជែក។'};
 const CLOSE_DEF=[
  {en:"Thank you for chatting with us! Have a wonderful trip ",km:"អរគុណសម្រាប់ការជជែកជាមួយយើង! សូមឱ្យដំណើររបស់អ្នករីករាយ "},
@@ -582,10 +589,11 @@ function filtered(){return chats.filter(c=>{
   if(tab==='bot'&&c.status!=='bot')return false;
   if(tab==='reports'&&!c.reportOpen)return false;
   if(tab==='closed'&&c.status!=='closed')return false;
-  if(search){const sd=search.replace(/\D/g,'');if(!(((c.name||'')+' '+(c.lastMsg||'')+' '+(c.contact||'')+' '+((c.customer&&c.customer.email)||'')).toLowerCase().includes(search)||(sd.length>=6&&(String(c.ticket||'').includes(sd)||String(c.followTicket||'').includes(sd)))))return false}return true})}
+  if(search){const sd=search.replace(/\D/g,'');if(!(((c.name||'')+' '+(c.lastMsg||'')+' '+(c.contact||'')+' '+((c.customer&&c.customer.email)||'')).toLowerCase().includes(search)||(sd.length>=6&&(String(c.ticket||'').includes(sd.slice(0,16))||String(c.followTicket||'').includes(sd.slice(0,16))))))return false}return true})}
 let tFound=[],tLook='';
-async function ticketLookup(){const sd=search.replace(/\D/g,'');if(sd.length!==16||tLook===sd)return;tLook=sd;
+async function ticketLookup(){const sd=search.replace(/\D/g,'').slice(0,16);if(sd.length!==16||tLook===sd)return;tLook=sd;
   if(chats.some(c=>c.ticket===sd))return;
+  try{const tk=await DB.get('tickets/'+sd);if(tk){const ids=[tk.chatId,tk.curChat].filter(Boolean);let n=0;for(const id of ids){if(chats.some(c=>c.id===id)){n++;continue}const ch=await DB.get('chats/'+id);if(ch){chats.push(Object.assign({id},ch));n++}}if(n){tab='all';drawList();toast('Ticket '+fmtTicket(tk.cur||sd)+' · '+(tk.status==='closed'?'solved':'open'));return}}}catch(e){}
   try{const r=await DB.findEq('chats','ticket',sd);if(r.length){r.forEach(x=>{if(!chats.some(c=>c.id===x.id))chats.push(x)});tab='all';drawList();toast('Found the chat for ticket '+fmtTicket(sd))}else toast('No chat found with ticket '+fmtTicket(sd))}catch(e){toast('Could not search tickets: '+(e.code||e.message))}}
 function vName(c){return c.name||('Visitor '+c.id.slice(0,4).toUpperCase())}
 function ago(ts){if(!ts)return 'now';const s=(Date.now()-ms(ts))/1000;if(s<60)return 'now';if(s<3600)return Math.floor(s/60)+'m';if(s<86400)return Math.floor(s/3600)+'h';return Math.floor(s/86400)+'d'}
@@ -629,10 +637,10 @@ function drawConvHead(){
   const trb=h.querySelector('#tr');if(trb)trb.onclick=()=>transferSheet(c.id);
   const inf=root.querySelector('#inf');
   const cu=c.customer||{};
-  inf.innerHTML=(c.ticket?'<span class="tk">'+I('ticket')+'Ticket '+esc(fmtTicket(c.ticket))+'</span><button data-copy="'+esc(c.ticket)+'">Copy</button>':'')+(c.followTicket?'<span class="tk">'+I('ticket')+'Follow-up of '+esc(fmtTicket(c.followTicket))+'</span><button data-find="'+esc(c.followTicket)+'">Find</button>':'')+(c.reportOpen?'<span class="tk rep">'+I('flag')+'Content report</span><button data-resolve>Mark resolved</button>':'')+(cu.email?'<span>'+I('mail')+esc(cu.email)+'</span><button data-copy="'+esc(cu.email)+'">Copy</button>':'')+(c.contact&&c.contact!==cu.email?'<span>'+I('phone')+esc(c.contact)+'</span><button data-copy="'+esc(c.contact)+'">Copy</button>':(cu.email?'':'<span>'+I('user')+'No contact given</span>'))+'<span>'+I('info')+(c.lang==='km'?'Khmer':'English')+'</span>'+(c.page?'<span>'+I('pin')+esc(c.page)+'</span>':'')+(c.ua&&/iPhone|Android/i.test(c.ua)?'<span>Mobile</span>':'<span>Desktop</span>');
+  inf.innerHTML=(c.ticket?'<span class="tk'+(c.ticketStatus==='closed'?' done':'')+'">'+I('ticket')+'Ticket '+esc(fmtTicket(c.ticketCur||c.ticket))+(c.ticketStatus==='closed'?' · solved':' · open')+'</span><button data-copy="'+esc(fmtTicket(c.ticketCur||c.ticket))+'">Copy</button>'+(c.ticketStatus==='closed'?'':'<button data-solve>Mark case solved</button>'):'')+(c.followTicket&&c.followTicket!==c.ticket?'<span class="tk">'+I('ticket')+'Follow-up of '+esc(fmtTicket(c.followTicket))+'</span><button data-find="'+esc(c.followTicket)+'">Find</button>':'')+(c.reportOpen?'<span class="tk rep">'+I('flag')+'Content report</span><button data-resolve>Mark resolved</button>':'')+(cu.email?'<span>'+I('mail')+esc(cu.email)+'</span><button data-copy="'+esc(cu.email)+'">Copy</button>':'')+(c.contact&&c.contact!==cu.email?'<span>'+I('phone')+esc(c.contact)+'</span><button data-copy="'+esc(c.contact)+'">Copy</button>':(cu.email?'':'<span>'+I('user')+'No contact given</span>'))+'<span>'+I('info')+(c.lang==='km'?'Khmer':'English')+'</span>'+(c.page?'<span>'+I('pin')+esc(c.page)+'</span>':'')+(c.ua&&/iPhone|Android/i.test(c.ua)?'<span>Mobile</span>':'<span>Desktop</span>');
   inf.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>copy(b.dataset.copy));
   inf.querySelectorAll('[data-find]').forEach(b=>b.onclick=()=>{const q=root.querySelector('#q');q.value=b.dataset.find;search=b.dataset.find;tab='all';tLook='';drawList();ticketLookup()});
-  inf.querySelectorAll('[data-resolve]').forEach(b=>b.onclick=()=>DB.update('chats/'+c.id,{reportOpen:false,reportDoneAt:TS}).then(()=>toast('Report marked as resolved')).catch(e=>toast('Not saved: '+(e.code||e.message))));
+  inf.querySelectorAll('[data-resolve],[data-solve]').forEach(b=>b.onclick=()=>{if(!b.dataset.armed){b.dataset.armed=1;b.textContent='Tap again to confirm';return}b.disabled=true;solveCase(c)});
   const acc=root.querySelector('#acc');
   const mine=c.status==='assigned'&&c.agentUid===me.uid,other=c.status==='assigned'&&c.agentUid&&c.agentUid!==me.uid;
   acc.innerHTML=mine?'':'<div class="acceptbar"><span>'+(c.status==='waiting'?'<b>Waiting for an agent.</b> The customer does not know you are here until you open the chat.':other?'<b>'+esc(c.agentName||'Another agent')+'</b> is handling this chat. You are only viewing it.':c.status==='closed'?'This chat is closed. You are only viewing it.':'The customer is talking to the assistant. You are only viewing it.')+'</span><button class="btn ok sm" id="ac">'+I('check')+(other?' Take over':' Open chat')+'</button></div>';
@@ -656,7 +664,8 @@ function drawQuick(){
   q.querySelectorAll('[data-ql]').forEach(b=>b.onclick=()=>{qLang=b.dataset.ql;drawQuick()});
   q.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{const x=quick[+b.dataset.q],c=cur();const want=qLang==='auto'?((c&&c.lang==='km')?'km':'en'):qLang;let t=want==='km'?(x.km||''):(x.en||'');
     if(!t){t=x.en||x.km||'';toast('This reply has no '+(want==='km'?'Khmer':'English')+' text yet. Tap Edit to add it. Sent in the other language for now.')}
-    if(x.act==='ticket'){const tk=(c&&c.ticket)||newTicket();t=t.split('{ticket}').join(fmtTicket(tk));if(!c.ticket)DB.update('chats/'+c.id,{ticket:tk}).catch(()=>{});sendMsg(t);return}
+    if(x.act==='ticket'){if(c.ticket&&c.ticketStatus!=='closed'){sendMsg(t.split('{ticket}').join(fmtTicket(c.ticketCur||c.ticket)));return}
+      b.disabled=true;nextTicket().then(async tk=>{await DB.set('tickets/'+tk,{n:Number(tk),chatId:c.id,status:'open',kind:'chat',createdAt:TS,by:(agent&&agent.name)||'Agent'});await DB.update('chats/'+c.id,{ticket:tk,ticketCur:tk,ticketStatus:'open'});sendMsg(t.split('{ticket}').join(fmtTicket(tk)))}).catch(e=>toast('Could not create a ticket: '+(e.code||e.message))).finally(()=>{b.disabled=false});return}
     if(x.act&&x.act.indexOf('form:')===0){sendMsg(t,{form:x.act.slice(5)});return}
     if(x.send)sendMsg(t);else{const ta=root.querySelector('#ta');ta.value=t;ta.focus()}});
 }
