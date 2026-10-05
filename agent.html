@@ -143,6 +143,23 @@ label.f input,label.f textarea{border:1px solid var(--line);border-radius:12px;p
 .toggle{display:flex;align-items:center;justify-content:space-between;gap:8px 12px;flex-wrap:wrap;padding:12px 14px;border:1px solid var(--line);border-radius:14px}
 .toggle small{display:block;color:var(--muted);font-size:.8rem}
 .toggle input{width:22px;height:22px}
+
+/* ---- web calls ---- */
+#incall{position:fixed;left:50%;transform:translateX(-50%);top:calc(12px + env(safe-area-inset-top,0px));z-index:95;width:min(440px,calc(100vw - 24px));display:grid;gap:8px}
+.icard{background:#1c2531;color:#fff;border-radius:20px;padding:14px 16px;box-shadow:0 16px 40px rgba(0,0,0,.35);display:flex;align-items:center;gap:12px;animation:icIn .2s ease-out}
+@keyframes icIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+.icard .ic-ic{width:44px;height:44px;border-radius:50%;background:#1f9d55;display:grid;place-items:center;flex:none;animation:icPulse 1.2s infinite}
+.icard .ic-ic .i{width:22px;height:22px}
+@keyframes icPulse{0%{box-shadow:0 0 0 0 rgba(31,157,85,.6)}100%{box-shadow:0 0 0 14px rgba(31,157,85,0)}}
+.icard .ic-tx{flex:1;min-width:0}.icard .ic-tx b{display:block}.icard .ic-tx small{display:block;opacity:.75;font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icard button{border:0;border-radius:50%;width:46px;height:46px;display:grid;place-items:center;color:#fff;cursor:pointer;flex:none}
+.icard .ic-no{background:#e5483f}.icard .ic-yes{background:#1f9d55}.icard button .i{width:22px;height:22px}
+.icard.on .ic-ic{animation:none;background:#2e3b4b}
+.icard .ic-mu.on{background:#fff;color:#1c2531}.icard .ic-mu,.icard .ic-ch{background:#2e3b4b}
+.callrow{display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding:10px 0}
+.callrow .cr-ic{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--ok-soft);color:var(--ok)}
+.callrow .cr-ic.miss{background:#f7dedd;color:var(--danger)}
+.callrow .cr-tx{flex:1;min-width:0}.callrow .cr-tx small{display:block;color:var(--muted);font-size:.82rem}
 </style>
 </head>
 <body>
@@ -198,7 +215,7 @@ try{
 }catch(e){root.innerHTML='<div class="login"><div class="lcard"><h1 class="emb">THEAN</h1><div class="err">Could not load the chat service. Check your internet connection and reload.</div></div></div>';throw e}
 
 /* ---------- icons ---------- */
-const P={chat:'<path d="M4 5h16v11H9.5L4 20z"/><path d="M8 9.3h8M8 12.3h5"/>',bell:'<path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',sound:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',mute:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>',
+const P={mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/>',phoneoff:'<path d="M3 13.6c5-4.6 13-4.6 18 0l-2.3 2.6-3.6-1.4-.3-2.5a10 10 0 0 0-5.6 0l-.3 2.5-3.6 1.4z"/>',chat:'<path d="M4 5h16v11H9.5L4 20z"/><path d="M8 9.3h8M8 12.3h5"/>',bell:'<path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',sound:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',mute:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>',
  logout:'<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/>',
  left:'<path d="M15 5l-7 7 7 7"/>',send:'<path d="M5 12h14M13 6l6 6-6 6"/>',bolt:'<path d="M13 3L5 13.5h6L10 21l8-10.5h-6z"/>',edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>',swap:'<path d="M4 8h13l-3.5-3.5M20 16H7l3.5 3.5"/>',door:'<path d="M14 4H6v16h8"/><path d="M11 12h9M17 9l3 3-3 3"/>',check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',close:'<path d="M6 6l12 12M18 6L6 18"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>',
  wave:'<path d="M7 11V6.5a1.5 1.5 0 0 1 3 0V11M10 10V4.5a1.5 1.5 0 0 1 3 0V10M13 10V5.5a1.5 1.5 0 0 1 3 0V12M16 9.5a1.5 1.5 0 0 1 3 0V14a7 7 0 0 1-7 7h-1a7 7 0 0 1-5.3-2.4L3.4 15a1.6 1.6 0 0 1 2.4-2.1L7 14V11"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',bed:'<path d="M3 19.5V6M21 19.5V14a3 3 0 0 0-3-3h-7.5v5"/><path d="M3 16h18"/><circle cx="7" cy="12.5" r="1.8"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/>',
@@ -481,7 +498,7 @@ A.onAuthStateChanged(auth,async u=>{
   try{const v=await DB.get('agents/'+me.uid);if(!v)return drawNotAgent();agent=v;start()}
   catch(e){drawNotAgent(e)}
 });
-function cleanup(){[chatUnsub,msgUnsub,meUnsub,connUnsub].forEach(f=>f&&f());chatUnsub=msgUnsub=meUnsub=connUnsub=null;if(beat)clearInterval(beat);chats=[];firstSnap=true;sel=null;msgs=[]}
+function cleanup(){[chatUnsub,msgUnsub,meUnsub,connUnsub,callUnsub].forEach(f=>f&&f());chatUnsub=msgUnsub=meUnsub=connUnsub=callUnsub=null;if(onCall)hangUp(true);if(beat)clearInterval(beat);chats=[];firstSnap=true;sel=null;msgs=[]}
 
 function drawLogin(msg,mode){
   const create=mode==='create';
@@ -530,6 +547,7 @@ function start(){
       if(!v.goodbyeMerged){const have=new Set(quick.map(x=>x.en));const add=(Array.isArray(v.closing)&&v.closing.length?v.closing:CLOSE_DEF).filter(x=>x.en&&!have.has(x.en)).map((x,i)=>({icon:['check','chat','heart','clock'][i%4],label:['Goodbye','Will contact','Pleasure','No reply'][i]||'Goodbye',send:true,en:x.en,km:x.km||''}));
         quick=quick.concat(add);DB.set('settings/quick',{items:quick,goodbyeMerged:true,updatedAt:TS}).catch(()=>{})}}
       drawConv()}).catch(()=>{});
+  callWatch();
   chatUnsub=DB.onRecent('chats','updatedAt',200,list=>{
     list.forEach(d=>{
       const id=d.id,prev=seen[id];
@@ -576,6 +594,7 @@ function drawTop(){
   t.innerHTML='<div class="ttl"><span class="logo">T</span><div><b>THEAN</b><small>Inbox · '+esc((agent&&agent.name)||me.email)+'</small></div></div>'+
    '<button class="tb '+(on?'on':'away')+'" id="st" title="Availability">'+I(on?'check':'clock')+'<span class="tl">'+(on?'Available':'Away')+'</span></button>'+
    '<button class="tb" id="nt" title="Notifications">'+I('bell')+'<span class="tl">Alerts</span>'+(c.unread+c.waiting?'<span class="bd">'+(c.unread+c.waiting)+'</span>':'')+'</button>'+
+   '<button class="tb" id="cl" title="Web calls">'+I('phone')+'<span class="tl">Calls</span>'+(missedCount()?'<span class="bd">'+missedCount()+'</span>':'')+'</button>'+
    '<button class="tb" id="sd" title="Sound" aria-label="Sound">'+I(soundOn?'sound':'mute')+'</button>'+
    '<button class="tb" id="tm" title="Team" aria-label="Team">'+I('users')+'<span class="tl">Team</span></button>'+
    '<a class="tb" href="admin" title="Edit website" aria-label="Edit website">'+I('edit')+'<span class="tl">Website</span></a>'+
@@ -583,6 +602,7 @@ function drawTop(){
    '<button class="tb" id="lo" title="Sign out" aria-label="Sign out">'+I('logout')+'</button>';
   t.querySelector('#st').onclick=()=>setOnline(!on);
   t.querySelector('#nt').onclick=askNotify;
+  t.querySelector('#cl').onclick=callLog;
   t.querySelector('#sd').onclick=()=>{soundOn=!soundOn;setPref('sound',soundOn);if(soundOn)beep();drawTop()};
   t.querySelector('#gs').onclick=settings;
   t.querySelector('#tm').onclick=team;
@@ -805,6 +825,77 @@ async function closeChat(id){
 }
 setInterval(()=>{if(sel)drawConvHead()},3000);
 
+/* ---------- web calls ---------- */
+const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302','stun:stun2.l.google.com:19302']}]};
+let calls=[],callUnsub=null,declined=new Set(),notified=new Set(),onCall=null,ringT=null,missSeen=+pref('missSeen',0)||0;
+function callFresh(c){return c.status==='ringing'&&c.createdAt&&Date.now()-ms(c.createdAt)<4*60000}
+function callWatch(){callUnsub=DB.onRecent('calls','createdAt',40,list=>{calls=list;
+    list.filter(callFresh).forEach(c=>{if(!notified.has(c.id)){notified.add(c.id);if(!firstCalls)callNotify(c)}});firstCalls=false;
+    if(onCall){const c=list.find(x=>x.id===onCall.id);if(c&&(c.status==='ended'||c.status==='cancelled'||c.status==='missed'))hangUp(false)}
+    drawIncoming();drawTop()},err=>{})}
+let firstCalls=true;
+function callLang(c){return c.lang==='km'?'Khmer':'English'}
+function callWho(c){const ch=chats.find(x=>x.id===c.callerUid);return (ch&&ch.name)||c.name||('Visitor '+String(c.callerUid||'').slice(0,4).toUpperCase())}
+function callNotify(c){if('Notification' in window&&Notification.permission==='granted'){try{const n=new Notification('Incoming web call',{body:callWho(c)+' · '+callLang(c),tag:'call-'+c.id,renotify:true,requireInteraction:true});n.onclick=()=>{window.focus();n.close()}}catch(e){}}
+  try{navigator.vibrate&&navigator.vibrate([300,150,300,150,300])}catch(e){}}
+function ringTone(){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();
+  [0,.5].forEach(t=>{[[440,480]].forEach(f=>f.forEach(fr=>{const o=ac.createOscillator(),g=ac.createGain(),t0=ac.currentTime+t;o.frequency.value=fr;g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(.12,t0+.03);g.gain.setValueAtTime(.12,t0+.4);g.gain.exponentialRampToValueAtTime(.0001,t0+.45);o.connect(g);g.connect(ac.destination);o.start(t0);o.stop(t0+.5)}))})}catch(e){}}
+function drawIncoming(){let box=document.getElementById('incall');
+  const ring=calls.filter(c=>callFresh(c)&&!declined.has(c.id));
+  if(!box){box=document.createElement('div');box.id='incall';document.body.appendChild(box)}
+  let h='';
+  if(onCall){const c=calls.find(x=>x.id===onCall.id)||{};const s=onCall.t0?Math.floor((Date.now()-onCall.t0)/1000):0;
+    h+='<div class="icard on"><span class="ic-ic">'+I('phone')+'</span><span class="ic-tx"><b>'+esc(callWho(c))+'</b><small data-ctm>'+(onCall.t0?'On call · '+String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'):'Connecting…')+' · '+callLang(c)+'</small></span>'+
+     '<button type="button" class="ic-mu'+(onCall.muted?' on':'')+'" data-cmu title="Mute">'+I('mic')+'</button><button type="button" class="ic-ch" data-cch title="Open chat">'+I('chat')+'</button><button type="button" class="ic-no" data-cend title="End call">'+I('phoneoff')+'</button></div>'}
+  ring.filter(c=>!onCall||c.id!==onCall.id).forEach(c=>{h+='<div class="icard"><span class="ic-ic">'+I('phone')+'</span><span class="ic-tx"><b>Incoming call · '+callLang(c)+'</b><small>'+esc(callWho(c))+(c.page?' · '+esc(c.page):'')+'</small></span>'+
+    '<button type="button" class="ic-no" data-cno="'+esc(c.id)+'" title="Decline">'+I('phoneoff')+'</button><button type="button" class="ic-yes" data-cyes="'+esc(c.id)+'" title="Answer">'+I('phone')+'</button></div>'});
+  box.innerHTML=h;
+  const want=ring.some(c=>!onCall||c.id!==onCall.id)&&!onCall;
+  if(want&&!ringT){ringTone();ringT=setInterval(()=>{if(soundOn)ringTone()},3000)}
+  if(!want&&ringT){clearInterval(ringT);ringT=null}
+  updateTitle()}
+document.addEventListener('click',e=>{const b=e.target.closest('#incall button');if(!b)return;
+  if(b.dataset.cno){declined.add(b.dataset.cno);drawIncoming();return}
+  if(b.dataset.cyes){answer(b.dataset.cyes);return}
+  if(b.hasAttribute('data-cend')){hangUp(true);return}
+  if(b.hasAttribute('data-cmu')&&onCall){onCall.muted=!onCall.muted;onCall.stream&&onCall.stream.getAudioTracks().forEach(t=>t.enabled=!onCall.muted);drawIncoming();return}
+  if(b.hasAttribute('data-cch')&&onCall){const c=calls.find(x=>x.id===onCall.id);if(c&&chats.some(x=>x.id===c.callerUid))openChat(c.callerUid);else toast('This caller has no chat yet');return}});
+async function answer(id){if(onCall){toast('Finish your current call first');return}
+  if(!navigator.mediaDevices||!window.RTCPeerConnection){toast('This browser cannot take calls. Use Chrome or Safari.');return}
+  let stream;try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}})}catch(e){toast('Allow the microphone for this page to answer calls');return}
+  if(ringT){clearInterval(ringT);ringT=null}
+  let r;try{r=await DB.tx('calls/'+id+'/status',cur=>cur==='ringing'?'active':undefined)}catch(e){r={committed:false}}
+  if(!r.committed||r.val!=='active'){stream.getTracks().forEach(t=>t.stop());toast('This call was already answered or ended');declined.add(id);drawIncoming();return}
+  await DB.update('calls/'+id,{agentUid:me.uid,agentName:(agent&&agent.name)||'Agent',answeredAt:TS}).catch(()=>{});
+  const pc=new RTCPeerConnection(ICE);onCall={id,pc,stream,muted:false,seen:{},unsub:[]};
+  stream.getTracks().forEach(t=>pc.addTrack(t,stream));
+  const au=document.createElement('audio');au.autoplay=true;au.setAttribute('playsinline','');document.body.appendChild(au);onCall.au=au;
+  pc.ontrack=e=>{au.srcObject=e.streams[0];au.play().catch(()=>{})};
+  pc.onicecandidate=e=>{if(e.candidate&&onCall)DB.push('calls/'+id+'/ac',JSON.parse(JSON.stringify(e.candidate.toJSON()))).catch(()=>{})};
+  pc.onconnectionstatechange=()=>{if(!onCall)return;const st=pc.connectionState;
+    if(st==='connected'&&!onCall.t0){onCall.t0=Date.now();onCall.tick=setInterval(()=>{const el=document.querySelector('#incall [data-ctm]');if(el&&onCall&&onCall.t0){const s=Math.floor((Date.now()-onCall.t0)/1000);el.textContent='On call · '+String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}},1000);drawIncoming()}
+    if(st==='failed'){toast('The call connection failed. The caller\'s network may block web calls.');hangUp(true)}};
+  try{const c=await DB.get('calls/'+id);if(!c||!c.offer)throw new Error('no offer');
+    await pc.setRemoteDescription(c.offer);const ans=await pc.createAnswer();await pc.setLocalDescription(ans);
+    await DB.update('calls/'+id,{answer:{type:ans.type,sdp:ans.sdp}});
+    onCall.unsub.push(DB.on('calls/'+id+'/cc',v=>{if(!v||!onCall)return;Object.keys(v).forEach(k=>{if(onCall.seen[k])return;onCall.seen[k]=1;pc.addIceCandidate(v[k]).catch(()=>{})})}));
+    const ch=chats.find(x=>x.id===c.callerUid);if(ch)openChat(c.callerUid)}
+  catch(e){toast('Could not connect the call: '+(e.code||e.message));hangUp(true);return}
+  drawIncoming()}
+async function hangUp(byMe){if(!onCall)return;const c=onCall;onCall=null;
+  clearInterval(c.tick);c.unsub.forEach(u=>{try{u()}catch(e){}});
+  try{c.pc.close()}catch(e){}try{c.stream.getTracks().forEach(t=>t.stop())}catch(e){}try{c.au.remove()}catch(e){}
+  const dur=c.t0?Math.round((Date.now()-c.t0)/1000):0;
+  if(byMe)await DB.update('calls/'+c.id,{status:'ended',endedAt:TS,endedBy:'agent',duration:dur}).catch(()=>{});
+  else if(dur)DB.update('calls/'+c.id,{duration:dur}).catch(()=>{});
+  toast('Call ended'+(dur?' · '+Math.floor(dur/60)+'m '+dur%60+'s':''));drawIncoming()}
+function missedCount(){return calls.filter(c=>c.status==='missed'&&ms(c.createdAt)>missSeen).length}
+function callLog(){missSeen=Date.now();setPref('missSeen',missSeen);drawTop();
+  const st={ringing:'Ringing',active:'Answered',ended:'Answered',missed:'Missed',cancelled:'Caller hung up'};
+  const rows=calls.map(c=>{const miss=c.status==='missed'||(c.status==='cancelled'&&!c.answeredAt)||(c.status==='ended'&&!c.answeredAt);const d=new Date(ms(c.createdAt));
+    return '<div class="callrow"><span class="cr-ic'+(miss?' miss':'')+'">'+I('phone')+'</span><span class="cr-tx"><b>'+esc(callWho(c))+'</b><small>'+d.toLocaleDateString([], {day:'numeric',month:'short'})+' '+d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})+' · '+callLang(c)+' · '+(miss&&c.status!=='missed'?'Not answered':(st[c.status]||c.status))+(c.agentName?' · '+esc(c.agentName):'')+(c.duration?' · '+Math.floor(c.duration/60)+'m '+c.duration%60+'s':'')+'</small></span>'+(chats.some(x=>x.id===c.callerUid)?'<button class="btn sm soft" type="button" data-copen="'+esc(c.callerUid)+'">Chat</button>':'')+'</div>'}).join('');
+  const m=modal('Web calls',rows||'<p style="margin:0;color:var(--muted)">No calls yet. When a visitor taps Call us, this page rings. Keep it open and set to Available.</p>');
+  m.addEventListener('click',e=>{const b=e.target.closest('[data-copen]');if(b){m.remove();openChat(b.dataset.copen)}})}
 /* ---------- notifications ---------- */
 let ac=null;
 function beep(){if(!soundOn)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();[0,.18].forEach((t,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=i?1320:990;g.gain.setValueAtTime(.0001,ac.currentTime+t);g.gain.exponentialRampToValueAtTime(.25,ac.currentTime+t+.02);g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+t+.3);o.connect(g);g.connect(ac.destination);o.start(ac.currentTime+t);o.stop(ac.currentTime+t+.32)})}catch(e){}}
@@ -819,7 +910,7 @@ async function askNotify(){
   if(Notification.permission==='granted'){toast('Alerts are on. Keep this page open to receive them.');beep();return}
   const p=await Notification.requestPermission();toast(p==='granted'?'Alerts are on':'Alerts were blocked. Allow notifications in your browser settings.');
 }
-function updateTitle(){const c=counts(),n=c.unread+c.waiting;document.title=(n?'('+n+') ':'')+'Thean · Agent Inbox'}
+function updateTitle(){const c=counts(),n=c.unread+c.waiting;const r=calls.some(x=>callFresh(x)&&!declined.has(x.id));document.title=(r?'Incoming call · ':'')+(n?'('+n+') ':'')+'Thean · Agent Inbox'}
 
 /* ---------- settings & quick replies ---------- */
 function modal(title,inner){const m=document.createElement('div');m.className='modal';m.innerHTML='<div class="sheet" role="dialog" aria-modal="true"><div class="hd"><h3>'+esc(title)+'</h3><button class="ib" data-close aria-label="Close">'+I('close')+'</button></div><div class="bd">'+inner+'</div></div>';m.addEventListener('click',e=>{if(e.target===m||e.target.closest('[data-close]'))m.remove()});document.body.appendChild(m);return m}
