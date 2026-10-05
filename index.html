@@ -5,9 +5,9 @@
 <script>try{(function(){var k=localStorage.getItem("thean-skin");if(k==="heritage"||k==="classic"||k==="apsara"||k==="kbach"||k==="pchum"){document.documentElement.setAttribute("data-skin",k);var m=localStorage.getItem("thean-pmode");if(k==="pchum"&&(m==="light"||m==="dark"))document.documentElement.setAttribute("data-theme",m)}})()}catch(e){}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Thean · Cambodia Traveler</title>
-<meta name="description" content="Thean – a Cambodian travel team sharing scenic routes, temples, travel spots and peaceful places across Cambodia.">
+<meta name="description" content="Thean shares the beauty of Cambodia: Angkor and temple stories, Khmer culture, festivals, food and dances, places to visit and travel tips, in English and Khmer.">
 <meta property="og:title" content="Thean · Cambodia Traveler">
-<meta property="og:description" content="Scenic routes, temples, travel spots and peaceful places across Cambodia.">
+<meta property="og:description" content="Thean shares the beauty of Cambodia: Angkor and temple stories, Khmer culture, festivals, food and dances, places to visit and travel tips, in English and Khmer.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kongthean.com/">
 <meta property="og:site_name" content="Thean">
@@ -17,7 +17,7 @@
 <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"TravelAgency","name":"Thean · Cambodia Traveler","alternateName":"ធាន","url":"https://kongthean.com/","logo":"https://kongthean.com/logo.png","image":"https://kongthean.com/logo.png","description":"A Cambodian travel team sharing destinations, Angkor temple stories, Khmer culture, festivals, food, hotels and travel tips in English and Khmer.","areaServed":"Cambodia","email":"info@kongthean.com","sameAs":["https://www.facebook.com/fb.thean","https://www.tiktok.com/@tt.thean","https://www.youtube.com/@theancambodia","https://www.instagram.com/ig.thean","https://t.me/tg_thean"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Thean · Cambodia Traveler","alternateName":"ធាន","url":"https://kongthean.com/","logo":"https://kongthean.com/logo.png","image":"https://kongthean.com/logo.png","description":"Thean shares the beauty of Cambodia: Angkor and temple stories, Khmer culture, festivals, food and dances, places to visit and travel tips, in English and Khmer.","email":"info@kongthean.com","sameAs":["https://www.facebook.com/fb.thean","https://www.tiktok.com/@tt.thean","https://www.youtube.com/@theancambodia","https://www.instagram.com/ig.thean","https://t.me/tg_thean"]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Koulen&family=Kantumruy+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap">
@@ -1312,8 +1312,8 @@ function render(){
   document.documentElement.lang=lang;
   document.body.classList.toggle('admin',admin);
   document.body.classList.toggle('editing',editing);
-  try{var md=document.querySelector('meta[name="description"]'),dsc='';if(R.name==='place'&&placeById(R.id))dsc=tr(placeById(R.id).sum);else if(R.name==='p'&&page(R.id))dsc=tr(page(R.id).intro);else if(R.name==='k'&&kObj(R.id,R.sub))dsc=tr(kObj(R.id,R.sub).text)||tr(kObj(R.id,R.sub).body);else if(R.name==='n'&&getObj(R.id,R.sub))dsc=nCap(getObj(R.id,R.sub));if(md)md.setAttribute('content',String(dsc||'Thean – a Cambodian travel team sharing scenic routes, temples, travel spots and peaceful places across Cambodia.').slice(0,300))}catch(e){}
-  document.title=(R.name==='n'&&getObj(R.id,R.sub)?tr(getObj(R.id,R.sub).title)+' · ':'')+(R.name==='k'&&kObj(R.id,R.sub)?tr(kObj(R.id,R.sub).title)+' · ':'')+(R.name==='p'&&page(R.id)?tr(page(R.id).label)+' · ':'')+(R.name==='place'&&placeById(R.id)?tr(placeById(R.id).title)+' · ':'')+'Thean · Cambodia Traveler';
+  try{var md=document.querySelector('meta[name="description"]'),dsc='';if(R.name==='place'&&placeById(R.id))dsc=tr(placeById(R.id).sum);else if(R.name==='p'&&page(R.id))dsc=tr(page(R.id).intro);else if(R.name==='k'&&kObj(R.id,R.sub))dsc=tr(kObj(R.id,R.sub).text)||tr(kObj(R.id,R.sub).body);else if(R.name==='n'&&getObj(R.id,R.sub))dsc=nCap(getObj(R.id,R.sub));if(md)md.setAttribute('content',String(dsc||'Thean shares the beauty of Cambodia: Angkor and temple stories, Khmer culture, festivals, food and dances, places to visit and travel tips, in English and Khmer.').slice(0,300))}catch(e){}
+  document.title=(R.name==='home'&&!location.hash.replace(/^#\/?/,''))?'Thean · Cambodia Traveler':(R.name==='n'&&getObj(R.id,R.sub)?tr(getObj(R.id,R.sub).title)+' · ':'')+(R.name==='k'&&kObj(R.id,R.sub)?tr(kObj(R.id,R.sub).title)+' · ':'')+(R.name==='p'&&page(R.id)?tr(page(R.id).label)+' · ':'')+(R.name==='place'&&placeById(R.id)?tr(placeById(R.id).title)+' · ':'')+'Thean · Cambodia Traveler';
   if(editing)app.querySelectorAll('[data-edit]').forEach(function(el){try{el.contentEditable='plaintext-only'}catch(x){el.contentEditable='true'}el.spellcheck=false});
   startAuto();initTiles();
   if(R.name==='v'&&location.hash!==vOpened){vOpened=location.hash;var vv=(S.videos||[]).filter(function(x){return x.id===R.id})[0];if(vv){var pv=playable(vv);if(pv)setTimeout(function(){playVideo(pv)},60);else{var ul=url(vv.link);if(ul)setTimeout(function(){var c=app.querySelector('[data-vid="'+vv.id+'"]');if(c){c.scrollIntoView({block:'center'});c.classList.add('flash')}},60)}}}
@@ -3133,7 +3133,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261004-1335',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261005-1033',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
