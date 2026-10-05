@@ -1142,7 +1142,11 @@ body.tcall-on{overflow:hidden}
 #tcall .tcl-st{font-size:.98rem;opacity:.75;min-height:1.4em;max-width:320px}
 #tcall .tcl-ivr{max-width:320px;text-align:center;font-size:.84rem;line-height:1.5;opacity:.6}
 #tcall .tcl-pad{display:grid;grid-template-columns:repeat(3,74px);gap:14px 22px;justify-content:center}
-#tcall .tcl-pad button,#tcall .tcl-ctl button{border:0;color:#fff;cursor:pointer;font:inherit}
+#tcall button{all:unset;box-sizing:border-box;cursor:pointer;color:#fff;-webkit-tap-highlight-color:transparent}
+#tcall .tcl-bot{display:grid;grid-template-columns:1fr 72px 1fr;align-items:center;width:min(300px,100%);justify-items:center}
+#tcall .tcl-hide{font-size:1rem;opacity:.9;padding:10px}
+#tcall [hidden]{display:none!important}
+#tcall.mini .tcl-bot{width:auto;display:block}#tcall.mini .tcl-hide,#tcall.mini .tcl-bot>span{display:none}
 #tcall .tcl-pad button{width:74px;height:74px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}
 #tcall .tcl-pad button:active{background:rgba(255,255,255,.34)}
 #tcall .tcl-pad b{font-size:2rem;font-weight:300;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
@@ -3227,7 +3231,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261005-1213',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261005-1311',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
@@ -3321,18 +3325,19 @@ function drawCall(){let el=callEl();const lg=call.lang;
   el.innerHTML='<div class="tcl-top"><b class="tcl-big">'+esc(callCfg().number||'203')+'</b><span class="tcl-st" data-st>'+esc(cw('calling',lg))+'</span></div>'+
    '<div class="tcl-ivr" data-ivr hidden></div>'+
    '<div class="tcl-pad" data-pad hidden>'+['1','2','3','4','5','6','7','8','9','*','0','#'].map(k=>'<button type="button" data-k="'+k+'"><b>'+k+'</b></button>').join('')+'</div>'+
-   '<div class="tcl-ctl" data-ctl hidden><button type="button" data-mute><span>'+I('mic')+'</span><small>'+esc(cw('mute',lg))+'</small></button><button type="button" data-kp><span>'+I('grid')+'</span><small>'+esc(cw('keypad',lg))+'</small></button><button type="button" data-chat><span>'+I('chat')+'</span><small>'+esc(cw('chat',lg))+'</small></button></div>'+
-   '<button type="button" class="tcl-end" data-end aria-label="'+esc(cw('end',lg))+'">'+I('phoneoff')+'</button><audio data-remote autoplay playsinline></audio>';
+   '<div class="tcl-ctl" data-ctl><button type="button" data-mute><span>'+I('mic')+'</span><small>'+esc(cw('mute',lg))+'</small></button><button type="button" data-kp><span>'+I('grid')+'</span><small>'+esc(cw('keypad',lg))+'</small></button><button type="button" data-chat><span>'+I('chat')+'</span><small>'+esc(cw('chat',lg))+'</small></button></div>'+
+   '<div class="tcl-bot"><span></span><button type="button" class="tcl-end" data-end aria-label="'+esc(cw('end',lg))+'">'+I('phoneoff')+'</button><button type="button" class="tcl-hide" data-hide hidden>'+esc(lg==='km'?'លាក់':'Hide')+'</button></div><audio data-remote autoplay playsinline></audio>';
   el.onclick=e=>{if(el.classList.contains('mini')&&e.target.closest('.tcl-top')){setMini(false);return}const b=e.target.closest('button');if(!b)return;
     if(b.dataset.k){dtmf(b.dataset.k);onKey(b.dataset.k);return}
     if(b.hasAttribute('data-end')){callEnd(true);return}
-    if(b.hasAttribute('data-kp')){const p=el.querySelector('[data-pad]');p.hidden=!p.hidden;return}
+    if(b.hasAttribute('data-kp')){showPad(true);return}
+    if(b.hasAttribute('data-hide')){showPad(false);return}
     if(b.hasAttribute('data-chat')){setMini(true);if(window.TheanChat)window.TheanChat.open();return}
     if(b.hasAttribute('data-mute')){call.muted=!call.muted;if(call.stream)call.stream.getAudioTracks().forEach(t=>t.enabled=!call.muted);b.classList.toggle('on',call.muted);return}}}
 function setMini(v){const el=callEl();if(!el)return;el.classList.toggle('mini',v);document.body.classList.toggle('tcall-mini',v)}
 function setSt(t){const e=callEl()&&callEl().querySelector('[data-st]');if(e)e.textContent=t}
 function setIvr(t){const e=callEl()&&callEl().querySelector('[data-ivr]');if(!e)return;e.hidden=!t;e.textContent=t||''}
-function showPad(v){const el=callEl();if(!el)return;el.querySelector('[data-pad]').hidden=!v;el.querySelector('[data-ctl]').hidden=v}
+function showPad(v){const el=callEl();if(!el)return;el.querySelector('[data-pad]').hidden=!v;el.querySelector('[data-ctl]').hidden=v;el.querySelector('[data-hide]').hidden=!v}
 function clock(){if(!call||!call.t0)return '';const s=Math.floor((Date.now()-call.t0)/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
 function startClock(){if(!call||call.tick)return;call.t0=Date.now();const f=()=>{if(call&&!call.busy)setSt(clock())};f();call.tick=setInterval(f,1000)}
 /* ---- flow ---- */
@@ -3351,7 +3356,7 @@ async function callStart(){
   catch(e){setSt(cw('micNo',lg0));await sleepC(4500);return callEnd(false)}
   if(!call)return;
   setSt(cw('calling',lg0));await ringback(2);if(!call)return;
-  call.state='menu';startClock();showPad(true);
+  call.state='menu';startClock();
   call.menuTimer=setTimeout(()=>{if(call&&call.state==='menu')onKey(lg0==='km'?'1':'2')},30000);
   for(let i=0;i<2;i++){await sayPrompt('menu',lg0);if(!call||call.state!=='menu')return;await sleepC(5000);if(!call||call.state!=='menu')return}
 }
