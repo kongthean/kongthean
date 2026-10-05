@@ -160,6 +160,27 @@ label.f input,label.f textarea{border:1px solid var(--line);border-radius:12px;p
 .callrow .cr-ic{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--ok-soft);color:var(--ok)}
 .callrow .cr-ic.miss{background:#f7dedd;color:var(--danger)}
 .callrow .cr-tx{flex:1;min-width:0}.callrow .cr-tx small{display:block;color:var(--muted);font-size:.82rem}
+
+#agcall{position:fixed;inset:0;z-index:65;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(56px + env(safe-area-inset-top,0px)) 22px calc(34px + env(safe-area-inset-bottom,0px));color:#fff;background:radial-gradient(120% 70% at 50% 0%,#3a4a5e 0%,#1c2531 55%,#0e131a 100%)}
+#agcall button{all:unset;box-sizing:border-box;cursor:pointer;color:#fff;-webkit-tap-highlight-color:transparent}
+#agcall .ag-top{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;margin-top:4vh}
+#agcall .ag-name{font-size:2rem;font-weight:500}
+#agcall .ag-sub{opacity:.7;font-size:.95rem}
+#agcall .ag-st{font-size:1.1rem;font-variant-numeric:tabular-nums;opacity:.9}
+#agcall .ag-flags{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;min-height:28px}
+#agcall .ag-flags i{font-style:normal;font-size:.8rem;padding:4px 12px;border-radius:99px;background:rgba(255,255,255,.12)}
+#agcall .ag-flags i.rec{background:#e5483f}
+#agcall .ag-grid{display:grid;grid-template-columns:repeat(3,80px);gap:22px 26px;justify-content:center}
+#agcall .ag-grid button{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:.78rem;text-align:center}
+#agcall .ag-grid button span{width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,.14);display:grid;place-items:center}
+#agcall .ag-grid button.on span{background:#fff;color:#1c2531}
+#agcall .ag-grid button[data-arec].on span{background:#e5483f;color:#fff}
+#agcall .ag-grid .i{width:28px;height:28px}
+#agcall .ag-end{width:74px;height:74px;border-radius:50%;background:#e5483f;display:grid;place-items:center;box-shadow:0 8px 24px rgba(229,72,63,.35)}
+#agcall .ag-end .i{width:34px;height:34px}
+.icard[data-cbig]{cursor:pointer}
+.callrow .crec{display:inline-flex;gap:4px;align-items:center;font-size:.82rem;margin:4px 10px 0 0;color:var(--accent)}
+.callrow .crec .i{width:14px;height:14px}
 </style>
 </head>
 <body>
@@ -215,7 +236,7 @@ try{
 }catch(e){root.innerHTML='<div class="login"><div class="lcard"><h1 class="emb">THEAN</h1><div class="err">Could not load the chat service. Check your internet connection and reload.</div></div></div>';throw e}
 
 /* ---------- icons ---------- */
-const P={mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/>',phoneoff:'<path d="M3 13.6c5-4.6 13-4.6 18 0l-2.3 2.6-3.6-1.4-.3-2.5a10 10 0 0 0-5.6 0l-.3 2.5-3.6 1.4z"/>',chat:'<path d="M4 5h16v11H9.5L4 20z"/><path d="M8 9.3h8M8 12.3h5"/>',bell:'<path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',sound:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',mute:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>',
+const P={rec:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.6" fill="currentColor"/>',mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/>',phoneoff:'<path d="M3 13.6c5-4.6 13-4.6 18 0l-2.3 2.6-3.6-1.4-.3-2.5a10 10 0 0 0-5.6 0l-.3 2.5-3.6 1.4z"/>',chat:'<path d="M4 5h16v11H9.5L4 20z"/><path d="M8 9.3h8M8 12.3h5"/>',bell:'<path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',sound:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',mute:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>',
  logout:'<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/>',
  left:'<path d="M15 5l-7 7 7 7"/>',send:'<path d="M5 12h14M13 6l6 6-6 6"/>',bolt:'<path d="M13 3L5 13.5h6L10 21l8-10.5h-6z"/>',edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/>',spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>',swap:'<path d="M4 8h13l-3.5-3.5M20 16H7l3.5 3.5"/>',door:'<path d="M14 4H6v16h8"/><path d="M11 12h9M17 9l3 3-3 3"/>',check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',close:'<path d="M6 6l12 12M18 6L6 18"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>',
  wave:'<path d="M7 11V6.5a1.5 1.5 0 0 1 3 0V11M10 10V4.5a1.5 1.5 0 0 1 3 0V10M13 10V5.5a1.5 1.5 0 0 1 3 0V12M16 9.5a1.5 1.5 0 0 1 3 0V14a7 7 0 0 1-7 7h-1a7 7 0 0 1-5.3-2.4L3.4 15a1.6 1.6 0 0 1 2.4-2.1L7 14V11"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',bed:'<path d="M3 19.5V6M21 19.5V14a3 3 0 0 0-3-3h-7.5v5"/><path d="M3 16h18"/><circle cx="7" cy="12.5" r="1.8"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/>',
@@ -827,73 +848,125 @@ setInterval(()=>{if(sel)drawConvHead()},3000);
 
 /* ---------- web calls ---------- */
 const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302','stun:stun2.l.google.com:19302']}]};
-let calls=[],callUnsub=null,declined=new Set(),notified=new Set(),onCall=null,ringT=null,missSeen=+pref('missSeen',0)||0;
-function callFresh(c){return c.status==='ringing'&&c.createdAt&&Date.now()-ms(c.createdAt)<4*60000}
+let calls=[],callUnsub=null,declined=new Set(),notified=new Set(),onCall=null,ringT=null,missSeen=+pref('missSeen',0)||0,firstCalls=true;
+function callFresh(c){if(c.status==='ringing')return c.createdAt&&Date.now()-ms(c.createdAt)<4*60000;
+  if(c.status==='transfer')return (!c.transferTo||c.transferTo===me.uid)&&c.transferFromUid!==me.uid&&(!c.transferAt||Date.now()-ms(c.transferAt)<3*60000);return false}
 function callWatch(){callUnsub=DB.onRecent('calls','createdAt',40,list=>{calls=list;
-    list.filter(callFresh).forEach(c=>{if(!notified.has(c.id)){notified.add(c.id);if(!firstCalls)callNotify(c)}});firstCalls=false;
-    if(onCall){const c=list.find(x=>x.id===onCall.id);if(c&&(c.status==='ended'||c.status==='cancelled'||c.status==='missed'))hangUp(false)}
+    list.filter(callFresh).forEach(c=>{const key=c.id+':'+c.status+':'+(c.leg||0);if(!notified.has(key)){notified.add(key);if(!firstCalls)callNotify(c)}});firstCalls=false;
+    if(onCall){const c=list.find(x=>x.id===onCall.id);if(c&&(c.status==='ended'||c.status==='cancelled'||c.status==='missed'||(c.agentUid&&c.agentUid!==me.uid)))hangUp(false,c.status==='ended'&&c.endedBy==='caller'?'The caller hung up':'')}
     drawIncoming();drawTop()},err=>{})}
-let firstCalls=true;
 function callLang(c){return c.lang==='km'?'Khmer':'English'}
 function callWho(c){const ch=chats.find(x=>x.id===c.callerUid);return (ch&&ch.name)||c.name||('Visitor '+String(c.callerUid||'').slice(0,4).toUpperCase())}
-function callNotify(c){if('Notification' in window&&Notification.permission==='granted'){try{const n=new Notification('Incoming web call',{body:callWho(c)+' · '+callLang(c),tag:'call-'+c.id,renotify:true,requireInteraction:true});n.onclick=()=>{window.focus();n.close()}}catch(e){}}
+function callNotify(c){const t=c.status==='transfer'?'Call transferred to you':'Incoming web call';if('Notification' in window&&Notification.permission==='granted'){try{const n=new Notification(t,{body:callWho(c)+' · '+callLang(c)+(c.transferFromName?' · from '+c.transferFromName:''),tag:'call-'+c.id,renotify:true,requireInteraction:true});n.onclick=()=>{window.focus();n.close()}}catch(e){}}
   try{navigator.vibrate&&navigator.vibrate([300,150,300,150,300])}catch(e){}}
-function ringTone(){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();
-  [0,.5].forEach(t=>{[[440,480]].forEach(f=>f.forEach(fr=>{const o=ac.createOscillator(),g=ac.createGain(),t0=ac.currentTime+t;o.frequency.value=fr;g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(.12,t0+.03);g.gain.setValueAtTime(.12,t0+.4);g.gain.exponentialRampToValueAtTime(.0001,t0+.45);o.connect(g);g.connect(ac.destination);o.start(t0);o.stop(t0+.5)}))})}catch(e){}}
+function audioCtx(){ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();return ac}
+function ringTone(){try{const a=audioCtx();[0,.5].forEach(t=>{[440,480].forEach(fr=>{const o=a.createOscillator(),g=a.createGain(),t0=a.currentTime+t;o.frequency.value=fr;g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(.12,t0+.03);g.gain.setValueAtTime(.12,t0+.4);g.gain.exponentialRampToValueAtTime(.0001,t0+.45);o.connect(g);g.connect(a.destination);o.start(t0);o.stop(t0+.5)})})}catch(e){}}
+function fmtDur(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
 function drawIncoming(){let box=document.getElementById('incall');
-  const ring=calls.filter(c=>callFresh(c)&&!declined.has(c.id));
+  const ring=calls.filter(c=>callFresh(c)&&!declined.has(c.id+':'+(c.leg||0))&&!(onCall&&c.id===onCall.id));
   if(!box){box=document.createElement('div');box.id='incall';document.body.appendChild(box)}
   let h='';
-  if(onCall){const c=calls.find(x=>x.id===onCall.id)||{};const s=onCall.t0?Math.floor((Date.now()-onCall.t0)/1000):0;
-    h+='<div class="icard on"><span class="ic-ic">'+I('phone')+'</span><span class="ic-tx"><b>'+esc(callWho(c))+'</b><small data-ctm>'+(onCall.t0?'On call · '+String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'):'Connecting…')+' · '+callLang(c)+'</small></span>'+
-     '<button type="button" class="ic-mu'+(onCall.muted?' on':'')+'" data-cmu title="Mute">'+I('mic')+'</button><button type="button" class="ic-ch" data-cch title="Open chat">'+I('chat')+'</button><button type="button" class="ic-no" data-cend title="End call">'+I('phoneoff')+'</button></div>'}
-  ring.filter(c=>!onCall||c.id!==onCall.id).forEach(c=>{h+='<div class="icard"><span class="ic-ic">'+I('phone')+'</span><span class="ic-tx"><b>Incoming call · '+callLang(c)+'</b><small>'+esc(callWho(c))+(c.page?' · '+esc(c.page):'')+'</small></span>'+
-    '<button type="button" class="ic-no" data-cno="'+esc(c.id)+'" title="Decline">'+I('phoneoff')+'</button><button type="button" class="ic-yes" data-cyes="'+esc(c.id)+'" title="Answer">'+I('phone')+'</button></div>'});
-  box.innerHTML=h;
-  const want=ring.some(c=>!onCall||c.id!==onCall.id)&&!onCall;
+  if(onCall&&onCall.mini){const c=calls.find(x=>x.id===onCall.id)||{};
+    h+='<div class="icard on" data-cbig><span class="ic-ic">'+I('phone')+'</span><span class="ic-tx"><b>'+esc(callWho(c))+'</b><small data-ctm2>'+(onCall.t0?fmtDur(Math.floor((Date.now()-onCall.t0)/1000)):'Connecting…')+(onCall.hold?' · On hold':'')+(onCall.rec?' · Recording':'')+'</small></span><button type="button" class="ic-no" data-cend title="End call">'+I('phoneoff')+'</button></div>'}
+  ring.forEach(c=>{const tr=c.status==='transfer';h+='<div class="icard"><span class="ic-ic">'+I('phone')+'</span><span class="ic-tx"><b>'+(tr?'Transfer from '+esc(c.transferFromName||'agent'):'Incoming call')+' · '+callLang(c)+'</b><small>'+esc(callWho(c))+(c.page?' · '+esc(c.page):'')+'</small></span>'+
+    '<button type="button" class="ic-no" data-cno="'+esc(c.id+':'+(c.leg||0))+'" title="Decline">'+I('phoneoff')+'</button><button type="button" class="ic-yes" data-cyes="'+esc(c.id)+'" title="Answer">'+I('phone')+'</button></div>'});
+  if(box.dataset.h!==h){box.innerHTML=h;box.dataset.h=h;if(onCall)tickCall()}
+  const want=ring.length>0&&!onCall;
   if(want&&!ringT){ringTone();ringT=setInterval(()=>{if(soundOn)ringTone()},3000)}
   if(!want&&ringT){clearInterval(ringT);ringT=null}
   updateTitle()}
-document.addEventListener('click',e=>{const b=e.target.closest('#incall button');if(!b)return;
+/* full call screen for the agent */
+function drawCallScreen(){let el=document.getElementById('agcall');
+  if(!onCall||onCall.mini){if(el)el.remove();return}
+  const c=calls.find(x=>x.id===onCall.id)||{};
+  if(!el){el=document.createElement('div');el.id='agcall';document.body.appendChild(el)}
+  const B=(attr,icon,label,on)=>'<button type="button" '+attr+(on?' class="on"':'')+'><span>'+I(icon)+'</span><small>'+label+'</small></button>';
+  const html='<div class="ag-top"><b class="ag-name">'+esc(callWho(c))+'</b><span class="ag-sub">'+callLang(c)+' · web call</span><span class="ag-st" data-ctm>'+(onCall.t0?fmtDur(Math.floor((Date.now()-onCall.t0)/1000)):'Connecting…')+'</span>'+
+   '<span class="ag-flags">'+(onCall.hold?'<i class="hold">On hold · caller hears waiting music</i>':'')+(onCall.rec?'<i class="rec">Recording</i>':'')+'</span></div>'+
+   '<div class="ag-grid">'+B('data-amute','mic',onCall.muted?'Unmute':'Mute',onCall.muted)+B('data-aspk','sound','Speaker',onCall.spk)+B('data-ahold','clock',onCall.hold?'Resume':'Waiting',onCall.hold)+
+     B('data-arec','rec',onCall.rec?'Stop rec':'Record',onCall.rec)+B('data-atr','swap','Transfer',false)+B('data-achat','chat','Chat',false)+'</div>'+
+   '<button type="button" class="ag-end" data-cend title="End call">'+I('phoneoff')+'</button>';
+  if(el.dataset.h!==html){el.innerHTML=html;el.dataset.h=html;tickCall()}}
+function tickCall(){if(!onCall||!onCall.t0)return;const t=fmtDur(Math.floor((Date.now()-onCall.t0)/1000));const a=document.querySelector('#agcall [data-ctm]');if(a)a.textContent=t;const b=document.querySelector('#incall [data-ctm2]');if(b)b.textContent=t+(onCall.hold?' · On hold':'')+(onCall.rec?' · Recording':'')}
+function redrawCall(){drawCallScreen();drawIncoming()}
+document.addEventListener('click',e=>{
+  if(e.target.closest('#incall [data-cbig]')&&!e.target.closest('button')){onCall.mini=false;redrawCall();return}
+  const b=e.target.closest('#incall button,#agcall button');if(!b)return;
   if(b.dataset.cno){declined.add(b.dataset.cno);drawIncoming();return}
   if(b.dataset.cyes){answer(b.dataset.cyes);return}
+  if(!onCall)return;
   if(b.hasAttribute('data-cend')){hangUp(true);return}
-  if(b.hasAttribute('data-cmu')&&onCall){onCall.muted=!onCall.muted;onCall.stream&&onCall.stream.getAudioTracks().forEach(t=>t.enabled=!onCall.muted);drawIncoming();return}
-  if(b.hasAttribute('data-cch')&&onCall){const c=calls.find(x=>x.id===onCall.id);if(c&&chats.some(x=>x.id===c.callerUid))openChat(c.callerUid);else toast('This caller has no chat yet');return}});
+  if(b.hasAttribute('data-amute')){onCall.muted=!onCall.muted;applyMic();redrawCall();return}
+  if(b.hasAttribute('data-aspk')){onCall.spk=!onCall.spk;applySpk();redrawCall();return}
+  if(b.hasAttribute('data-ahold')){onCall.hold=!onCall.hold;applyMic();applySpk();DB.update('calls/'+onCall.id,{hold:onCall.hold}).catch(()=>{});redrawCall();return}
+  if(b.hasAttribute('data-arec')){if(onCall.rec)stopRec();else startRec();return}
+  if(b.hasAttribute('data-atr')){transferSheetCall();return}
+  if(b.hasAttribute('data-achat')){const c=calls.find(x=>x.id===onCall.id);onCall.mini=true;redrawCall();if(c&&chats.some(x=>x.id===c.callerUid))openChat(c.callerUid);else toast('This caller has no chat yet');return}});
+function applyMic(){if(onCall&&onCall.stream)onCall.stream.getAudioTracks().forEach(t=>t.enabled=!onCall.muted&&!onCall.hold)}
+function applySpk(){if(!onCall)return;if(onCall.au)onCall.au.muted=!!onCall.hold;
+  if(onCall.remote){try{const a=audioCtx();if(!onCall.rg){onCall.rg=a.createGain();a.createMediaStreamSource(onCall.remote).connect(onCall.rg);onCall.rg.connect(a.destination)}onCall.rg.gain.value=onCall.spk&&!onCall.hold?1.6:0}catch(e){}}}
 async function answer(id){if(onCall){toast('Finish your current call first');return}
   if(!navigator.mediaDevices||!window.RTCPeerConnection){toast('This browser cannot take calls. Use Chrome or Safari.');return}
   let stream;try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}})}catch(e){toast('Allow the microphone for this page to answer calls');return}
   if(ringT){clearInterval(ringT);ringT=null}
-  let r;try{r=await DB.tx('calls/'+id+'/status',cur=>cur==='ringing'?'active':undefined)}catch(e){r={committed:false}}
-  if(!r.committed||r.val!=='active'){stream.getTracks().forEach(t=>t.stop());toast('This call was already answered or ended');declined.add(id);drawIncoming();return}
-  await DB.update('calls/'+id,{agentUid:me.uid,agentName:(agent&&agent.name)||'Agent',answeredAt:TS}).catch(()=>{});
-  const pc=new RTCPeerConnection(ICE);onCall={id,pc,stream,muted:false,seen:{},unsub:[]};
+  let r;try{r=await DB.tx('calls/'+id+'/status',cur=>(cur==='ringing'||cur==='transfer')?'active':undefined)}catch(e){r={committed:false}}
+  if(!r.committed||r.val!=='active'){stream.getTracks().forEach(t=>t.stop());toast('This call was already answered or ended');drawIncoming();return}
+  const c0=await DB.get('calls/'+id)||{};const leg=(+c0.leg||0)+1;
+  const up={agentUid:me.uid,agentName:(agent&&agent.name)||'Agent',leg,hold:false,transferTo:null};if(!c0.answeredAt)up.answeredAt=TS;
+  await DB.update('calls/'+id,up).catch(()=>{});
+  const pc=new RTCPeerConnection(ICE);onCall={id,pc,stream,leg,muted:false,spk:false,hold:false,seen:{},unsub:[]};
   stream.getTracks().forEach(t=>pc.addTrack(t,stream));
   const au=document.createElement('audio');au.autoplay=true;au.setAttribute('playsinline','');document.body.appendChild(au);onCall.au=au;
-  pc.ontrack=e=>{au.srcObject=e.streams[0];au.play().catch(()=>{})};
-  pc.onicecandidate=e=>{if(e.candidate&&onCall)DB.push('calls/'+id+'/ac',JSON.parse(JSON.stringify(e.candidate.toJSON()))).catch(()=>{})};
-  pc.onconnectionstatechange=()=>{if(!onCall)return;const st=pc.connectionState;
-    if(st==='connected'&&!onCall.t0){onCall.t0=Date.now();onCall.tick=setInterval(()=>{const el=document.querySelector('#incall [data-ctm]');if(el&&onCall&&onCall.t0){const s=Math.floor((Date.now()-onCall.t0)/1000);el.textContent='On call · '+String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}},1000);drawIncoming()}
+  pc.ontrack=e=>{onCall&&(onCall.remote=e.streams[0]);au.srcObject=e.streams[0];au.play().catch(()=>{});applySpk()};
+  const L='calls/'+id+'/sig/'+leg;
+  pc.onicecandidate=e=>{if(e.candidate&&onCall&&onCall.pc===pc)DB.push(L+'/ac',JSON.parse(JSON.stringify(e.candidate.toJSON()))).catch(()=>{})};
+  pc.onconnectionstatechange=()=>{if(!onCall||onCall.pc!==pc)return;const st=pc.connectionState;
+    if(st==='connected'&&!onCall.t0){onCall.t0=Date.now();onCall.tick=setInterval(tickCall,1000);redrawCall()}
     if(st==='failed'){toast('The call connection failed. The caller\'s network may block web calls.');hangUp(true)}};
-  try{const c=await DB.get('calls/'+id);if(!c||!c.offer)throw new Error('no offer');
-    await pc.setRemoteDescription(c.offer);const ans=await pc.createAnswer();await pc.setLocalDescription(ans);
-    await DB.update('calls/'+id,{answer:{type:ans.type,sdp:ans.sdp}});
-    onCall.unsub.push(DB.on('calls/'+id+'/cc',v=>{if(!v||!onCall)return;Object.keys(v).forEach(k=>{if(onCall.seen[k])return;onCall.seen[k]=1;pc.addIceCandidate(v[k]).catch(()=>{})})}));
-    const ch=chats.find(x=>x.id===c.callerUid);if(ch)openChat(c.callerUid)}
-  catch(e){toast('Could not connect the call: '+(e.code||e.message));hangUp(true);return}
-  drawIncoming()}
-async function hangUp(byMe){if(!onCall)return;const c=onCall;onCall=null;
+  redrawCall();
+  let done=false;
+  onCall.unsub.push(DB.on(L+'/offer',async v=>{if(!v||done||!onCall||onCall.pc!==pc)return;done=true;
+    try{await pc.setRemoteDescription(v);const ans=await pc.createAnswer();await pc.setLocalDescription(ans);await DB.update(L,{answer:{type:ans.type,sdp:ans.sdp}})}catch(e){toast('Could not connect the call: '+(e.code||e.message));hangUp(true)}}));
+  onCall.unsub.push(DB.on(L+'/cc',v=>{if(!v||!onCall||onCall.pc!==pc)return;Object.keys(v).forEach(k=>{if(onCall.seen[k])return;onCall.seen[k]=1;pc.addIceCandidate(v[k]).catch(()=>{})})}));
+  setTimeout(()=>{if(onCall&&onCall.pc===pc&&!done){toast('The caller did not connect');hangUp(true)}},25000)}
+function endLocal(){const c=onCall;onCall=null;if(!c)return 0;
   clearInterval(c.tick);c.unsub.forEach(u=>{try{u()}catch(e){}});
-  try{c.pc.close()}catch(e){}try{c.stream.getTracks().forEach(t=>t.stop())}catch(e){}try{c.au.remove()}catch(e){}
-  const dur=c.t0?Math.round((Date.now()-c.t0)/1000):0;
-  if(byMe)await DB.update('calls/'+c.id,{status:'ended',endedAt:TS,endedBy:'agent',duration:dur}).catch(()=>{});
-  else if(dur)DB.update('calls/'+c.id,{duration:dur}).catch(()=>{});
-  toast('Call ended'+(dur?' · '+Math.floor(dur/60)+'m '+dur%60+'s':''));drawIncoming()}
+  try{c.pc.close()}catch(e){}try{c.stream.getTracks().forEach(t=>t.stop())}catch(e){}try{c.au.remove()}catch(e){}try{c.rg&&c.rg.disconnect()}catch(e){}
+  return c.t0?Math.round((Date.now()-c.t0)/1000):0}
+async function hangUp(byMe,why){if(!onCall)return;const id=onCall.id;if(onCall.rec)await stopRec();const dur=endLocal();
+  if(byMe)await DB.update('calls/'+id,{status:'ended',endedAt:TS,endedBy:'agent',duration:dur}).catch(()=>{});
+  else if(dur)DB.update('calls/'+id,{duration:dur}).catch(()=>{});
+  toast((why||'Call ended')+(dur?' · '+Math.floor(dur/60)+'m '+dur%60+'s':''));redrawCall()}
+/* transfer */
+async function transferSheetCall(){let ag={};try{ag=await DB.get('agents')||{}}catch(e){}
+  const others=Object.keys(ag).filter(u=>u!==me.uid).sort((a,b)=>(ag[b].online?1:0)-(ag[a].online?1:0));
+  if(!others.length){toast('There is no other agent to transfer to yet');return}
+  const m=modal('Transfer call','<p style="margin:0;color:var(--muted);font-size:.88rem">The caller hears waiting music until the other agent answers.</p><div class="endopt">'+others.map(u=>{const a=ag[u]||{};return '<button type="button" data-tto="'+esc(u)+'"><span class="agrow"><span class="av" style="width:34px;height:34px">'+esc((a.name||'?')[0])+'<span class="st" style="background:'+(a.online?'var(--ok)':'var(--line)')+'"></span></span><span><b>'+esc(a.name||'Agent')+'</b><small>'+(a.online?'Online now':'Away')+'</small></span></span></button>'}).join('')+
+   '<button type="button" data-tto="*"><span class="agrow"><span class="av" style="width:34px;height:34px">'+I('user')+'</span><span><b>Any available agent</b><small>Rings everyone who is online</small></span></span></button></div>');
+  m.addEventListener('click',async e=>{const b=e.target.closest('[data-tto]');if(!b||!onCall)return;const to=b.dataset.tto,id=onCall.id;m.remove();
+    if(onCall.rec)await stopRec();
+    await DB.update('calls/'+id,{status:'transfer',transferTo:to==='*'?null:to,transferToName:to==='*'?'':((ag[to]&&ag[to].name)||'Agent'),transferFromName:(agent&&agent.name)||'Agent',transferFromUid:me.uid,transferAt:TS,hold:false}).catch(()=>{});
+    endLocal();redrawCall();toast('Transferred to '+(to==='*'?'any available agent':((ag[to]&&ag[to].name)||'agent')))})}
+/* record */
+async function startRec(){if(!onCall)return;if(!window.MediaRecorder){toast('Recording is not supported in this browser');return}
+  try{const a=audioCtx(),dest=a.createMediaStreamDestination();a.createMediaStreamSource(onCall.stream).connect(dest);if(onCall.remote)a.createMediaStreamSource(onCall.remote).connect(dest);
+    const mt=['audio/webm;codecs=opus','audio/mp4','audio/webm'].filter(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))[0];
+    const mr=new MediaRecorder(dest.stream,mt?{mimeType:mt}:undefined),ch=[];mr.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};mr.start(1000);
+    onCall.rec={mr,ch,type:mr.mimeType||mt||'audio/webm',t0:Date.now(),id:onCall.id};redrawCall();toast('Recording started')}catch(e){toast('Could not start recording')}}
+function stopRec(){const c=onCall;if(!c||!c.rec)return Promise.resolve();const r=c.rec;c.rec=null;redrawCall();
+  return new Promise(res=>{r.mr.onstop=async()=>{const blob=new Blob(r.ch,{type:r.type}),secs=Math.round((Date.now()-r.t0)/1000);res();
+    if(blob.size<1000)return;await loadSite();const M=(SITE.S&&SITE.S.media)||{};
+    if(M.cloud&&M.preset){toast('Saving recording…');try{const fd=new FormData();fd.append('file',blob,'call-'+r.id+(/mp4/.test(r.type)?'.m4a':'.webm'));fd.append('upload_preset',M.preset);fd.append('folder','thean/calls');
+        const j=await (await fetch('https://api.cloudinary.com/v1_1/'+encodeURIComponent(M.cloud)+'/video/upload',{method:'POST',body:fd})).json();if(!j.secure_url)throw new Error((j.error&&j.error.message)||'upload');
+        await DB.push('calls/'+r.id+'/recs',{url:j.secure_url.replace(/\.[a-z0-9]+$/i,'.mp3'),by:(agent&&agent.name)||'Agent',secs,at:TS});toast('Recording saved. Open Calls to listen.');return}catch(e){toast('Could not save the recording online, downloading it instead')}}
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='call-'+new Date().toISOString().slice(0,16).replace(/[:T]/g,'-')+(/mp4/.test(r.type)?'.m4a':'.webm');document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000)};
+    try{r.mr.stop()}catch(e){res()}})}
 function missedCount(){return calls.filter(c=>c.status==='missed'&&ms(c.createdAt)>missSeen).length}
 function callLog(){missSeen=Date.now();setPref('missSeen',missSeen);drawTop();
-  const st={ringing:'Ringing',active:'Answered',ended:'Answered',missed:'Missed',cancelled:'Caller hung up'};
-  const rows=calls.map(c=>{const miss=c.status==='missed'||(c.status==='cancelled'&&!c.answeredAt)||(c.status==='ended'&&!c.answeredAt);const d=new Date(ms(c.createdAt));
-    return '<div class="callrow"><span class="cr-ic'+(miss?' miss':'')+'">'+I('phone')+'</span><span class="cr-tx"><b>'+esc(callWho(c))+'</b><small>'+d.toLocaleDateString([], {day:'numeric',month:'short'})+' '+d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})+' · '+callLang(c)+' · '+(miss&&c.status!=='missed'?'Not answered':(st[c.status]||c.status))+(c.agentName?' · '+esc(c.agentName):'')+(c.duration?' · '+Math.floor(c.duration/60)+'m '+c.duration%60+'s':'')+'</small></span>'+(chats.some(x=>x.id===c.callerUid)?'<button class="btn sm soft" type="button" data-copen="'+esc(c.callerUid)+'">Chat</button>':'')+'</div>'}).join('');
+  const st={ringing:'Ringing',active:'In progress',transfer:'Being transferred',ended:'Answered',missed:'Missed',cancelled:'Caller hung up'};
+  const rows=calls.map(c=>{const miss=c.status==='missed'||((c.status==='cancelled'||c.status==='ended')&&!c.answeredAt);const d=new Date(ms(c.createdAt));const recs=c.recs?Object.values(c.recs):[];
+    return '<div class="callrow"><span class="cr-ic'+(miss?' miss':'')+'">'+I('phone')+'</span><span class="cr-tx"><b>'+esc(callWho(c))+'</b><small>'+d.toLocaleDateString([], {day:'numeric',month:'short'})+' '+d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})+' · '+callLang(c)+' · '+(miss&&c.status!=='missed'?'Not answered':(st[c.status]||c.status))+(c.agentName?' · '+esc(c.agentName):'')+(c.duration?' · '+Math.floor(c.duration/60)+'m '+c.duration%60+'s':'')+'</small>'+
+     recs.map((x,i)=>'<a class="crec" href="'+esc(x.url)+'" target="_blank" rel="noopener">'+I('rec')+' Recording '+(recs.length>1?i+1+' ':'')+(x.secs?'('+Math.floor(x.secs/60)+'m '+x.secs%60+'s)':'')+'</a>').join('')+'</span>'+(chats.some(x=>x.id===c.callerUid)?'<button class="btn sm soft" type="button" data-copen="'+esc(c.callerUid)+'">Chat</button>':'')+'</div>'}).join('');
   const m=modal('Web calls',rows||'<p style="margin:0;color:var(--muted)">No calls yet. When a visitor taps Call us, this page rings. Keep it open and set to Available.</p>');
   m.addEventListener('click',e=>{const b=e.target.closest('[data-copen]');if(b){m.remove();openChat(b.dataset.copen)}})}
 /* ---------- notifications ---------- */
