@@ -161,7 +161,7 @@ label.f input,label.f textarea{border:1px solid var(--line);border-radius:12px;p
 .callrow .cr-ic.miss{background:#f7dedd;color:var(--danger)}
 .callrow .cr-tx{flex:1;min-width:0}.callrow .cr-tx small{display:block;color:var(--muted);font-size:.82rem}
 
-#agcall{position:fixed;inset:0;z-index:65;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(56px + env(safe-area-inset-top,0px)) 22px calc(34px + env(safe-area-inset-bottom,0px));color:#fff;background:radial-gradient(120% 70% at 50% 0%,#3a4a5e 0%,#1c2531 55%,#0e131a 100%)}
+#agcall{position:fixed;inset:0;z-index:65;isolation:isolate;transform:translateZ(0);-webkit-backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(56px + env(safe-area-inset-top,0px)) 22px calc(34px + env(safe-area-inset-bottom,0px));color:#fff;background:#1b222b}
 #agcall button{all:unset;box-sizing:border-box;cursor:pointer;color:#fff;-webkit-tap-highlight-color:transparent}
 #agcall .ag-top{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;margin-top:4vh}
 #agcall .ag-name{font-size:2rem;font-weight:500}
@@ -173,7 +173,7 @@ label.f input,label.f textarea{border:1px solid var(--line);border-radius:12px;p
 #agcall .ag-flags i.rec{background:#e5483f}
 #agcall .ag-grid{display:grid;grid-template-columns:repeat(3,80px);gap:22px 26px;justify-content:center}
 #agcall .ag-grid button{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:.78rem;text-align:center}
-#agcall .ag-grid button span{width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,.14);display:grid;place-items:center}
+#agcall .ag-grid button span{width:68px;height:68px;border-radius:50%;background:#353d48;display:grid;place-items:center}
 #agcall .ag-grid button.on span{background:#fff;color:#1c2531}
 #agcall .ag-grid button[data-arec].on span{background:#e5483f;color:#fff}
 #agcall .ag-grid .i{width:28px;height:28px}
