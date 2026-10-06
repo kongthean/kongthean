@@ -1131,7 +1131,7 @@ html[data-skin="kbach"][lang="km"] .emb{letter-spacing:0}
 #tcall.mini .tcl-dial{display:none}
 @keyframes tclIn{from{opacity:0}to{opacity:1}}
 body.tcall-on{overflow:hidden}
-body.tcall-on:not(.tcall-mini)>*:not(#tcall){visibility:hidden!important}
+body.tcall-on:not(.tcall-mini)>*:not(#tcall):not(#tcrec):not(.toast){visibility:hidden!important}
 #tcall{isolation:isolate;-webkit-transform:translateZ(0);transform:translateZ(0);-webkit-backface-visibility:hidden;backface-visibility:hidden}
 #tcall *{-webkit-backface-visibility:hidden;backface-visibility:hidden}
 #tcall .tcl-top{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
@@ -1220,6 +1220,24 @@ body.tcall-on.tcall-mini{overflow:auto}
 #tcall.mini .tcl-ctl .tcl-end span{width:42px;height:42px;box-shadow:none}
 #tcall.mini .tcl-ctl .tcl-end .i{width:22px;height:22px}
 @media (max-height:700px){#tcall{padding-top:calc(30px + env(safe-area-inset-top,0px))}#tcall .tcl-pad{grid-template-columns:repeat(3,66px);gap:10px 22px}#tcall .tcl-pad button{width:66px;height:66px}#tcall .tcl-ctl>button span{width:66px;height:66px}#tcall .tcl-ctl{grid-template-columns:repeat(3,66px);gap:14px 30px}}
+
+#tcall.padon .tcl-ctl .mob{visibility:hidden}
+#tcall.mini .mob,#tcall.mini .tcl-sheet{display:none!important}
+#tcall .tcl-sheet{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(150px + env(safe-area-inset-bottom,0px));width:min(320px,calc(100% - 40px));background:#2b323c;border-radius:18px;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.45);display:grid}
+#tcall .tcl-sheet button{display:flex;align-items:center;justify-content:center;gap:10px;padding:16px;font-size:1.05rem;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;border-top:1px solid rgba(255,255,255,.08)}
+#tcall .tcl-sheet button:first-child{border-top:0}
+#tcall .tcl-sheet button:active{background:#3a424d}
+#tcall .rdot{width:12px;height:12px;border-radius:50%;background:#e5483f;flex:none}
+#tcall .rdot.on{border-radius:3px}
+#tcall.recon .tcl-st::after{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:#e5483f;margin-left:8px;vertical-align:middle;animation:recBlink 1.2s infinite}
+@keyframes recBlink{50%{opacity:.25}}
+#tcall .tcl-ctl>button[data-more].on span{background:#fff;color:#e5483f}
+#tcrec{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:2147483001;width:min(420px,calc(100vw - 24px));background:#1b222b;color:#fff;border-radius:18px;padding:12px 10px 12px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 14px 40px rgba(0,0,0,.4);font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+#tcrec span{flex:1;font-size:.92rem}
+#tcrec button{all:unset;cursor:pointer;color:#fff}
+#tcrec [data-rsave]{background:#2f9e5f;padding:9px 14px;border-radius:99px;font-weight:600;font-size:.9rem}
+#tcrec [data-rx]{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.12)}
+#tcrec [data-rx] .i{width:18px;height:18px}
 </style>
 </head>
 <body>
@@ -1294,6 +1312,7 @@ var P={users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s
  upload:'<path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 20 19v-3"/>',
  sound:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',
  trash:'<path d="M4.5 7h15M9.5 7V4.8h5V7M6.5 7l.9 12.2h9.2L17.5 7M10 10.5v5.5M14 10.5v5.5"/>',
+ dots:'<circle cx="5.5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="18.5" cy="12" r="1.6" fill="currentColor"/>',
  mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/>',grid:'<circle cx="6" cy="5" r="1.3"/><circle cx="12" cy="5" r="1.3"/><circle cx="18" cy="5" r="1.3"/><circle cx="6" cy="11" r="1.3"/><circle cx="12" cy="11" r="1.3"/><circle cx="18" cy="11" r="1.3"/><circle cx="6" cy="17" r="1.3"/><circle cx="12" cy="17" r="1.3"/><circle cx="18" cy="17" r="1.3"/><circle cx="12" cy="22" r=".9"/>',phoneoff:'<path d="M3 13.6c5-4.6 13-4.6 18 0l-2.3 2.6-3.6-1.4-.3-2.5a10 10 0 0 0-5.6 0l-.3 2.5-3.6 1.4z"/>',
  close:'<path d="M6 6l12 12M18 6L6 18"/>', menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
  left:'<path d="M15 5l-7 7 7 7"/>', right:'<path d="M9 5l7 7-7 7"/>', arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
@@ -3299,7 +3318,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261006-1018',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261006-1056',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
@@ -3351,13 +3370,13 @@ const CW={
    topics:'For general inquiries, press 1. For donations, press 2. To report as a copyright owner, press 3.',
    wait:'Please hold for a moment while we connect you to our customer service team. Where necessary, this call may be recorded for training and quality assurance purposes to improve our service. Thank you!',
    busy:'We apologize for not being able to respond to you on time. Our customer service team is currently busy. Please try again later. Thank you!',
-   connecting:'Connecting…',ended:'Call ended',mute:'Mute',unmute:'Mute',speaker:'Speaker',keypad:'Keypad',end:'End',chat:'Chat',where:'Cambodia',lost:'Connection lost'},
+   connecting:'Connecting…',ended:'Call ended',mute:'Mute',unmute:'Mute',speaker:'Speaker',keypad:'Keypad',end:'End',chat:'Chat',where:'Cambodia',more:'More',recStart:'Record call',recStop:'Stop recording',recSave:'Save recording',recReady:'Your call recording is ready.',recClose:'Close',recNo:'Recording is not supported in this browser.',lost:'Connection lost'},
  km:{calling:'កំពុងហៅ…',mic:'សូមអនុញ្ញាតមីក្រូហ្វូន ដើម្បីហៅ',micNo:'មីក្រូហ្វូនត្រូវបានបិទ។ សូមអនុញ្ញាតក្នុងការកំណត់កម្មវិធីរុករក រួចព្យាយាមម្ដងទៀត។',unsupported:'កម្មវិធីរុករកនេះមិនគាំទ្រការហៅតាមគេហទំព័រទេ។ សូមបើកគេហទំព័រក្នុង Safari ឬ Chrome ឬផ្ញើសារមកយើងក្នុងការជជែក។',
    menuKm:'សូមស្វាគមន៍មកកាន់ភ្នាក់ងារបម្រើសេវាកម្មអតិថិជនរបស់គេហទំព័រធាន សូមចុចលេខ ១ សម្រាប់ភាសាខ្មែរ។',menuEn:'Welcome to Thean customer service. Please press 2 for English.',
    topics:'សម្រាប់ការសាកសួរទូទៅ សូមចុចលេខ ១។ សម្រាប់ការបរិច្ចាគ សូមចុចលេខ ២។ សម្រាប់ការរាយការណ៍ពីម្ចាស់កម្មសិទ្ធិ (រក្សាសិទ្ធិ) សូមចុចលេខ ៣។',
    wait:'សូមមេត្តារង់ចាំ យើងខ្ញុំកំពុងតភ្ជាប់លោកអ្នកទៅកាន់ភ្នាក់ងារបម្រើសេវាកម្មអតិថិជន។ ក្នុងករណីចាំបាច់ យើងខ្ញុំនឹងបើកមុខងារថតសំឡេងទុក ក្នុងគោលបំណងផ្តល់ជូននូវសេវាកម្មដែលមានប្រសិទ្ធភាព និងដើម្បីពង្រឹងគុណភាពសេវាកម្មរបស់យើងខ្ញុំ។ សូមអរគុណ។',
    busy:'យើងខ្ញុំសូមអភ័យទោសដែលមិនអាចឆ្លើយតបទៅកាន់លោកអ្នកបានទាន់ពេលវេលា។ បច្ចុប្បន្ននេះ ក្រុមការងារផ្នែកសេវាកម្មអតិថិជនរបស់យើងកំពុងមមាញឹក។ សូមព្យាយាមម្តងទៀតនៅពេលក្រោយ។ សូមអរគុណ។',
-   connecting:'កំពុងភ្ជាប់…',ended:'ការហៅបានបញ្ចប់',mute:'បិទសំឡេង',unmute:'បិទសំឡេង',speaker:'ឧបករណ៍បំពងសំឡេង',keypad:'ក្ដារលេខ',end:'បញ្ចប់',chat:'ជជែក',where:'កម្ពុជា',lost:'ការតភ្ជាប់បានដាច់'}};
+   connecting:'កំពុងភ្ជាប់…',ended:'ការហៅបានបញ្ចប់',mute:'បិទសំឡេង',unmute:'បិទសំឡេង',speaker:'ឧបករណ៍បំពងសំឡេង',keypad:'ក្ដារលេខ',end:'បញ្ចប់',chat:'ជជែក',where:'កម្ពុជា',more:'បន្ថែម',recStart:'ថតការហៅ',recStop:'បញ្ឈប់ការថត',recSave:'រក្សាទុកការថត',recReady:'ការថតការហៅរបស់អ្នករួចរាល់ហើយ។',recClose:'បិទ',recNo:'កម្មវិធីរុករកនេះមិនគាំទ្រការថតទេ។',lost:'ការតភ្ជាប់បានដាច់'}};
 const cw=(k,lg)=>(CW[lg||'en']||CW.en)[k];
 const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302','stun:stun2.l.google.com:19302']}]};
 let call=null;
@@ -3417,15 +3436,18 @@ function drawCall(){let el=callEl();const lg=call.lang;
    '<div class="tcl-mid"><div class="tcl-dial" data-dial></div><div class="tcl-ivr" data-ivr hidden></div>'+
    '<div class="tcl-pad" data-pad hidden>'+[['1',''],['2','ABC'],['3','DEF'],['4','GHI'],['5','JKL'],['6','MNO'],['7','PQRS'],['8','TUV'],['9','WXYZ'],['*',''],['0','+'],['#','']].map(x=>'<button type="button" data-k="'+x[0]+'"'+(x[0]==='*'||x[0]==='#'?' class="sym"':'')+'><b>'+x[0]+'</b><small>'+(x[1]||'&nbsp;')+'</small></button>').join('')+'</div></div>'+
    '<div class="tcl-ctl" data-ctl>'+B('data-spk','sound',cw('speaker',lg),'r1')+B('data-chat','chat',cw('chat',lg),'r1')+B('data-mute','mic',cw('mute',lg),'r1')+
-     '<span class="tcl-gap"></span><button type="button" class="tcl-end" data-end aria-label="'+esc(cw('end',lg))+'"><span>'+I('phoneoff')+'</span><small>'+esc(cw('end',lg))+'</small></button>'+
+     B('data-more','dots',cw('more',lg),'mob')+'<button type="button" class="tcl-end" data-end aria-label="'+esc(cw('end',lg))+'"><span>'+I('phoneoff')+'</span><small>'+esc(cw('end',lg))+'</small></button>'+
      B('data-kp','grid',cw('keypad',lg),'kpb')+'<button type="button" class="tcl-hide" data-hide hidden>'+esc(lg==='km'?'លាក់':'Hide')+'</button></div>'+
-   '<audio data-remote autoplay playsinline></audio>';
+   '<div class="tcl-sheet" data-sheet hidden></div><audio data-remote autoplay playsinline></audio>';
   el.onclick=e=>{if(el.classList.contains('mini')&&e.target.closest('.tcl-top')){setMini(false);return}const b=e.target.closest('button');if(!b)return;
     if(b.dataset.k){dtmf(b.dataset.k);addDigit(b.dataset.k);onKey(b.dataset.k);return}
     if(b.hasAttribute('data-end')){callEnd(true);return}
     if(b.hasAttribute('data-kp')){showPad(true);return}
     if(b.hasAttribute('data-hide')){showPad(false);return}
     if(b.hasAttribute('data-chat')){setMini(true);if(window.TheanChat)window.TheanChat.open();return}
+    if(b.hasAttribute('data-more')){moreSheet();return}
+    if(b.hasAttribute('data-rec')){if(call.rec)recStop();else recStart();return}
+    if(b.hasAttribute('data-shclose')){const sh=el.querySelector('[data-sheet]');if(sh)sh.hidden=true;return}
     if(b.hasAttribute('data-spk')){call.spk=!call.spk;b.classList.toggle('on',call.spk);setSpk();return}
     if(b.hasAttribute('data-mute')){call.muted=!call.muted;if(call.stream)call.stream.getAudioTracks().forEach(t=>t.enabled=!call.muted);b.classList.toggle('on',call.muted);return}}}
 function setSpk(){if(!call||!call.ac)return;outNode().gain.value=call.spk?2.4:1;/* phones do not let websites pick earpiece or loudspeaker, so Speaker makes the call louder */
@@ -3469,7 +3491,7 @@ function drawLabels(){const el=callEl();if(!el)return;const lg=call.lang;[['data
 async function anyAgentOnline(){try{const a=await fb.get('agents')||{};const now=Date.now();return Object.keys(a).some(k=>a[k]&&a[k].online&&(!a[k].lastSeen||now-ms(a[k].lastSeen)<5*60000))}catch(e){return false}}
 async function afterLang(){const lg=call.lang;
   try{await ensureChat(lg)}catch(e){await ensureUser()}if(!call)return;
-  const ref=await fb.push('calls',{callerUid:user.uid,lang:lg,topic:call.topic||'general',topicName:call.topicEn||'',topicKm:call.topicKm||'',status:'ringing',leg:0,createdAt:TS,name:(chat&&chat.name)||'',page:location.hash||'#/',ua:navigator.userAgent.slice(0,120)});
+  const ref=await fb.push('calls',{callerUid:user.uid,lang:lg,topic:call.topic||'general',topicName:call.topicEn||'',topicKm:call.topicKm||'',callerRec:!!call.rec,status:'ringing',leg:0,createdAt:TS,name:(chat&&chat.name)||'',page:location.hash||'#/',ua:navigator.userAgent.slice(0,120)});
   if(!call){fb.update('calls/'+ref.key,{status:'cancelled',endedAt:TS}).catch(()=>{});return}
   call.id=ref.key;call.leg=0;const P='calls/'+call.id;
   try{await say({from:'system',text:'Web call started · '+(lg==='km'?'Khmer':'English')+' · '+(call.topicEn||'General inquiry'),staff:true});await touch({lastMsg:'Web call: '+(call.topicEn||'General inquiry')+' ('+(lg==='km'?'Khmer':'English')+')',lastFrom:'visitor'})}catch(e){}
@@ -3485,7 +3507,7 @@ function closeLeg(){if(!call)return;(call.legUnsub||[]).forEach(u=>{try{u()}catc
 async function newLeg(n){closeLeg();call.leg=n;call.state='active';call.onHold=false;clearTimeout(call.ringT);holdStop();stopVoice();setIvr('');
   const P='calls/'+call.id,L='calls/'+call.id+'/sig/'+n,seen={},pc=new RTCPeerConnection(ICE);call.pc=pc;call.legUnsub=[];
   call.stream.getTracks().forEach(t=>pc.addTrack(t,call.stream));
-  pc.ontrack=e=>{call.remote=e.streams[0];const a=callEl()&&callEl().querySelector('[data-remote]');if(a){a.srcObject=e.streams[0];a.muted=false;a.play().catch(()=>{})}if(call.spk)setSpk()};
+  pc.ontrack=e=>{call.remote=e.streams[0];if(call.rec&&call.ac){try{call.recRem&&call.recRem.disconnect()}catch(x){}try{call.recRem=call.ac.createMediaStreamSource(call.remote);call.recRem.connect(call.rec.dest)}catch(x){}}const a=callEl()&&callEl().querySelector('[data-remote]');if(a){a.srcObject=e.streams[0];a.muted=false;a.play().catch(()=>{})}if(call.spk)setSpk()};
   pc.onconnectionstatechange=()=>{if(!call||call.pc!==pc)return;const s=pc.connectionState;if(s==='connected')onConnected();
     if((s==='failed'||s==='disconnected')&&call.state==='active'){setTimeout(()=>{if(call&&call.pc===pc&&pc.connectionState!=='connected'&&call.state==='active')callEnd(true)},8000)}};
   pc.onicecandidate=e=>{if(e.candidate&&call&&call.pc===pc)fb.push(L+'/cc',JSON.parse(JSON.stringify(e.candidate.toJSON()))).catch(()=>{})};
@@ -3497,7 +3519,7 @@ async function newLeg(n){closeLeg();call.leg=n;call.state='active';call.onHold=f
 }
 function onConnected(){if(!call||call.connected)return;call.connected=true;call.everConnected=true;clearTimeout(call.ringT);if(!call.onHold)holdStop();stopVoice();setIvr('')}
 async function busyEnd(){if(!call||call.state==='busy'||call.state==='ending')return;call.state='busy';clearTimeout(call.ringT);closeLeg();holdStop();stopVoice();showPad(false);await sleepC(300);if(!call)return;await sayPrompt('busy',call.lang);if(!call)return;await sleepC(800);callEnd(false)}
-async function callEnd(byMe){if(!call||call.state==='ending')return;const c=call;c.state='ending';
+async function callEnd(byMe){if(!call||call.state==='ending')return;if(call.rec)recStop();const c=call;c.state='ending';
   holdStop();stopVoice();try{c.ringSrc&&c.ringSrc.stop()}catch(e){}clearTimeout(c.menuTimer);clearTimeout(c.ringT);clearInterval(c.tick);c.timers.forEach(t=>clearTimeout(t));
   if(byMe&&c.id){try{await fb.update('calls/'+c.id,{status:c.everConnected||c.answered?'ended':'cancelled',endedAt:TS,endedBy:'caller'})}catch(e){}}
   c.unsub.forEach(u=>{try{u()}catch(e){}});(c.legUnsub||[]).forEach(u=>{try{u()}catch(e){}});
@@ -3505,6 +3527,32 @@ async function callEnd(byMe){if(!call||call.state==='ending')return;const c=call
   setSt(cw('ended',c.lang));setIvr('');tone(480,.25,.08);tone(480,.25,.08,.35);
   setTimeout(()=>{const el=callEl();if(el)el.remove();document.body.classList.remove('tcall-on','tcall-mini');try{c.ac&&c.ac.close()}catch(e){}},1400);
   call=null}
+
+/* ---- customer call recording (More > Record call) ---- */
+function moreSheet(){const el=callEl();if(!el)return;const sh=el.querySelector('[data-sheet]'),lg=call.lang;
+  if(!sh.hidden){sh.hidden=true;return}
+  sh.innerHTML='<button type="button" data-rec><span class="rdot'+(call.rec?' on':'')+'"></span>'+esc(cw(call.rec?'recStop':'recStart',lg))+'</button><button type="button" data-shclose>'+esc(cw('recClose',lg))+'</button>';sh.hidden=false}
+function recMark(){const el=callEl();if(!el)return;el.classList.toggle('recon',!!call.rec);const mb=el.querySelector('[data-more]');if(mb)mb.classList.toggle('on',!!call.rec);const sh=el.querySelector('[data-sheet]');if(sh)sh.hidden=true}
+function recStart(){if(!call||call.rec)return;if(!window.MediaRecorder||!call.ac||!call.ac.createMediaStreamDestination){toast2(cw('recNo',call.lang));return}
+  try{const a=call.ac,dest=a.createMediaStreamDestination();outNode().connect(dest);
+    if(call.stream){call.recMic=a.createMediaStreamSource(call.stream);call.recMic.connect(dest)}
+    if(call.remote){try{call.recRem=a.createMediaStreamSource(call.remote);call.recRem.connect(dest)}catch(e){}}
+    const mt=['audio/mp4','audio/webm;codecs=opus','audio/webm'].filter(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))[0];
+    const mr=new MediaRecorder(dest.stream,mt?{mimeType:mt}:undefined),ch=[];mr.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};mr.start(1000);
+    call.rec={mr,ch,dest,type:mr.mimeType||mt||'audio/webm',t0:Date.now()};recMark();
+    if(call.id)fb.update('calls/'+call.id,{callerRec:true}).catch(()=>{})}catch(e){toast2(cw('recNo',call.lang))}}
+function recStop(){const c=call;if(!c||!c.rec)return;const r=c.rec;c.rec=null;recMark();
+  try{c.out&&c.out.disconnect(r.dest)}catch(e){}try{c.recMic&&c.recMic.disconnect()}catch(e){}try{c.recRem&&c.recRem.disconnect()}catch(e){}
+  if(c.id)fb.update('calls/'+c.id,{callerRec:false}).catch(()=>{});
+  const lg=c.lang;r.mr.onstop=()=>{const blob=new Blob(r.ch,{type:r.type});if(blob.size<1000)return;recOffer(blob,r.type,lg)};try{r.mr.stop()}catch(e){}}
+function recOffer(blob,type,lg){let card=document.getElementById('tcrec');if(card)card.remove();card=document.createElement('div');card.id='tcrec';
+  const d=new Date(),p=n=>String(n).padStart(2,'0'),name='thean-call-'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+(/mp4/.test(type)?'.m4a':'.webm');
+  card.innerHTML='<span>'+esc(cw('recReady',lg))+'</span><button type="button" data-rsave>'+esc(cw('recSave',lg))+'</button><button type="button" data-rx aria-label="'+esc(cw('recClose',lg))+'">'+I('close')+'</button>';
+  document.body.appendChild(card);
+  card.onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.hasAttribute('data-rx')){card.remove();return}
+    const file=new File([blob],name,{type:blob.type||type});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:name}).catch(()=>{});return}
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},3000)}}
 function toast2(t){const d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),5000)}
 window.TheanCall={start:callStart,enabled:callOn};
 
