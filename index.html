@@ -1150,7 +1150,9 @@ body.tcall-on{overflow:hidden}
 #tcall .tcl-pad button{width:74px;height:74px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}
 #tcall .tcl-pad button:active{background:rgba(255,255,255,.34)}
 #tcall .tcl-pad b{font-size:2rem;font-weight:300;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
-#tcall .tcl-pad small{font-size:.66rem;opacity:.85;margin-top:2px}
+#tcall .tcl-pad small{font-size:.62rem;font-weight:600;letter-spacing:.18em;opacity:.9;margin-top:1px;line-height:1;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+#tcall .tcl-pad button.sym b{margin-top:-4px}
+#tcall .tcl-pad button[data-k="0"] small{font-size:.9rem;letter-spacing:0;font-weight:400}
 #tcall .tcl-ctl{display:flex;gap:18px;justify-content:center}
 #tcall .tcl-ctl button{background:none;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.74rem;opacity:.92;width:66px;text-align:center;line-height:1.2}
 #tcall .tcl-ctl button span{width:62px;height:62px;border-radius:50%;background:rgba(255,255,255,.14);display:grid;place-items:center}
@@ -2564,16 +2566,17 @@ var CALL_PROMPTS=[['menuKm','1. Greeting (Khmer)','សូមស្វាគម�
  ['waitEn','6. Please wait (English)','Please hold for a moment while we connect you to our customer service team. Where necessary, this call may be recorded for training and quality assurance purposes to improve our service. Thank you!'],
  ['busyKm','7. No answer (Khmer)','យើងខ្ញុំសូមអភ័យទោសដែលមិនអាចឆ្លើយតបទៅកាន់លោកអ្នកបានទាន់ពេលវេលា។ បច្ចុប្បន្ននេះ ក្រុមការងារផ្នែកសេវាកម្មអតិថិជនរបស់យើងកំពុងមមាញឹក។ សូមព្យាយាមម្តងទៀតនៅពេលក្រោយ។ សូមអរគុណ។'],
  ['busyEn','8. No answer (English)','We apologize for not being able to respond to you on time. Our customer service team is currently busy. Please try again later. Thank you!'],
+ ['ringTone','Ringing tone','Callers hear this while the call rings, before the greeting and during the wait for an agent. Upload a short sound (MP3 or M4A). It plays on repeat. If empty, the standard "tuut… tuut…" tone plays.',1],
  ['holdMusic','Waiting music','Callers hear this when you tap Waiting or transfer their call. Upload a music file (MP3 or M4A, up to 15 MB). It plays on repeat. If empty, a soft built-in tune plays.',1]];
 function callCard(){var c=S.call||{};return dCard('phone','Call us (web call)',c.enabled===false?'Off. Tap to turn on and set up.':'On · number '+esc(c.number||'203')+' · '+CALL_PROMPTS.filter(function(p){return !p[3]&&c.prompts&&c.prompts[p[0]]}).length+' of 8 voice messages recorded'+(c.prompts&&c.prompts.holdMusic?' · own waiting music':''),'data-act="callform"')}
 function callForm(){var c=JSON.parse(JSON.stringify(S.call||{})),P=c.prompts=c.prompts||{},rec=null,player=null;
   var m=modal('Call us (web call)','<p style="margin:0;color:var(--muted);font-size:.92rem;line-height:1.55">Visitors tap <b>Call us</b> on the Contact page or in the chat. They see a phone screen with the number and hear the greeting twice. After they press 1 (Khmer) or 2 (English), they choose a topic: 1 general inquiry, 2 donation, 3 copyright report. Then they hear the please-wait message and then a ringing tone while your <b>chat inbox</b> rings. If they press nothing, the call ends. Keep the inbox open and set to <b>Available</b> to receive calls. Calls are free and go over the internet.</p>'+
    '<label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-con style="width:auto"'+(c.enabled===false?'':' checked')+'> Show the Call us button</label>'+
-   fieldHtml(['number','Number shown on the call screen','text'],c.number||'203')+fieldHtml(['ringSec','Seconds of ringing tone before the no-answer message','text'],String(c.ringSec||35))+
+   fieldHtml(['number','Number shown on the call screen','text'],c.number||'203')+'<label class="f">Number style<select data-nst>'+[['thin','Thin'],['light','Light (default)'],['regular','Regular'],['bold','Bold']].map(function(o){return '<option value="'+o[0]+'"'+((c.numStyle||'light')===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select></label>'+fieldHtml(['ringSec','Seconds of ringing tone before the no-answer message','text'],String(c.ringSec||35))+
    '<h4 style="margin:6px 0 0">Voice messages</h4><p style="margin:0;color:var(--muted);font-size:.86rem;line-height:1.55"><b>Please record all 8.</b> iPhones have no Khmer voice, so the Khmer messages are only heard after you record them. Tap Record, read the text in a calm, clear voice, then tap Stop. Record in a quiet room, holding the phone about 20 cm from your mouth.</p><div data-pr style="display:grid;gap:10px"></div>'+
    '<div style="display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap"><button class="btn soft" type="button" data-ctest>'+I('phone')+' Test call</button><span style="display:flex;gap:8px"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-cok>Save</button></span></div>');
   function draw(){m.querySelector('[data-pr]').innerHTML=CALL_PROMPTS.map(function(p){var u=P[p[0]],r=rec&&rec.key===p[0];
-    return '<div style="border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:8px"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b>'+esc(p[1])+'</b><small style="color:'+(u?'var(--ok)':'var(--muted)')+'">'+(r?'Recording…':u?(p[3]?'Your music':'Your voice'):(p[3]?'Built-in tune':'Phone voice'))+'</small></div>'+
+    return '<div style="border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:8px"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b>'+esc(p[1])+'</b><small style="color:'+(u?'var(--ok)':'var(--muted)')+'">'+(r?'Recording…':u?(p[3]?(p[0]==='ringTone'?'Your tone':'Your music'):'Your voice'):(p[3]?(p[0]==='ringTone'?'Standard tuut':'Built-in tune'):'Phone voice'))+'</small></div>'+
      '<div style="font-size:.86rem;color:var(--muted);line-height:1.5">'+(p[3]?esc(p[2]):'Say: “'+esc(p[2])+'”')+'</div><div style="display:flex;gap:6px;flex-wrap:wrap" data-pk="'+p[0]+'">'+
      (p[3]?'':'<button class="btn sm'+(r?'':' soft')+'" type="button" data-prec>'+I('mic')+(r?' Stop':' Record')+'</button>')+'<button class="btn sm soft" type="button" data-pup>'+I('upload')+' Upload</button>'+(u?'<button class="btn sm soft" type="button" data-pplay>'+I('play')+' Play</button><button class="btn sm del" type="button" data-prm>Remove</button>':'')+'</div><small data-pmsg style="color:var(--muted)"></small></div>'}).join('')}
   function msg(k,t){var e=m.querySelector('[data-pk="'+k+'"]');e=e&&e.parentNode.querySelector('[data-pmsg]');if(e)e.textContent=t}
@@ -2589,7 +2592,7 @@ function callForm(){var c=JSON.parse(JSON.stringify(S.call||{})),P=c.prompts=c.p
     if(b.hasAttribute('data-pup')){var i=document.createElement('input');i.type='file';i.accept='audio/*,.mp3,.m4a,.wav';i.onchange=function(){var f=i.files[0];if(!f)return;if(f.size>15*1048576){msg(k,'This file is too big. Please keep it under 15 MB.');return}send(k,f,f.name)};i.click();return}
     if(b.hasAttribute('data-pplay')){try{if(player)player.pause()}catch(x){}player=new Audio(P[k]);player.play().catch(function(){toast('Could not play this message')});return}
     if(b.hasAttribute('data-prm')){delete P[k];draw();return}
-    if(b.hasAttribute('data-ctest')||b.hasAttribute('data-cok')){c.enabled=m.querySelector('[data-con]').checked;c.number=(m.querySelector('[data-k="number"]').value.trim()||'203').slice(0,20);c.ringSec=Math.max(15,Math.min(180,parseInt(m.querySelector('[data-k="ringSec"]').value,10)||35));
+    if(b.hasAttribute('data-ctest')||b.hasAttribute('data-cok')){c.enabled=m.querySelector('[data-con]').checked;c.number=(m.querySelector('[data-k="number"]').value.trim()||'203').slice(0,20);c.numStyle=m.querySelector('[data-nst]').value;c.ringSec=Math.max(15,Math.min(180,parseInt(m.querySelector('[data-k="ringSec"]').value,10)||35));
       if(rec){try{rec.mr.stop()}catch(x){}}try{if(player)player.pause()}catch(x){}
       S.call=c;m.remove();changed();
       if(b.hasAttribute('data-ctest')){if(window.TheanCall)window.TheanCall.start();else toast('Not ready yet, try again in a moment')}else toast('Saved. The website updates in a moment.')}});
@@ -3236,7 +3239,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261006-0244',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261006-0359',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
@@ -3306,7 +3309,11 @@ function tone(freq,dur,vol,when){if(!call||!call.ac)return;const a=call.ac,o=a.c
 function outNode(){if(!call.out){call.out=call.ac.createGain();call.out.gain.value=call.spk?2.4:1;call.out.connect(call.ac.destination)}return call.out}
 const DTMF={'1':[697,1209],'2':[697,1336],'3':[697,1477],'4':[770,1209],'5':[770,1336],'6':[770,1477],'7':[852,1209],'8':[852,1336],'9':[852,1477],'*':[941,1209],'0':[941,1336],'#':[941,1477]};
 function dtmf(k){const f=DTMF[k];if(f){tone(f[0],.16,.06);tone(f[1],.16,.06)}}
-function ringback(times){for(let i=0;i<times;i++){tone(425,1,.08,i*3)}return sleepC(times*3*1000-1800)}
+function ringBuf(){const u=(callCfg().prompts||{}).ringTone;if(!u)return Promise.resolve(null);if(!PBUF[u])loadPrompts();return Promise.resolve(PBUF[u])}
+function playLoop(buf,vol){const src=call.ac.createBufferSource(),g=call.ac.createGain();g.gain.value=vol;src.buffer=buf;src.loop=true;src.connect(g);g.connect(outNode());src.start();return src}
+async function ringback(times){if(!call||!call.ac)return sleepC(times*3000-1800);const buf=await ringBuf();if(!call)return;
+  if(buf){const src=playLoop(buf,.8);call.ringSrc=src;await sleepC(times*3000-1800);try{src.stop()}catch(e){}call.ringSrc=null;return}
+  for(let i=0;i<times;i++){tone(425,1,.08,i*3)}return sleepC(times*3*1000-1800)}
 function holdStart(){holdStop();if(!call||!call.ac)return;
   const u=(callCfg().prompts||{}).holdMusic;
   if(u){if(!PBUF[u])loadPrompts();const tok=call.holdTok={};Promise.resolve(PBUF[u]).then(buf=>{if(!call||call.holdTok!==tok)return;if(!buf)return holdTones();
@@ -3315,7 +3322,7 @@ function holdStart(){holdStop();if(!call||!call.ac)return;
 function holdTones(){if(!call)return;const notes=[392,440,523.25,587.33,659.25,587.33,523.25,440];let i=0;
   call.hold=setInterval(()=>{if(!call)return;const n=notes[i++%notes.length];tone(n,.55,.035);if(i%4===1)tone(n/2,1.1,.025)},600)}
 function holdStop(){if(!call)return;call.holdTok=null;if(call.hold){clearInterval(call.hold);call.hold=null}if(call.holdSrc){try{call.holdSrc.stop()}catch(e){}call.holdSrc=null}}
-function queueStart(){holdStop();if(!call||!call.ac)return;tone(425,1,.08);call.hold=setInterval(()=>{if(call)tone(425,1,.08)},4000)}
+function queueStart(){holdStop();if(!call||!call.ac)return;const tok=call.holdTok={};ringBuf().then(buf=>{if(!call||call.holdTok!==tok)return;if(buf){call.holdSrc=playLoop(buf,.8);return}tone(425,1,.08);call.hold=setInterval(()=>{if(call)tone(425,1,.08)},4000)})}
 function sleepC(ms){return new Promise(r=>{const t=setTimeout(r,ms);if(call)call.timers.push(t)})}
 function stopVoice(){if(call)call.vseq=(call.vseq||0)+1;try{speechSynthesis.cancel()}catch(e){}if(call&&call.src){try{call.src.stop()}catch(e){}call.src=null}}
 const PBUF={};
@@ -3337,9 +3344,9 @@ async function sayPrompt(key,lg){
 function callEl(){return document.getElementById('tcall')}
 function drawCall(){let el=callEl();const lg=call.lang;
   if(!el){el=document.createElement('div');el.id='tcall';el.setAttribute('role','dialog');el.setAttribute('aria-label','Call');document.body.appendChild(el);document.body.classList.add('tcall-on')}
-  el.innerHTML='<div class="tcl-top"><b class="tcl-big">'+esc(callCfg().number||'203')+'</b><span class="tcl-st" data-st>'+esc(cw('calling',lg))+'</span></div>'+
+  el.innerHTML='<div class="tcl-top"><b class="tcl-big" style="font-weight:'+({thin:200,regular:400,bold:700}[callCfg().numStyle]||300)+'">'+esc(callCfg().number||'203')+'</b><span class="tcl-st" data-st>'+esc(cw('calling',lg))+'</span></div>'+
    '<div class="tcl-ivr" data-ivr hidden></div>'+
-   '<div class="tcl-pad" data-pad hidden>'+['1','2','3','4','5','6','7','8','9','*','0','#'].map(k=>'<button type="button" data-k="'+k+'"><b>'+k+'</b></button>').join('')+'</div>'+
+   '<div class="tcl-pad" data-pad hidden>'+[['1',''],['2','ABC'],['3','DEF'],['4','GHI'],['5','JKL'],['6','MNO'],['7','PQRS'],['8','TUV'],['9','WXYZ'],['*',''],['0','+'],['#','']].map(x=>'<button type="button" data-k="'+x[0]+'"'+(x[0]==='*'||x[0]==='#'?' class="sym"':'')+'><b>'+x[0]+'</b><small>'+(x[1]||'&nbsp;')+'</small></button>').join('')+'</div>'+
    '<div class="tcl-ctl" data-ctl>'+[['data-spk','sound','speaker'],['data-kp','grid','keypad'],['data-chat','chat','chat'],['data-mute','mic','mute']].map(x=>'<button type="button" '+x[0]+'><span>'+I(x[1])+'</span><small>'+esc(cw(x[2],lg))+'</small></button>').join('')+'</div>'+
    '<div class="tcl-bot"><span></span><button type="button" class="tcl-end" data-end aria-label="'+esc(cw('end',lg))+'">'+I('phoneoff')+'</button><button type="button" class="tcl-hide" data-hide hidden>'+esc(lg==='km'?'លាក់':'Hide')+'</button></div><audio data-remote autoplay playsinline></audio>';
   el.onclick=e=>{if(el.classList.contains('mini')&&e.target.closest('.tcl-top')){setMini(false);return}const b=e.target.closest('button');if(!b)return;
@@ -3419,7 +3426,7 @@ async function newLeg(n){closeLeg();call.leg=n;call.state='active';call.onHold=f
 function onConnected(){if(!call||call.connected)return;call.connected=true;call.everConnected=true;clearTimeout(call.ringT);if(!call.onHold)holdStop();stopVoice();setIvr('')}
 async function busyEnd(){if(!call||call.state==='busy'||call.state==='ending')return;call.state='busy';clearTimeout(call.ringT);closeLeg();holdStop();stopVoice();showPad(false);await sleepC(300);if(!call)return;await sayPrompt('busy',call.lang);if(!call)return;await sleepC(800);callEnd(false)}
 async function callEnd(byMe){if(!call||call.state==='ending')return;const c=call;c.state='ending';
-  holdStop();stopVoice();clearTimeout(c.menuTimer);clearTimeout(c.ringT);clearInterval(c.tick);c.timers.forEach(t=>clearTimeout(t));
+  holdStop();stopVoice();try{c.ringSrc&&c.ringSrc.stop()}catch(e){}clearTimeout(c.menuTimer);clearTimeout(c.ringT);clearInterval(c.tick);c.timers.forEach(t=>clearTimeout(t));
   if(byMe&&c.id){try{await fb.update('calls/'+c.id,{status:c.everConnected||c.answered?'ended':'cancelled',endedAt:TS,endedBy:'caller'})}catch(e){}}
   c.unsub.forEach(u=>{try{u()}catch(e){}});(c.legUnsub||[]).forEach(u=>{try{u()}catch(e){}});
   try{c.pc&&c.pc.close()}catch(e){}try{c.stream&&c.stream.getTracks().forEach(t=>t.stop())}catch(e){}
