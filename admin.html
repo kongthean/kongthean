@@ -1173,7 +1173,7 @@ body.tcall-on:not(.tcall-mini)>*:not(#tcall){visibility:hidden!important}
 #tcall.mini .tcl-name{font-size:.95rem}
 #tcall.mini .tcl-num{display:none}
 #tcall.mini .tcl-st{font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#tcall.mini .tcl-ivr,#tcall.mini .tcl-pad,#tcall.mini .tcl-ctl{display:none!important}
+#tcall.mini .tcl-ivr,#tcall.mini .tcl-pad{display:none!important}
 #tcall.mini .tcl-end{width:44px;height:44px;box-shadow:none}
 #tcall.mini .tcl-end .i{width:24px;height:24px}
 body.tcall-on.tcall-mini{overflow:auto}
@@ -1187,6 +1187,40 @@ body.tcall-on.tcall-mini{overflow:auto}
 .callcard b{display:block;font-size:1.05rem}
 .callcard small{display:block;color:var(--muted);font-size:.86rem;margin-top:2px}
 .callcard .cc-go{margin-left:auto;background:#1f9d55;color:#fff;border-radius:99px;padding:8px 16px;font-weight:600;font-size:.9rem;flex:none}
+
+/* call screen: iPhone-style layout */
+#tcall{justify-content:flex-start;gap:0;padding:calc(64px + env(safe-area-inset-top,0px)) 20px calc(40px + env(safe-area-inset-bottom,0px))}
+#tcall .tcl-top{margin-top:4vh;gap:4px}
+#tcall .tcl-st{order:0;font-size:1.25rem;opacity:.62;font-weight:500;min-height:1.5em;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+#tcall .tcl-big{font-size:clamp(2.1rem,10.5vw,2.7rem);letter-spacing:.01em;line-height:1.15;white-space:nowrap}
+#tcall .tcl-sub{font-size:1.25rem;opacity:.62;font-weight:500;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+#tcall .tcl-mid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:14px;width:100%;padding-bottom:22px;min-height:0}
+#tcall .tcl-dial{margin-top:0}
+#tcall .tcl-pad{grid-template-columns:repeat(3,78px);gap:16px 26px}
+#tcall .tcl-pad button{width:78px;height:78px}
+#tcall .tcl-ctl{display:grid;grid-template-columns:repeat(3,78px);gap:22px 30px;justify-content:center;justify-items:center}
+#tcall .tcl-ctl>button{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:.95rem;opacity:1;width:auto;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+#tcall .tcl-ctl>button span{width:78px;height:78px;border-radius:50%;background:#353d48;display:grid;place-items:center}
+#tcall .tcl-ctl>button small{font-size:.95rem;white-space:nowrap}
+#tcall .tcl-ctl .i{width:30px;height:30px}
+#tcall .tcl-ctl .tcl-end{width:auto;height:auto;background:none;box-shadow:none;border-radius:0}
+#tcall .tcl-ctl .tcl-end span{background:#e5483f;box-shadow:0 8px 24px rgba(229,72,63,.3)}
+#tcall .tcl-ctl .tcl-end .i{width:36px;height:36px}
+#tcall .tcl-ctl .tcl-end:active span{background:#c43a32}
+#tcall .tcl-hide{align-self:center;font-size:1.05rem;padding:10px}
+#tcall.padon .tcl-ctl .r1,#tcall.padon .tcl-ctl .kpb{display:none}
+#tcall.padon .tcl-mid{justify-content:center;padding-bottom:18px}
+#tcall .tcl-ctl>button.on span{background:#fff;color:#1c2531}
+#tcall.mini{padding:8px 10px 8px 16px}
+#tcall.mini .tcl-top{margin-top:0;flex-direction:row;align-items:center;gap:10px}
+#tcall.mini .tcl-st{order:2;font-size:.85rem}
+#tcall.mini .tcl-big{font-size:1.05rem!important}
+#tcall.mini .tcl-sub,#tcall.mini .tcl-mid,#tcall.mini .tcl-gap,#tcall.mini .r1,#tcall.mini .kpb,#tcall.mini .tcl-hide{display:none!important}
+#tcall.mini .tcl-ctl{display:block!important}
+#tcall.mini .tcl-ctl .tcl-end small{display:none}
+#tcall.mini .tcl-ctl .tcl-end span{width:42px;height:42px;box-shadow:none}
+#tcall.mini .tcl-ctl .tcl-end .i{width:22px;height:22px}
+@media (max-height:700px){#tcall{padding-top:calc(30px + env(safe-area-inset-top,0px))}#tcall .tcl-pad{grid-template-columns:repeat(3,66px);gap:10px 22px}#tcall .tcl-pad button{width:66px;height:66px}#tcall .tcl-ctl>button span{width:66px;height:66px}#tcall .tcl-ctl{grid-template-columns:repeat(3,66px);gap:14px 30px}}
 </style>
 </head>
 <body>
@@ -1261,6 +1295,7 @@ var P={users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s
  chat:'<path d="M4 5h16v11H9.5L4 20z"/><path d="M8 9.3h8M8 12.3h5"/>',
  upload:'<path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 20 19v-3"/>',
  sound:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',
+ trash:'<path d="M4.5 7h15M9.5 7V4.8h5V7M6.5 7l.9 12.2h9.2L17.5 7M10 10.5v5.5M14 10.5v5.5"/>',
  mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/>',grid:'<circle cx="6" cy="5" r="1.3"/><circle cx="12" cy="5" r="1.3"/><circle cx="18" cy="5" r="1.3"/><circle cx="6" cy="11" r="1.3"/><circle cx="12" cy="11" r="1.3"/><circle cx="18" cy="11" r="1.3"/><circle cx="6" cy="17" r="1.3"/><circle cx="12" cy="17" r="1.3"/><circle cx="18" cy="17" r="1.3"/><circle cx="12" cy="22" r=".9"/>',phoneoff:'<path d="M3 13.6c5-4.6 13-4.6 18 0l-2.3 2.6-3.6-1.4-.3-2.5a10 10 0 0 0-5.6 0l-.3 2.5-3.6 1.4z"/>',
  close:'<path d="M6 6l12 12M18 6L6 18"/>', menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
  left:'<path d="M15 5l-7 7 7 7"/>', right:'<path d="M9 5l7 7-7 7"/>', arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
@@ -2575,43 +2610,51 @@ var CALL_PROMPTS=[['menuKm','1. Greeting (Khmer)','សូមស្វាគម�
  ['busyEn','8. No answer (English)','We apologize for not being able to respond to you on time. Our customer service team is currently busy. Please try again later. Thank you!'],
  ['ringTone','Ringing tone','Callers hear this while the call rings, before the greeting and during the wait for an agent. Upload a short sound (MP3 or M4A). It plays on repeat. If empty, the standard "tuut… tuut…" tone plays.',1],
  ['holdMusic','Waiting music','Callers hear this when you tap Waiting or transfer their call. Upload a music file (MP3 or M4A, up to 15 MB). It plays on repeat. If empty, a soft built-in tune plays.',1]];
-function callCard(){var c=S.call||{};return dCard('phone','Call us (web call)',c.enabled===false?'Off. Tap to turn on and set up.':'On · number '+esc(c.number||'203')+' · '+CALL_PROMPTS.filter(function(p){return !p[3]&&c.prompts&&c.prompts[p[0]]}).length+' of 8 voice messages recorded'+(c.prompts&&c.prompts.holdMusic?' · own waiting music':''),'data-act="callform"')}
+function callCard(){var c=S.call||{};return dCard('phone','Call us (web call)',c.enabled===false?'Off. Tap to turn on and set up.':'On · number '+esc(c.number||'203')+' · '+CALL_PROMPTS.filter(function(p){return !p[3]&&p[0]!=='topicsKm'&&p[0]!=='topicsEn'&&c.prompts&&c.prompts[p[0]]}).length+' of 6 voice messages recorded'+(c.prompts&&c.prompts.holdMusic?' · own waiting music':''),'data-act="callform"')}
 function callForm(){var c=JSON.parse(JSON.stringify(S.call||{})),P=c.prompts=c.prompts||{},rec=null,player=null;
-  var m=modal('Call us (web call)','<p style="margin:0;color:var(--muted);font-size:.92rem;line-height:1.55">Visitors tap <b>Call us</b> on the Contact page or in the chat. They see a phone screen with the number and hear the greeting twice. After they press 1 (Khmer) or 2 (English), they choose a topic: 1 general inquiry, 2 donation, 3 copyright report. Then they hear the please-wait message and then a ringing tone while your <b>chat inbox</b> rings. If they press nothing, the call ends. Keep the inbox open and set to <b>Available</b> to receive calls. Calls are free and go over the internet.</p>'+
+  var m=modal('Call us (web call)','<p style="margin:0;color:var(--muted);font-size:.92rem;line-height:1.55">Visitors tap <b>Call us</b> on the Contact page or in the chat. They see a phone screen with the number and hear the greeting twice. After they press 1 (Khmer) or 2 (English), they choose a topic from your Topic menu. Then they hear the please-wait message and then a ringing tone while your <b>chat inbox</b> rings. If they press nothing, the call ends. Keep the inbox open and set to <b>Available</b> to receive calls. Calls are free and go over the internet.</p>'+
    '<label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-con style="width:auto"'+(c.enabled===false?'':' checked')+'> Show the Call us button</label>'+
-   fieldHtml(['number','Number shown on the call screen','text'],c.number||'203')+'<label class="f">Number style<select data-nst>'+[['thin','Thin'],['light','Light (default)'],['regular','Regular'],['bold','Bold']].map(function(o){return '<option value="'+o[0]+'"'+((c.numStyle||'light')===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select></label>'+fieldHtml(['ringSec','Seconds of ringing tone before the no-answer message','text'],String(c.ringSec||35))+
-   '<h4 style="margin:6px 0 0">Topic menu</h4><p style="margin:0;color:var(--muted);font-size:.86rem;line-height:1.55">After choosing a language, callers press a number to choose a topic. Up to 9 topics. Your agents see the topic when the call rings. After you change topics, record the two Topic menu messages again.</p><div data-tl style="display:grid;gap:8px"></div><button class="btn sm soft" type="button" data-tadd>'+I('plus')+' Add topic</button>'+
-   '<h4 style="margin:6px 0 0">Voice messages</h4><p style="margin:0;color:var(--muted);font-size:.86rem;line-height:1.55"><b>Please record all 8.</b> iPhones have no Khmer voice, so the Khmer messages are only heard after you record them. Tap Record, read the text in a calm, clear voice, then tap Stop. Record in a quiet room, holding the phone about 20 cm from your mouth.</p><div data-pr style="display:grid;gap:10px"></div>'+
+   fieldHtml(['number','Number shown on the call screen','text'],c.number||'203')+'<label class="f">Number style<select data-nst>'+[['thin','Thin'],['light','Light'],['regular','Regular'],['bold','Bold (default)']].map(function(o){return '<option value="'+o[0]+'"'+((c.numStyle||'bold')===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select></label>'+fieldHtml(['ringSec','Seconds of ringing tone before the no-answer message','text'],String(c.ringSec||35))+
+   '<h4 style="margin:6px 0 0">Topic menu</h4><p style="margin:0;color:var(--muted);font-size:.86rem;line-height:1.55">After choosing a language, callers press a number to choose a topic. Up to 9 topics. Your agents see the topic when the call rings. Each topic has its own two short voice clips (Khmer and English). When you add a topic, record only its clips; the others stay. If you move a topic to a new number, record its clips again.</p><div data-tl style="display:grid;gap:8px"></div><button class="btn sm soft" type="button" data-tadd>'+I('plus')+' Add topic</button>'+
+   '<h4 style="margin:6px 0 0">Voice messages</h4><p style="margin:0;color:var(--muted);font-size:.86rem;line-height:1.55"><b>Please record all 6 here, plus the two short clips in each topic above.</b> iPhones have no Khmer voice, so the Khmer messages are only heard after you record them. Tap Record, read the text in a calm, clear voice, then tap Stop. Record in a quiet room, holding the phone about 20 cm from your mouth.</p><div data-pr style="display:grid;gap:10px"></div>'+
    '<div style="display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap"><button class="btn soft" type="button" data-ctest>'+I('phone')+' Test call</button><span style="display:flex;gap:8px"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-cok>Save</button></span></div>');
-  function draw(){m.querySelector('[data-pr]').innerHTML=CALL_PROMPTS.map(function(p){var u=P[p[0]],r=rec&&rec.key===p[0];
+  function draw(){m.querySelector('[data-pr]').innerHTML=CALL_PROMPTS.filter(function(p){return p[0]!=='topicsKm'&&p[0]!=='topicsEn'}).map(function(p){var u=P[p[0]],r=rec&&rec.key===p[0];
     return '<div style="border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:8px"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b>'+esc(p[1])+'</b><small style="color:'+(u?'var(--ok)':'var(--muted)')+'">'+(r?'Recording…':u?(p[3]?(p[0]==='ringTone'?'Your tone':'Your music'):'Your voice'):(p[3]?(p[0]==='ringTone'?'Standard tuut':'Built-in tune'):'Phone voice'))+'</small></div>'+
      '<div style="font-size:.86rem;color:var(--muted);line-height:1.5">'+(p[3]?esc(p[2]):'Say: “'+esc(p[0]==='topicsKm'?tText('km'):p[0]==='topicsEn'?tText('en'):p[2])+'”')+'</div><div style="display:flex;gap:6px;flex-wrap:wrap" data-pk="'+p[0]+'">'+
      (p[3]?'':'<button class="btn sm'+(r?'':' soft')+'" type="button" data-prec>'+I('mic')+(r?' Stop':' Record')+'</button>')+'<button class="btn sm soft" type="button" data-pup>'+I('upload')+' Upload</button>'+(u?'<button class="btn sm soft" type="button" data-pplay>'+I('play')+' Play</button><button class="btn sm del" type="button" data-prm>Remove</button>':'')+'</div><small data-pmsg style="color:var(--muted)"></small></div>'}).join('')}
-  var TL=(Array.isArray(c.topics)&&c.topics.length?c.topics:[{id:'general',en:'General inquiry',km:'ការសាកសួរទូទៅ'},{id:'donation',en:'Donation',km:'ការបរិច្ចាគ'},{id:'copyright',en:'Copyright report',km:'ការរាយការណ៍ពីម្ចាស់កម្មសិទ្ធិ'}]).map(function(t){return {id:t.id||'',en:t.en||'',km:t.km||''}}),tlEdited=false;
+  var TL=(Array.isArray(c.topics)&&c.topics.length?c.topics:[{id:'general',en:'General inquiry',km:'ការសាកសួរទូទៅ'},{id:'donation',en:'Donation',km:'ការបរិច្ចាគ'},{id:'copyright',en:'Copyright report',km:'ការរាយការណ៍ពីម្ចាស់កម្មសិទ្ធិ'}]).map(function(t){return {id:t.id||'',en:t.en||'',km:t.km||'',vKm:t.vKm||'',vEn:t.vEn||'',nKm:t.nKm||0,nEn:t.nEn||0}}),tlEdited=false;
   function tRead(){m.querySelectorAll('[data-trow]').forEach(function(r,i){if(TL[i]){TL[i].en=r.querySelector('[data-ten]').value.trim();TL[i].km=r.querySelector('[data-tkm]').value.trim()}})}
-  function tDraw(){m.querySelector('[data-tl]').innerHTML=TL.map(function(t,i){return '<div data-trow style="display:grid;grid-template-columns:26px minmax(0,1fr) 40px;gap:8px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:8px"><b style="font-size:1.3rem;text-align:center">'+(i+1)+'</b><span style="display:grid;gap:6px;min-width:0"><input style="width:100%;min-width:0;box-sizing:border-box" data-ten placeholder="English, e.g. General inquiry" value="'+esc(t.en)+'"><input style="width:100%;min-width:0;box-sizing:border-box" data-tkm placeholder="ខ្មែរ ឧ. ការសាកសួរទូទៅ" value="'+esc(t.km)+'"></span><span style="display:grid;gap:4px;justify-items:center"><button class="btn sm soft" style="padding:6px;min-width:0" type="button" data-tup="'+i+'" aria-label="Move up"'+(i?'':' disabled')+'>'+I('up')+'</button><button class="btn sm del" style="padding:6px;min-width:0" type="button" data-trm="'+i+'" aria-label="Remove">'+I('close')+'</button></span></div>'}).join('');
+  function tDraw(){m.querySelector('[data-tl]').innerHTML=TL.map(function(t,i){return '<div data-trow style="display:grid;grid-template-columns:26px minmax(0,1fr) 40px;gap:8px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:8px"><b style="font-size:1.3rem;text-align:center">'+(i+1)+'</b><span style="display:grid;gap:6px;min-width:0"><input style="width:100%;min-width:0;box-sizing:border-box" data-ten placeholder="English, e.g. General inquiry" value="'+esc(t.en)+'"><input style="width:100%;min-width:0;box-sizing:border-box" data-tkm placeholder="ខ្មែរ ឧ. ការសាកសួរទូទៅ" value="'+esc(t.km)+'">'+tVoice(t,i,'km')+tVoice(t,i,'en')+'</span><span style="display:grid;gap:4px;justify-items:center"><button class="btn sm soft" style="padding:6px;min-width:0" type="button" data-tup="'+i+'" aria-label="Move up"'+(i?'':' disabled')+'>'+I('up')+'</button><button class="btn sm del" style="padding:6px;min-width:0" type="button" data-trm="'+i+'" aria-label="Remove">'+I('close')+'</button></span></div>'}).join('');
     var ab=m.querySelector('[data-tadd]');if(ab)ab.hidden=TL.length>=9}
+  function kd(n){return String(n).replace(/\d/g,function(d){return '០១២៣៤៥៦៧៨៩'[d]})}
+  function tLine(t,i,lg){return lg==='km'?'សម្រាប់'+(t.km||t.en||'…')+' សូមចុចលេខ '+kd(i+1)+'។':'For '+(t.en||t.km||'…')+', press '+(i+1)+'.'}
+  function tVoice(t,i,lg){var k='tv:'+i+':'+lg,u=lg==='km'?t.vKm:t.vEn,num=lg==='km'?t.nKm:t.nEn,stale=u&&num&&num!==i+1,r=rec&&rec.key===k;
+    return '<div style="border-top:1px dashed var(--line);padding-top:6px;display:grid;gap:5px"><div style="display:flex;justify-content:space-between;gap:6px;font-size:.8rem"><b>'+(lg==='km'?'Khmer voice':'English voice')+'</b><small style="color:'+(stale?'var(--danger)':u?'var(--ok)':'var(--muted)')+'">'+(r?'Recording…':stale?'Number changed: record again':u?'Your voice':'Not recorded')+'</small></div>'+
+     '<div style="font-size:.8rem;color:var(--muted)">Say: “'+esc(tLine(t,i,lg))+'”</div><div style="display:flex;gap:5px;flex-wrap:wrap" data-pk="'+k+'"><button class="btn sm'+(r?'':' soft')+'" type="button" data-prec>'+I('mic')+(r?' Stop':' Record')+'</button><button class="btn sm soft" type="button" data-pup>'+I('upload')+'</button>'+(u?'<button class="btn sm soft" type="button" data-pplay aria-label="Play">'+I('play')+'</button><button class="btn sm del" type="button" data-prm aria-label="Delete voice">'+I('trash')+'</button>':'')+'</div><small data-pmsg style="color:var(--muted)"></small></div>'}
+  function getV(k){var q=k.split(':');if(q[0]==='tv'){var t=TL[+q[1]];return t&&(q[2]==='km'?t.vKm:t.vEn)}return P[k]}
+  function setV(k,u){var q=k.split(':');if(q[0]==='tv'){var t=TL[+q[1]];if(!t)return;if(q[2]==='km'){t.vKm=u;t.nKm=u?(+q[1]+1):0}else{t.vEn=u;t.nEn=u?(+q[1]+1):0}tlEdited=true}else{if(u)P[k]=u;else delete P[k]}}
+  function redraw(){tRead();tDraw();draw()}
   function tText(lg){var kd=function(n){return String(n).replace(/\d/g,function(d){return '០១២៣៤៥៦៧៨៩'[d]})};
     if(!tlEdited&&!(Array.isArray(c.topics)&&c.topics.length))return lg==='km'?CALL_PROMPTS[2][2]:CALL_PROMPTS[3][2];
     var L=TL.filter(function(t){return t.en||t.km});return lg==='km'?L.map(function(t,i){return 'សម្រាប់'+(t.km||t.en)+' សូមចុចលេខ '+kd(i+1)+'។'}).join(' '):L.map(function(t,i){return 'For '+(t.en||t.km)+', press '+(i+1)+'.'}).join(' ')}
   m.addEventListener('input',function(e){if(e.target.closest('[data-trow]')){tlEdited=true;tRead();draw()}});
   function msg(k,t){var e=m.querySelector('[data-pk="'+k+'"]');e=e&&e.parentNode.querySelector('[data-pmsg]');if(e)e.textContent=t}
   function send(k,blob,name){if(!mediaOK()){msg(k,'Set up Photo & video storage first (Settings), then try again.');return}
-    msg(k,'Uploading… 0%');uploadFile(blob,'video',function(p){msg(k,'Uploading… '+p+'%')},name).then(function(j){P[k]=j.secure_url.replace(/\.[a-z0-9]+$/i,'.mp3');draw();msg(k,'Saved. Tap Save to keep it.')}).catch(function(e){msg(k,'Upload failed: '+e)})}
+    msg(k,'Uploading… 0%');uploadFile(blob,'video',function(p){msg(k,'Uploading… '+p+'%')},name).then(function(j){setV(k,j.secure_url.replace(/\.[a-z0-9]+$/i,'.mp3'));redraw();msg(k,'Saved. Tap Save to keep it.')}).catch(function(e){msg(k,'Upload failed: '+e)})}
   function startRec(k){if(!navigator.mediaDevices||!window.MediaRecorder){toast('Recording is not supported in this browser. Use Upload instead.');return}
     navigator.mediaDevices.getUserMedia({audio:true}).then(function(st){var mt=['audio/mp4','audio/webm;codecs=opus','audio/webm'].filter(function(t){return MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t)})[0];
       var mr=new MediaRecorder(st,mt?{mimeType:mt}:undefined),ch=[];rec={key:k,mr:mr,st:st};mr.ondataavailable=function(e){if(e.data&&e.data.size)ch.push(e.data)};
-      mr.onstop=function(){st.getTracks().forEach(function(t){t.stop()});var type=mr.mimeType||mt||'audio/webm',b=new Blob(ch,{type:type});rec=null;draw();if(b.size<800){msg(k,'Nothing was recorded. Try again.');return}send(k,b,k+(/mp4/.test(type)?'.m4a':'.webm'))};
-      mr.start();draw()}).catch(function(){toast('Allow the microphone for this website to record.')})}
+      mr.onstop=function(){st.getTracks().forEach(function(t){t.stop()});var type=mr.mimeType||mt||'audio/webm',b=new Blob(ch,{type:type});rec=null;redraw();if(b.size<800){msg(k,'Nothing was recorded. Try again.');return}send(k,b,k+(/mp4/.test(type)?'.m4a':'.webm'))};
+      mr.start();redraw()}).catch(function(){toast('Allow the microphone for this website to record.')})}
   m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var row=b.closest('[data-pk]'),k=row&&row.dataset.pk;
     if(b.hasAttribute('data-tadd')){tRead();if(TL.length<9){TL.push({id:'',en:'',km:''});tlEdited=true;tDraw();draw()}return}
     if(b.dataset.trm!=null){tRead();if(TL.length<=1){toast('Keep at least one topic');return}TL.splice(+b.dataset.trm,1);tlEdited=true;tDraw();draw();return}
     if(b.dataset.tup!=null){tRead();var ti=+b.dataset.tup;if(ti>0){var tt=TL[ti];TL[ti]=TL[ti-1];TL[ti-1]=tt;tlEdited=true;tDraw();draw()}return}
     if(b.hasAttribute('data-prec')){if(rec&&rec.key===k){rec.mr.stop();return}if(rec){toast('Stop the other recording first');return}startRec(k);return}
     if(b.hasAttribute('data-pup')){var i=document.createElement('input');i.type='file';i.accept='audio/*,.mp3,.m4a,.wav';i.onchange=function(){var f=i.files[0];if(!f)return;if(f.size>15*1048576){msg(k,'This file is too big. Please keep it under 15 MB.');return}send(k,f,f.name)};i.click();return}
-    if(b.hasAttribute('data-pplay')){try{if(player)player.pause()}catch(x){}player=new Audio(P[k]);player.play().catch(function(){toast('Could not play this message')});return}
-    if(b.hasAttribute('data-prm')){delete P[k];draw();return}
-    if(b.hasAttribute('data-ctest')||b.hasAttribute('data-cok')){c.enabled=m.querySelector('[data-con]').checked;c.number=(m.querySelector('[data-k="number"]').value.trim()||'203').slice(0,20);c.numStyle=m.querySelector('[data-nst]').value;tRead();if(tlEdited){var TT=TL.filter(function(t){return t.en||t.km}).slice(0,9);c.topics=TT.map(function(t,i){return {id:t.id||('t'+(i+1)+'_'+Date.now().toString(36)),en:t.en,km:t.km}})}c.ringSec=Math.max(15,Math.min(180,parseInt(m.querySelector('[data-k="ringSec"]').value,10)||35));
+    if(b.hasAttribute('data-pplay')){try{if(player)player.pause()}catch(x){}player=new Audio(getV(k));player.play().catch(function(){toast('Could not play this message')});return}
+    if(b.hasAttribute('data-prm')){setV(k,'');redraw();return}
+    if(b.hasAttribute('data-ctest')||b.hasAttribute('data-cok')){c.enabled=m.querySelector('[data-con]').checked;c.number=(m.querySelector('[data-k="number"]').value.trim()||'203').slice(0,20);c.numStyle=m.querySelector('[data-nst]').value;tRead();if(tlEdited){var TT=TL.filter(function(t){return t.en||t.km}).slice(0,9);c.topics=TT.map(function(t,i){return {id:t.id||('t'+(i+1)+'_'+Date.now().toString(36)),en:t.en,km:t.km,vKm:t.vKm||'',vEn:t.vEn||'',nKm:t.nKm||0,nEn:t.nEn||0}})}c.ringSec=Math.max(15,Math.min(180,parseInt(m.querySelector('[data-k="ringSec"]').value,10)||35));
       if(rec){try{rec.mr.stop()}catch(x){}}try{if(player)player.pause()}catch(x){}
       S.call=c;m.remove();changed();
       if(b.hasAttribute('data-ctest')){if(window.TheanCall)window.TheanCall.start();else toast('Not ready yet, try again in a moment')}else toast('Saved. The website updates in a moment.')}});
@@ -3258,7 +3301,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261006-0927',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261006-1018',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
@@ -3310,13 +3353,13 @@ const CW={
    topics:'For general inquiries, press 1. For donations, press 2. To report as a copyright owner, press 3.',
    wait:'Please hold for a moment while we connect you to our customer service team. Where necessary, this call may be recorded for training and quality assurance purposes to improve our service. Thank you!',
    busy:'We apologize for not being able to respond to you on time. Our customer service team is currently busy. Please try again later. Thank you!',
-   connecting:'Connecting…',ended:'Call ended',mute:'mute',unmute:'mute',speaker:'speaker',keypad:'keypad',end:'End',chat:'chat',lost:'Connection lost'},
+   connecting:'Connecting…',ended:'Call ended',mute:'Mute',unmute:'Mute',speaker:'Speaker',keypad:'Keypad',end:'End',chat:'Chat',where:'Cambodia',lost:'Connection lost'},
  km:{calling:'កំពុងហៅ…',mic:'សូមអនុញ្ញាតមីក្រូហ្វូន ដើម្បីហៅ',micNo:'មីក្រូហ្វូនត្រូវបានបិទ។ សូមអនុញ្ញាតក្នុងការកំណត់កម្មវិធីរុករក រួចព្យាយាមម្ដងទៀត។',unsupported:'កម្មវិធីរុករកនេះមិនគាំទ្រការហៅតាមគេហទំព័រទេ។ សូមបើកគេហទំព័រក្នុង Safari ឬ Chrome ឬផ្ញើសារមកយើងក្នុងការជជែក។',
    menuKm:'សូមស្វាគមន៍មកកាន់ភ្នាក់ងារបម្រើសេវាកម្មអតិថិជនរបស់គេហទំព័រធាន សូមចុចលេខ ១ សម្រាប់ភាសាខ្មែរ។',menuEn:'Welcome to Thean customer service. Please press 2 for English.',
    topics:'សម្រាប់ការសាកសួរទូទៅ សូមចុចលេខ ១។ សម្រាប់ការបរិច្ចាគ សូមចុចលេខ ២។ សម្រាប់ការរាយការណ៍ពីម្ចាស់កម្មសិទ្ធិ (រក្សាសិទ្ធិ) សូមចុចលេខ ៣។',
    wait:'សូមមេត្តារង់ចាំ យើងខ្ញុំកំពុងតភ្ជាប់លោកអ្នកទៅកាន់ភ្នាក់ងារបម្រើសេវាកម្មអតិថិជន។ ក្នុងករណីចាំបាច់ យើងខ្ញុំនឹងបើកមុខងារថតសំឡេងទុក ក្នុងគោលបំណងផ្តល់ជូននូវសេវាកម្មដែលមានប្រសិទ្ធភាព និងដើម្បីពង្រឹងគុណភាពសេវាកម្មរបស់យើងខ្ញុំ។ សូមអរគុណ។',
    busy:'យើងខ្ញុំសូមអភ័យទោសដែលមិនអាចឆ្លើយតបទៅកាន់លោកអ្នកបានទាន់ពេលវេលា។ បច្ចុប្បន្ននេះ ក្រុមការងារផ្នែកសេវាកម្មអតិថិជនរបស់យើងកំពុងមមាញឹក។ សូមព្យាយាមម្តងទៀតនៅពេលក្រោយ។ សូមអរគុណ។',
-   connecting:'កំពុងភ្ជាប់…',ended:'ការហៅបានបញ្ចប់',mute:'បិទសំឡេង',unmute:'បិទសំឡេង',speaker:'ឧបករណ៍បំពងសំឡេង',keypad:'ក្ដារលេខ',end:'បញ្ចប់',chat:'ជជែក',lost:'ការតភ្ជាប់បានដាច់'}};
+   connecting:'កំពុងភ្ជាប់…',ended:'ការហៅបានបញ្ចប់',mute:'បិទសំឡេង',unmute:'បិទសំឡេង',speaker:'ឧបករណ៍បំពងសំឡេង',keypad:'ក្ដារលេខ',end:'បញ្ចប់',chat:'ជជែក',where:'កម្ពុជា',lost:'ការតភ្ជាប់បានដាច់'}};
 const cw=(k,lg)=>(CW[lg||'en']||CW.en)[k];
 const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302','stun:stun2.l.google.com:19302']}]};
 let call=null;
@@ -3349,10 +3392,10 @@ function queueStart(){holdStop();if(!call||!call.ac)return;const tok=call.holdTo
 function sleepC(ms){return new Promise(r=>{const t=setTimeout(r,ms);if(call)call.timers.push(t)})}
 function stopVoice(){if(call)call.vseq=(call.vseq||0)+1;try{speechSynthesis.cancel()}catch(e){}if(call&&call.src){try{call.src.stop()}catch(e){}call.src=null}}
 const PBUF={};
-function loadPrompts(){const P=callCfg().prompts||{};Object.keys(P).forEach(k=>{const u=P[k];if(!u||!/^https:\/\//.test(u)||PBUF[u])return;
+function loadPrompts(){const P=Object.assign({},callCfg().prompts||{});(callCfg().topics||[]).forEach((t,i)=>{if(t&&t.vKm)P['tk'+i]=t.vKm;if(t&&t.vEn)P['te'+i]=t.vEn});Object.keys(P).forEach(k=>{const u=P[k];if(!u||!/^https:\/\//.test(u)||PBUF[u])return;
   PBUF[u]=fetch(u).then(r=>r.arrayBuffer()).then(b=>new Promise((res,rej)=>call&&call.ac?call.ac.decodeAudioData(b,res,rej):rej())).catch(()=>null)})}
-function playOne(name,txt,vl){/* recorded voice from the editor, else the phone's own voice, else the words on screen */
-  const u=(callCfg().prompts||{})[name];setIvr('');const seq=call.vseq=(call.vseq||0)+1;const show=t=>{if(call&&call.vseq===seq)setIvr(t)};
+function playOne(name,txt,vl,url){/* recorded voice from the editor, else the phone's own voice, else the words on screen */
+  const u=url==='__none__'?'':(url||(callCfg().prompts||{})[name]);setIvr('');const seq=call.vseq=(call.vseq||0)+1;const show=t=>{if(call&&call.vseq===seq)setIvr(t)};
   return new Promise(res=>{let done=false;const fin=()=>{if(!done){done=true;res()}};
     const speak=()=>{try{const vs=speechSynthesis.getVoices(),v=vs.find(x=>x.lang&&x.lang.toLowerCase().replace('_','-').startsWith(vl));
       if(!v&&vl==='km'){show(txt);setTimeout(fin,Math.min(14000,2500+txt.length*60));return}
@@ -3362,16 +3405,23 @@ function playOne(name,txt,vl){/* recorded voice from the editor, else the phone'
     speak()})}
 async function sayPrompt(key,lg){
   if(key==='menu'){await playOne('menuKm',CW.km.menuKm,'km');if(!call||call.state!=='menu')return;await sleepC(300);if(!call||call.state!=='menu')return;return playOne('menuEn',CW.en.menuEn,'en')}
+  if(key==='topics'){const L=topicList(),any=L.some(t=>lg==='km'?t.vKm:t.vEn);
+    if(any){for(let i=0;i<L.length;i++){if(!call||call.state!=='topic')return;const t=L[i],u=lg==='km'?t.vKm:t.vEn,n=lg==='km'?t.nKm:t.nEn,ok=u&&(!n||n===i+1);
+        const line=lg==='km'?'សម្រាប់'+(t.km||t.en)+' សូមចុចលេខ '+kmDig(i+1)+'។':'For '+(t.en||t.km)+', press '+(i+1)+'.';
+        await playOne('_t',line,lg,ok?u:'__none__');await sleepC(250)}return}}
   return playOne(key+(lg==='km'?'Km':'En'),key==='topics'?topicsText(lg):cw(key,lg),lg)}
 /* ---- screen ---- */
 function callEl(){return document.getElementById('tcall')}
 function drawCall(){let el=callEl();const lg=call.lang;
   if(!el){el=document.createElement('div');el.id='tcall';el.setAttribute('role','dialog');el.setAttribute('aria-label','Call');document.body.appendChild(el);document.body.classList.add('tcall-on')}
-  el.innerHTML='<div class="tcl-top"><b class="tcl-big" style="font-weight:'+({thin:200,regular:400,bold:700}[callCfg().numStyle]||300)+'">'+esc(callCfg().number||'203')+'</b><span class="tcl-st" data-st>'+esc(cw('calling',lg))+'</span></div>'+
-   '<div class="tcl-dial" data-dial></div><div class="tcl-ivr" data-ivr hidden></div>'+
-   '<div class="tcl-pad" data-pad hidden>'+[['1',''],['2','ABC'],['3','DEF'],['4','GHI'],['5','JKL'],['6','MNO'],['7','PQRS'],['8','TUV'],['9','WXYZ'],['*',''],['0','+'],['#','']].map(x=>'<button type="button" data-k="'+x[0]+'"'+(x[0]==='*'||x[0]==='#'?' class="sym"':'')+'><b>'+x[0]+'</b><small>'+(x[1]||'&nbsp;')+'</small></button>').join('')+'</div>'+
-   '<div class="tcl-ctl" data-ctl>'+[['data-spk','sound','speaker'],['data-kp','grid','keypad'],['data-chat','chat','chat'],['data-mute','mic','mute']].map(x=>'<button type="button" '+x[0]+'><span>'+I(x[1])+'</span><small>'+esc(cw(x[2],lg))+'</small></button>').join('')+'</div>'+
-   '<div class="tcl-bot"><span></span><button type="button" class="tcl-end" data-end aria-label="'+esc(cw('end',lg))+'">'+I('phoneoff')+'</button><button type="button" class="tcl-hide" data-hide hidden>'+esc(lg==='km'?'លាក់':'Hide')+'</button></div><audio data-remote autoplay playsinline></audio>';
+  const B=(attr,icon,label,cls)=>'<button type="button" '+attr+(cls?' class="'+cls+'"':'')+'><span>'+I(icon)+'</span><small>'+esc(label)+'</small></button>';
+  el.innerHTML='<div class="tcl-top"><span class="tcl-st" data-st>'+esc(cw('calling',lg))+'</span><b class="tcl-big" style="font-weight:'+({thin:200,light:300,regular:400}[callCfg().numStyle]||700)+'">'+esc(callCfg().number||'203')+'</b><span class="tcl-sub">'+esc(cw('where',lg))+'</span></div>'+
+   '<div class="tcl-mid"><div class="tcl-dial" data-dial></div><div class="tcl-ivr" data-ivr hidden></div>'+
+   '<div class="tcl-pad" data-pad hidden>'+[['1',''],['2','ABC'],['3','DEF'],['4','GHI'],['5','JKL'],['6','MNO'],['7','PQRS'],['8','TUV'],['9','WXYZ'],['*',''],['0','+'],['#','']].map(x=>'<button type="button" data-k="'+x[0]+'"'+(x[0]==='*'||x[0]==='#'?' class="sym"':'')+'><b>'+x[0]+'</b><small>'+(x[1]||'&nbsp;')+'</small></button>').join('')+'</div></div>'+
+   '<div class="tcl-ctl" data-ctl>'+B('data-spk','sound',cw('speaker',lg),'r1')+B('data-chat','chat',cw('chat',lg),'r1')+B('data-mute','mic',cw('mute',lg),'r1')+
+     '<span class="tcl-gap"></span><button type="button" class="tcl-end" data-end aria-label="'+esc(cw('end',lg))+'"><span>'+I('phoneoff')+'</span><small>'+esc(cw('end',lg))+'</small></button>'+
+     B('data-kp','grid',cw('keypad',lg),'kpb')+'<button type="button" class="tcl-hide" data-hide hidden>'+esc(lg==='km'?'លាក់':'Hide')+'</button></div>'+
+   '<audio data-remote autoplay playsinline></audio>';
   el.onclick=e=>{if(el.classList.contains('mini')&&e.target.closest('.tcl-top')){setMini(false);return}const b=e.target.closest('button');if(!b)return;
     if(b.dataset.k){dtmf(b.dataset.k);addDigit(b.dataset.k);onKey(b.dataset.k);return}
     if(b.hasAttribute('data-end')){callEnd(true);return}
@@ -3386,7 +3436,7 @@ function addDigit(k){if(!call)return;call.dial=((call.dial||'')+k).slice(-18);co
 function setMini(v){const el=callEl();if(!el)return;el.classList.toggle('mini',v);document.body.classList.toggle('tcall-mini',v)}
 function setSt(t){const e=callEl()&&callEl().querySelector('[data-st]');if(e)e.textContent=t}
 function setIvr(t){const e=callEl()&&callEl().querySelector('[data-ivr]');if(!e)return;e.hidden=!t;e.textContent=t||''}
-function showPad(v){const el=callEl();if(!el)return;if(!v){call.dial='';const d=el.querySelector('[data-dial]');if(d)d.textContent=''}el.querySelector('[data-pad]').hidden=!v;el.querySelector('[data-ctl]').hidden=v;el.querySelector('[data-hide]').hidden=!v}
+function showPad(v){const el=callEl();if(!el)return;if(!v){call.dial='';const d=el.querySelector('[data-dial]');if(d)d.textContent=''}el.querySelector('[data-pad]').hidden=!v;el.classList.toggle('padon',!!v);el.querySelector('[data-hide]').hidden=!v}
 function clock(){if(!call||!call.t0)return '';const s=Math.floor((Date.now()-call.t0)/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
 function startClock(){if(!call||call.tick)return;call.t0=Date.now();const f=()=>{if(call&&!call.busy)setSt(clock())};f();call.tick=setInterval(f,1000)}
 /* ---- flow ---- */
@@ -3410,14 +3460,14 @@ async function callStart(){
   callEnd(false) /* no language chosen after the greeting played twice */
 }
 function onKey(k){if(!call)return;
-  if(call.state==='menu'){if(k!=='1'&&k!=='2')return;stopVoice();call.lang=k==='1'?'km':'en';call.state='topic';drawLabels();topicMenu();return}
+  if(call.state==='menu'){if(k!=='1'&&k!=='2')return;stopVoice();call.lang=k==='1'?'km':'en';call.state='topic';drawLabels();{const w=callEl()&&callEl().querySelector('.tcl-sub');if(w)w.textContent=cw('where',call.lang)}topicMenu();return}
   if(call.state==='topic'){const L=topicList(),t=L[+k-1];if(!t||k==='0')return;stopVoice();call.topic=t.id||('t'+k);call.topicEn=t.en||t.km;call.topicKm=t.km||t.en;call.state='wait';afterLang().catch(()=>{});holdFlow()}}
 async function topicMenu(){const lg=call.lang;await sleepC(300);
   for(let i=0;i<2;i++){if(!call||call.state!=='topic')return;await sayPrompt('topics',lg);if(!call||call.state!=='topic')return;await sleepC(5000)}
   if(call&&call.state==='topic')callEnd(false)}
 async function holdFlow(){const lg=call.lang;await sleepC(400);if(!call||call.state!=='wait')return;await sayPrompt('wait',lg);if(call&&call.state==='wait'){queueStart();clearTimeout(call.ringT);call.ringT=setTimeout(()=>{if(call&&call.state==='wait')noAnswer()},(+callCfg().ringSec||35)*1000)}}
 function noAnswer(){const id=call.id;busyEnd();if(id)fb.update('calls/'+id,{status:'missed',endedAt:TS}).catch(()=>{})}
-function drawLabels(){const el=callEl();if(!el)return;const lg=call.lang;[['data-mute','mute'],['data-spk','speaker'],['data-kp','keypad'],['data-chat','chat']].forEach(([a,k])=>{const b=el.querySelector('['+a+'] small');if(b)b.textContent=cw(k,lg)})}
+function drawLabels(){const el=callEl();if(!el)return;const lg=call.lang;[['data-mute','mute'],['data-spk','speaker'],['data-kp','keypad'],['data-chat','chat'],['data-end','end']].forEach(([a,k])=>{const b=el.querySelector('['+a+'] small');if(b)b.textContent=cw(k,lg)})}
 async function anyAgentOnline(){try{const a=await fb.get('agents')||{};const now=Date.now();return Object.keys(a).some(k=>a[k]&&a[k].online&&(!a[k].lastSeen||now-ms(a[k].lastSeen)<5*60000))}catch(e){return false}}
 async function afterLang(){const lg=call.lang;
   try{await ensureChat(lg)}catch(e){await ensureUser()}if(!call)return;
