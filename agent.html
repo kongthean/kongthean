@@ -858,7 +858,7 @@ function callWatch(){callUnsub=DB.onRecent('calls','createdAt',40,list=>{calls=l
     drawIncoming();drawTop()},err=>{})}
 function callLang(c){return c.lang==='km'?'Khmer':'English'}
 const TOPICS={general:'General inquiry',donation:'Donation',copyright:'Copyright report'};
-function callTopic(c){return TOPICS[c.topic]||'General inquiry'}
+function callTopic(c){return c.topicName||TOPICS[c.topic]||'General inquiry'}
 function callWho(c){const ch=chats.find(x=>x.id===c.callerUid);return (ch&&ch.name)||c.name||('Visitor '+String(c.callerUid||'').slice(0,4).toUpperCase())}
 function callNotify(c){const t=c.status==='transfer'?'Call transferred to you':'Incoming web call';if('Notification' in window&&Notification.permission==='granted'){try{const n=new Notification(t,{body:callWho(c)+' · '+callTopic(c)+' · '+callLang(c)+(c.transferFromName?' · from '+c.transferFromName:''),tag:'call-'+c.id,renotify:true,requireInteraction:true});n.onclick=()=>{window.focus();n.close()}}catch(e){}}
   try{navigator.vibrate&&navigator.vibrate([300,150,300,150,300])}catch(e){}}
