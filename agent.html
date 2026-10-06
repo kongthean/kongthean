@@ -855,7 +855,7 @@ function callFresh(c){if(c.status==='ringing')return c.createdAt&&Date.now()-ms(
 function callWatch(){callUnsub=DB.onRecent('calls','createdAt',40,list=>{calls=list;
     list.filter(callFresh).forEach(c=>{const key=c.id+':'+c.status+':'+(c.leg||0);if(!notified.has(key)){notified.add(key);if(!firstCalls)callNotify(c)}});firstCalls=false;
     if(onCall){const c=list.find(x=>x.id===onCall.id);if(c&&(c.status==='ended'||c.status==='cancelled'||c.status==='missed'||(c.agentUid&&c.agentUid!==me.uid)))hangUp(false,c.status==='ended'&&c.endedBy==='caller'?'The caller hung up':'')}
-    drawIncoming();drawTop()},err=>{})}
+    drawIncoming();drawCallScreen();drawTop()},err=>{})}
 function callLang(c){return c.lang==='km'?'Khmer':'English'}
 const TOPICS={general:'General inquiry',donation:'Donation',copyright:'Copyright report'};
 function callTopic(c){return c.topicName||TOPICS[c.topic]||'General inquiry'}
@@ -885,7 +885,7 @@ function drawCallScreen(){let el=document.getElementById('agcall');
   if(!el){el=document.createElement('div');el.id='agcall';document.body.appendChild(el)}
   const B=(attr,icon,label,on)=>'<button type="button" '+attr+(on?' class="on"':'')+'><span>'+I(icon)+'</span><small>'+label+'</small></button>';
   const html='<div class="ag-top"><b class="ag-name">'+esc(callWho(c))+'</b><span class="ag-topic">'+callTopic(c)+'</span><span class="ag-sub">'+callLang(c)+' · web call</span><span class="ag-st" data-ctm>'+(onCall.t0?fmtDur(Math.floor((Date.now()-onCall.t0)/1000)):'Connecting…')+'</span>'+
-   '<span class="ag-flags">'+(onCall.hold?'<i class="hold">On hold · caller hears waiting music</i>':'')+(onCall.rec?'<i class="rec">Recording</i>':'')+'</span></div>'+
+   '<span class="ag-flags">'+(c.callerRec?'<i class="rec">Customer is recording</i>':'')+(onCall.hold?'<i class="hold">On hold · caller hears waiting music</i>':'')+(onCall.rec?'<i class="rec">Recording</i>':'')+'</span></div>'+
    '<div class="ag-grid">'+B('data-amute','mic',onCall.muted?'Unmute':'Mute',onCall.muted)+B('data-aspk','sound','Speaker',onCall.spk)+B('data-ahold','clock',onCall.hold?'Resume':'Waiting',onCall.hold)+
      B('data-arec','rec',onCall.rec?'Stop rec':'Record',onCall.rec)+B('data-atr','swap','Transfer',false)+B('data-achat','chat','Chat',false)+'</div>'+
    '<button type="button" class="ag-end" data-cend title="End call">'+I('phoneoff')+'</button>';
