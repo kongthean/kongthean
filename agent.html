@@ -166,6 +166,7 @@ label.f input,label.f textarea{border:1px solid var(--line);border-radius:12px;p
 #agcall .ag-top{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;margin-top:4vh}
 #agcall .ag-name{font-size:2rem;font-weight:500}
 #agcall .ag-sub{opacity:.7;font-size:.95rem}
+#agcall .ag-topic{font-size:.92rem;font-weight:600;padding:5px 14px;border-radius:99px;background:rgba(255,255,255,.16);margin-top:2px}
 #agcall .ag-st{font-size:1.1rem;font-variant-numeric:tabular-nums;opacity:.9}
 #agcall .ag-flags{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;min-height:28px}
 #agcall .ag-flags i{font-style:normal;font-size:.8rem;padding:4px 12px;border-radius:99px;background:rgba(255,255,255,.12)}
@@ -856,8 +857,10 @@ function callWatch(){callUnsub=DB.onRecent('calls','createdAt',40,list=>{calls=l
     if(onCall){const c=list.find(x=>x.id===onCall.id);if(c&&(c.status==='ended'||c.status==='cancelled'||c.status==='missed'||(c.agentUid&&c.agentUid!==me.uid)))hangUp(false,c.status==='ended'&&c.endedBy==='caller'?'The caller hung up':'')}
     drawIncoming();drawTop()},err=>{})}
 function callLang(c){return c.lang==='km'?'Khmer':'English'}
+const TOPICS={general:'General inquiry',donation:'Donation',copyright:'Copyright report'};
+function callTopic(c){return TOPICS[c.topic]||'General inquiry'}
 function callWho(c){const ch=chats.find(x=>x.id===c.callerUid);return (ch&&ch.name)||c.name||('Visitor '+String(c.callerUid||'').slice(0,4).toUpperCase())}
-function callNotify(c){const t=c.status==='transfer'?'Call transferred to you':'Incoming web call';if('Notification' in window&&Notification.permission==='granted'){try{const n=new Notification(t,{body:callWho(c)+' · '+callLang(c)+(c.transferFromName?' · from '+c.transferFromName:''),tag:'call-'+c.id,renotify:true,requireInteraction:true});n.onclick=()=>{window.focus();n.close()}}catch(e){}}
+function callNotify(c){const t=c.status==='transfer'?'Call transferred to you':'Incoming web call';if('Notification' in window&&Notification.permission==='granted'){try{const n=new Notification(t,{body:callWho(c)+' · '+callTopic(c)+' · '+callLang(c)+(c.transferFromName?' · from '+c.transferFromName:''),tag:'call-'+c.id,renotify:true,requireInteraction:true});n.onclick=()=>{window.focus();n.close()}}catch(e){}}
   try{navigator.vibrate&&navigator.vibrate([300,150,300,150,300])}catch(e){}}
 function audioCtx(){ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();return ac}
 function ringTone(){try{const a=audioCtx();[0,.5].forEach(t=>{[440,480].forEach(fr=>{const o=a.createOscillator(),g=a.createGain(),t0=a.currentTime+t;o.frequency.value=fr;g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(.12,t0+.03);g.gain.setValueAtTime(.12,t0+.4);g.gain.exponentialRampToValueAtTime(.0001,t0+.45);o.connect(g);g.connect(a.destination);o.start(t0);o.stop(t0+.5)})})}catch(e){}}
@@ -868,7 +871,7 @@ function drawIncoming(){let box=document.getElementById('incall');
   let h='';
   if(onCall&&onCall.mini){const c=calls.find(x=>x.id===onCall.id)||{};
     h+='<div class="icard on" data-cbig><span class="ic-ic">'+I('phone')+'</span><span class="ic-tx"><b>'+esc(callWho(c))+'</b><small data-ctm2>'+(onCall.t0?fmtDur(Math.floor((Date.now()-onCall.t0)/1000)):'Connecting…')+(onCall.hold?' · On hold':'')+(onCall.rec?' · Recording':'')+'</small></span><button type="button" class="ic-no" data-cend title="End call">'+I('phoneoff')+'</button></div>'}
-  ring.forEach(c=>{const tr=c.status==='transfer';h+='<div class="icard"><span class="ic-ic">'+I('phone')+'</span><span class="ic-tx"><b>'+(tr?'Transfer from '+esc(c.transferFromName||'agent'):'Incoming call')+' · '+callLang(c)+'</b><small>'+esc(callWho(c))+(c.page?' · '+esc(c.page):'')+'</small></span>'+
+  ring.forEach(c=>{const tr=c.status==='transfer';h+='<div class="icard"><span class="ic-ic">'+I('phone')+'</span><span class="ic-tx"><b>'+(tr?'Transfer from '+esc(c.transferFromName||'agent'):'Incoming call')+' · '+callTopic(c)+'</b><small>'+esc(callWho(c))+' · '+callLang(c)+'</small></span>'+
     '<button type="button" class="ic-no" data-cno="'+esc(c.id+':'+(c.leg||0))+'" title="Decline">'+I('phoneoff')+'</button><button type="button" class="ic-yes" data-cyes="'+esc(c.id)+'" title="Answer">'+I('phone')+'</button></div>'});
   if(box.dataset.h!==h){box.innerHTML=h;box.dataset.h=h;if(onCall)tickCall()}
   const want=ring.length>0&&!onCall;
@@ -881,7 +884,7 @@ function drawCallScreen(){let el=document.getElementById('agcall');
   const c=calls.find(x=>x.id===onCall.id)||{};
   if(!el){el=document.createElement('div');el.id='agcall';document.body.appendChild(el)}
   const B=(attr,icon,label,on)=>'<button type="button" '+attr+(on?' class="on"':'')+'><span>'+I(icon)+'</span><small>'+label+'</small></button>';
-  const html='<div class="ag-top"><b class="ag-name">'+esc(callWho(c))+'</b><span class="ag-sub">'+callLang(c)+' · web call</span><span class="ag-st" data-ctm>'+(onCall.t0?fmtDur(Math.floor((Date.now()-onCall.t0)/1000)):'Connecting…')+'</span>'+
+  const html='<div class="ag-top"><b class="ag-name">'+esc(callWho(c))+'</b><span class="ag-topic">'+callTopic(c)+'</span><span class="ag-sub">'+callLang(c)+' · web call</span><span class="ag-st" data-ctm>'+(onCall.t0?fmtDur(Math.floor((Date.now()-onCall.t0)/1000)):'Connecting…')+'</span>'+
    '<span class="ag-flags">'+(onCall.hold?'<i class="hold">On hold · caller hears waiting music</i>':'')+(onCall.rec?'<i class="rec">Recording</i>':'')+'</span></div>'+
    '<div class="ag-grid">'+B('data-amute','mic',onCall.muted?'Unmute':'Mute',onCall.muted)+B('data-aspk','sound','Speaker',onCall.spk)+B('data-ahold','clock',onCall.hold?'Resume':'Waiting',onCall.hold)+
      B('data-arec','rec',onCall.rec?'Stop rec':'Record',onCall.rec)+B('data-atr','swap','Transfer',false)+B('data-achat','chat','Chat',false)+'</div>'+
@@ -965,7 +968,7 @@ function missedCount(){return calls.filter(c=>c.status==='missed'&&ms(c.createdA
 function callLog(){missSeen=Date.now();setPref('missSeen',missSeen);drawTop();
   const st={ringing:'Ringing',active:'In progress',transfer:'Being transferred',ended:'Answered',missed:'Missed',cancelled:'Caller hung up'};
   const rows=calls.map(c=>{const miss=c.status==='missed'||((c.status==='cancelled'||c.status==='ended')&&!c.answeredAt);const d=new Date(ms(c.createdAt));const recs=c.recs?Object.values(c.recs):[];
-    return '<div class="callrow"><span class="cr-ic'+(miss?' miss':'')+'">'+I('phone')+'</span><span class="cr-tx"><b>'+esc(callWho(c))+'</b><small>'+d.toLocaleDateString([], {day:'numeric',month:'short'})+' '+d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})+' · '+callLang(c)+' · '+(miss&&c.status!=='missed'?'Not answered':(st[c.status]||c.status))+(c.agentName?' · '+esc(c.agentName):'')+(c.duration?' · '+Math.floor(c.duration/60)+'m '+c.duration%60+'s':'')+'</small>'+
+    return '<div class="callrow"><span class="cr-ic'+(miss?' miss':'')+'">'+I('phone')+'</span><span class="cr-tx"><b>'+esc(callWho(c))+'</b><small>'+d.toLocaleDateString([], {day:'numeric',month:'short'})+' '+d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})+' · '+callTopic(c)+' · '+callLang(c)+' · '+(miss&&c.status!=='missed'?'Not answered':(st[c.status]||c.status))+(c.agentName?' · '+esc(c.agentName):'')+(c.duration?' · '+Math.floor(c.duration/60)+'m '+c.duration%60+'s':'')+'</small>'+
      recs.map((x,i)=>'<a class="crec" href="'+esc(x.url)+'" target="_blank" rel="noopener">'+I('rec')+' Recording '+(recs.length>1?i+1+' ':'')+(x.secs?'('+Math.floor(x.secs/60)+'m '+x.secs%60+'s)':'')+'</a>').join('')+'</span>'+(chats.some(x=>x.id===c.callerUid)?'<button class="btn sm soft" type="button" data-copen="'+esc(c.callerUid)+'">Chat</button>':'')+'</div>'}).join('');
   const m=modal('Web calls',rows||'<p style="margin:0;color:var(--muted)">No calls yet. When a visitor taps Call us, this page rings. Keep it open and set to Available.</p>');
   m.addEventListener('click',e=>{const b=e.target.closest('[data-copen]');if(b){m.remove();openChat(b.dataset.copen)}})}
