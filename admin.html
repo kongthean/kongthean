@@ -1132,7 +1132,7 @@ html[data-skin="kbach"][lang="km"] .emb{letter-spacing:0}
 #tcall.mini .tcl-dial{display:none}
 @keyframes tclIn{from{opacity:0}to{opacity:1}}
 body.tcall-on{overflow:hidden}
-body.tcall-on:not(.tcall-mini)>*:not(#tcall){visibility:hidden!important}
+body.tcall-on:not(.tcall-mini)>*:not(#tcall):not(#tcrec):not(.toast){visibility:hidden!important}
 #tcall{isolation:isolate;-webkit-transform:translateZ(0);transform:translateZ(0);-webkit-backface-visibility:hidden;backface-visibility:hidden}
 #tcall *{-webkit-backface-visibility:hidden;backface-visibility:hidden}
 #tcall .tcl-top{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
@@ -1221,6 +1221,24 @@ body.tcall-on.tcall-mini{overflow:auto}
 #tcall.mini .tcl-ctl .tcl-end span{width:42px;height:42px;box-shadow:none}
 #tcall.mini .tcl-ctl .tcl-end .i{width:22px;height:22px}
 @media (max-height:700px){#tcall{padding-top:calc(30px + env(safe-area-inset-top,0px))}#tcall .tcl-pad{grid-template-columns:repeat(3,66px);gap:10px 22px}#tcall .tcl-pad button{width:66px;height:66px}#tcall .tcl-ctl>button span{width:66px;height:66px}#tcall .tcl-ctl{grid-template-columns:repeat(3,66px);gap:14px 30px}}
+
+#tcall.padon .tcl-ctl .mob{visibility:hidden}
+#tcall.mini .mob,#tcall.mini .tcl-sheet{display:none!important}
+#tcall .tcl-sheet{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(150px + env(safe-area-inset-bottom,0px));width:min(320px,calc(100% - 40px));background:#2b323c;border-radius:18px;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.45);display:grid}
+#tcall .tcl-sheet button{display:flex;align-items:center;justify-content:center;gap:10px;padding:16px;font-size:1.05rem;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;border-top:1px solid rgba(255,255,255,.08)}
+#tcall .tcl-sheet button:first-child{border-top:0}
+#tcall .tcl-sheet button:active{background:#3a424d}
+#tcall .rdot{width:12px;height:12px;border-radius:50%;background:#e5483f;flex:none}
+#tcall .rdot.on{border-radius:3px}
+#tcall.recon .tcl-st::after{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:#e5483f;margin-left:8px;vertical-align:middle;animation:recBlink 1.2s infinite}
+@keyframes recBlink{50%{opacity:.25}}
+#tcall .tcl-ctl>button[data-more].on span{background:#fff;color:#e5483f}
+#tcrec{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:2147483001;width:min(420px,calc(100vw - 24px));background:#1b222b;color:#fff;border-radius:18px;padding:12px 10px 12px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 14px 40px rgba(0,0,0,.4);font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+#tcrec span{flex:1;font-size:.92rem}
+#tcrec button{all:unset;cursor:pointer;color:#fff}
+#tcrec [data-rsave]{background:#2f9e5f;padding:9px 14px;border-radius:99px;font-weight:600;font-size:.9rem}
+#tcrec [data-rx]{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:rgba(255,255,255,.12)}
+#tcrec [data-rx] .i{width:18px;height:18px}
 </style>
 </head>
 <body>
@@ -1296,6 +1314,7 @@ var P={users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s
  upload:'<path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 20 19v-3"/>',
  sound:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',
  trash:'<path d="M4.5 7h15M9.5 7V4.8h5V7M6.5 7l.9 12.2h9.2L17.5 7M10 10.5v5.5M14 10.5v5.5"/>',
+ dots:'<circle cx="5.5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="18.5" cy="12" r="1.6" fill="currentColor"/>',
  mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/>',grid:'<circle cx="6" cy="5" r="1.3"/><circle cx="12" cy="5" r="1.3"/><circle cx="18" cy="5" r="1.3"/><circle cx="6" cy="11" r="1.3"/><circle cx="12" cy="11" r="1.3"/><circle cx="18" cy="11" r="1.3"/><circle cx="6" cy="17" r="1.3"/><circle cx="12" cy="17" r="1.3"/><circle cx="18" cy="17" r="1.3"/><circle cx="12" cy="22" r=".9"/>',phoneoff:'<path d="M3 13.6c5-4.6 13-4.6 18 0l-2.3 2.6-3.6-1.4-.3-2.5a10 10 0 0 0-5.6 0l-.3 2.5-3.6 1.4z"/>',
  close:'<path d="M6 6l12 12M18 6L6 18"/>', menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
  left:'<path d="M15 5l-7 7 7 7"/>', right:'<path d="M9 5l7 7-7 7"/>', arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
@@ -1366,7 +1385,7 @@ window.TheanSite={get S(){return S},get lang(){return lang},icon:I,esc:esc,linkO
   setState:function(c,o){if(!c||typeof c!=='object')return;if(o&&o.v&&o.v===liveV)return;liveV=o&&o.v||liveV;var m=Object.assign({},EMBED,upgrade(JSON.parse(JSON.stringify(c))));BASE=m;if(!(admin&&dirty)){S=m;render()}}};
 window.TheanProv=PROV;
 /* ---------- maintenance mode ---------- */
-var MAINT=null;
+var MAINT=null,CALLAWAY=null;
 function maintPreview(){return /[?&]preview\b/.test(location.search||'')}
 var MT={en:{t:'Our website is under maintenance',p:'We are improving our website and will be back very soon. Thank you for your patience.',c:'You can still chat with our team.'},km:{t:'គេហទំព័ររបស់យើងកំពុងធ្វើការថែទាំ',p:'យើងកំពុងកែលម្អគេហទំព័រ ហើយនឹងត្រឡប់មកវិញក្នុងពេលឆាប់ៗនេះ។ សូមអរគុណចំពោះការអត់ធ្មត់របស់អ្នក។',c:'អ្នកនៅតែអាចជជែកជាមួយក្រុមការងាររបស់យើងបាន។'}};
 function showMaint(){var el=document.getElementById('maint'),on=!!(MAINT&&MAINT.on)&&!ADMIN_PAGE&&!maintPreview();
@@ -2236,6 +2255,7 @@ app.addEventListener('click',function(e){
     case 'skinform':skinForm();return;
     case 'skins':skinPicker();return;
     case 'maint':maintToggle();return;
+    case 'callaway':awayToggle();return;
     case 'maintedit':maintEdit();return;
     case 'msghide':S.message.show=false;changed();toast('Hidden. Visitors no longer see this section.');return;
     case 'msgshow':S.message.show=true;changed();toast(String(S.message.km||S.message.en||'').trim()||S.message.video?'Shown on the website':'Shown. Add the message text so visitors can see it.');return;
@@ -2269,6 +2289,7 @@ function composeText(f){var k=f.dataset.form,n=(f.querySelector('#c-name-'+k)||{
 function enterAdmin(u){
   adminUser=u;admin=true;adminView='dash';editing=false;
   try{if(window.TheanAdmin&&window.TheanAdmin.onMaint&&!window.__mSub){window.__mSub=1;window.TheanAdmin.onMaint(function(v){MAINT=v||null;if(admin&&adminView==='dash')render()})}}catch(e){}
+  try{if(window.TheanAdmin&&window.TheanAdmin.onCallAway&&!window.__aSub){window.__aSub=1;window.TheanAdmin.onCallAway(function(v){CALLAWAY=v||null;if(admin&&adminView==='dash')render()})}}catch(e){}
   try{var d=localStorage.getItem(DRAFT_KEY);if(d){S=Object.assign({},EMBED,upgrade(JSON.parse(d)));dirty=true}}catch(e){}
   render();
   if(dirty){toast('Saving the changes you made last time…');schedulePublish(500);setTimeout(maybeAuto,1500)}
@@ -2490,7 +2511,7 @@ function dashSection(){
     h+='<div class="dwelcome"><h2>Hello'+(adminUser&&adminUser.agent&&adminUser.agent.name?', '+esc(adminUser.agent.name):'')+'</h2><p>Everything you change here <b>saves and goes live automatically</b> within a few seconds. Watch the status at the top: <b>Live on the website</b> means visitors can see it.</p></div>';
     var need=photoTargets().length;
     h+='<div class="autobox"><span style="font-size:1.8rem;color:var(--accent)">'+I('image')+'</span><div><b>HD photos & videos</b><small style="color:var(--muted)">'+(need?need+' places, slides or videos have no photo yet. Add free HD photos from Wikimedia Commons in one tap.':'Every place has a photo. You can change any photo with <b>Online photo</b>.')+'</small></div>'+(need?'<button class="btn" data-act="autophotos">'+I('image')+' Add HD photos</button>':'')+'</div>';
-    h+='<h3 class="dsub">Quick actions</h3><div class="dcards">'+maintCard()+dCard('calendar','Add news','Title, photo, short caption, full story, photos & video','data-add="news:"')+dCard('video','Add a video','Upload from your phone or paste a link','data-add="videos:"')+dCard('pin','Add a place','Destination, temple or culture story','data-add="places:destination"')+dCard('star','Home page','Slideshow, announcement, message of gratitude','data-dash="home"')+dCard('bell','Edit announcement','The red/dark bar under the slideshow','data-dash="texts"')+dCard('menu','Add a menu page','New icon in the menu with its own posts','data-add="pages:custom"')+'</div>';
+    h+='<h3 class="dsub">Quick actions</h3><div class="dcards">'+maintCard()+awayCard()+dCard('calendar','Add news','Title, photo, short caption, full story, photos & video','data-add="news:"')+dCard('video','Add a video','Upload from your phone or paste a link','data-add="videos:"')+dCard('pin','Add a place','Destination, temple or culture story','data-add="places:destination"')+dCard('star','Home page','Slideshow, announcement, message of gratitude','data-dash="home"')+dCard('bell','Edit announcement','The red/dark bar under the slideshow','data-dash="texts"')+dCard('menu','Add a menu page','New icon in the menu with its own posts','data-add="pages:custom"')+'</div>';
     h+='<h3 class="dsub">Your website</h3><div class="dstats">'+[['Posts',(S.news||[]).length+(S.social||[]).length+S.pages.reduce(function(a,p){return a+(p.custom&&S[p.list]?S[p.list].length:0)},0),'posts'],['Videos',(S.videos||[]).length,'videos'],['Places',S.places.length,'places'],['Menu pages',S.pages.length,'pages'],['Slides',S.slides.length,'home']].map(function(r){return '<button class="dstat" data-dash="'+r[2]+'"><b>'+r[1]+'</b><span>'+r[0]+'</span></button>'}).join('')+'</div>';
     h+='<div class="dnote">'+(mediaOK()?'Photo & video storage is connected (Cloudinary).':'⚠️ Photo & video storage is not connected yet. <button class="btn sm" data-act="media">Set up now</button>')+'<br>Website data size: <b>'+mb.toFixed(1)+' MB</b>'+(mb>8?' — large. New photos go to Cloudinary once it is connected, which keeps the site fast.':' — good.')+'</div>';
   }
@@ -2546,7 +2567,7 @@ function dashSection(){
   }
   else if(sec==='settings'){
     h+=dHead('Contact & settings','Links, logo, storage and your team.');
-    h+='<div class="dcards">'+dCard('menu','Menu icon style','Colour, photo, outline or classic grey','data-act="tilestyle"')+maintCard()+dCard('star','Website theme','Default for visitors: '+({heritage:'Khmer Heritage',apsara:'Apsara Night',kbach:'Kbach Gold',pchum:'Pchum Ben'}[S.ui&&S.ui.skin]||'Classic')+'. Visitors can switch at the bottom of the page.','data-act="skinform"')+dCard('link','Contact links & numbers','Facebook, Telegram, phone, email, follower count…','data-act="links"')+callCard()+dCard('image','Logo','The round logo at the top','data-act="logo"')+dCard('pin','Map image','Picture on the Cambodia map section','data-act="mapimg"')+dCard('video','Photo & video storage',mediaOK()?'Connected ('+esc(S.media.cloud)+')':'Not connected: tap to set up','data-act="media"')+dCard('users','Team & chat inbox','Invite staff, answer customers','onclick="location.href=\'agent\'"')+dCard('download','Backup copy','Download a copy of the website','data-act="export"')+'</div>';
+    h+='<div class="dcards">'+dCard('menu','Menu icon style','Colour, photo, outline or classic grey','data-act="tilestyle"')+maintCard()+dCard('star','Website theme','Default for visitors: '+({heritage:'Khmer Heritage',apsara:'Apsara Night',kbach:'Kbach Gold',pchum:'Pchum Ben'}[S.ui&&S.ui.skin]||'Classic')+'. Visitors can switch at the bottom of the page.','data-act="skinform"')+dCard('link','Contact links & numbers','Facebook, Telegram, phone, email, follower count…','data-act="links"')+callCard()+awayCard()+dCard('image','Logo','The round logo at the top','data-act="logo"')+dCard('pin','Map image','Picture on the Cambodia map section','data-act="mapimg"')+dCard('video','Photo & video storage',mediaOK()?'Connected ('+esc(S.media.cloud)+')':'Not connected: tap to set up','data-act="media"')+dCard('users','Team & chat inbox','Invite staff, answer customers','onclick="location.href=\'agent\'"')+dCard('download','Backup copy','Download a copy of the website','data-act="export"')+'</div>';
   }
   return h;
 }
@@ -2608,15 +2629,22 @@ var CALL_PROMPTS=[['menuKm','1. Greeting (Khmer)','សូមស្វាគម�
  ['waitEn','6. Please wait (English)','Please hold for a moment while we connect you to our customer service team. Where necessary, this call may be recorded for training and quality assurance purposes to improve our service. Thank you!'],
  ['busyKm','7. No answer (Khmer)','យើងខ្ញុំសូមអភ័យទោសដែលមិនអាចឆ្លើយតបទៅកាន់លោកអ្នកបានទាន់ពេលវេលា។ បច្ចុប្បន្ននេះ ក្រុមការងារផ្នែកសេវាកម្មអតិថិជនរបស់យើងកំពុងមមាញឹក។ សូមព្យាយាមម្តងទៀតនៅពេលក្រោយ។ សូមអរគុណ។'],
  ['busyEn','8. No answer (English)','We apologize for not being able to respond to you on time. Our customer service team is currently busy. Please try again later. Thank you!'],
+ ['closedKm','Away / closed (Khmer)','សូមស្វាគមន៍មកកាន់គេហទំព័រធាន។ សូមអភ័យទោស បច្ចុប្បន្ននេះសេវាកម្មតាមទូរស័ព្ទរបស់យើងខ្ញុំបានបិទ។ សូមទាក់ទងមកយើងខ្ញុំម្តងទៀតនៅពេលក្រោយ ឬផ្ញើសារមកយើងខ្ញុំតាមការជជែក។ សូមអរគុណ។'],
+ ['closedEn','Away / closed (English)','Welcome to Thean. We are sorry, our phone service is closed at the moment. Please contact us again later, or send us a message in the chat. Thank you!'],
  ['ringTone','Ringing tone','Callers hear this while the call rings, before the greeting and during the wait for an agent. Upload a short sound (MP3 or M4A). It plays on repeat. If empty, the standard "tuut… tuut…" tone plays.',1],
  ['holdMusic','Waiting music','Callers hear this when you tap Waiting or transfer their call. Upload a music file (MP3 or M4A, up to 15 MB). It plays on repeat. If empty, a soft built-in tune plays.',1]];
-function callCard(){var c=S.call||{};return dCard('phone','Call us (web call)',c.enabled===false?'Off. Tap to turn on and set up.':'On · number '+esc(c.number||'203')+' · '+CALL_PROMPTS.filter(function(p){return !p[3]&&p[0]!=='topicsKm'&&p[0]!=='topicsEn'&&c.prompts&&c.prompts[p[0]]}).length+' of 6 voice messages recorded'+(c.prompts&&c.prompts.holdMusic?' · own waiting music':''),'data-act="callform"')}
-function callForm(){var c=JSON.parse(JSON.stringify(S.call||{})),P=c.prompts=c.prompts||{},rec=null,player=null;
+function callCard(){var c=S.call||{};return dCard('phone','Call us (web call)',c.enabled===false?'Off. Tap to turn on and set up.':'On · number '+esc(c.number||'203')+' · '+CALL_PROMPTS.filter(function(p){return !p[3]&&p[0]!=='topicsKm'&&p[0]!=='topicsEn'&&c.prompts&&c.prompts[p[0]]}).length+' of 8 voice messages recorded'+(c.prompts&&c.prompts.holdMusic?' · own waiting music':''),'data-act="callform"')}
+function callForm(){var c=JSON.parse(JSON.stringify(S.call||{})),P=c.prompts=c.prompts||{},rec=null,player=null,AW=Object.assign({},CALLAWAY||{});
   var m=modal('Call us (web call)','<p style="margin:0;color:var(--muted);font-size:.92rem;line-height:1.55">Visitors tap <b>Call us</b> on the Contact page or in the chat. They see a phone screen with the number and hear the greeting twice. After they press 1 (Khmer) or 2 (English), they choose a topic from your Topic menu. Then they hear the please-wait message and then a ringing tone while your <b>chat inbox</b> rings. If they press nothing, the call ends. Keep the inbox open and set to <b>Available</b> to receive calls. Calls are free and go over the internet.</p>'+
    '<label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-con style="width:auto"'+(c.enabled===false?'':' checked')+'> Show the Call us button</label>'+
    fieldHtml(['number','Number shown on the call screen','text'],c.number||'203')+'<label class="f">Number style<select data-nst>'+[['thin','Thin'],['light','Light'],['regular','Regular'],['bold','Bold (default)']].map(function(o){return '<option value="'+o[0]+'"'+((c.numStyle||'bold')===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select></label>'+fieldHtml(['ringSec','Seconds of ringing tone before the no-answer message','text'],String(c.ringSec||35))+
+   '<h4 style="margin:6px 0 0">Away and opening hours</h4><p style="margin:0;color:var(--muted);font-size:.86rem;line-height:1.55">When the line is Away or closed, callers hear the Away message and the call ends. Your inbox does not ring. Times are Cambodia time.</p>'+
+   '<label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-aon style="width:auto"'+(AW.on?' checked':'')+'> Away now (no calls ring)</label>'+
+   '<label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-asch style="width:auto"'+(AW.sched?' checked':'')+'> Use opening hours</label>'+
+   '<div style="display:flex;gap:10px"><label class="f" style="flex:1">Open from<input type="time" data-aopen value="'+esc(AW.open||'08:00')+'"></label><label class="f" style="flex:1">Close at<input type="time" data-aclose value="'+esc(AW.close||'17:00')+'"></label></div>'+
+   '<div style="display:flex;gap:6px;flex-wrap:wrap">'+[[1,'Mon'],[2,'Tue'],[3,'Wed'],[4,'Thu'],[5,'Fri'],[6,'Sat'],[0,'Sun']].map(function(d){var on=!Array.isArray(AW.days)||AW.days.indexOf(d[0])>=0;return '<label style="display:flex;gap:4px;align-items:center;border:1px solid var(--line);border-radius:99px;padding:5px 10px;font-size:.86rem"><input type="checkbox" data-aday="'+d[0]+'" style="width:auto"'+(on?' checked':'')+'>'+d[1]+'</label>'}).join('')+'</div>'+
    '<h4 style="margin:6px 0 0">Topic menu</h4><p style="margin:0;color:var(--muted);font-size:.86rem;line-height:1.55">After choosing a language, callers press a number to choose a topic. Up to 9 topics. Your agents see the topic when the call rings. Each topic has its own two short voice clips (Khmer and English). When you add a topic, record only its clips; the others stay. If you move a topic to a new number, record its clips again.</p><div data-tl style="display:grid;gap:8px"></div><button class="btn sm soft" type="button" data-tadd>'+I('plus')+' Add topic</button>'+
-   '<h4 style="margin:6px 0 0">Voice messages</h4><p style="margin:0;color:var(--muted);font-size:.86rem;line-height:1.55"><b>Please record all 6 here, plus the two short clips in each topic above.</b> iPhones have no Khmer voice, so the Khmer messages are only heard after you record them. Tap Record, read the text in a calm, clear voice, then tap Stop. Record in a quiet room, holding the phone about 20 cm from your mouth.</p><div data-pr style="display:grid;gap:10px"></div>'+
+   '<h4 style="margin:6px 0 0">Voice messages</h4><p style="margin:0;color:var(--muted);font-size:.86rem;line-height:1.55"><b>Please record all 8 here, plus the two short clips in each topic above.</b> iPhones have no Khmer voice, so the Khmer messages are only heard after you record them. Tap Record, read the text in a calm, clear voice, then tap Stop. Record in a quiet room, holding the phone about 20 cm from your mouth.</p><div data-pr style="display:grid;gap:10px"></div>'+
    '<div style="display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap"><button class="btn soft" type="button" data-ctest>'+I('phone')+' Test call</button><span style="display:flex;gap:8px"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-cok>Save</button></span></div>');
   function draw(){m.querySelector('[data-pr]').innerHTML=CALL_PROMPTS.filter(function(p){return p[0]!=='topicsKm'&&p[0]!=='topicsEn'}).map(function(p){var u=P[p[0]],r=rec&&rec.key===p[0];
     return '<div style="border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:8px"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b>'+esc(p[1])+'</b><small style="color:'+(u?'var(--ok)':'var(--muted)')+'">'+(r?'Recording…':u?(p[3]?(p[0]==='ringTone'?'Your tone':'Your music'):'Your voice'):(p[3]?(p[0]==='ringTone'?'Standard tuut':'Built-in tune'):'Phone voice'))+'</small></div>'+
@@ -2656,9 +2684,17 @@ function callForm(){var c=JSON.parse(JSON.stringify(S.call||{})),P=c.prompts=c.p
     if(b.hasAttribute('data-prm')){setV(k,'');redraw();return}
     if(b.hasAttribute('data-ctest')||b.hasAttribute('data-cok')){c.enabled=m.querySelector('[data-con]').checked;c.number=(m.querySelector('[data-k="number"]').value.trim()||'203').slice(0,20);c.numStyle=m.querySelector('[data-nst]').value;tRead();if(tlEdited){var TT=TL.filter(function(t){return t.en||t.km}).slice(0,9);c.topics=TT.map(function(t,i){return {id:t.id||('t'+(i+1)+'_'+Date.now().toString(36)),en:t.en,km:t.km,vKm:t.vKm||'',vEn:t.vEn||'',nKm:t.nKm||0,nEn:t.nEn||0}})}c.ringSec=Math.max(15,Math.min(180,parseInt(m.querySelector('[data-k="ringSec"]').value,10)||35));
       if(rec){try{rec.mr.stop()}catch(x){}}try{if(player)player.pause()}catch(x){}
+      var nAW={on:m.querySelector('[data-aon]').checked,sched:m.querySelector('[data-asch]').checked,open:m.querySelector('[data-aopen]').value||'08:00',close:m.querySelector('[data-aclose]').value||'17:00',days:[].slice.call(m.querySelectorAll('[data-aday]')).filter(function(x){return x.checked}).map(function(x){return +x.dataset.aday}),at:Date.now()};
+      if(JSON.stringify([nAW.on,nAW.sched,nAW.open,nAW.close,nAW.days])!==JSON.stringify([!!AW.on,!!AW.sched,AW.open||'08:00',AW.close||'17:00',Array.isArray(AW.days)?AW.days:[1,2,3,4,5,6,0]]))awaySet(nAW,'');
       S.call=c;m.remove();changed();
       if(b.hasAttribute('data-ctest')){if(window.TheanCall)window.TheanCall.start();else toast('Not ready yet, try again in a moment')}else toast('Saved. The website updates in a moment.')}});
   tDraw();draw()}
+function awayIsNow(a){if(!a)return false;if(a.on)return true;if(!a.sched)return false;var t=new Date(Date.now()+7*3600000),day=t.getUTCDay(),mins=t.getUTCHours()*60+t.getUTCMinutes(),days=Array.isArray(a.days)?a.days:[0,1,2,3,4,5,6];if(days.indexOf(day)<0)return true;
+  var hm=function(x){var m=String(x||'').match(/^(\d{1,2}):(\d{2})/);return m?(+m[1])*60+(+m[2]):null},o=hm(a.open),c=hm(a.close);if(o==null||c==null)return false;return o<=c?(mins<o||mins>=c):(mins<o&&mins>=c)}
+function awayCard(){var a=CALLAWAY||{},now=awayIsNow(a);return dCard('phone','Phone line: '+(now?'Away (closed)':'Open'),a.on?'AWAY: callers hear the closed message. Tap to open the line.':(a.sched?(now?'Closed now by your opening hours ('+esc(a.open||'')+'–'+esc(a.close||'')+'). Tap to close all day.':'Open by your opening hours ('+esc(a.open||'')+'–'+esc(a.close||'')+'). Tap to go Away now.'):'Open. Tap once to go Away (no calls ring).'),'data-act="callaway"')}
+function awaySet(v,msg){if(!window.TheanAdmin||!window.TheanAdmin.setCallAway){toast('Not connected yet, try again in a moment');return}
+  window.TheanAdmin.setCallAway(v).then(function(){CALLAWAY=v;if(msg)toast(msg);render()}).catch(function(e){toast(/permission/i.test(String(e&&(e.code||e.message)))?'Only the owner can change the phone line':'Not saved: '+(e&&(e.code||e.message)))})}
+function awayToggle(){var a=Object.assign({},CALLAWAY||{});a.on=!a.on;a.at=Date.now();awaySet(a,a.on?'Away is ON. Callers hear the closed message.':'Away is OFF. Calls ring normally'+(a.sched?' during your opening hours.':'.'))}
 function maintCard(){var on=MAINT&&MAINT.on;return dCard('gear','Maintenance mode',on?'ON: visitors see the maintenance screen. Tap to turn off.':'Off. Tap once to show visitors a maintenance screen (chat still works).','data-act="maint"')}
 function maintSet(v,msg){if(!window.TheanAdmin||!window.TheanAdmin.setMaint){toast('Not connected yet, try again in a moment');return}
   window.TheanAdmin.setMaint(v).then(function(){toast(msg)}).catch(function(e){toast(/permission/i.test(String(e&&(e.code||e.message)))?'Only the owner can change maintenance mode':'Not saved: '+(e&&(e.code||e.message)))})}
@@ -3301,7 +3337,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261006-1018',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261006-1202',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
@@ -3335,6 +3371,8 @@ if(ADMIN_PAGE){
     async logout(){await loadFb();await fb.A.signOut(fb.auth)},
     async setMaint(v){await loadFb();await fb.set('settings/public/maintenance',v)},
     onMaint(cb){loadFb().then(()=>fb.on('settings/public/maintenance',cb)).catch(()=>{})},
+    async setCallAway(v){await loadFb();await fb.set('settings/public/callAway',v)},
+    onCallAway(cb){loadFb().then(()=>fb.on('settings/public/callAway',cb)).catch(()=>{})},
     async publish(S){await loadFb();
       const to=new Promise((_,rej)=>setTimeout(()=>rej(new Error('network: the server did not answer in 40 seconds')),40000));
       const now=Date.now();
@@ -3352,14 +3390,16 @@ const CW={
    menuKm:'សូមស្វាគមន៍មកកាន់ភ្នាក់ងារបម្រើសេវាកម្មអតិថិជនរបស់គេហទំព័រធាន សូមចុចលេខ ១ សម្រាប់ភាសាខ្មែរ។',menuEn:'Welcome to Thean customer service. Please press 2 for English.',
    topics:'For general inquiries, press 1. For donations, press 2. To report as a copyright owner, press 3.',
    wait:'Please hold for a moment while we connect you to our customer service team. Where necessary, this call may be recorded for training and quality assurance purposes to improve our service. Thank you!',
+   closed:'Welcome to Thean. We are sorry, our phone service is closed at the moment. Please contact us again later, or send us a message in the chat. Thank you!',
    busy:'We apologize for not being able to respond to you on time. Our customer service team is currently busy. Please try again later. Thank you!',
-   connecting:'Connecting…',ended:'Call ended',mute:'Mute',unmute:'Mute',speaker:'Speaker',keypad:'Keypad',end:'End',chat:'Chat',where:'Cambodia',lost:'Connection lost'},
+   connecting:'Connecting…',ended:'Call ended',mute:'Mute',unmute:'Mute',speaker:'Speaker',keypad:'Keypad',end:'End',chat:'Chat',where:'Cambodia',more:'More',recStart:'Record call',recStop:'Stop recording',recSave:'Save recording',recReady:'Your call recording is ready.',recClose:'Close',recNo:'Recording is not supported in this browser.',lost:'Connection lost'},
  km:{calling:'កំពុងហៅ…',mic:'សូមអនុញ្ញាតមីក្រូហ្វូន ដើម្បីហៅ',micNo:'មីក្រូហ្វូនត្រូវបានបិទ។ សូមអនុញ្ញាតក្នុងការកំណត់កម្មវិធីរុករក រួចព្យាយាមម្ដងទៀត។',unsupported:'កម្មវិធីរុករកនេះមិនគាំទ្រការហៅតាមគេហទំព័រទេ។ សូមបើកគេហទំព័រក្នុង Safari ឬ Chrome ឬផ្ញើសារមកយើងក្នុងការជជែក។',
    menuKm:'សូមស្វាគមន៍មកកាន់ភ្នាក់ងារបម្រើសេវាកម្មអតិថិជនរបស់គេហទំព័រធាន សូមចុចលេខ ១ សម្រាប់ភាសាខ្មែរ។',menuEn:'Welcome to Thean customer service. Please press 2 for English.',
    topics:'សម្រាប់ការសាកសួរទូទៅ សូមចុចលេខ ១។ សម្រាប់ការបរិច្ចាគ សូមចុចលេខ ២។ សម្រាប់ការរាយការណ៍ពីម្ចាស់កម្មសិទ្ធិ (រក្សាសិទ្ធិ) សូមចុចលេខ ៣។',
    wait:'សូមមេត្តារង់ចាំ យើងខ្ញុំកំពុងតភ្ជាប់លោកអ្នកទៅកាន់ភ្នាក់ងារបម្រើសេវាកម្មអតិថិជន។ ក្នុងករណីចាំបាច់ យើងខ្ញុំនឹងបើកមុខងារថតសំឡេងទុក ក្នុងគោលបំណងផ្តល់ជូននូវសេវាកម្មដែលមានប្រសិទ្ធភាព និងដើម្បីពង្រឹងគុណភាពសេវាកម្មរបស់យើងខ្ញុំ។ សូមអរគុណ។',
+   closed:'សូមស្វាគមន៍មកកាន់គេហទំព័រធាន។ សូមអភ័យទោស បច្ចុប្បន្ននេះសេវាកម្មតាមទូរស័ព្ទរបស់យើងខ្ញុំបានបិទ។ សូមទាក់ទងមកយើងខ្ញុំម្តងទៀតនៅពេលក្រោយ ឬផ្ញើសារមកយើងខ្ញុំតាមការជជែក។ សូមអរគុណ។',
    busy:'យើងខ្ញុំសូមអភ័យទោសដែលមិនអាចឆ្លើយតបទៅកាន់លោកអ្នកបានទាន់ពេលវេលា។ បច្ចុប្បន្ននេះ ក្រុមការងារផ្នែកសេវាកម្មអតិថិជនរបស់យើងកំពុងមមាញឹក។ សូមព្យាយាមម្តងទៀតនៅពេលក្រោយ។ សូមអរគុណ។',
-   connecting:'កំពុងភ្ជាប់…',ended:'ការហៅបានបញ្ចប់',mute:'បិទសំឡេង',unmute:'បិទសំឡេង',speaker:'ឧបករណ៍បំពងសំឡេង',keypad:'ក្ដារលេខ',end:'បញ្ចប់',chat:'ជជែក',where:'កម្ពុជា',lost:'ការតភ្ជាប់បានដាច់'}};
+   connecting:'កំពុងភ្ជាប់…',ended:'ការហៅបានបញ្ចប់',mute:'បិទសំឡេង',unmute:'បិទសំឡេង',speaker:'ឧបករណ៍បំពងសំឡេង',keypad:'ក្ដារលេខ',end:'បញ្ចប់',chat:'ជជែក',where:'កម្ពុជា',more:'បន្ថែម',recStart:'ថតការហៅ',recStop:'បញ្ឈប់ការថត',recSave:'រក្សាទុកការថត',recReady:'ការថតការហៅរបស់អ្នករួចរាល់ហើយ។',recClose:'បិទ',recNo:'កម្មវិធីរុករកនេះមិនគាំទ្រការថតទេ។',lost:'ការតភ្ជាប់បានដាច់'}};
 const cw=(k,lg)=>(CW[lg||'en']||CW.en)[k];
 const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302','stun:stun2.l.google.com:19302']}]};
 let call=null;
@@ -3404,6 +3444,7 @@ function playOne(name,txt,vl,url){/* recorded voice from the editor, else the ph
         const src=call.ac.createBufferSource();src.buffer=buf;src.connect(outNode());src.onended=fin;call.src=src;src.start();setTimeout(fin,buf.duration*1000+800)});return}
     speak()})}
 async function sayPrompt(key,lg){
+  if(key==='closedBoth'){await playOne('closedKm',CW.km.closed,'km');if(!call||call.state!=='closed')return;await sleepC(400);if(!call||call.state!=='closed')return;return playOne('closedEn',CW.en.closed,'en')}
   if(key==='menu'){await playOne('menuKm',CW.km.menuKm,'km');if(!call||call.state!=='menu')return;await sleepC(300);if(!call||call.state!=='menu')return;return playOne('menuEn',CW.en.menuEn,'en')}
   if(key==='topics'){const L=topicList(),any=L.some(t=>lg==='km'?t.vKm:t.vEn);
     if(any){for(let i=0;i<L.length;i++){if(!call||call.state!=='topic')return;const t=L[i],u=lg==='km'?t.vKm:t.vEn,n=lg==='km'?t.nKm:t.nEn,ok=u&&(!n||n===i+1);
@@ -3412,22 +3453,25 @@ async function sayPrompt(key,lg){
   return playOne(key+(lg==='km'?'Km':'En'),key==='topics'?topicsText(lg):cw(key,lg),lg)}
 /* ---- screen ---- */
 function callEl(){return document.getElementById('tcall')}
-function drawCall(){let el=callEl();const lg=call.lang;
+function drawCall(){let el=callEl();const lg=call.ui||call.lang;
   if(!el){el=document.createElement('div');el.id='tcall';el.setAttribute('role','dialog');el.setAttribute('aria-label','Call');document.body.appendChild(el);document.body.classList.add('tcall-on')}
   const B=(attr,icon,label,cls)=>'<button type="button" '+attr+(cls?' class="'+cls+'"':'')+'><span>'+I(icon)+'</span><small>'+esc(label)+'</small></button>';
   el.innerHTML='<div class="tcl-top"><span class="tcl-st" data-st>'+esc(cw('calling',lg))+'</span><b class="tcl-big" style="font-weight:'+({thin:200,light:300,regular:400}[callCfg().numStyle]||700)+'">'+esc(callCfg().number||'203')+'</b><span class="tcl-sub">'+esc(cw('where',lg))+'</span></div>'+
    '<div class="tcl-mid"><div class="tcl-dial" data-dial></div><div class="tcl-ivr" data-ivr hidden></div>'+
    '<div class="tcl-pad" data-pad hidden>'+[['1',''],['2','ABC'],['3','DEF'],['4','GHI'],['5','JKL'],['6','MNO'],['7','PQRS'],['8','TUV'],['9','WXYZ'],['*',''],['0','+'],['#','']].map(x=>'<button type="button" data-k="'+x[0]+'"'+(x[0]==='*'||x[0]==='#'?' class="sym"':'')+'><b>'+x[0]+'</b><small>'+(x[1]||'&nbsp;')+'</small></button>').join('')+'</div></div>'+
    '<div class="tcl-ctl" data-ctl>'+B('data-spk','sound',cw('speaker',lg),'r1')+B('data-chat','chat',cw('chat',lg),'r1')+B('data-mute','mic',cw('mute',lg),'r1')+
-     '<span class="tcl-gap"></span><button type="button" class="tcl-end" data-end aria-label="'+esc(cw('end',lg))+'"><span>'+I('phoneoff')+'</span><small>'+esc(cw('end',lg))+'</small></button>'+
+     B('data-more','dots',cw('more',lg),'mob')+'<button type="button" class="tcl-end" data-end aria-label="'+esc(cw('end',lg))+'"><span>'+I('phoneoff')+'</span><small>'+esc(cw('end',lg))+'</small></button>'+
      B('data-kp','grid',cw('keypad',lg),'kpb')+'<button type="button" class="tcl-hide" data-hide hidden>'+esc(lg==='km'?'លាក់':'Hide')+'</button></div>'+
-   '<audio data-remote autoplay playsinline></audio>';
+   '<div class="tcl-sheet" data-sheet hidden></div><audio data-remote autoplay playsinline></audio>';
   el.onclick=e=>{if(el.classList.contains('mini')&&e.target.closest('.tcl-top')){setMini(false);return}const b=e.target.closest('button');if(!b)return;
     if(b.dataset.k){dtmf(b.dataset.k);addDigit(b.dataset.k);onKey(b.dataset.k);return}
     if(b.hasAttribute('data-end')){callEnd(true);return}
     if(b.hasAttribute('data-kp')){showPad(true);return}
     if(b.hasAttribute('data-hide')){showPad(false);return}
     if(b.hasAttribute('data-chat')){setMini(true);if(window.TheanChat)window.TheanChat.open();return}
+    if(b.hasAttribute('data-more')){moreSheet();return}
+    if(b.hasAttribute('data-rec')){if(call.rec)recStop();else recStart();return}
+    if(b.hasAttribute('data-shclose')){const sh=el.querySelector('[data-sheet]');if(sh)sh.hidden=true;return}
     if(b.hasAttribute('data-spk')){call.spk=!call.spk;b.classList.toggle('on',call.spk);setSpk();return}
     if(b.hasAttribute('data-mute')){call.muted=!call.muted;if(call.stream)call.stream.getAudioTracks().forEach(t=>t.enabled=!call.muted);b.classList.toggle('on',call.muted);return}}}
 function setSpk(){if(!call||!call.ac)return;outNode().gain.value=call.spk?2.4:1;/* phones do not let websites pick earpiece or loudspeaker, so Speaker makes the call louder */
@@ -3439,6 +3483,15 @@ function setIvr(t){const e=callEl()&&callEl().querySelector('[data-ivr]');if(!e)
 function showPad(v){const el=callEl();if(!el)return;if(!v){call.dial='';const d=el.querySelector('[data-dial]');if(d)d.textContent=''}el.querySelector('[data-pad]').hidden=!v;el.classList.toggle('padon',!!v);el.querySelector('[data-hide]').hidden=!v}
 function clock(){if(!call||!call.t0)return '';const s=Math.floor((Date.now()-call.t0)/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
 function startClock(){if(!call||call.tick)return;call.t0=Date.now();const f=()=>{if(call&&!call.busy)setSt(clock())};f();call.tick=setInterval(f,1000)}
+
+/* ---- Away / opening hours (settings/public/callAway) ---- */
+function awayNow(a){if(!a)return false;if(a.on)return true;if(!a.sched)return false;
+  const t=new Date(Date.now()+7*3600000),day=t.getUTCDay(),mins=t.getUTCHours()*60+t.getUTCMinutes();
+  const days=Array.isArray(a.days)?a.days:[0,1,2,3,4,5,6];if(days.indexOf(day)<0)return true;
+  const hm=x=>{const m=String(x||'').match(/^(\d{1,2}):(\d{2})/);return m?(+m[1])*60+(+m[2]):null},o=hm(a.open),c=hm(a.close);
+  if(o==null||c==null)return false;return o<=c?(mins<o||mins>=c):(mins<o&&mins>=c)}
+async function closedFlow(){call.state='closed';startClock();
+  await sayPrompt('closedBoth',call.lang);if(!call)return;await sleepC(600);callEnd(false)}
 /* ---- flow ---- */
 async function callStart(){
   if(call){setMini(false);return}
@@ -3446,7 +3499,7 @@ async function callStart(){
   {const old=callEl();if(old)old.remove()}
   const lg0=L();
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.RTCPeerConnection){toast2(cw('unsupported',lg0));return}
-  call={state:'init',lang:lg0,timers:[],unsub:[],seen:{},muted:false};
+  call={state:'init',lang:lg0,ui:lg0,timers:[],unsub:[],seen:{},muted:false};
   try{call.ac=new (window.AudioContext||window.webkitAudioContext)();call.ac.resume()}catch(e){}
   try{speechSynthesis.getVoices();const u0=new SpeechSynthesisUtterance(' ');u0.volume=0;speechSynthesis.speak(u0)}catch(e){}
   loadPrompts();
@@ -3454,13 +3507,15 @@ async function callStart(){
   try{call.stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}})}
   catch(e){setSt(cw('micNo',lg0));await sleepC(4500);return callEnd(false)}
   if(!call)return;
+  const awayP=loadFb().then(f=>f.get('settings/public/callAway')).catch(()=>null);
   setSt(cw('calling',lg0));await ringback(2);if(!call)return;
+  if(awayNow(await awayP)){if(!call)return;ensureUser().then(u=>fb.push('calls',{callerUid:u.uid,status:'closed',lang:lg0,createdAt:TS,page:location.hash||'#/'})).catch(()=>{});return closedFlow()}
   call.state='menu';startClock();
   for(let i=0;i<2;i++){await sayPrompt('menu',lg0);if(!call||call.state!=='menu')return;await sleepC(5000);if(!call||call.state!=='menu')return}
   callEnd(false) /* no language chosen after the greeting played twice */
 }
 function onKey(k){if(!call)return;
-  if(call.state==='menu'){if(k!=='1'&&k!=='2')return;stopVoice();call.lang=k==='1'?'km':'en';call.state='topic';drawLabels();{const w=callEl()&&callEl().querySelector('.tcl-sub');if(w)w.textContent=cw('where',call.lang)}topicMenu();return}
+  if(call.state==='menu'){if(k!=='1'&&k!=='2')return;stopVoice();call.lang=k==='1'?'km':'en';call.state='topic';topicMenu();return}
   if(call.state==='topic'){const L=topicList(),t=L[+k-1];if(!t||k==='0')return;stopVoice();call.topic=t.id||('t'+k);call.topicEn=t.en||t.km;call.topicKm=t.km||t.en;call.state='wait';afterLang().catch(()=>{});holdFlow()}}
 async function topicMenu(){const lg=call.lang;await sleepC(300);
   for(let i=0;i<2;i++){if(!call||call.state!=='topic')return;await sayPrompt('topics',lg);if(!call||call.state!=='topic')return;await sleepC(5000)}
@@ -3471,7 +3526,7 @@ function drawLabels(){const el=callEl();if(!el)return;const lg=call.lang;[['data
 async function anyAgentOnline(){try{const a=await fb.get('agents')||{};const now=Date.now();return Object.keys(a).some(k=>a[k]&&a[k].online&&(!a[k].lastSeen||now-ms(a[k].lastSeen)<5*60000))}catch(e){return false}}
 async function afterLang(){const lg=call.lang;
   try{await ensureChat(lg)}catch(e){await ensureUser()}if(!call)return;
-  const ref=await fb.push('calls',{callerUid:user.uid,lang:lg,topic:call.topic||'general',topicName:call.topicEn||'',topicKm:call.topicKm||'',status:'ringing',leg:0,createdAt:TS,name:(chat&&chat.name)||'',page:location.hash||'#/',ua:navigator.userAgent.slice(0,120)});
+  const ref=await fb.push('calls',{callerUid:user.uid,lang:lg,topic:call.topic||'general',topicName:call.topicEn||'',topicKm:call.topicKm||'',callerRec:!!call.rec,status:'ringing',leg:0,createdAt:TS,name:(chat&&chat.name)||'',page:location.hash||'#/',ua:navigator.userAgent.slice(0,120)});
   if(!call){fb.update('calls/'+ref.key,{status:'cancelled',endedAt:TS}).catch(()=>{});return}
   call.id=ref.key;call.leg=0;const P='calls/'+call.id;
   try{await say({from:'system',text:'Web call started · '+(lg==='km'?'Khmer':'English')+' · '+(call.topicEn||'General inquiry'),staff:true});await touch({lastMsg:'Web call: '+(call.topicEn||'General inquiry')+' ('+(lg==='km'?'Khmer':'English')+')',lastFrom:'visitor'})}catch(e){}
@@ -3487,7 +3542,7 @@ function closeLeg(){if(!call)return;(call.legUnsub||[]).forEach(u=>{try{u()}catc
 async function newLeg(n){closeLeg();call.leg=n;call.state='active';call.onHold=false;clearTimeout(call.ringT);holdStop();stopVoice();setIvr('');
   const P='calls/'+call.id,L='calls/'+call.id+'/sig/'+n,seen={},pc=new RTCPeerConnection(ICE);call.pc=pc;call.legUnsub=[];
   call.stream.getTracks().forEach(t=>pc.addTrack(t,call.stream));
-  pc.ontrack=e=>{call.remote=e.streams[0];const a=callEl()&&callEl().querySelector('[data-remote]');if(a){a.srcObject=e.streams[0];a.muted=false;a.play().catch(()=>{})}if(call.spk)setSpk()};
+  pc.ontrack=e=>{call.remote=e.streams[0];if(call.rec&&call.ac){try{call.recRem&&call.recRem.disconnect()}catch(x){}try{call.recRem=call.ac.createMediaStreamSource(call.remote);call.recRem.connect(call.rec.dest)}catch(x){}}const a=callEl()&&callEl().querySelector('[data-remote]');if(a){a.srcObject=e.streams[0];a.muted=false;a.play().catch(()=>{})}if(call.spk)setSpk()};
   pc.onconnectionstatechange=()=>{if(!call||call.pc!==pc)return;const s=pc.connectionState;if(s==='connected')onConnected();
     if((s==='failed'||s==='disconnected')&&call.state==='active'){setTimeout(()=>{if(call&&call.pc===pc&&pc.connectionState!=='connected'&&call.state==='active')callEnd(true)},8000)}};
   pc.onicecandidate=e=>{if(e.candidate&&call&&call.pc===pc)fb.push(L+'/cc',JSON.parse(JSON.stringify(e.candidate.toJSON()))).catch(()=>{})};
@@ -3499,14 +3554,40 @@ async function newLeg(n){closeLeg();call.leg=n;call.state='active';call.onHold=f
 }
 function onConnected(){if(!call||call.connected)return;call.connected=true;call.everConnected=true;clearTimeout(call.ringT);if(!call.onHold)holdStop();stopVoice();setIvr('')}
 async function busyEnd(){if(!call||call.state==='busy'||call.state==='ending')return;call.state='busy';clearTimeout(call.ringT);closeLeg();holdStop();stopVoice();showPad(false);await sleepC(300);if(!call)return;await sayPrompt('busy',call.lang);if(!call)return;await sleepC(800);callEnd(false)}
-async function callEnd(byMe){if(!call||call.state==='ending')return;const c=call;c.state='ending';
+async function callEnd(byMe){if(!call||call.state==='ending')return;if(call.rec)recStop();const c=call;c.state='ending';
   holdStop();stopVoice();try{c.ringSrc&&c.ringSrc.stop()}catch(e){}clearTimeout(c.menuTimer);clearTimeout(c.ringT);clearInterval(c.tick);c.timers.forEach(t=>clearTimeout(t));
   if(byMe&&c.id){try{await fb.update('calls/'+c.id,{status:c.everConnected||c.answered?'ended':'cancelled',endedAt:TS,endedBy:'caller'})}catch(e){}}
   c.unsub.forEach(u=>{try{u()}catch(e){}});(c.legUnsub||[]).forEach(u=>{try{u()}catch(e){}});
   try{c.pc&&c.pc.close()}catch(e){}try{c.stream&&c.stream.getTracks().forEach(t=>t.stop())}catch(e){}
-  setSt(cw('ended',c.lang));setIvr('');tone(480,.25,.08);tone(480,.25,.08,.35);
+  setSt(cw('ended',c.ui||c.lang));setIvr('');tone(480,.25,.08);tone(480,.25,.08,.35);
   setTimeout(()=>{const el=callEl();if(el)el.remove();document.body.classList.remove('tcall-on','tcall-mini');try{c.ac&&c.ac.close()}catch(e){}},1400);
   call=null}
+
+/* ---- customer call recording (More > Record call) ---- */
+function moreSheet(){const el=callEl();if(!el)return;const sh=el.querySelector('[data-sheet]'),lg=call.ui||call.lang;
+  if(!sh.hidden){sh.hidden=true;return}
+  sh.innerHTML='<button type="button" data-rec><span class="rdot'+(call.rec?' on':'')+'"></span>'+esc(cw(call.rec?'recStop':'recStart',lg))+'</button><button type="button" data-shclose>'+esc(cw('recClose',lg))+'</button>';sh.hidden=false}
+function recMark(){const el=callEl();if(!el)return;el.classList.toggle('recon',!!call.rec);const mb=el.querySelector('[data-more]');if(mb)mb.classList.toggle('on',!!call.rec);const sh=el.querySelector('[data-sheet]');if(sh)sh.hidden=true}
+function recStart(){if(!call||call.rec)return;if(!window.MediaRecorder||!call.ac||!call.ac.createMediaStreamDestination){toast2(cw('recNo',call.ui||call.lang));return}
+  try{const a=call.ac,dest=a.createMediaStreamDestination();outNode().connect(dest);
+    if(call.stream){call.recMic=a.createMediaStreamSource(call.stream);call.recMic.connect(dest)}
+    if(call.remote){try{call.recRem=a.createMediaStreamSource(call.remote);call.recRem.connect(dest)}catch(e){}}
+    const mt=['audio/mp4','audio/webm;codecs=opus','audio/webm'].filter(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))[0];
+    const mr=new MediaRecorder(dest.stream,mt?{mimeType:mt}:undefined),ch=[];mr.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};mr.start(1000);
+    call.rec={mr,ch,dest,type:mr.mimeType||mt||'audio/webm',t0:Date.now()};recMark();
+    if(call.id)fb.update('calls/'+call.id,{callerRec:true}).catch(()=>{})}catch(e){toast2(cw('recNo',call.ui||call.lang))}}
+function recStop(){const c=call;if(!c||!c.rec)return;const r=c.rec;c.rec=null;recMark();
+  try{c.out&&c.out.disconnect(r.dest)}catch(e){}try{c.recMic&&c.recMic.disconnect()}catch(e){}try{c.recRem&&c.recRem.disconnect()}catch(e){}
+  if(c.id)fb.update('calls/'+c.id,{callerRec:false}).catch(()=>{});
+  const lg=c.ui||c.lang;r.mr.onstop=()=>{const blob=new Blob(r.ch,{type:r.type});if(blob.size<1000)return;recOffer(blob,r.type,lg)};try{r.mr.stop()}catch(e){}}
+function recOffer(blob,type,lg){let card=document.getElementById('tcrec');if(card)card.remove();card=document.createElement('div');card.id='tcrec';
+  const d=new Date(),p=n=>String(n).padStart(2,'0'),name='thean-call-'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+(/mp4/.test(type)?'.m4a':'.webm');
+  card.innerHTML='<span>'+esc(cw('recReady',lg))+'</span><button type="button" data-rsave>'+esc(cw('recSave',lg))+'</button><button type="button" data-rx aria-label="'+esc(cw('recClose',lg))+'">'+I('close')+'</button>';
+  document.body.appendChild(card);
+  card.onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.hasAttribute('data-rx')){card.remove();return}
+    const file=new File([blob],name,{type:blob.type||type});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:name}).catch(()=>{});return}
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},3000)}}
 function toast2(t){const d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),5000)}
 window.TheanCall={start:callStart,enabled:callOn};
 
