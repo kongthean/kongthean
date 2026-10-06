@@ -1127,9 +1127,14 @@ html[data-skin="kbach"][lang="km"] .emb{letter-spacing:0}
 @media (prefers-reduced-motion:reduce){.pbscene *,[data-skin="pchum"] .tiles .tile .ic{animation:none!important}}
 
 /* ---- web call screen ---- */
-#tcall{position:fixed;inset:0;z-index:120;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:14px;padding:calc(54px + env(safe-area-inset-top,0px)) 22px calc(34px + env(safe-area-inset-bottom,0px));color:#fff;font-family:var(--body);background:radial-gradient(120% 70% at 50% 0%,#3a4a5e 0%,#1c2531 55%,#0e131a 100%);animation:tclIn .25s ease-out}
-@keyframes tclIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+#tcall{position:fixed;inset:0;z-index:2147483000;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:14px;padding:calc(54px + env(safe-area-inset-top,0px)) 22px calc(34px + env(safe-area-inset-bottom,0px));color:#fff;font-family:var(--body);background:#1b222b;animation:tclIn .25s ease-out}
+#tcall .tcl-dial{min-height:2.6rem;font-size:2.1rem;font-weight:300;letter-spacing:.08em;text-align:center;max-width:100%;overflow:hidden;white-space:nowrap;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-variant-numeric:tabular-nums;margin-top:-8px}
+#tcall.mini .tcl-dial{display:none}
+@keyframes tclIn{from{opacity:0}to{opacity:1}}
 body.tcall-on{overflow:hidden}
+body.tcall-on:not(.tcall-mini)>*:not(#tcall){visibility:hidden!important}
+#tcall{isolation:isolate;-webkit-transform:translateZ(0);transform:translateZ(0);-webkit-backface-visibility:hidden;backface-visibility:hidden}
+#tcall *{-webkit-backface-visibility:hidden;backface-visibility:hidden}
 #tcall .tcl-top{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
 #tcall .tcl-av{width:92px;height:92px;border-radius:50%;background:rgba(255,255,255,.12);overflow:hidden;display:grid;place-items:center;margin-bottom:8px;box-shadow:0 0 0 6px rgba(255,255,255,.05),0 0 0 14px rgba(255,255,255,.03)}
 #tcall .tcl-av img{width:100%;height:100%;object-fit:cover}
@@ -1148,15 +1153,15 @@ body.tcall-on{overflow:hidden}
 #tcall .tcl-hide{font-size:1rem;opacity:.9;padding:10px}
 #tcall [hidden]{display:none!important}
 #tcall.mini .tcl-bot{width:auto;display:block}#tcall.mini .tcl-hide,#tcall.mini .tcl-bot>span{display:none}
-#tcall .tcl-pad button{width:74px;height:74px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}
-#tcall .tcl-pad button:active{background:rgba(255,255,255,.34)}
+#tcall .tcl-pad button{width:74px;height:74px;border-radius:50%;background:#353d48;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}
+#tcall .tcl-pad button:active{background:#6b737d}
 #tcall .tcl-pad b{font-size:2rem;font-weight:300;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
 #tcall .tcl-pad small{font-size:.62rem;font-weight:600;letter-spacing:.18em;opacity:.9;margin-top:1px;line-height:1;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
 #tcall .tcl-pad button.sym b{margin-top:-4px}
 #tcall .tcl-pad button[data-k="0"] small{font-size:.9rem;letter-spacing:0;font-weight:400}
 #tcall .tcl-ctl{display:flex;gap:18px;justify-content:center}
 #tcall .tcl-ctl button{background:none;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.74rem;opacity:.92;width:66px;text-align:center;line-height:1.2}
-#tcall .tcl-ctl button span{width:62px;height:62px;border-radius:50%;background:rgba(255,255,255,.14);display:grid;place-items:center}
+#tcall .tcl-ctl button span{width:62px;height:62px;border-radius:50%;background:#353d48;display:grid;place-items:center}
 #tcall .tcl-ctl button.on span{background:#fff;color:#1c2531}
 #tcall .tcl-ctl .i{width:26px;height:26px}
 #tcall .tcl-end{width:72px;height:72px;border-radius:50%;border:0;background:#e5483f;color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 24px rgba(229,72,63,.35);flex:none}
@@ -2575,12 +2580,21 @@ function callForm(){var c=JSON.parse(JSON.stringify(S.call||{})),P=c.prompts=c.p
   var m=modal('Call us (web call)','<p style="margin:0;color:var(--muted);font-size:.92rem;line-height:1.55">Visitors tap <b>Call us</b> on the Contact page or in the chat. They see a phone screen with the number and hear the greeting twice. After they press 1 (Khmer) or 2 (English), they choose a topic: 1 general inquiry, 2 donation, 3 copyright report. Then they hear the please-wait message and then a ringing tone while your <b>chat inbox</b> rings. If they press nothing, the call ends. Keep the inbox open and set to <b>Available</b> to receive calls. Calls are free and go over the internet.</p>'+
    '<label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-con style="width:auto"'+(c.enabled===false?'':' checked')+'> Show the Call us button</label>'+
    fieldHtml(['number','Number shown on the call screen','text'],c.number||'203')+'<label class="f">Number style<select data-nst>'+[['thin','Thin'],['light','Light (default)'],['regular','Regular'],['bold','Bold']].map(function(o){return '<option value="'+o[0]+'"'+((c.numStyle||'light')===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select></label>'+fieldHtml(['ringSec','Seconds of ringing tone before the no-answer message','text'],String(c.ringSec||35))+
+   '<h4 style="margin:6px 0 0">Topic menu</h4><p style="margin:0;color:var(--muted);font-size:.86rem;line-height:1.55">After choosing a language, callers press a number to choose a topic. Up to 9 topics. Your agents see the topic when the call rings. After you change topics, record the two Topic menu messages again.</p><div data-tl style="display:grid;gap:8px"></div><button class="btn sm soft" type="button" data-tadd>'+I('plus')+' Add topic</button>'+
    '<h4 style="margin:6px 0 0">Voice messages</h4><p style="margin:0;color:var(--muted);font-size:.86rem;line-height:1.55"><b>Please record all 8.</b> iPhones have no Khmer voice, so the Khmer messages are only heard after you record them. Tap Record, read the text in a calm, clear voice, then tap Stop. Record in a quiet room, holding the phone about 20 cm from your mouth.</p><div data-pr style="display:grid;gap:10px"></div>'+
    '<div style="display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap"><button class="btn soft" type="button" data-ctest>'+I('phone')+' Test call</button><span style="display:flex;gap:8px"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-cok>Save</button></span></div>');
   function draw(){m.querySelector('[data-pr]').innerHTML=CALL_PROMPTS.map(function(p){var u=P[p[0]],r=rec&&rec.key===p[0];
     return '<div style="border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:8px"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><b>'+esc(p[1])+'</b><small style="color:'+(u?'var(--ok)':'var(--muted)')+'">'+(r?'Recording…':u?(p[3]?(p[0]==='ringTone'?'Your tone':'Your music'):'Your voice'):(p[3]?(p[0]==='ringTone'?'Standard tuut':'Built-in tune'):'Phone voice'))+'</small></div>'+
-     '<div style="font-size:.86rem;color:var(--muted);line-height:1.5">'+(p[3]?esc(p[2]):'Say: “'+esc(p[2])+'”')+'</div><div style="display:flex;gap:6px;flex-wrap:wrap" data-pk="'+p[0]+'">'+
+     '<div style="font-size:.86rem;color:var(--muted);line-height:1.5">'+(p[3]?esc(p[2]):'Say: “'+esc(p[0]==='topicsKm'?tText('km'):p[0]==='topicsEn'?tText('en'):p[2])+'”')+'</div><div style="display:flex;gap:6px;flex-wrap:wrap" data-pk="'+p[0]+'">'+
      (p[3]?'':'<button class="btn sm'+(r?'':' soft')+'" type="button" data-prec>'+I('mic')+(r?' Stop':' Record')+'</button>')+'<button class="btn sm soft" type="button" data-pup>'+I('upload')+' Upload</button>'+(u?'<button class="btn sm soft" type="button" data-pplay>'+I('play')+' Play</button><button class="btn sm del" type="button" data-prm>Remove</button>':'')+'</div><small data-pmsg style="color:var(--muted)"></small></div>'}).join('')}
+  var TL=(Array.isArray(c.topics)&&c.topics.length?c.topics:[{id:'general',en:'General inquiry',km:'ការសាកសួរទូទៅ'},{id:'donation',en:'Donation',km:'ការបរិច្ចាគ'},{id:'copyright',en:'Copyright report',km:'ការរាយការណ៍ពីម្ចាស់កម្មសិទ្ធិ'}]).map(function(t){return {id:t.id||'',en:t.en||'',km:t.km||''}}),tlEdited=false;
+  function tRead(){m.querySelectorAll('[data-trow]').forEach(function(r,i){if(TL[i]){TL[i].en=r.querySelector('[data-ten]').value.trim();TL[i].km=r.querySelector('[data-tkm]').value.trim()}})}
+  function tDraw(){m.querySelector('[data-tl]').innerHTML=TL.map(function(t,i){return '<div data-trow style="display:grid;grid-template-columns:26px minmax(0,1fr) 40px;gap:8px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:8px"><b style="font-size:1.3rem;text-align:center">'+(i+1)+'</b><span style="display:grid;gap:6px;min-width:0"><input style="width:100%;min-width:0;box-sizing:border-box" data-ten placeholder="English, e.g. General inquiry" value="'+esc(t.en)+'"><input style="width:100%;min-width:0;box-sizing:border-box" data-tkm placeholder="ខ្មែរ ឧ. ការសាកសួរទូទៅ" value="'+esc(t.km)+'"></span><span style="display:grid;gap:4px;justify-items:center"><button class="btn sm soft" style="padding:6px;min-width:0" type="button" data-tup="'+i+'" aria-label="Move up"'+(i?'':' disabled')+'>'+I('up')+'</button><button class="btn sm del" style="padding:6px;min-width:0" type="button" data-trm="'+i+'" aria-label="Remove">'+I('close')+'</button></span></div>'}).join('');
+    var ab=m.querySelector('[data-tadd]');if(ab)ab.hidden=TL.length>=9}
+  function tText(lg){var kd=function(n){return String(n).replace(/\d/g,function(d){return '០១២៣៤៥៦៧៨៩'[d]})};
+    if(!tlEdited&&!(Array.isArray(c.topics)&&c.topics.length))return lg==='km'?CALL_PROMPTS[2][2]:CALL_PROMPTS[3][2];
+    var L=TL.filter(function(t){return t.en||t.km});return lg==='km'?L.map(function(t,i){return 'សម្រាប់'+(t.km||t.en)+' សូមចុចលេខ '+kd(i+1)+'។'}).join(' '):L.map(function(t,i){return 'For '+(t.en||t.km)+', press '+(i+1)+'.'}).join(' ')}
+  m.addEventListener('input',function(e){if(e.target.closest('[data-trow]')){tlEdited=true;tRead();draw()}});
   function msg(k,t){var e=m.querySelector('[data-pk="'+k+'"]');e=e&&e.parentNode.querySelector('[data-pmsg]');if(e)e.textContent=t}
   function send(k,blob,name){if(!mediaOK()){msg(k,'Set up Photo & video storage first (Settings), then try again.');return}
     msg(k,'Uploading… 0%');uploadFile(blob,'video',function(p){msg(k,'Uploading… '+p+'%')},name).then(function(j){P[k]=j.secure_url.replace(/\.[a-z0-9]+$/i,'.mp3');draw();msg(k,'Saved. Tap Save to keep it.')}).catch(function(e){msg(k,'Upload failed: '+e)})}
@@ -2590,15 +2604,18 @@ function callForm(){var c=JSON.parse(JSON.stringify(S.call||{})),P=c.prompts=c.p
       mr.onstop=function(){st.getTracks().forEach(function(t){t.stop()});var type=mr.mimeType||mt||'audio/webm',b=new Blob(ch,{type:type});rec=null;draw();if(b.size<800){msg(k,'Nothing was recorded. Try again.');return}send(k,b,k+(/mp4/.test(type)?'.m4a':'.webm'))};
       mr.start();draw()}).catch(function(){toast('Allow the microphone for this website to record.')})}
   m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var row=b.closest('[data-pk]'),k=row&&row.dataset.pk;
+    if(b.hasAttribute('data-tadd')){tRead();if(TL.length<9){TL.push({id:'',en:'',km:''});tlEdited=true;tDraw();draw()}return}
+    if(b.dataset.trm!=null){tRead();if(TL.length<=1){toast('Keep at least one topic');return}TL.splice(+b.dataset.trm,1);tlEdited=true;tDraw();draw();return}
+    if(b.dataset.tup!=null){tRead();var ti=+b.dataset.tup;if(ti>0){var tt=TL[ti];TL[ti]=TL[ti-1];TL[ti-1]=tt;tlEdited=true;tDraw();draw()}return}
     if(b.hasAttribute('data-prec')){if(rec&&rec.key===k){rec.mr.stop();return}if(rec){toast('Stop the other recording first');return}startRec(k);return}
     if(b.hasAttribute('data-pup')){var i=document.createElement('input');i.type='file';i.accept='audio/*,.mp3,.m4a,.wav';i.onchange=function(){var f=i.files[0];if(!f)return;if(f.size>15*1048576){msg(k,'This file is too big. Please keep it under 15 MB.');return}send(k,f,f.name)};i.click();return}
     if(b.hasAttribute('data-pplay')){try{if(player)player.pause()}catch(x){}player=new Audio(P[k]);player.play().catch(function(){toast('Could not play this message')});return}
     if(b.hasAttribute('data-prm')){delete P[k];draw();return}
-    if(b.hasAttribute('data-ctest')||b.hasAttribute('data-cok')){c.enabled=m.querySelector('[data-con]').checked;c.number=(m.querySelector('[data-k="number"]').value.trim()||'203').slice(0,20);c.numStyle=m.querySelector('[data-nst]').value;c.ringSec=Math.max(15,Math.min(180,parseInt(m.querySelector('[data-k="ringSec"]').value,10)||35));
+    if(b.hasAttribute('data-ctest')||b.hasAttribute('data-cok')){c.enabled=m.querySelector('[data-con]').checked;c.number=(m.querySelector('[data-k="number"]').value.trim()||'203').slice(0,20);c.numStyle=m.querySelector('[data-nst]').value;tRead();if(tlEdited){var TT=TL.filter(function(t){return t.en||t.km}).slice(0,9);c.topics=TT.map(function(t,i){return {id:t.id||('t'+(i+1)+'_'+Date.now().toString(36)),en:t.en,km:t.km}})}c.ringSec=Math.max(15,Math.min(180,parseInt(m.querySelector('[data-k="ringSec"]').value,10)||35));
       if(rec){try{rec.mr.stop()}catch(x){}}try{if(player)player.pause()}catch(x){}
       S.call=c;m.remove();changed();
       if(b.hasAttribute('data-ctest')){if(window.TheanCall)window.TheanCall.start();else toast('Not ready yet, try again in a moment')}else toast('Saved. The website updates in a moment.')}});
-  draw()}
+  tDraw();draw()}
 function maintCard(){var on=MAINT&&MAINT.on;return dCard('gear','Maintenance mode',on?'ON: visitors see the maintenance screen. Tap to turn off.':'Off. Tap once to show visitors a maintenance screen (chat still works).','data-act="maint"')}
 function maintSet(v,msg){if(!window.TheanAdmin||!window.TheanAdmin.setMaint){toast('Not connected yet, try again in a moment');return}
   window.TheanAdmin.setMaint(v).then(function(){toast(msg)}).catch(function(e){toast(/permission/i.test(String(e&&(e.code||e.message)))?'Only the owner can change maintenance mode':'Not saved: '+(e&&(e.code||e.message)))})}
@@ -3241,7 +3258,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261006-0359',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261006-0927',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
@@ -3303,7 +3320,11 @@ const CW={
 const cw=(k,lg)=>(CW[lg||'en']||CW.en)[k];
 const ICE={iceServers:[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302','stun:stun2.l.google.com:19302']}]};
 let call=null;
-const TOPIC_EN={general:'General inquiry',donation:'Donation',copyright:'Copyright report'};
+const TOPIC_DEF=[{id:'general',en:'General inquiry',km:'ការសាកសួរទូទៅ'},{id:'donation',en:'Donation',km:'ការបរិច្ចាគ'},{id:'copyright',en:'Copyright report',km:'ការរាយការណ៍ពីម្ចាស់កម្មសិទ្ធិ'}];
+function topicList(){const t=callCfg().topics;return Array.isArray(t)&&t.filter(x=>x&&(x.en||x.km)).length?t.filter(x=>x&&(x.en||x.km)).slice(0,9):TOPIC_DEF}
+function topicsCustom(){const t=callCfg().topics;return Array.isArray(t)&&t.filter(x=>x&&(x.en||x.km)).length>0}
+function topicsText(lg){if(!topicsCustom())return CW[lg].topics;const L=topicList();
+  return lg==='km'?L.map((t,i)=>'សម្រាប់'+(t.km||t.en)+' សូមចុចលេខ '+kmDig(i+1)+'។').join(' '):L.map((t,i)=>'For '+(t.en||t.km)+', press '+(i+1)+'.').join(' ')}
 function callCfg(){return (T.S&&T.S.call)||{}}
 function callOn(){return callCfg().enabled!==false}
 /* ---- sounds ---- */
@@ -3341,18 +3362,18 @@ function playOne(name,txt,vl){/* recorded voice from the editor, else the phone'
     speak()})}
 async function sayPrompt(key,lg){
   if(key==='menu'){await playOne('menuKm',CW.km.menuKm,'km');if(!call||call.state!=='menu')return;await sleepC(300);if(!call||call.state!=='menu')return;return playOne('menuEn',CW.en.menuEn,'en')}
-  return playOne(key+(lg==='km'?'Km':'En'),cw(key,lg),lg)}
+  return playOne(key+(lg==='km'?'Km':'En'),key==='topics'?topicsText(lg):cw(key,lg),lg)}
 /* ---- screen ---- */
 function callEl(){return document.getElementById('tcall')}
 function drawCall(){let el=callEl();const lg=call.lang;
   if(!el){el=document.createElement('div');el.id='tcall';el.setAttribute('role','dialog');el.setAttribute('aria-label','Call');document.body.appendChild(el);document.body.classList.add('tcall-on')}
   el.innerHTML='<div class="tcl-top"><b class="tcl-big" style="font-weight:'+({thin:200,regular:400,bold:700}[callCfg().numStyle]||300)+'">'+esc(callCfg().number||'203')+'</b><span class="tcl-st" data-st>'+esc(cw('calling',lg))+'</span></div>'+
-   '<div class="tcl-ivr" data-ivr hidden></div>'+
+   '<div class="tcl-dial" data-dial></div><div class="tcl-ivr" data-ivr hidden></div>'+
    '<div class="tcl-pad" data-pad hidden>'+[['1',''],['2','ABC'],['3','DEF'],['4','GHI'],['5','JKL'],['6','MNO'],['7','PQRS'],['8','TUV'],['9','WXYZ'],['*',''],['0','+'],['#','']].map(x=>'<button type="button" data-k="'+x[0]+'"'+(x[0]==='*'||x[0]==='#'?' class="sym"':'')+'><b>'+x[0]+'</b><small>'+(x[1]||'&nbsp;')+'</small></button>').join('')+'</div>'+
    '<div class="tcl-ctl" data-ctl>'+[['data-spk','sound','speaker'],['data-kp','grid','keypad'],['data-chat','chat','chat'],['data-mute','mic','mute']].map(x=>'<button type="button" '+x[0]+'><span>'+I(x[1])+'</span><small>'+esc(cw(x[2],lg))+'</small></button>').join('')+'</div>'+
    '<div class="tcl-bot"><span></span><button type="button" class="tcl-end" data-end aria-label="'+esc(cw('end',lg))+'">'+I('phoneoff')+'</button><button type="button" class="tcl-hide" data-hide hidden>'+esc(lg==='km'?'លាក់':'Hide')+'</button></div><audio data-remote autoplay playsinline></audio>';
   el.onclick=e=>{if(el.classList.contains('mini')&&e.target.closest('.tcl-top')){setMini(false);return}const b=e.target.closest('button');if(!b)return;
-    if(b.dataset.k){dtmf(b.dataset.k);onKey(b.dataset.k);return}
+    if(b.dataset.k){dtmf(b.dataset.k);addDigit(b.dataset.k);onKey(b.dataset.k);return}
     if(b.hasAttribute('data-end')){callEnd(true);return}
     if(b.hasAttribute('data-kp')){showPad(true);return}
     if(b.hasAttribute('data-hide')){showPad(false);return}
@@ -3361,10 +3382,11 @@ function drawCall(){let el=callEl();const lg=call.lang;
     if(b.hasAttribute('data-mute')){call.muted=!call.muted;if(call.stream)call.stream.getAudioTracks().forEach(t=>t.enabled=!call.muted);b.classList.toggle('on',call.muted);return}}}
 function setSpk(){if(!call||!call.ac)return;outNode().gain.value=call.spk?2.4:1;/* phones do not let websites pick earpiece or loudspeaker, so Speaker makes the call louder */
   if(call.remote){try{if(!call.rg){call.rg=call.ac.createGain();call.ac.createMediaStreamSource(call.remote).connect(call.rg);call.rg.connect(call.ac.destination)}call.rg.gain.value=call.spk?1.6:0}catch(e){}}}
+function addDigit(k){if(!call)return;call.dial=((call.dial||'')+k).slice(-18);const d=callEl()&&callEl().querySelector('[data-dial]');if(d)d.textContent=call.dial}
 function setMini(v){const el=callEl();if(!el)return;el.classList.toggle('mini',v);document.body.classList.toggle('tcall-mini',v)}
 function setSt(t){const e=callEl()&&callEl().querySelector('[data-st]');if(e)e.textContent=t}
 function setIvr(t){const e=callEl()&&callEl().querySelector('[data-ivr]');if(!e)return;e.hidden=!t;e.textContent=t||''}
-function showPad(v){const el=callEl();if(!el)return;el.querySelector('[data-pad]').hidden=!v;el.querySelector('[data-ctl]').hidden=v;el.querySelector('[data-hide]').hidden=!v}
+function showPad(v){const el=callEl();if(!el)return;if(!v){call.dial='';const d=el.querySelector('[data-dial]');if(d)d.textContent=''}el.querySelector('[data-pad]').hidden=!v;el.querySelector('[data-ctl]').hidden=v;el.querySelector('[data-hide]').hidden=!v}
 function clock(){if(!call||!call.t0)return '';const s=Math.floor((Date.now()-call.t0)/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
 function startClock(){if(!call||call.tick)return;call.t0=Date.now();const f=()=>{if(call&&!call.busy)setSt(clock())};f();call.tick=setInterval(f,1000)}
 /* ---- flow ---- */
@@ -3389,7 +3411,7 @@ async function callStart(){
 }
 function onKey(k){if(!call)return;
   if(call.state==='menu'){if(k!=='1'&&k!=='2')return;stopVoice();call.lang=k==='1'?'km':'en';call.state='topic';drawLabels();topicMenu();return}
-  if(call.state==='topic'){const T={'1':'general','2':'donation','3':'copyright'}[k];if(!T)return;stopVoice();call.topic=T;call.state='wait';showPad(false);afterLang().catch(()=>{});holdFlow()}}
+  if(call.state==='topic'){const L=topicList(),t=L[+k-1];if(!t||k==='0')return;stopVoice();call.topic=t.id||('t'+k);call.topicEn=t.en||t.km;call.topicKm=t.km||t.en;call.state='wait';afterLang().catch(()=>{});holdFlow()}}
 async function topicMenu(){const lg=call.lang;await sleepC(300);
   for(let i=0;i<2;i++){if(!call||call.state!=='topic')return;await sayPrompt('topics',lg);if(!call||call.state!=='topic')return;await sleepC(5000)}
   if(call&&call.state==='topic')callEnd(false)}
@@ -3399,10 +3421,10 @@ function drawLabels(){const el=callEl();if(!el)return;const lg=call.lang;[['data
 async function anyAgentOnline(){try{const a=await fb.get('agents')||{};const now=Date.now();return Object.keys(a).some(k=>a[k]&&a[k].online&&(!a[k].lastSeen||now-ms(a[k].lastSeen)<5*60000))}catch(e){return false}}
 async function afterLang(){const lg=call.lang;
   try{await ensureChat(lg)}catch(e){await ensureUser()}if(!call)return;
-  const ref=await fb.push('calls',{callerUid:user.uid,lang:lg,topic:call.topic||'general',status:'ringing',leg:0,createdAt:TS,name:(chat&&chat.name)||'',page:location.hash||'#/',ua:navigator.userAgent.slice(0,120)});
+  const ref=await fb.push('calls',{callerUid:user.uid,lang:lg,topic:call.topic||'general',topicName:call.topicEn||'',topicKm:call.topicKm||'',status:'ringing',leg:0,createdAt:TS,name:(chat&&chat.name)||'',page:location.hash||'#/',ua:navigator.userAgent.slice(0,120)});
   if(!call){fb.update('calls/'+ref.key,{status:'cancelled',endedAt:TS}).catch(()=>{});return}
   call.id=ref.key;call.leg=0;const P='calls/'+call.id;
-  try{await say({from:'system',text:'Web call started · '+(lg==='km'?'Khmer':'English')+' · '+TOPIC_EN[call.topic||'general'],staff:true});await touch({lastMsg:'Web call: '+TOPIC_EN[call.topic||'general']+' ('+(lg==='km'?'Khmer':'English')+')',lastFrom:'visitor'})}catch(e){}
+  try{await say({from:'system',text:'Web call started · '+(lg==='km'?'Khmer':'English')+' · '+(call.topicEn||'General inquiry'),staff:true});await touch({lastMsg:'Web call: '+(call.topicEn||'General inquiry')+' ('+(lg==='km'?'Khmer':'English')+')',lastFrom:'visitor'})}catch(e){}
   try{fb.onDisconnect(P,{status:'ended',endedAt:TS,endedBy:'caller'})}catch(e){}
   call.unsub.push(fb.on(P,v=>{if(!call||!v)return;
     if(v.status==='active'&&(+v.leg||0)>call.leg){call.agent=v.agentName||'';newLeg(+v.leg)}
