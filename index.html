@@ -1126,9 +1126,14 @@ html[data-skin="kbach"][lang="km"] .emb{letter-spacing:0}
 @media (prefers-reduced-motion:reduce){.pbscene *,[data-skin="pchum"] .tiles .tile .ic{animation:none!important}}
 
 /* ---- web call screen ---- */
-#tcall{position:fixed;inset:0;z-index:120;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:14px;padding:calc(54px + env(safe-area-inset-top,0px)) 22px calc(34px + env(safe-area-inset-bottom,0px));color:#fff;font-family:var(--body);background:radial-gradient(120% 70% at 50% 0%,#3a4a5e 0%,#1c2531 55%,#0e131a 100%);animation:tclIn .25s ease-out}
-@keyframes tclIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+#tcall{position:fixed;inset:0;z-index:2147483000;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:14px;padding:calc(54px + env(safe-area-inset-top,0px)) 22px calc(34px + env(safe-area-inset-bottom,0px));color:#fff;font-family:var(--body);background:#1b222b;animation:tclIn .25s ease-out}
+#tcall .tcl-dial{min-height:2.6rem;font-size:2.1rem;font-weight:300;letter-spacing:.08em;text-align:center;max-width:100%;overflow:hidden;white-space:nowrap;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-variant-numeric:tabular-nums;margin-top:-8px}
+#tcall.mini .tcl-dial{display:none}
+@keyframes tclIn{from{opacity:0}to{opacity:1}}
 body.tcall-on{overflow:hidden}
+body.tcall-on:not(.tcall-mini)>*:not(#tcall){visibility:hidden!important}
+#tcall{isolation:isolate;-webkit-transform:translateZ(0);transform:translateZ(0);-webkit-backface-visibility:hidden;backface-visibility:hidden}
+#tcall *{-webkit-backface-visibility:hidden;backface-visibility:hidden}
 #tcall .tcl-top{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
 #tcall .tcl-av{width:92px;height:92px;border-radius:50%;background:rgba(255,255,255,.12);overflow:hidden;display:grid;place-items:center;margin-bottom:8px;box-shadow:0 0 0 6px rgba(255,255,255,.05),0 0 0 14px rgba(255,255,255,.03)}
 #tcall .tcl-av img{width:100%;height:100%;object-fit:cover}
@@ -1147,15 +1152,15 @@ body.tcall-on{overflow:hidden}
 #tcall .tcl-hide{font-size:1rem;opacity:.9;padding:10px}
 #tcall [hidden]{display:none!important}
 #tcall.mini .tcl-bot{width:auto;display:block}#tcall.mini .tcl-hide,#tcall.mini .tcl-bot>span{display:none}
-#tcall .tcl-pad button{width:74px;height:74px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}
-#tcall .tcl-pad button:active{background:rgba(255,255,255,.34)}
+#tcall .tcl-pad button{width:74px;height:74px;border-radius:50%;background:#353d48;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}
+#tcall .tcl-pad button:active{background:#6b737d}
 #tcall .tcl-pad b{font-size:2rem;font-weight:300;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
 #tcall .tcl-pad small{font-size:.62rem;font-weight:600;letter-spacing:.18em;opacity:.9;margin-top:1px;line-height:1;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
 #tcall .tcl-pad button.sym b{margin-top:-4px}
 #tcall .tcl-pad button[data-k="0"] small{font-size:.9rem;letter-spacing:0;font-weight:400}
 #tcall .tcl-ctl{display:flex;gap:18px;justify-content:center}
 #tcall .tcl-ctl button{background:none;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.74rem;opacity:.92;width:66px;text-align:center;line-height:1.2}
-#tcall .tcl-ctl button span{width:62px;height:62px;border-radius:50%;background:rgba(255,255,255,.14);display:grid;place-items:center}
+#tcall .tcl-ctl button span{width:62px;height:62px;border-radius:50%;background:#353d48;display:grid;place-items:center}
 #tcall .tcl-ctl button.on span{background:#fff;color:#1c2531}
 #tcall .tcl-ctl .i{width:26px;height:26px}
 #tcall .tcl-end{width:72px;height:72px;border-radius:50%;border:0;background:#e5483f;color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 24px rgba(229,72,63,.35);flex:none}
@@ -3239,7 +3244,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261006-0359',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261006-0521',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
@@ -3345,12 +3350,12 @@ function callEl(){return document.getElementById('tcall')}
 function drawCall(){let el=callEl();const lg=call.lang;
   if(!el){el=document.createElement('div');el.id='tcall';el.setAttribute('role','dialog');el.setAttribute('aria-label','Call');document.body.appendChild(el);document.body.classList.add('tcall-on')}
   el.innerHTML='<div class="tcl-top"><b class="tcl-big" style="font-weight:'+({thin:200,regular:400,bold:700}[callCfg().numStyle]||300)+'">'+esc(callCfg().number||'203')+'</b><span class="tcl-st" data-st>'+esc(cw('calling',lg))+'</span></div>'+
-   '<div class="tcl-ivr" data-ivr hidden></div>'+
+   '<div class="tcl-dial" data-dial></div><div class="tcl-ivr" data-ivr hidden></div>'+
    '<div class="tcl-pad" data-pad hidden>'+[['1',''],['2','ABC'],['3','DEF'],['4','GHI'],['5','JKL'],['6','MNO'],['7','PQRS'],['8','TUV'],['9','WXYZ'],['*',''],['0','+'],['#','']].map(x=>'<button type="button" data-k="'+x[0]+'"'+(x[0]==='*'||x[0]==='#'?' class="sym"':'')+'><b>'+x[0]+'</b><small>'+(x[1]||'&nbsp;')+'</small></button>').join('')+'</div>'+
    '<div class="tcl-ctl" data-ctl>'+[['data-spk','sound','speaker'],['data-kp','grid','keypad'],['data-chat','chat','chat'],['data-mute','mic','mute']].map(x=>'<button type="button" '+x[0]+'><span>'+I(x[1])+'</span><small>'+esc(cw(x[2],lg))+'</small></button>').join('')+'</div>'+
    '<div class="tcl-bot"><span></span><button type="button" class="tcl-end" data-end aria-label="'+esc(cw('end',lg))+'">'+I('phoneoff')+'</button><button type="button" class="tcl-hide" data-hide hidden>'+esc(lg==='km'?'លាក់':'Hide')+'</button></div><audio data-remote autoplay playsinline></audio>';
   el.onclick=e=>{if(el.classList.contains('mini')&&e.target.closest('.tcl-top')){setMini(false);return}const b=e.target.closest('button');if(!b)return;
-    if(b.dataset.k){dtmf(b.dataset.k);onKey(b.dataset.k);return}
+    if(b.dataset.k){dtmf(b.dataset.k);addDigit(b.dataset.k);onKey(b.dataset.k);return}
     if(b.hasAttribute('data-end')){callEnd(true);return}
     if(b.hasAttribute('data-kp')){showPad(true);return}
     if(b.hasAttribute('data-hide')){showPad(false);return}
@@ -3359,10 +3364,11 @@ function drawCall(){let el=callEl();const lg=call.lang;
     if(b.hasAttribute('data-mute')){call.muted=!call.muted;if(call.stream)call.stream.getAudioTracks().forEach(t=>t.enabled=!call.muted);b.classList.toggle('on',call.muted);return}}}
 function setSpk(){if(!call||!call.ac)return;outNode().gain.value=call.spk?2.4:1;/* phones do not let websites pick earpiece or loudspeaker, so Speaker makes the call louder */
   if(call.remote){try{if(!call.rg){call.rg=call.ac.createGain();call.ac.createMediaStreamSource(call.remote).connect(call.rg);call.rg.connect(call.ac.destination)}call.rg.gain.value=call.spk?1.6:0}catch(e){}}}
+function addDigit(k){if(!call)return;call.dial=((call.dial||'')+k).slice(-18);const d=callEl()&&callEl().querySelector('[data-dial]');if(d)d.textContent=call.dial}
 function setMini(v){const el=callEl();if(!el)return;el.classList.toggle('mini',v);document.body.classList.toggle('tcall-mini',v)}
 function setSt(t){const e=callEl()&&callEl().querySelector('[data-st]');if(e)e.textContent=t}
 function setIvr(t){const e=callEl()&&callEl().querySelector('[data-ivr]');if(!e)return;e.hidden=!t;e.textContent=t||''}
-function showPad(v){const el=callEl();if(!el)return;el.querySelector('[data-pad]').hidden=!v;el.querySelector('[data-ctl]').hidden=v;el.querySelector('[data-hide]').hidden=!v}
+function showPad(v){const el=callEl();if(!el)return;if(!v){call.dial='';const d=el.querySelector('[data-dial]');if(d)d.textContent=''}el.querySelector('[data-pad]').hidden=!v;el.querySelector('[data-ctl]').hidden=v;el.querySelector('[data-hide]').hidden=!v}
 function clock(){if(!call||!call.t0)return '';const s=Math.floor((Date.now()-call.t0)/1000);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
 function startClock(){if(!call||call.tick)return;call.t0=Date.now();const f=()=>{if(call&&!call.busy)setSt(clock())};f();call.tick=setInterval(f,1000)}
 /* ---- flow ---- */
@@ -3387,7 +3393,7 @@ async function callStart(){
 }
 function onKey(k){if(!call)return;
   if(call.state==='menu'){if(k!=='1'&&k!=='2')return;stopVoice();call.lang=k==='1'?'km':'en';call.state='topic';drawLabels();topicMenu();return}
-  if(call.state==='topic'){const T={'1':'general','2':'donation','3':'copyright'}[k];if(!T)return;stopVoice();call.topic=T;call.state='wait';showPad(false);afterLang().catch(()=>{});holdFlow()}}
+  if(call.state==='topic'){const T={'1':'general','2':'donation','3':'copyright'}[k];if(!T)return;stopVoice();call.topic=T;call.state='wait';afterLang().catch(()=>{});holdFlow()}}
 async function topicMenu(){const lg=call.lang;await sleepC(300);
   for(let i=0;i<2;i++){if(!call||call.state!=='topic')return;await sayPrompt('topics',lg);if(!call||call.state!=='topic')return;await sleepC(5000)}
   if(call&&call.state==='topic')callEnd(false)}
