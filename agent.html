@@ -856,7 +856,7 @@ function callWatch(){callUnsub=DB.onRecent('calls','createdAt',40,list=>{calls=l
     list.filter(callFresh).forEach(c=>{const key=c.id+':'+c.status+':'+(c.leg||0);if(!notified.has(key)){notified.add(key);if(!firstCalls)callNotify(c)}});firstCalls=false;
     if(onCall){const c=list.find(x=>x.id===onCall.id);if(c&&(c.status==='ended'||c.status==='cancelled'||c.status==='missed'||(c.agentUid&&c.agentUid!==me.uid)))hangUp(false,c.status==='ended'&&c.endedBy==='caller'?'The caller hung up':'')}
     drawIncoming();drawCallScreen();drawTop()},err=>{})}
-function callLang(c){return c.lang==='km'?'Khmer':'English'}
+function callLang(c){return c.langName||(c.lang==='km'?'Khmer':c.lang==='en'?'English':(c.lang||''))}
 const TOPICS={general:'General inquiry',donation:'Donation',copyright:'Copyright report'};
 function callTopic(c){return c.topicName||TOPICS[c.topic]||'General inquiry'}
 function callWho(c){const ch=chats.find(x=>x.id===c.callerUid);return (ch&&ch.name)||c.name||('Visitor '+String(c.callerUid||'').slice(0,4).toUpperCase())}
