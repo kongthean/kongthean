@@ -1271,7 +1271,8 @@ body.tcall-on.tcall-mini{overflow:auto}
 .ivv-say textarea{width:100%;box-sizing:border-box;font-size:.86rem}
 .ivv-b{display:flex;gap:6px;flex-wrap:wrap}
 .ivv [data-vmsg]{color:var(--muted);font-size:.8rem}
-.ivh5{margin:6px 0 0;font-size:.9rem}.ivh6{margin:4px 0 0;font-size:.84rem;color:var(--muted)}
+.ivh5{margin:10px 0 0;font-size:.9rem;border-top:1px solid var(--line);padding-top:12px}.ivsec-b>.ivh5:first-child{border-top:0;padding-top:0;margin-top:0}
+.ivnote{color:var(--muted);font-size:.82rem;line-height:1.5}.ivh6{margin:4px 0 0;font-size:.84rem;color:var(--muted)}
 .ivfoot{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap;position:sticky;bottom:-16px;background:var(--surface);padding:10px 0}
 </style>
 </head>
@@ -2680,7 +2681,12 @@ function ivrTopicLine(t,lang){var nm=(t.names&&(t.names[lang.id]||t.names.en||t.
 function ivrMsgText(name,lang){var d=IVR_TXT[name];return d&&lang&&(d[lang.id]||d[lang.tts])||''}
 function ivrModel(c){c=c||{};var P=c.prompts||{},iv=c.ivr;
   if(iv&&iv.v===2){iv.langs=iv.langs||[];iv.topics=iv.topics||[];iv.notes=iv.notes||[];iv.msgs=iv.msgs||{};
-    ['wait','busy','closed'].forEach(function(n){iv.msgs[n]=iv.msgs[n]||{on:true,clips:{},texts:{},bg:''}});return iv}
+    ['wait','busy','closed'].forEach(function(n){iv.msgs[n]=iv.msgs[n]||{on:true,clips:{},texts:{},bg:''}});
+    if(!iv.bg){var f=function(a){for(var i=0;i<a.length;i++){if(a[i])return a[i]}return ''};
+      iv.bg={greet:f(iv.langs.map(function(l){return l.bg}).concat(iv.notes.filter(function(n){return n.pos==='start'||n.pos==='afterLang'}).map(function(n){return n.bg}))),
+        topic:f(iv.topics.map(function(t){return t.bg||(t.info&&t.info.bg)}).concat(iv.notes.filter(function(n){return n.pos==='beforeTopic'||n.pos==='afterTopic'}).map(function(n){return n.bg}))),
+        wait:f([iv.msgs.wait.bg,iv.msgs.busy.bg]),closed:iv.msgs.closed.bg||''}}
+    return iv}
   var DEF=[{id:'general',en:'General inquiry',km:'ការសាកសួរទូទៅ'},{id:'donation',en:'Donation',km:'ការបរិច្ចាគ'},{id:'copyright',en:'Copyright report',km:'ការរាយការណ៍ពីម្ចាស់កម្មសិទ្ធិ'}];
   var T=(Array.isArray(c.topics)&&c.topics.filter(function(x){return x&&(x.en||x.km)}).length)?c.topics.filter(function(x){return x&&(x.en||x.km)}):DEF;
   function msg(n){return {on:true,clips:{km:P[n+'Km']||'',en:P[n+'En']||''},ck:{},texts:{},bg:''}}
@@ -2689,11 +2695,11 @@ function ivrModel(c){c=c||{};var P=c.prompts||{},iv=c.ivr;
            {id:'en',key:'2',name:'English',agent:'English',tts:'en',on:true,clip:P.menuEn||'',ck:P.menuEn?'2':'',text:'',bg:''}],
     topics:T.slice(0,9).map(function(t,i){return {id:t.id||('t'+(i+1)),key:String(i+1),type:'agent',on:true,names:{km:t.km||'',en:t.en||''},
       clips:{km:t.vKm||'',en:t.vEn||''},ck:{km:t.vKm?String(t.nKm||i+1):'',en:t.vEn?String(t.nEn||i+1):''},texts:{},bg:'',info:{clips:{},texts:{},bg:''}}}),
-    notes:[],msgs:{wait:msg('wait'),busy:msg('busy'),closed:msg('closed')}}}
+    notes:[],msgs:{wait:msg('wait'),busy:msg('busy'),closed:msg('closed')},bg:{greet:'',topic:'',wait:'',closed:''}}}
 function ivrUrls(iv){var out=[];function add(u){if(u&&/^https:\/\//.test(u)&&out.indexOf(u)<0)out.push(u)}
   function clips(o){if(o&&o.clips)Object.keys(o.clips).forEach(function(k){add(o.clips[k])});if(o)add(o.bg)}
   (iv.langs||[]).forEach(function(l){add(l.clip);add(l.bg)});(iv.topics||[]).forEach(function(t){clips(t);clips(t.info)});(iv.notes||[]).forEach(clips);
-  Object.keys(iv.msgs||{}).forEach(function(k){clips(iv.msgs[k])});return out}
+  Object.keys(iv.msgs||{}).forEach(function(k){clips(iv.msgs[k])});if(iv.bg)Object.keys(iv.bg).forEach(function(k){add(iv.bg[k])});return out}
 
 function callCard(){var c=S.call||{},iv=ivrModel(c),n=ivrUrls(iv).length;return dCard('phone','Call us (web call)',c.enabled===false?'Off. Tap to turn on and set up.':'On · number '+esc(c.number||'203')+' · '+iv.langs.filter(function(l){return l.on!==false}).length+' languages · '+iv.topics.filter(function(t){return t.on!==false}).length+' topics · '+n+' recordings','data-act="callform"')}
 function ivrCard(){return dCard('sound','Call menu (IVR)','Languages, topics, notices, messages, background music','data-act="ivrform"')}
@@ -2715,7 +2721,7 @@ function vKit(m,getV,setV,redraw){var rec=null,player=null;
   return {recording:function(p){return !!(rec&&rec.p===p)},stop:function(){if(rec){try{rec.mr.stop()}catch(x){}}try{if(player)player.pause()}catch(x){}}}}
 /* one voice row: label, words to say, record/upload/play/delete */
 function vRow(kit,p,url,o){o=o||{};var r=kit.recording(p),stale=url&&o.ck&&o.key&&o.ck!==o.key;
-  return '<div class="ivv" data-vp="'+esc(p)+'"'+(o.ckPath?' data-ck="'+esc(o.ckPath)+'" data-key="'+esc(o.key||'')+'"':'')+'><div class="ivv-h"><b>'+esc(o.label||'Voice')+'</b><small class="'+(stale?'bad':url?'ok':'')+'">'+(r?'Recording…':stale?'Number changed: record again':url?(o.music?'Your music':'Recorded'):(o.music?'None':(o.none||'Not recorded')))+'</small></div>'+
+  return '<div class="ivv" data-vp="'+esc(p)+'"'+(o.ckPath?' data-ck="'+esc(o.ckPath)+'" data-key="'+esc(o.key||'')+'"':'')+'><div class="ivv-h"><b>'+esc(o.label||'Voice')+'</b><small class="'+(stale?'bad':url?'ok':'')+'">'+(r?'Recording…':stale?'Number changed: record again':url?(o.music?'Your music':'Recorded'):(o.music?(o.none||'None'):(o.none||'Not recorded')))+'</small></div>'+
    (o.say!=null?'<div class="ivv-say">'+(o.textPath?'<textarea data-path="'+esc(o.textPath)+'" rows="2" placeholder="'+esc(o.say||'Type the words here. They are read aloud or shown on screen if you do not record.')+'">'+esc(o.text||'')+'</textarea>':'Say: “'+esc(o.say)+'”')+'</div>':'')+
    '<div class="ivv-b">'+(o.music?'':'<button class="btn sm'+(r?'':' soft')+'" type="button" data-vrec>'+I('mic')+(r?' Stop':' Record')+'</button>')+'<button class="btn sm soft" type="button" data-vup>'+I('upload')+(o.music?' Upload music':'')+'</button>'+(url?'<button class="btn sm soft" type="button" data-vplay aria-label="Play">'+I('play')+'</button><button class="btn sm del" type="button" data-vdel aria-label="Delete">'+I('trash')+'</button>':'')+'</div><small data-vmsg></small></div>'}
 function ivSw(path,on,label){return '<label class="ivsw"><input type="checkbox" data-path="'+esc(path)+'" data-bool data-redraw'+(on!==false?' checked':'')+'><span>'+esc(label||'On')+'</span></label>'}
@@ -2731,10 +2737,10 @@ function callForm(){var c=JSON.parse(JSON.stringify(S.call||{})),P=c.prompts=c.p
    '<label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-asch style="width:auto"'+(AW.sched?' checked':'')+'> Use opening hours</label>'+
    '<div style="display:flex;gap:10px"><label class="f" style="flex:1">Open from<input type="time" data-aopen value="'+esc(AW.open||'08:00')+'"></label><label class="f" style="flex:1">Close at<input type="time" data-aclose value="'+esc(AW.close||'17:00')+'"></label></div>'+
    '<div style="display:flex;gap:6px;flex-wrap:wrap">'+[[1,'Mon'],[2,'Tue'],[3,'Wed'],[4,'Thu'],[5,'Fri'],[6,'Sat'],[0,'Sun']].map(function(d){var on=!Array.isArray(AW.days)||AW.days.indexOf(d[0])>=0;return '<label style="display:flex;gap:4px;align-items:center;border:1px solid var(--line);border-radius:99px;padding:5px 10px;font-size:.86rem"><input type="checkbox" data-aday="'+d[0]+'" style="width:auto"'+(on?' checked':'')+'>'+d[1]+'</label>'}).join('')+'</div>'+
-   '<h4 style="margin:6px 0 0">Sounds</h4><div data-snd style="display:grid;gap:10px"></div>'+
+
    '<div style="display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap"><button class="btn soft" type="button" data-ctest>'+I('phone')+' Test call</button><span style="display:flex;gap:8px"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-cok>Save</button></span></div>');
   var kit=vKit(m,function(p){return P[p]},function(p,u){if(u)P[p]=u;else delete P[p]},draw);
-  function draw(){m.querySelector('[data-snd]').innerHTML=vRow(kit,'ringTone',P.ringTone,{label:'Ringing tone',music:true,none:'Standard tuut',say:null})+'<small style="color:var(--muted)">Heard while the call rings and during the wait for an agent. Plays on repeat.</small>'+
+  function draw(){if(!m.querySelector('[data-snd]'))return;m.querySelector('[data-snd]').innerHTML=vRow(kit,'ringTone',P.ringTone,{label:'Ringing tone',music:true,none:'Standard tuut',say:null})+'<small style="color:var(--muted)">Heard while the call rings and during the wait for an agent. Plays on repeat.</small>'+
     vRow(kit,'holdMusic',P.holdMusic,{label:'Waiting music',music:true,none:'Built-in tune'})+'<small style="color:var(--muted)">Heard when you tap Waiting or transfer a call. Plays on repeat.</small>'}
   function collect(){c.enabled=m.querySelector('[data-con]').checked;c.number=(m.querySelector('[data-k="number"]').value.trim()||'203').slice(0,20);c.numStyle=m.querySelector('[data-nst]').value;
     c.ringSec=Math.max(15,Math.min(180,parseInt(m.querySelector('[data-k="ringSec"]').value,10)||35));
@@ -2748,8 +2754,8 @@ function callForm(){var c=JSON.parse(JSON.stringify(S.call||{})),P=c.prompts=c.p
   draw()}
 
 /* ---- Call menu (IVR) editor ---- */
-function ivrForm(){var IV=JSON.parse(JSON.stringify(ivrModel(S.call||{})));
-  var m=modal('Call menu (IVR)','<p style="margin:0;color:var(--muted);font-size:.9rem;line-height:1.55">Build what callers hear, in order from top to bottom. Switch any part <b>On</b> or <b>Off</b> without deleting it. Record each voice yourself, or upload an audio file. If a voice is not recorded, the phone reads the words aloud (English) or shows them on screen.</p><div data-iv></div>'+
+function ivrForm(){var IV=JSON.parse(JSON.stringify(ivrModel(S.call||{})));IV._p=JSON.parse(JSON.stringify((S.call||{}).prompts||{}));IV.bg=IV.bg||{greet:'',topic:'',wait:'',closed:''};
+  var m=modal('Call menu (IVR)','<p style="margin:0;color:var(--muted);font-size:.9rem;line-height:1.55">Each folder holds one part of what callers hear. Tap a folder to open it. Switch any part <b>On</b> or <b>Off</b> without deleting it. Record each voice yourself, or upload an audio file. If a voice is not recorded, the phone reads the words aloud (English) or shows them on screen.</p><div data-iv></div>'+
    '<div class="ivfoot"><button class="btn soft" type="button" data-ivtest>'+I('phone')+' Test call</button><span style="display:flex;gap:8px"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-ivok>Save</button></span></div>');
   m.querySelector('.sheet').classList.add('ivsheet');
   function getP(p){return p.split('.').reduce(function(o,k){return o==null?o:o[k]},IV)}
@@ -2767,30 +2773,32 @@ function ivrForm(){var IV=JSON.parse(JSON.stringify(ivrModel(S.call||{})));
   function bg(base,item){return vRow(kit,base+'.bg',item.bg,{label:'Background music',music:true,none:'None'})}
   function notes(pos,label){var L=IV.notes.map(function(n,i){return {n:n,i:i}}).filter(function(x){return x.n.pos===pos});
     return L.map(function(x,j){var b='notes.'+x.i;return card(x.n.name||'Notice','Notice · no key to press','<label class="f">Name (only you see this)<input data-path="'+b+'.name" value="'+esc(x.n.name||'')+'"></label>'+
-        (pos==='start'?'<small style="color:var(--muted)">Heard before the language is chosen, so each language plays one after the other.</small>':'')+perLang(b,x.n,null,true)+bg(b,x.n),b,x.n.on,j,L.length,true)}).join('')+
+        (pos==='start'?'<small style="color:var(--muted)">Heard before the language is chosen, so each language plays one after the other.</small>':'')+perLang(b,x.n,null,true),b,x.n.on,j,L.length,true)}).join('')+
       '<button class="btn sm soft" type="button" data-addnote="'+pos+'">'+I('plus')+' Add notice '+esc(label)+'</button>'}
-  function sec(id,title,inner,sw){var o=open[id]!==false;return '<details class="ivsec" data-sec="'+id+'"'+(o?' open':'')+'><summary><b>'+title+'</b>'+(sw||'')+'</summary><div class="ivsec-b">'+inner+'</div></details>'}
-  function draw(){var h='',ld=dupKeys(IV.langs),td=dupKeys(IV.topics);
-    h+=sec('s1','1. Before the language menu',notes('start','here'));
-    h+=sec('s2','2. Language menu','<div class="ivrow">'+ivSw('langOn',IV.langOn,'Language menu on')+'</div><small style="color:var(--muted)">Each language says its own line in its own language, for example “press 1 for Khmer”. If the menu is off, callers hear the website language.</small>'+
+  function sec(id,title,inner,sw){var o=open[id]===true;return '<details class="ivsec" data-sec="'+id+'"'+(o?' open':'')+'><summary><b>'+title+'</b>'+(sw||'')+'</summary><div class="ivsec-b">'+inner+'</div></details>'}
+  function music(){IV.bg=IV.bg||{};return vRow(kit,'_p.ringTone',IV._p.ringTone,{label:'Ringing tone',music:true,none:'Standard tuut'})+'<small class="ivnote">Heard while the call rings and during the wait for an agent. Plays on repeat.</small>'+
+      vRow(kit,'_p.holdMusic',IV._p.holdMusic,{label:'Waiting music',music:true,none:'Built-in tune'})+'<small class="ivnote">Heard when an agent taps Waiting or transfers the call.</small>'+
+      '<h5 class="ivh5">Background music</h5><small class="ivnote">Plays softly under a whole part of the menu, without stopping between the options.</small>'+
+      [['greet','Greeting and language'],['topic','Topic menu and notices'],['wait','Waiting and busy'],['closed','Closed and Away message']].map(function(x){return vRow(kit,'bg.'+x[0],IV.bg[x[0]],{label:x[1],music:true,none:'None'})}).join('')}
+  function draw(){var h='',ld=dupKeys(IV.langs),td=dupKeys(IV.topics),mb='<small class="ivnote">Background music for this part is in <b>5. Music</b>.</small>';
+    h+=sec('f1','1. Closed and Away message',[['closed','Away / closed','Heard when the line is Away or outside opening hours. Plays in every language, then the call ends.']].map(function(x){var b='msgs.'+x[0],it=IV.msgs[x[0]];return '<div class="ivcard'+(it.on===false?' off':'')+'"><div class="ivcard-h"><span><b>'+x[1]+'</b><small>'+x[2]+'</small></span>'+ivSw(b+'.on',it.on)+'</div>'+perLang(b,it,x[0],true)+'</div>'}).join('')+mb);
+    h+=sec('f2','2. Greeting and language','<h5 class="ivh5">Notices before the language menu</h5>'+notes('start','before the language menu')+'<h5 class="ivh5">Language menu</h5>'+'<div class="ivrow">'+ivSw('langOn',IV.langOn,'Language menu on')+'</div><small style="color:var(--muted)">Each language says its own line in its own language, for example “press 1 for Khmer”. If the menu is off, callers hear the website language.</small>'+
       IV.langs.map(function(l,i){var b='langs.'+i;return card(l.name||l.agent||'Language','Press '+l.key,'<div class="ivgrid"><label class="f">Name callers see<input data-path="'+b+'.name" value="'+esc(l.name||'')+'"></label><label class="f">Name your agents see<input data-path="'+b+'.agent" value="'+esc(l.agent||'')+'"></label></div>'+
           '<div class="ivgrid">'+ivKeySel(b+'.key',l.key,ld[l.key]&&l.on!==false)+'<label class="ivkey">Phone voice <select data-path="'+b+'.tts">'+[['km','Khmer'],['en','English'],['zh','Chinese'],['th','Thai'],['vi','Vietnamese'],['fr','French'],['ja','Japanese'],['ko','Korean']].map(function(o){return '<option value="'+o[0]+'"'+(l.tts===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select></label></div>'+
-          vRow(kit,b+'.clip',l.clip,{label:'Menu line',say:ivrLangLine(l),textPath:b+'.text',text:l.text,ckPath:b+'.ck',ck:l.ck,key:l.key})+bg(b,l),b,l.on,i,IV.langs.length,l.id!=='km'&&l.id!=='en')}).join('')+
-      '<button class="btn sm soft" type="button" data-addlang>'+I('plus')+' Add language</button>');
-    h+=sec('s3','3. After the language menu',notes('afterLang','here'));
-    h+=sec('s4','4. Topic menu','<div class="ivrow">'+ivSw('topicOn',IV.topicOn,'Topic menu on')+'</div><small style="color:var(--muted)">If the menu is off, callers go straight to your team as a general inquiry.</small>'+
-      '<h5 class="ivh5">Before the topic menu</h5>'+notes('beforeTopic','before the topics')+'<h5 class="ivh5">Topics</h5>'+
+          vRow(kit,b+'.clip',l.clip,{label:'Menu line',say:ivrLangLine(l),textPath:b+'.text',text:l.text,ckPath:b+'.ck',ck:l.ck,key:l.key}),b,l.on,i,IV.langs.length,l.id!=='km'&&l.id!=='en')}).join('')+
+      '<button class="btn sm soft" type="button" data-addlang>'+I('plus')+' Add language</button>'+'<h5 class="ivh5">Notices after the language menu</h5>'+notes('afterLang','after the language menu')+mb);
+    h+=sec('f3','3. Topic menu and notice messages','<div class="ivrow">'+ivSw('topicOn',IV.topicOn,'Topic menu on')+'</div><small style="color:var(--muted)">If the menu is off, callers go straight to your team as a general inquiry.</small>'+
+      '<h5 class="ivh5">Notices before the topic menu</h5>'+notes('beforeTopic','before the topics')+'<h5 class="ivh5">Topics</h5>'+
       IV.topics.map(function(t,i){var b='topics.'+i;t.names=t.names||{};t.info=t.info||{clips:{},texts:{},bg:''};
         return card(t.names.en||t.names.km||'Topic',(t.type==='info'?'Information message':'Connect to your team')+' · press '+t.key,
           '<div class="ivgrid">'+langs().map(function(l){return '<label class="f">Name in '+esc(l.agent||l.name||l.id)+'<input data-path="'+b+'.names.'+l.id+'" value="'+esc(t.names[l.id]||'')+'"></label>'}).join('')+'</div>'+
           '<div class="ivgrid">'+ivKeySel(b+'.key',t.key,td[t.key]&&t.on!==false)+'<label class="ivkey">When pressed <select data-path="'+b+'.type" data-redraw><option value="agent"'+(t.type!=='info'?' selected':'')+'>Connect to your team</option><option value="info"'+(t.type==='info'?' selected':'')+'>Play an information message</option></select></label></div>'+
-          '<h6 class="ivh6">Menu line</h6>'+perLang(b,t,null,false,t.key)+bg(b,t)+
-          (t.type==='info'?'<h6 class="ivh6">Information message</h6><small style="color:var(--muted)">While it plays, callers can press <b>#</b> to go back to the topic menu, or <b>1</b> to talk to your team. When it ends, the topic menu plays again. Say this at the start or end of your message.</small>'+perLang(b+'.info',t.info,null,true)+bg(b+'.info',t.info):''),
+          '<h6 class="ivh6">Menu line</h6>'+perLang(b,t,null,false,t.key)+
+          (t.type==='info'?'<h6 class="ivh6">Information message</h6><small style="color:var(--muted)">While it plays, callers can press <b>#</b> to go back to the topic menu, or <b>1</b> to talk to your team. When it ends, the topic menu plays again. Say this at the start or end of your message.</small>'+perLang(b+'.info',t.info,null,true):''),
           b,t.on,i,IV.topics.length,true)}).join('')+
-      (IV.topics.length<12?'<button class="btn sm soft" type="button" data-addtopic>'+I('plus')+' Add topic</button>':''));
-    h+=sec('s5','5. After the topic menu',notes('afterTopic','here'));
-    h+=sec('s6','6. Messages',[['wait','Please wait','Heard after the menus, before the ringing tone.'],['busy','No answer','Heard when nobody answers in time.'],['closed','Away / closed','Heard when the line is Away or outside opening hours. Plays in every language.']].map(function(x){var b='msgs.'+x[0],it=IV.msgs[x[0]];
-        return '<div class="ivcard'+(it.on===false?' off':'')+'"><div class="ivcard-h"><span><b>'+x[1]+'</b><small>'+x[2]+'</small></span>'+ivSw(b+'.on',it.on)+'</div>'+perLang(b,it,x[0],true)+bg(b,it)+'</div>'}).join(''));
+      (IV.topics.length<12?'<button class="btn sm soft" type="button" data-addtopic>'+I('plus')+' Add topic</button>':'')+'<h5 class="ivh5">Notices after the topic menu</h5>'+notes('afterTopic','after the topic menu')+mb);
+    h+=sec('f4','4. Waiting and busy',[['wait','Please wait','Heard after the menus, before the ringing tone.'],['busy','No answer','Heard when nobody answers in time.']].map(function(x){var b='msgs.'+x[0],it=IV.msgs[x[0]];return '<div class="ivcard'+(it.on===false?' off':'')+'"><div class="ivcard-h"><span><b>'+x[1]+'</b><small>'+x[2]+'</small></span>'+ivSw(b+'.on',it.on)+'</div>'+perLang(b,it,x[0],true)+'</div>'}).join('')+mb);
+    h+=sec('f5','5. Music',music());
     var box=m.querySelector('[data-iv]'),y=m.querySelector('.bd')?m.querySelector('.bd').scrollTop:0;box.innerHTML=h;if(m.querySelector('.bd'))m.querySelector('.bd').scrollTop=y}
   m.addEventListener('toggle',function(e){var d=e.target.closest&&e.target.closest('[data-sec]');if(d)open[d.dataset.sec]=d.open},true);
   function onField(e){var el=e.target.closest('[data-path]');if(!el)return;var v=el.hasAttribute('data-bool')?el.checked:el.value;setP(el.dataset.path,v);if(el.hasAttribute('data-redraw')&&e.type==='change')draw()}
@@ -2805,7 +2813,7 @@ function ivrForm(){var IV=JSON.parse(JSON.stringify(ivrModel(S.call||{})));
       if(j<0||j>=arr.length)return;var t=arr[i];arr[i]=arr[j];arr[j]=t;draw();return}
     if(b.dataset.rm){var r=b.dataset.rm.split('.');if(!b.dataset.armed){b.dataset.armed=1;b.innerHTML='Tap again to delete';setTimeout(function(){if(b.isConnected){delete b.dataset.armed;b.innerHTML=I('trash')+' Delete'}},3000);return}
       if(r[0]==='langs'&&IV.langs.length<=1){toast('Keep at least one language');return}IV[r[0]].splice(+r[1],1);draw();return}
-    if(b.hasAttribute('data-ivok')||b.hasAttribute('data-ivtest')){kit.stop();S.call=Object.assign({},S.call||{});S.call.ivr=IV;m.remove();changed();
+    if(b.hasAttribute('data-ivok')||b.hasAttribute('data-ivtest')){kit.stop();S.call=Object.assign({},S.call||{});S.call.prompts=IV._p;delete IV._p;S.call.ivr=IV;m.remove();changed();
       if(b.hasAttribute('data-ivtest')){if(window.TheanCall)window.TheanCall.start();else toast('Not ready yet, try again in a moment')}else toast('Saved. The website updates in a moment.')}});
   draw()}
 function awayIsNow(a){if(!a)return false;if(a.on)return true;if(!a.sched)return false;var t=new Date(Date.now()+7*3600000),day=t.getUTCDay(),mins=t.getUTCHours()*60+t.getUTCMinutes(),days=Array.isArray(a.days)?a.days:[0,1,2,3,4,5,6];if(days.indexOf(day)<0)return true;
@@ -3456,7 +3464,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261007-0933',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261007-1121',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
@@ -3546,7 +3554,12 @@ function ivrTopicLine(t,lang){var nm=(t.names&&(t.names[lang.id]||t.names.en||t.
 function ivrMsgText(name,lang){var d=IVR_TXT[name];return d&&lang&&(d[lang.id]||d[lang.tts])||''}
 function ivrModel(c){c=c||{};var P=c.prompts||{},iv=c.ivr;
   if(iv&&iv.v===2){iv.langs=iv.langs||[];iv.topics=iv.topics||[];iv.notes=iv.notes||[];iv.msgs=iv.msgs||{};
-    ['wait','busy','closed'].forEach(function(n){iv.msgs[n]=iv.msgs[n]||{on:true,clips:{},texts:{},bg:''}});return iv}
+    ['wait','busy','closed'].forEach(function(n){iv.msgs[n]=iv.msgs[n]||{on:true,clips:{},texts:{},bg:''}});
+    if(!iv.bg){var f=function(a){for(var i=0;i<a.length;i++){if(a[i])return a[i]}return ''};
+      iv.bg={greet:f(iv.langs.map(function(l){return l.bg}).concat(iv.notes.filter(function(n){return n.pos==='start'||n.pos==='afterLang'}).map(function(n){return n.bg}))),
+        topic:f(iv.topics.map(function(t){return t.bg||(t.info&&t.info.bg)}).concat(iv.notes.filter(function(n){return n.pos==='beforeTopic'||n.pos==='afterTopic'}).map(function(n){return n.bg}))),
+        wait:f([iv.msgs.wait.bg,iv.msgs.busy.bg]),closed:iv.msgs.closed.bg||''}}
+    return iv}
   var DEF=[{id:'general',en:'General inquiry',km:'ការសាកសួរទូទៅ'},{id:'donation',en:'Donation',km:'ការបរិច្ចាគ'},{id:'copyright',en:'Copyright report',km:'ការរាយការណ៍ពីម្ចាស់កម្មសិទ្ធិ'}];
   var T=(Array.isArray(c.topics)&&c.topics.filter(function(x){return x&&(x.en||x.km)}).length)?c.topics.filter(function(x){return x&&(x.en||x.km)}):DEF;
   function msg(n){return {on:true,clips:{km:P[n+'Km']||'',en:P[n+'En']||''},ck:{},texts:{},bg:''}}
@@ -3555,11 +3568,11 @@ function ivrModel(c){c=c||{};var P=c.prompts||{},iv=c.ivr;
            {id:'en',key:'2',name:'English',agent:'English',tts:'en',on:true,clip:P.menuEn||'',ck:P.menuEn?'2':'',text:'',bg:''}],
     topics:T.slice(0,9).map(function(t,i){return {id:t.id||('t'+(i+1)),key:String(i+1),type:'agent',on:true,names:{km:t.km||'',en:t.en||''},
       clips:{km:t.vKm||'',en:t.vEn||''},ck:{km:t.vKm?String(t.nKm||i+1):'',en:t.vEn?String(t.nEn||i+1):''},texts:{},bg:'',info:{clips:{},texts:{},bg:''}}}),
-    notes:[],msgs:{wait:msg('wait'),busy:msg('busy'),closed:msg('closed')}}}
+    notes:[],msgs:{wait:msg('wait'),busy:msg('busy'),closed:msg('closed')},bg:{greet:'',topic:'',wait:'',closed:''}}}
 function ivrUrls(iv){var out=[];function add(u){if(u&&/^https:\/\//.test(u)&&out.indexOf(u)<0)out.push(u)}
   function clips(o){if(o&&o.clips)Object.keys(o.clips).forEach(function(k){add(o.clips[k])});if(o)add(o.bg)}
   (iv.langs||[]).forEach(function(l){add(l.clip);add(l.bg)});(iv.topics||[]).forEach(function(t){clips(t);clips(t.info)});(iv.notes||[]).forEach(clips);
-  Object.keys(iv.msgs||{}).forEach(function(k){clips(iv.msgs[k])});return out}
+  Object.keys(iv.msgs||{}).forEach(function(k){clips(iv.msgs[k])});if(iv.bg)Object.keys(iv.bg).forEach(function(k){add(iv.bg[k])});return out}
 
 function ivr(){return ivrModel(callCfg())}
 function ivLangs(){return ivr().langs.filter(l=>l&&l.on!==false)}
@@ -3586,7 +3599,7 @@ function holdTones(){if(!call)return;const notes=[392,440,523.25,587.33,659.25,5
 function holdStop(){if(!call)return;call.holdTok=null;if(call.hold){clearInterval(call.hold);call.hold=null}if(call.holdSrc){try{call.holdSrc.stop()}catch(e){}call.holdSrc=null}}
 function queueStart(){holdStop();if(!call||!call.ac)return;const tok=call.holdTok={};ringBuf().then(buf=>{if(!call||call.holdTok!==tok)return;if(buf){call.holdSrc=playLoop(buf,.8);return}tone(425,1,.08);call.hold=setInterval(()=>{if(call)tone(425,1,.08)},4000)})}
 function sleepC(ms){return new Promise(r=>{const t=setTimeout(r,ms);if(call)call.timers.push(t)})}
-function stopVoice(){if(call){call.vseq=(call.vseq||0)+1;bgStop()}try{speechSynthesis.cancel()}catch(e){}if(call&&call.src){try{call.src.stop()}catch(e){}call.src=null}}
+function stopVoice(){if(call){call.vseq=(call.vseq||0)+1}try{speechSynthesis.cancel()}catch(e){}if(call&&call.src){try{call.src.stop()}catch(e){}call.src=null}}
 const PBUF={};
 function loadPrompts(){const P=callCfg().prompts||{},U=ivrUrls(ivr()).concat([P.ringTone,P.holdMusic]);U.forEach(u=>{if(!u||!/^https:\/\//.test(u)||PBUF[u])return;
   PBUF[u]=fetch(u).then(r=>r.arrayBuffer()).then(b=>new Promise((res,rej)=>call&&call.ac?call.ac.decodeAudioData(b,res,rej):rej())).catch(()=>null)})}
@@ -3609,10 +3622,10 @@ function playOne(name,txt,vl,url){/* recorded voice from the editor, else the ph
 function ivText(item,lang,kind){const t=item.texts&&item.texts[lang.id];if(t)return t;return kind?ivrMsgText(kind,lang):''}
 function ivClip(item,lang,key){const u=item.clips&&item.clips[lang.id];if(!u)return '';if(key!=null&&item.ck&&item.ck[lang.id]&&item.ck[lang.id]!==key)return '';return u}
 /* an item heard before the language is known: play it in every language, in menu order */
-async function ivAll(item,kind,st){for(const l of ivLangs()){if(!call||call.state!==st)return;await playIv(ivClip(item,l),ivText(item,l,kind),l.tts,item.bg);if(!call||call.state!==st)return;await sleepC(300)}}
-async function ivNotes(pos,st,all){for(const n of ivr().notes.filter(x=>x&&x.on!==false&&x.pos===pos)){if(!call||call.state!==st)return;
-    if(all)await ivAll(n,null,st);else{const l=ivLang();await playIv(ivClip(n,l),ivText(n,l),l.tts,n.bg)}if(!call||call.state!==st)return;await sleepC(300)}}
-async function ivMsg(name,st){const m=ivr().msgs[name];if(!m||m.on===false)return false;const l=ivLang();await playIv(ivClip(m,l),ivText(m,l,name),l.tts,m.bg);return true}
+async function ivAll(item,kind,st,bg){for(const l of ivLangs()){if(!call||call.state!==st)return;await playIv(ivClip(item,l),ivText(item,l,kind),l.tts,bg);if(!call||call.state!==st)return;await sleepC(300)}}
+async function ivNotes(pos,st,all){const bg=ivBg(pos==='start'||pos==='afterLang'?'greet':'topic');for(const n of ivr().notes.filter(x=>x&&x.on!==false&&x.pos===pos)){if(!call||call.state!==st)return;
+    if(all)await ivAll(n,null,st,bg);else{const l=ivLang();await playIv(ivClip(n,l),ivText(n,l),l.tts,bg)}if(!call||call.state!==st)return;await sleepC(300)}}
+async function ivMsg(name,st){const m=ivr().msgs[name];if(!m||m.on===false)return false;const l=ivLang();await playIv(ivClip(m,l),ivText(m,l,name),l.tts,ivBg(name==='closed'?'closed':'wait'));return true}
 /* ---- screen ---- */
 function callEl(){return document.getElementById('tcall')}
 function drawCall(){let el=callEl();const lg=call.ui||call.lang;
@@ -3653,7 +3666,7 @@ function awayNow(a){if(!a)return false;if(a.on)return true;if(!a.sched)return fa
   const hm=x=>{const m=String(x||'').match(/^(\d{1,2}):(\d{2})/);return m?(+m[1])*60+(+m[2]):null},o=hm(a.open),c=hm(a.close);
   if(o==null||c==null)return false;return o<=c?(mins<o||mins>=c):(mins<o&&mins>=c)}
 async function closedFlow(){call.state='closed';startClock();
-  const m=ivr().msgs.closed;if(m&&m.on!==false)await ivAll(m,'closed','closed');if(!call)return;bgStop();await sleepC(600);callEnd(false)}
+  const m=ivr().msgs.closed;if(m&&m.on!==false)await ivAll(m,'closed','closed',ivBg('closed'));if(!call)return;bgStop();await sleepC(600);callEnd(false)}
 /* ---- flow ---- */
 async function callStart(){
   if(call){setMini(false);return}
@@ -3677,7 +3690,7 @@ async function callStart(){
   const LS=ivLangs(),iv=ivr();
   if(!iv.langOn||LS.length<2){call.lang=(LS.find(l=>l.id===lg0)||LS[0]||{id:lg0}).id;return afterLangFlow()}
   for(let i=0;i<2;i++){for(const l of LS){if(!call||call.flow!==tok||call.state!=='menu')return;
-      await playIv(l.clip&&(!l.ck||l.ck===l.key)?l.clip:'',l.text||ivrLangLine(l),l.tts,l.bg);if(!call||call.flow!==tok||call.state!=='menu')return;await sleepC(250)}
+      await playIv(l.clip&&(!l.ck||l.ck===l.key)?l.clip:'',l.text||ivrLangLine(l),l.tts,ivBg('greet'));if(!call||call.flow!==tok||call.state!=='menu')return;await sleepC(250)}
     await sleepC(5000);if(!call||call.flow!==tok||call.state!=='menu')return}
   bgStop();callEnd(false) /* no language chosen after the menu played twice */
 }
@@ -3685,6 +3698,7 @@ function onKey(k){if(!call)return;
   if(call.state==='menu'){const l=ivLangs().find(x=>x.key===k);if(!l||!ivr().langOn)return;stopVoice();call.lang=l.id;afterLangFlow();return}
   if(call.state==='topic'){const t=ivTopics().find(x=>x.key===k);if(!t)return;stopVoice();if(t.type==='info')return infoFlow(t);return connectFlow(t)}
   if(call.state==='info'){if(k==='#'){stopVoice();topicMenu();return}if(k==='1'){stopVoice();connectFlow(call.infoTopic);return}}}
+function ivBg(part){const b=ivr().bg||{};return b[part]||''}
 function ivTopics(){return ivr().topics.filter(t=>t&&t.on!==false)}
 async function afterLangFlow(){call.state='topic';const tok=call.flow={};
   await ivNotes('afterLang','topic',false);if(!call||call.flow!==tok||call.state!=='topic')return;
@@ -3693,11 +3707,11 @@ async function afterLangFlow(){call.state='topic';const tok=call.flow={};
   topicMenu(true)}
 async function topicMenu(skipNotes){call.state='topic';const tok=call.flow={},l=ivLang();await sleepC(300);
   for(let i=0;i<2;i++){for(const t of ivTopics()){if(!call||call.flow!==tok||call.state!=='topic')return;
-      await playIv(ivClip(t,l,t.key),ivText(t,l)||ivrTopicLine(t,l),l.tts,t.bg);if(!call||call.flow!==tok||call.state!=='topic')return;await sleepC(250)}
+      await playIv(ivClip(t,l,t.key),ivText(t,l)||ivrTopicLine(t,l),l.tts,ivBg('topic'));if(!call||call.flow!==tok||call.state!=='topic')return;await sleepC(250)}
     await sleepC(5000);if(!call||call.flow!==tok||call.state!=='topic')return}
   bgStop();callEnd(false)}
 async function infoFlow(t){call.state='info';call.infoTopic=t;const tok=call.flow={},l=ivLang(),inf=t.info||{};
-  await playIv(ivClip(inf,l),ivText(inf,l),l.tts,inf.bg);if(!call||call.flow!==tok||call.state!=='info')return;await sleepC(600);
+  await playIv(ivClip(inf,l),ivText(inf,l),l.tts,ivBg('topic'));if(!call||call.flow!==tok||call.state!=='info')return;await sleepC(600);
   if(call&&call.flow===tok&&call.state==='info')topicMenu()}
 async function connectFlow(t){const l=ivLang(),nm=t?((t.names&&(t.names.en||t.names[l.id]||t.names.km))||'Topic'):'General inquiry';
   call.topic=t?t.id:'general';call.topicEn=nm;call.topicKm=t&&t.names?(t.names.km||nm):'ការសាកសួរទូទៅ';call.langName=l.agent||l.name||l.id;
@@ -3723,7 +3737,7 @@ async function afterLang(){const lg=call.lang;
 }
 function muteRemote(v){const a=callEl()&&callEl().querySelector('[data-remote]');if(a)a.muted=v;if(call.rg)call.rg.gain.value=v?0:(call.spk?1.6:0)}
 function closeLeg(){if(!call)return;(call.legUnsub||[]).forEach(u=>{try{u()}catch(e){}});call.legUnsub=[];try{call.pc&&call.pc.close()}catch(e){}call.pc=null;call.connected=false;if(call.rg){try{call.rg.disconnect()}catch(e){}call.rg=null}call.remote=null}
-async function newLeg(n){closeLeg();call.leg=n;call.state='active';call.onHold=false;clearTimeout(call.ringT);holdStop();stopVoice();setIvr('');
+async function newLeg(n){closeLeg();call.leg=n;call.state='active';call.onHold=false;clearTimeout(call.ringT);holdStop();stopVoice();bgStop();setIvr('');
   const P='calls/'+call.id,L='calls/'+call.id+'/sig/'+n,seen={},pc=new RTCPeerConnection(ICE);call.pc=pc;call.legUnsub=[];
   call.stream.getTracks().forEach(t=>pc.addTrack(t,call.stream));
   pc.ontrack=e=>{call.remote=e.streams[0];if(call.rec&&call.ac){try{call.recRem&&call.recRem.disconnect()}catch(x){}try{call.recRem=call.ac.createMediaStreamSource(call.remote);call.recRem.connect(call.rec.dest)}catch(x){}}const a=callEl()&&callEl().querySelector('[data-remote]');if(a){a.srcObject=e.streams[0];a.muted=false;a.play().catch(()=>{})}if(call.spk)setSpk()};
