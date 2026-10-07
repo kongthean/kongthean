@@ -977,7 +977,7 @@ html[data-skin="kbach"][lang="km"] .emb{letter-spacing:0}
 [data-skin="kbach"] .tiles.row .tile{flex:0 0 calc((100% - 24px)/3.2)}
 [data-skin="kbach"] .tiles.st-photo .tile .ic{background-image:none!important}
 [data-skin="kbach"] .tile .ic .bdg{display:none}
-[data-skin="kbach"] .drawer a.tile[href="#/"] .ic{background:#1f1911!important;color:#e9bf62!important}
+
 /* buttons, cards, chips */
 [data-skin="kbach"] .btn{position:relative;overflow:hidden;background:linear-gradient(180deg,#f0cd78,#c99a3e);color:#1a120a;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 6px 14px -6px rgba(217,173,85,.6)}
 [data-skin="kbach"] .btn::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);transition:left .7s ease;pointer-events:none}
@@ -1090,7 +1090,7 @@ html[data-skin="kbach"][lang="km"] .emb{letter-spacing:0}
 [data-skin="pchum"] .tiles .tile:hover{border-color:var(--accent)}
 [data-skin="pchum"] .tiles.row .tile{flex:0 0 calc((100% - 24px)/3.2)}
 [data-skin="pchum"] .tile .ic .bdg{display:none}
-[data-skin="pchum"] .drawer a.tile[href="#/"] .ic{background:var(--accent-soft)!important;color:var(--accent)!important}
+
 /* chrome */
 [data-skin="pchum"] .top{border-bottom:0}
 [data-skin="pchum"] .top::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:4px;background:linear-gradient(90deg,#c4402f 0 33%,#e5b33e 33% 66%,#3e69ae 66%);opacity:.9}
@@ -1448,8 +1448,8 @@ function goBack(){var R=route();if(navDepth>0){navDepth-=2;history.back();return
 function header(R){
   var navIds=['destinations','temples','culture','food','stay','videos','news'];
   return '<header class="top"><div class="wrap"><a class="brand" href="#/"><span class="logo">'+(S.brand.logo?'<img alt="Thean logo" src="'+S.brand.logo+'">':'')+'</span><span><b>'+esc(S.brand.name)+'</b><small>'+esc(tr(S.brand.sub))+'</small></span></a>'+
-   '<nav class="nav" aria-label="Main">'+(R.name==='p'||R.name==='place'||R.name==='k'||R.name==='v'||R.name==='n'?backBtn():'')+navIds.map(function(id){var p=page(id);if(!p)return '';return '<a href="#/p/'+id+'" class="'+(R.name==='p'&&R.id===id?'on':'')+'">'+esc(tr(p.label))+'</a>'}).join('')+'</nav>'+
-   '<div class="tools">'+(R.name==='p'||R.name==='place'||R.name==='k'||R.name==='v'||R.name==='n'?backBtn():'')+'<div class="lang" role="group" aria-label="Language"><button data-lang="km" class="'+(lang==='km'?'on':'')+'">ខ្មែរ</button><button data-lang="en" class="'+(lang==='en'?'on':'')+'">EN</button></div>'+
+   '<nav class="nav" aria-label="Main"><a href="#/" class="'+(R.name==='home'?'on':'')+'">'+esc(u('home'))+'</a>'+navIds.map(function(id){var p=page(id);if(!p)return '';return '<a href="#/p/'+id+'" class="'+(R.name==='p'&&R.id===id?'on':'')+'">'+esc(tr(p.label))+'</a>'}).join('')+'</nav>'+
+   '<div class="tools"><div class="lang" role="group" aria-label="Language"><button data-lang="km" class="'+(lang==='km'?'on':'')+'">ខ្មែរ</button><button data-lang="en" class="'+(lang==='en'?'on':'')+'">EN</button></div>'+
    '<button class="ib" data-act="drawer" aria-label="'+esc(u('menu'))+'">'+I('menu')+'</button></div></div></header>';
 }
 
@@ -1509,12 +1509,12 @@ function tileStyle(){return (S.ui&&S.ui.tiles)||'classic'}
 function tileIc(p,i){var st=tileStyle(),c=TCOL[i%TCOL.length];
   if(st==='photo'){var bf=p.bannerFrom&&placeById(p.bannerFrom),im=p.img||(bf&&bf.img)||'';if(im)return '<span class="ic ph" style="background-image:url(\''+im+'\')"><span class="bdg" style="background:'+c[1]+'">'+MIco(p.icon)+'</span></span>'}
   return '<span class="ic" style="--tb:'+c[0]+';--tf:'+c[1]+'">'+MIco(p.icon)+'</span>'}
-function tilesHtml(row){
-  return (row?'<div class="tslide"><button class="tarw l" data-tmove="-1" aria-label="Previous">'+I('left')+'</button><button class="tarw r" data-tmove="1" aria-label="Next">'+I('right')+'</button>':'')+'<div class="tiles st-'+tileStyle()+(row?' row':'')+'">'+S.pages.map(function(p,pi){return '<a class="tile" style="position:relative" href="#/p/'+p.id+'">'+(admin?'<button class="edbtn aonly" style="top:-6px;right:4px;width:30px;height:30px" data-ed="pages:'+p.id+'" aria-label="Edit">'+I('edit')+'</button>':'')+tileIc(p,pi)+'<b>'+esc(tr(p.label))+'</b>'+(tr(p.hint)?'<small>'+esc(tr(p.hint))+'</small>':'')+'</a>'}).join('')+(admin?'<button class="tile aonly" data-add="pages:custom" style="border:0;background:transparent;cursor:pointer;flex-direction:column"><span class="ic" style="background:var(--bg2);color:var(--ink);box-shadow:none;border:2px dashed var(--stone)">'+I('plus')+'</span><b>Add page</b><small>New menu item</small></button>':'')+'</div>'+(row?'<div class="tbar"><i></i></div></div>':'');
+function tilesHtml(row,withHome){
+  return (row?'<div class="tslide"><button class="tarw l" data-tmove="-1" aria-label="Previous">'+I('left')+'</button><button class="tarw r" data-tmove="1" aria-label="Next">'+I('right')+'</button>':'')+'<div class="tiles st-'+tileStyle()+(row?' row':'')+'">'+(withHome?'<a class="tile" href="#/">'+tileIc({icon:'home'},TCOL.length-1)+'<b>'+esc(u('home'))+'</b><small>'+esc(lang==='km'?'ចាប់ផ្ដើមនៅទីនេះ':'Start here')+'</small></a>':'')+S.pages.map(function(p,pi){return '<a class="tile" style="position:relative" href="#/p/'+p.id+'">'+(admin?'<button class="edbtn aonly" style="top:-6px;right:4px;width:30px;height:30px" data-ed="pages:'+p.id+'" aria-label="Edit">'+I('edit')+'</button>':'')+tileIc(p,pi)+'<b>'+esc(tr(p.label))+'</b>'+(tr(p.hint)?'<small>'+esc(tr(p.hint))+'</small>':'')+'</a>'}).join('')+(admin?'<button class="tile aonly" data-add="pages:custom" style="border:0;background:transparent;cursor:pointer;flex-direction:column"><span class="ic" style="background:var(--bg2);color:var(--ink);box-shadow:none;border:2px dashed var(--stone)">'+I('plus')+'</span><b>Add page</b><small>New menu item</small></button>':'')+'</div>'+(row?'<div class="tbar"><i></i></div></div>':'');
 }
 function drawerHtml(){
   return '<div class="drawer" role="dialog" aria-label="'+esc(u('menu'))+'"><div class="wrap"><div class="head"><div><div class="kick">'+esc(u('menuSub'))+'</div><h2 class="emb">'+esc(u('explore'))+'</h2></div><button class="ib" data-act="drawer" aria-label="'+esc(u('close'))+'">'+I('close')+'</button></div>'+
-   '<a class="tile" href="#/" style="flex-direction:row;justify-content:flex-start;margin-bottom:20px"><span class="ic" style="width:48px;height:48px;border-radius:15px;font-size:1.4rem">'+I('home')+'</span><b>'+esc(u('home'))+'</b></a>'+tilesHtml()+socialBar()+'</div></div>';
+   tilesHtml(false,true)+socialBar()+'</div></div>';
 }
 
 /* ---------- HOME ---------- */
@@ -3337,7 +3337,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261006-1202',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261007-0503',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
