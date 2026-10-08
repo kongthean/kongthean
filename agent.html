@@ -182,6 +182,7 @@ label.f input,label.f textarea{border:1px solid var(--line);border-radius:12px;p
 .icard[data-cbig]{cursor:pointer}
 .callrow .crec{display:inline-flex;gap:4px;align-items:center;font-size:.82rem;margin:4px 10px 0 0;color:var(--accent)}
 .callrow .crec .i{width:14px;height:14px}
+.qmode{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}.qmode button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:10px 12px;text-align:left;cursor:pointer;font:inherit;font-weight:600}.qmode button small{display:block;font-weight:400;color:var(--muted);font-size:.78rem;margin-top:2px}.qmode button.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
 </style>
 </head>
 <body>
@@ -510,7 +511,7 @@ let wantOnline=true,connUnsub=null;
 let soundOn=pref('sound',true),waitMin=10,qLang='auto',qlDrawn='';
 
 /* ---------- state ---------- */
-let me=null,agent=null,chats=[],firstSnap=true,sel=null,msgs=[],msgUnsub=null,chatUnsub=null,meUnsub=null,quick=DEFAULT_QUICK,closing=CLOSE_DEF,tab='open',search='',showQuick=pref('qr',true),beat=null,seen={};
+let me=null,agent=null,chats=[],firstSnap=true,sel=null,msgs=[],msgUnsub=null,chatUnsub=null,meUnsub=null,quick=DEFAULT_QUICK,teamQuick=DEFAULT_QUICK,closing=CLOSE_DEF,tab='open',search='',showQuick=pref('qr',true),beat=null,seen={};
 
 /* ---------- auth ---------- */
 A.onAuthStateChanged(auth,async u=>{
@@ -561,14 +562,14 @@ function start(){
   setOnline(agent.online!==false,true);
   beat=setInterval(()=>{if(agent&&agent.online)DB.update('agents/'+me.uid,{lastSeen:TS}).catch(()=>{})},60000);
   connUnsub=DB.onConnected(c=>{if(c&&wantOnline){DB.onDisconnect('agents/'+me.uid,{online:false,lastSeen:TS});DB.update('agents/'+me.uid,{online:true,lastSeen:TS}).catch(()=>{})}});
-  meUnsub=DB.on('agents/'+me.uid,v=>{if(v){agent=v;drawTop()}});
+  meUnsub=DB.on('agents/'+me.uid,v=>{if(v){agent=v;drawTop();applyQuick()}});
   DB.get('settings/public').then(v=>{if(v&&v.waitMin)waitMin=+v.waitMin||10;if(v&&v.autoMin)autoMin=+v.autoMin||30}).catch(()=>{});
   setInterval(expireWaiting,30000);
   DB.get('settings/quick').then(v=>{if(v&&Array.isArray(v.items)&&v.items.length){quick=v.items;
       if(!v.formsMerged){const has=new Set(quick.map(x=>x.act).filter(Boolean));const add=FORM_QUICK.filter(x=>!has.has(x.act));quick=add.concat(quick);DB.update('settings/quick',{items:quick,formsMerged:true,updatedAt:TS}).catch(()=>{})}
       if(!v.goodbyeMerged){const have=new Set(quick.map(x=>x.en));const add=(Array.isArray(v.closing)&&v.closing.length?v.closing:CLOSE_DEF).filter(x=>x.en&&!have.has(x.en)).map((x,i)=>({icon:['check','chat','heart','clock'][i%4],label:['Goodbye','Will contact','Pleasure','No reply'][i]||'Goodbye',send:true,en:x.en,km:x.km||''}));
         quick=quick.concat(add);DB.set('settings/quick',{items:quick,goodbyeMerged:true,updatedAt:TS}).catch(()=>{})}}
-      drawConv()}).catch(()=>{});
+      teamQuick=quick;applyQuick()}).catch(()=>{});
   callWatch();
   chatUnsub=DB.onRecent('chats','updatedAt',200,list=>{
     list.forEach(d=>{
@@ -767,7 +768,7 @@ function editClosing(){
     if(b.dataset.rm!=null){L.splice(+b.dataset.rm,1);draw()}
     if(b.id==='ca'){L.push({en:'',km:''});draw()}
     if(b.id==='cdf'){L=JSON.parse(JSON.stringify(CLOSE_DEF));draw()}
-    if(b.id==='cs'){const keep=L.filter(x=>x.en||x.km);DB.set('settings/quick',{items:quick,closing:keep,updatedAt:TS}).then(()=>{closing=keep.length?keep:CLOSE_DEF;m.remove();toast('Goodbye messages saved')}).catch(er=>toast('Not saved: '+(er.code||er.message)))}});
+    if(b.id==='cs'){const keep=L.filter(x=>x.en||x.km);DB.set('settings/quick',{items:teamQuick,closing:keep,goodbyeMerged:true,formsMerged:true,updatedAt:TS}).then(()=>{closing=keep.length?keep:CLOSE_DEF;m.remove();toast('Goodbye messages saved')}).catch(er=>toast('Not saved: '+(er.code||er.message)))}});
 }
 /* ---------- transfer ---------- */
 async function transferSheet(id){
@@ -1082,10 +1083,16 @@ async function team(){
   }
   draw();
 }
+
+/* quick replies: the team set, or this agent's own set */
+function myQuickOn(){return !!(agent&&agent.quickMine&&Array.isArray(agent.quick)&&agent.quick.length)}
+function applyQuick(){const q=myQuickOn()?agent.quick:teamQuick;if(JSON.stringify(q)!==JSON.stringify(quick)){quick=q;drawConv()}}
 function editQuick(){
-  let L=JSON.parse(JSON.stringify(quick));
-  const m=modal('Quick replies','<div id="ql" style="display:grid;gap:10px"></div><button class="btn soft" type="button" id="qa">'+I('plus')+' Add reply</button><div class="row"><button class="btn soft" type="button" id="qd">Reset to default</button><button class="btn soft" data-close type="button">Cancel</button><button class="btn" id="qs" type="button">Save for all agents</button></div>');
-  function draw(){m.querySelector('#ql').innerHTML=L.map((x,i)=>'<div class="qe"><div style="display:grid;gap:6px;align-content:start"><span class="qrb" style="pointer-events:none"><span class="ic">'+I(x.icon)+'</span></span><select data-i="'+i+'" data-k="icon">'+QICONS.map(o=>'<option'+(o===x.icon?' selected':'')+'>'+o+'</option>').join('')+'</select></div><div style="display:grid;gap:6px"><label class="f">Button label<input data-i="'+i+'" data-k="label" value="'+esc(x.label)+'"></label><label class="f">English<textarea data-i="'+i+'" data-k="en">'+esc(x.en)+'</textarea></label><label class="f">Khmer<textarea data-i="'+i+'" data-k="km">'+esc(x.km)+'</textarea></label><label style="display:flex;gap:8px;align-items:center;font-size:.85rem"><input type="checkbox" data-i="'+i+'" data-k="send"'+(x.send?' checked':'')+'> Send instantly (untick to put it in the box to finish typing)</label><div class="row"><button class="btn sm soft" type="button" data-mv="'+i+'" data-d="-1">↑</button><button class="btn sm soft" type="button" data-mv="'+i+'" data-d="1">↓</button><button class="btn sm del" type="button" data-rm="'+i+'">Remove</button></div></div></div>').join('')}
+  let mode=myQuickOn()?'mine':'team';
+  let L=JSON.parse(JSON.stringify(mode==='mine'?agent.quick:teamQuick));
+  const m=modal('Quick replies','<div class="qmode" role="group" aria-label="Which quick replies"><button type="button" data-qm="team">Team replies<small>Shared with all agents</small></button><button type="button" data-qm="mine">My own replies<small>Only you see and use these</small></button></div><div id="ql" style="display:grid;gap:10px"></div><button class="btn soft" type="button" id="qa">'+I('plus')+' Add reply</button><div class="row"><button class="btn soft" type="button" id="qd">Reset</button><button class="btn soft" data-close type="button">Cancel</button><button class="btn" id="qs" type="button"></button></div>');
+  function modeUi(){m.querySelectorAll('[data-qm]').forEach(b=>b.classList.toggle('on',b.dataset.qm===mode));m.querySelector('#qs').textContent=mode==='mine'?'Save my replies':'Save for all agents';m.querySelector('#qd').textContent=mode==='mine'?'Copy team replies':'Reset to default'}
+  function draw(){modeUi();m.querySelector('#ql').innerHTML=L.map((x,i)=>'<div class="qe"><div style="display:grid;gap:6px;align-content:start"><span class="qrb" style="pointer-events:none"><span class="ic">'+I(x.icon)+'</span></span><select data-i="'+i+'" data-k="icon">'+QICONS.map(o=>'<option'+(o===x.icon?' selected':'')+'>'+o+'</option>').join('')+'</select></div><div style="display:grid;gap:6px"><label class="f">Button label<input data-i="'+i+'" data-k="label" value="'+esc(x.label)+'"></label><label class="f">English<textarea data-i="'+i+'" data-k="en">'+esc(x.en)+'</textarea></label><label class="f">Khmer<textarea data-i="'+i+'" data-k="km">'+esc(x.km)+'</textarea></label><label style="display:flex;gap:8px;align-items:center;font-size:.85rem"><input type="checkbox" data-i="'+i+'" data-k="send"'+(x.send?' checked':'')+'> Send instantly (untick to put it in the box to finish typing)</label><div class="row"><button class="btn sm soft" type="button" data-mv="'+i+'" data-d="-1">↑</button><button class="btn sm soft" type="button" data-mv="'+i+'" data-d="1">↓</button><button class="btn sm del" type="button" data-rm="'+i+'">Remove</button></div></div></div>').join('')}
   draw();
   m.addEventListener('input',e=>{const t=e.target;if(t.dataset.k){L[+t.dataset.i][t.dataset.k]=t.type==='checkbox'?t.checked:t.value;if(t.dataset.k==='icon')draw()}});
   m.addEventListener('change',e=>{const t=e.target;if(t.dataset.k){L[+t.dataset.i][t.dataset.k]=t.type==='checkbox'?t.checked:t.value;if(t.dataset.k==='icon')draw()}});
@@ -1093,8 +1100,11 @@ function editQuick(){
     if(b.dataset.rm!=null){L.splice(+b.dataset.rm,1);draw()}
     if(b.dataset.mv!=null){const i=+b.dataset.mv,j=i+(+b.dataset.d);if(j>=0&&j<L.length){[L[i],L[j]]=[L[j],L[i]];draw()}}
     if(b.id==='qa'){L.push({icon:'chat',label:'New reply',send:true,en:'',km:''});draw()}
-    if(b.id==='qd'){L=JSON.parse(JSON.stringify(DEFAULT_QUICK));draw()}
-    if(b.id==='qs'){DB.set('settings/quick',{items:L.filter(x=>x.en||x.km),goodbyeMerged:true,formsMerged:true,updatedAt:TS}).then(()=>{quick=L.filter(x=>x.en||x.km);m.remove();drawQuick();toast('Quick replies saved')}).catch(e=>toast('Not saved: '+(e.code||e.message)))}});
+    if(b.dataset.qm&&b.dataset.qm!==mode){mode=b.dataset.qm;L=JSON.parse(JSON.stringify(mode==='mine'&&agent&&Array.isArray(agent.quick)&&agent.quick.length?agent.quick:teamQuick));draw();return}
+    if(b.id==='qd'){L=JSON.parse(JSON.stringify(mode==='mine'?teamQuick:DEFAULT_QUICK));draw()}
+    if(b.id==='qs'){const keep=L.filter(x=>x.en||x.km);
+      if(mode==='mine'){DB.update('agents/'+me.uid,{quick:keep,quickMine:true}).then(()=>{agent.quick=keep;agent.quickMine=true;applyQuick();m.remove();drawQuick();toast('Your own quick replies are saved. Only you use them.')}).catch(e=>toast('Not saved: '+(e.code||e.message)));return}
+      DB.set('settings/quick',{items:keep,closing:closing,goodbyeMerged:true,formsMerged:true,updatedAt:TS}).then(()=>{teamQuick=keep;if(agent)agent.quickMine=false;DB.update('agents/'+me.uid,{quickMine:false}).catch(()=>{});applyQuick();m.remove();drawQuick();toast('Team quick replies saved for all agents')}).catch(e=>toast('Not saved: '+(e.code||e.message)))}});
 }
 
 /* ---------- misc ---------- */
