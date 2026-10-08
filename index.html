@@ -2698,6 +2698,14 @@ function ivrUrls(iv){var out=[];function add(u){if(u&&/^https:\/\//.test(u)&&out
   function clips(o){if(o&&o.clips)Object.keys(o.clips).forEach(function(k){add(o.clips[k])});if(o)add(o.bg)}
   (iv.langs||[]).forEach(function(l){add(l.clip);add(l.bg)});(iv.topics||[]).forEach(function(t){clips(t);clips(t.info)});(iv.notes||[]).forEach(clips);
   Object.keys(iv.msgs||{}).forEach(function(k){clips(iv.msgs[k])});if(iv.bg)Object.keys(iv.bg).forEach(function(k){add(iv.bg[k])});return out}
+/* connection servers: free STUN plus an optional relay (TURN) set in the editor */
+var ICE_CACHE={t:0,v:null};
+function iceServersFor(c){c=c||{};var base=[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']}],out=base.slice();
+  var srv=String(c.turnServer||'').trim();if(srv)out.push({urls:srv.split(/[\s,]+/).filter(Boolean),username:c.turnUser||'',credential:c.turnPass||''});
+  var link=String(c.turnLink||'').trim();if(!/^https:\/\//.test(link))return Promise.resolve({iceServers:out});
+  if(ICE_CACHE.v&&ICE_CACHE.link===link&&Date.now()-ICE_CACHE.t<20*60000)return Promise.resolve({iceServers:out.concat(ICE_CACHE.v)});
+  return Promise.race([fetch(link).then(function(r){return r.json()}),new Promise(function(_,rej){setTimeout(function(){rej(new Error('timeout'))},6000)})])
+    .then(function(j){var arr=Array.isArray(j)?j:(j&&j.iceServers)||[];ICE_CACHE={t:Date.now(),v:arr,link:link};return {iceServers:out.concat(arr)}}).catch(function(){return {iceServers:out}})}
 
 function callCard(){var c=S.call||{},iv=ivrModel(c),n=ivrUrls(iv).length;return dCard('phone','Call us (web call)',c.enabled===false?'Off. Tap to turn on and set up.':'On · number '+esc(c.number||'203')+' · '+iv.langs.filter(function(l){return l.on!==false}).length+' languages · '+iv.topics.filter(function(t){return t.on!==false}).length+' topics · '+n+' recordings','data-act="callform"')}
 function ivrCard(){return dCard('sound','Call menu (IVR)','Languages, topics, notices, messages, background music','data-act="ivrform"')}
@@ -2730,6 +2738,10 @@ function callForm(){var c=JSON.parse(JSON.stringify(S.call||{})),P=c.prompts=c.p
    '<label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-con style="width:auto"'+(c.enabled===false?'':' checked')+'> Show the Call us button</label>'+
    fieldHtml(['number','Number shown on the call screen','text'],c.number||'203')+'<label class="f">Number style<select data-nst>'+[['thin','Thin'],['light','Light'],['regular','Regular'],['bold','Bold (default)']].map(function(o){return '<option value="'+o[0]+'"'+((c.numStyle||'bold')===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select></label>'+fieldHtml(['ringSec','Seconds of ringing tone before the no-answer message','text'],String(c.ringSec||35))+
    '<button class="btn" type="button" data-openivr style="justify-content:center">'+I('sound')+' Edit call menu (IVR)</button>'+
+   '<h4 style="margin:6px 0 0">Call connection (relay server)</h4><p style="margin:0;color:var(--muted);font-size:.86rem;line-height:1.55">Many mobile networks block direct web calls, so the call stays on “Connecting…” and then ends. A relay (TURN) server passes the voice along when that happens. Get a free one at <b>metered.ca</b> (Open Relay, 20 GB a month free): sign up, create a TURN app, then copy its <b>credentials link</b> (it starts with https:// and ends with ?apiKey=…) and paste it here.</p>'+
+   fieldHtml(['turnLink','Relay credentials link','text'],c.turnLink||'')+
+   '<details><summary style="cursor:pointer;font-size:.86rem;color:var(--muted)">Other relay provider (advanced)</summary><div style="display:grid;gap:8px;margin-top:8px">'+fieldHtml(['turnServer','TURN server address(es), e.g. turn:relay.example.com:443','text'],c.turnServer||'')+fieldHtml(['turnUser','Username','text'],c.turnUser||'')+fieldHtml(['turnPass','Password','text'],c.turnPass||'')+'</div></details>'+
+   '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn sm soft" type="button" data-turncheck>'+I('check')+' Check relay</button><small data-turnres style="color:var(--muted)"></small></div>'+
    '<h4 style="margin:6px 0 0">Away and opening hours</h4><p style="margin:0;color:var(--muted);font-size:.86rem;line-height:1.55">When the line is Away or closed, callers hear the Away message and the call ends. Your inbox does not ring. Times are Cambodia time.</p>'+
    '<label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-aon style="width:auto"'+(AW.on?' checked':'')+'> Away now (no calls ring)</label>'+
    '<label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-asch style="width:auto"'+(AW.sched?' checked':'')+'> Use opening hours</label>'+
@@ -2742,11 +2754,18 @@ function callForm(){var c=JSON.parse(JSON.stringify(S.call||{})),P=c.prompts=c.p
     vRow(kit,'holdMusic',P.holdMusic,{label:'Waiting music',music:true,none:'Built-in tune'})+'<small style="color:var(--muted)">Heard when you tap Waiting or transfer a call. Plays on repeat.</small>'}
   function collect(){c.enabled=m.querySelector('[data-con]').checked;c.number=(m.querySelector('[data-k="number"]').value.trim()||'203').slice(0,20);c.numStyle=m.querySelector('[data-nst]').value;
     c.ringSec=Math.max(15,Math.min(180,parseInt(m.querySelector('[data-k="ringSec"]').value,10)||35));
+    ['turnLink','turnServer','turnUser','turnPass'].forEach(function(k){var el=m.querySelector('[data-k="'+k+'"]');if(el)c[k]=el.value.trim()});
     var nAW={on:m.querySelector('[data-aon]').checked,sched:m.querySelector('[data-asch]').checked,open:m.querySelector('[data-aopen]').value||'08:00',close:m.querySelector('[data-aclose]').value||'17:00',days:[].slice.call(m.querySelectorAll('[data-aday]')).filter(function(x){return x.checked}).map(function(x){return +x.dataset.aday}),at:Date.now()};
     if(JSON.stringify([nAW.on,nAW.sched,nAW.open,nAW.close,nAW.days])!==JSON.stringify([!!AW.on,!!AW.sched,AW.open||'08:00',AW.close||'17:00',Array.isArray(AW.days)?AW.days:[1,2,3,4,5,6,0]]))awaySet(nAW,'');
     kit.stop();S.call=Object.assign({},S.call||{},c)}
   m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
     if(b.hasAttribute('data-openivr')){collect();m.remove();changed();ivrForm();return}
+    if(b.hasAttribute('data-turncheck')){var res=m.querySelector('[data-turnres]'),cc={};['turnLink','turnServer','turnUser','turnPass'].forEach(function(k){var el=m.querySelector('[data-k="'+k+'"]');cc[k]=el?el.value.trim():''});
+      if(!cc.turnLink&&!cc.turnServer){res.textContent='Paste a relay link first.';res.style.color='var(--danger)';return}
+      res.textContent='Checking…';res.style.color='var(--muted)';ICE_CACHE={t:0,v:null};
+      iceServersFor(cc).then(function(cfg){var pc=new RTCPeerConnection({iceServers:cfg.iceServers,iceTransportPolicy:'relay'}),ok=false,done=function(msg,good){if(ok)return;ok=true;try{pc.close()}catch(x){}res.textContent=msg;res.style.color=good?'var(--ok)':'var(--danger)'};
+        pc.createDataChannel('t');pc.onicecandidate=function(e){if(e.candidate&&/ relay /.test(e.candidate.candidate))done('Relay works. Calls can now connect on mobile networks. Tap Save.',true)};
+        pc.createOffer().then(function(o){return pc.setLocalDescription(o)}).catch(function(){});setTimeout(function(){done('The relay did not answer. Check the link, username and password.',false)},9000)}).catch(function(){res.textContent='Could not read the relay link.';res.style.color='var(--danger)'});return}
     if(b.hasAttribute('data-ctest')||b.hasAttribute('data-cok')){collect();m.remove();changed();
       if(b.hasAttribute('data-ctest')){if(window.TheanCall)window.TheanCall.start();else toast('Not ready yet, try again in a moment')}else toast('Saved. The website updates in a moment.')}});
   draw()}
@@ -3462,7 +3481,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261008-0237',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261008-0455',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
@@ -3571,6 +3590,14 @@ function ivrUrls(iv){var out=[];function add(u){if(u&&/^https:\/\//.test(u)&&out
   function clips(o){if(o&&o.clips)Object.keys(o.clips).forEach(function(k){add(o.clips[k])});if(o)add(o.bg)}
   (iv.langs||[]).forEach(function(l){add(l.clip);add(l.bg)});(iv.topics||[]).forEach(function(t){clips(t);clips(t.info)});(iv.notes||[]).forEach(clips);
   Object.keys(iv.msgs||{}).forEach(function(k){clips(iv.msgs[k])});if(iv.bg)Object.keys(iv.bg).forEach(function(k){add(iv.bg[k])});return out}
+/* connection servers: free STUN plus an optional relay (TURN) set in the editor */
+var ICE_CACHE={t:0,v:null};
+function iceServersFor(c){c=c||{};var base=[{urls:['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302']}],out=base.slice();
+  var srv=String(c.turnServer||'').trim();if(srv)out.push({urls:srv.split(/[\s,]+/).filter(Boolean),username:c.turnUser||'',credential:c.turnPass||''});
+  var link=String(c.turnLink||'').trim();if(!/^https:\/\//.test(link))return Promise.resolve({iceServers:out});
+  if(ICE_CACHE.v&&ICE_CACHE.link===link&&Date.now()-ICE_CACHE.t<20*60000)return Promise.resolve({iceServers:out.concat(ICE_CACHE.v)});
+  return Promise.race([fetch(link).then(function(r){return r.json()}),new Promise(function(_,rej){setTimeout(function(){rej(new Error('timeout'))},6000)})])
+    .then(function(j){var arr=Array.isArray(j)?j:(j&&j.iceServers)||[];ICE_CACHE={t:Date.now(),v:arr,link:link};return {iceServers:out.concat(arr)}}).catch(function(){return {iceServers:out}})}
 
 function ivr(){return ivrModel(callCfg())}
 function ivLangs(){return ivr().langs.filter(l=>l&&l.on!==false)}
@@ -3678,7 +3705,7 @@ async function callStart(){
   call={state:'init',lang:lg0,ui:lg0,timers:[],unsub:[],seen:{},muted:false};
   try{call.ac=new (window.AudioContext||window.webkitAudioContext)();call.ac.resume()}catch(e){}
   try{speechSynthesis.getVoices();const u0=new SpeechSynthesisUtterance(' ');u0.volume=0;speechSynthesis.speak(u0)}catch(e){}
-  loadPrompts();
+  loadPrompts();iceServersFor(callCfg());
   drawCall();setSt(cw('mic',lg0));
   try{call.stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}})}
   catch(e){setSt(cw('micNo',lg0));await sleepC(4500);return callEnd(false)}
@@ -3739,10 +3766,11 @@ async function afterLang(){const lg=call.lang;
 function muteRemote(v){const a=callEl()&&callEl().querySelector('[data-remote]');if(a)a.muted=v;if(call.rg)call.rg.gain.value=v?0:(call.spk?1.6:0)}
 function closeLeg(){if(!call)return;(call.legUnsub||[]).forEach(u=>{try{u()}catch(e){}});call.legUnsub=[];try{call.pc&&call.pc.close()}catch(e){}call.pc=null;call.connected=false;if(call.rg){try{call.rg.disconnect()}catch(e){}call.rg=null}call.remote=null}
 async function newLeg(n){closeLeg();call.leg=n;call.state='active';call.onHold=false;clearTimeout(call.ringT);holdStop();stopVoice();bgStop();setIvr('');
-  const P='calls/'+call.id,L='calls/'+call.id+'/sig/'+n,seen={},pc=new RTCPeerConnection(ICE);call.pc=pc;call.legUnsub=[];
+  const P='calls/'+call.id,L='calls/'+call.id+'/sig/'+n,seen={},cfgI=await iceServersFor(callCfg());if(!call||call.leg!==n)return;const pc=new RTCPeerConnection(cfgI);call.pc=pc;call.legUnsub=[];
   call.stream.getTracks().forEach(t=>pc.addTrack(t,call.stream));
   pc.ontrack=e=>{call.remote=e.streams[0];if(call.rec&&call.ac){try{call.recRem&&call.recRem.disconnect()}catch(x){}try{call.recRem=call.ac.createMediaStreamSource(call.remote);call.recRem.connect(call.rec.dest)}catch(x){}}const a=callEl()&&callEl().querySelector('[data-remote]');if(a){a.srcObject=e.streams[0];a.muted=false;a.play().catch(()=>{})}if(call.spk)setSpk()};
   pc.onconnectionstatechange=()=>{if(!call||call.pc!==pc)return;const s=pc.connectionState;if(s==='connected')onConnected();
+    if(s==='failed'&&call.id)fb.update('calls/'+call.id,{fail:'network'}).catch(()=>{});
     if((s==='failed'||s==='disconnected')&&call.state==='active'){setTimeout(()=>{if(call&&call.pc===pc&&pc.connectionState!=='connected'&&call.state==='active')callEnd(true)},8000)}};
   pc.onicecandidate=e=>{if(e.candidate&&call&&call.pc===pc)fb.push(L+'/cc',JSON.parse(JSON.stringify(e.candidate.toJSON()))).catch(()=>{})};
   const offer=await pc.createOffer({offerToReceiveAudio:true});await pc.setLocalDescription(offer);
