@@ -2776,8 +2776,8 @@ function ivrForm(){var IV=JSON.parse(JSON.stringify(ivrModel(S.call||{})));IV._p
   function sec(id,title,inner,sw){var o=open[id]===true;return '<details class="ivsec" data-sec="'+id+'"'+(o?' open':'')+'><summary><b>'+title+'</b>'+(sw||'')+'</summary><div class="ivsec-b">'+inner+'</div></details>'}
   function music(){IV.bg=IV.bg||{};return vRow(kit,'_p.ringTone',IV._p.ringTone,{label:'Ringing tone',music:true,none:'Standard tuut'})+'<small class="ivnote">Heard while the call rings and during the wait for an agent. Plays on repeat.</small>'+
       vRow(kit,'_p.holdMusic',IV._p.holdMusic,{label:'Waiting music',music:true,none:'Built-in tune'})+'<small class="ivnote">Heard when an agent taps Waiting or transfers the call.</small>'+
-      '<h5 class="ivh5">Background music</h5><small class="ivnote">Plays softly under a whole part of the menu, without stopping between the options.</small>'+
-      [['greet','Greeting and language'],['topic','Topic menu and notices'],['wait','Waiting and busy'],['closed','Closed and Away message']].map(function(x){return vRow(kit,'bg.'+x[0],IV.bg[x[0]],{label:x[1],music:true,none:'None'})}).join('')}
+      '<h5 class="ivh5">Background music</h5><small class="ivnote">Plays softly under a whole part of the menu, without stopping between the options. You can keep it playing for a while after the voices end. Callers can still press a key during that time.</small>'+
+      [['greet','Greeting and language'],['topic','Topic menu and notices'],['wait','Waiting and busy'],['closed','Closed and Away message']].map(function(x){IV.tail=IV.tail||{};var t=+IV.tail[x[0]]||0;return '<div class="ivcard">'+vRow(kit,'bg.'+x[0],IV.bg[x[0]],{label:x[1],music:true,none:'None'})+'<label class="ivkey">Keep playing after the voices end <select data-path="tail.'+x[0]+'">'+[0,10,20,30,45,60].map(function(n){return '<option value="'+n+'"'+(t===n?' selected':'')+'>'+(n?n+' seconds, then fade out':'Off (stop with the voice)')+'</option>'}).join('')+'</select></label></div>'}).join('')}
   function draw(){var h='',ld=dupKeys(IV.langs),td=dupKeys(IV.topics),mb='<small class="ivnote">Background music for this part is in <b>5. Music</b>.</small>';
     h+=sec('f1','1. Closed and Away message',[['closed','Away / closed','Heard when the line is Away or outside opening hours. Plays in every language, then the call ends.']].map(function(x){var b='msgs.'+x[0],it=IV.msgs[x[0]];return '<div class="ivcard'+(it.on===false?' off':'')+'"><div class="ivcard-h"><span><b>'+x[1]+'</b><small>'+x[2]+'</small></span>'+ivSw(b+'.on',it.on)+'</div>'+perLang(b,it,x[0],true)+'</div>'}).join('')+mb);
     h+=sec('f2','2. Greeting and language','<h5 class="ivh5">Notices before the language menu</h5>'+notes('start','before the language menu')+'<h5 class="ivh5">Language menu</h5>'+'<div class="ivrow">'+ivSw('langOn',IV.langOn,'Language menu on')+'</div><small style="color:var(--muted)">Each language says its own line in its own language, for example “press 1 for Khmer”. If the menu is off, callers hear the website language.</small>'+
@@ -3462,7 +3462,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261007-1121',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261008-0237',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
@@ -3603,8 +3603,11 @@ function loadPrompts(){const P=callCfg().prompts||{},U=ivrUrls(ivr()).concat([P.
   PBUF[u]=fetch(u).then(r=>r.arrayBuffer()).then(b=>new Promise((res,rej)=>call&&call.ac?call.ac.decodeAudioData(b,res,rej):rej())).catch(()=>null)})}
 /* background music under a voice */
 function bgSet(u){if(!call||!call.ac)return;if(call.bgUrl===u)return;bgStop();if(!u)return;call.bgUrl=u;const tok=call.bgTok={};if(!PBUF[u])loadPrompts();
-  Promise.resolve(PBUF[u]).then(buf=>{if(!call||call.bgTok!==tok||!buf)return;const src=call.ac.createBufferSource(),g=call.ac.createGain();g.gain.value=.22;src.buffer=buf;src.loop=true;src.connect(g);g.connect(outNode());src.start();call.bgSrc=src})}
-function bgStop(){if(!call)return;call.bgTok=null;call.bgUrl='';if(call.bgSrc){try{call.bgSrc.stop()}catch(e){}call.bgSrc=null}}
+  Promise.resolve(PBUF[u]).then(buf=>{if(!call||call.bgTok!==tok||!buf)return;const src=call.ac.createBufferSource(),g=call.ac.createGain();g.gain.value=.22;src.buffer=buf;src.loop=true;src.connect(g);g.connect(outNode());src.start();call.bgSrc=src;call.bgGain=g})}
+function bgStop(){if(!call)return;call.bgTok=null;call.bgUrl='';if(call.bgSrc){try{call.bgSrc.stop()}catch(e){}call.bgSrc=null;call.bgGain=null}}
+/* keep the part's music playing for the chosen seconds after the voices end, then fade out */
+async function bgTail(part,st){const sec=+((ivr().tail||{})[part])||0;if(!call||!sec||!call.bgSrc)return;const tok=call.flow;await sleepC(Math.max(0,sec*1000-1500));
+  if(!call||call.state!==st||call.flow!==tok)return;try{const g=call.bgGain,t=call.ac.currentTime;g.gain.setValueAtTime(g.gain.value,t);g.gain.linearRampToValueAtTime(.0001,t+1.5)}catch(e){}await sleepC(1500)}
 /* play one IVR voice: recording, else phone voice, else words on screen */
 function playIv(url,txt,tts,bg){if(bg!==undefined)bgSet(bg||'');return playOne('',txt||'',tts||'en',url||'__none__')}
 function playOne(name,txt,vl,url){/* recorded voice from the editor, else the phone's own voice, else the words on screen */
@@ -3664,7 +3667,7 @@ function awayNow(a){if(!a)return false;if(a.on)return true;if(!a.sched)return fa
   const hm=x=>{const m=String(x||'').match(/^(\d{1,2}):(\d{2})/);return m?(+m[1])*60+(+m[2]):null},o=hm(a.open),c=hm(a.close);
   if(o==null||c==null)return false;return o<=c?(mins<o||mins>=c):(mins<o&&mins>=c)}
 async function closedFlow(){call.state='closed';startClock();
-  const m=ivr().msgs.closed;if(m&&m.on!==false)await ivAll(m,'closed','closed',ivBg('closed'));if(!call)return;bgStop();await sleepC(600);callEnd(false)}
+  const m=ivr().msgs.closed;if(m&&m.on!==false)await ivAll(m,'closed','closed',ivBg('closed'));if(!call)return;await bgTail('closed','closed');if(!call)return;bgStop();await sleepC(600);callEnd(false)}
 /* ---- flow ---- */
 async function callStart(){
   if(call){setMini(false);return}
@@ -3690,7 +3693,7 @@ async function callStart(){
   for(let i=0;i<2;i++){for(const l of LS){if(!call||call.flow!==tok||call.state!=='menu')return;
       await playIv(l.clip&&(!l.ck||l.ck===l.key)?l.clip:'',l.text||ivrLangLine(l),l.tts,ivBg('greet'));if(!call||call.flow!==tok||call.state!=='menu')return;await sleepC(250)}
     await sleepC(5000);if(!call||call.flow!==tok||call.state!=='menu')return}
-  bgStop();callEnd(false) /* no language chosen after the menu played twice */
+  await bgTail('greet','menu');if(!call||call.flow!==tok||call.state!=='menu')return;bgStop();callEnd(false) /* no language chosen after the menu played twice */
 }
 function onKey(k){if(!call)return;
   if(call.state==='menu'){const l=ivLangs().find(x=>x.key===k);if(!l||!ivr().langOn)return;stopVoice();call.lang=l.id;afterLangFlow();return}
@@ -3707,7 +3710,7 @@ async function topicMenu(skipNotes){call.state='topic';const tok=call.flow={},l=
   for(let i=0;i<2;i++){for(const t of ivTopics()){if(!call||call.flow!==tok||call.state!=='topic')return;
       await playIv(ivClip(t,l,t.key),ivText(t,l)||ivrTopicLine(t,l),l.tts,ivBg('topic'));if(!call||call.flow!==tok||call.state!=='topic')return;await sleepC(250)}
     await sleepC(5000);if(!call||call.flow!==tok||call.state!=='topic')return}
-  bgStop();callEnd(false)}
+  await bgTail('topic','topic');if(!call||call.flow!==tok||call.state!=='topic')return;bgStop();callEnd(false)}
 async function infoFlow(t){call.state='info';call.infoTopic=t;const tok=call.flow={},l=ivLang(),inf=t.info||{};
   await playIv(ivClip(inf,l),ivText(inf,l),l.tts,ivBg('topic'));if(!call||call.flow!==tok||call.state!=='info')return;await sleepC(600);
   if(call&&call.flow===tok&&call.state==='info')topicMenu()}
@@ -3715,7 +3718,7 @@ async function connectFlow(t){const l=ivLang(),nm=t?((t.names&&(t.names.en||t.na
   call.topic=t?t.id:'general';call.topicEn=nm;call.topicKm=t&&t.names?(t.names.km||nm):'ការសាកសួរទូទៅ';call.langName=l.agent||l.name||l.id;
   call.state='wait';const tok=call.flow={};afterLang().catch(()=>{});
   await ivNotes('afterTopic','wait',false);if(!call||call.flow!==tok||call.state!=='wait')return;
-  await ivMsg('wait','wait');if(!call||call.flow!==tok||call.state!=='wait')return;bgStop();
+  await ivMsg('wait','wait');if(!call||call.flow!==tok||call.state!=='wait')return;await bgTail('wait','wait');if(!call||call.flow!==tok||call.state!=='wait')return;bgStop();
   queueStart();clearTimeout(call.ringT);call.ringT=setTimeout(()=>{if(call&&call.state==='wait')noAnswer()},(+callCfg().ringSec||35)*1000)}
 function noAnswer(){const id=call.id;busyEnd();if(id)fb.update('calls/'+id,{status:'missed',endedAt:TS}).catch(()=>{})}
 function drawLabels(){const el=callEl();if(!el)return;const lg=call.lang;[['data-mute','mute'],['data-spk','speaker'],['data-kp','keypad'],['data-chat','chat'],['data-end','end']].forEach(([a,k])=>{const b=el.querySelector('['+a+'] small');if(b)b.textContent=cw(k,lg)})}
@@ -3749,7 +3752,7 @@ async function newLeg(n){closeLeg();call.leg=n;call.state='active';call.onHold=f
   call.legUnsub.push(fb.on(L+'/ac',v=>{if(!v||!call||call.pc!==pc)return;Object.keys(v).forEach(k=>{if(seen[k])return;seen[k]=1;pc.addIceCandidate(v[k]).catch(()=>{})})}));
 }
 function onConnected(){if(!call||call.connected)return;call.connected=true;call.everConnected=true;clearTimeout(call.ringT);if(!call.onHold)holdStop();stopVoice();setIvr('')}
-async function busyEnd(){if(!call||call.state==='busy'||call.state==='ending')return;call.state='busy';clearTimeout(call.ringT);closeLeg();holdStop();stopVoice();showPad(false);await sleepC(300);if(!call)return;await ivMsg('busy','busy');if(!call)return;bgStop();await sleepC(800);callEnd(false)}
+async function busyEnd(){if(!call||call.state==='busy'||call.state==='ending')return;call.state='busy';clearTimeout(call.ringT);closeLeg();holdStop();stopVoice();showPad(false);await sleepC(300);if(!call)return;await ivMsg('busy','busy');if(!call)return;await bgTail('wait','busy');if(!call)return;bgStop();await sleepC(800);callEnd(false)}
 async function callEnd(byMe){if(!call||call.state==='ending')return;if(call.rec)recStop();const c=call;c.state='ending';
   holdStop();stopVoice();bgStop();try{c.ringSrc&&c.ringSrc.stop()}catch(e){}clearTimeout(c.menuTimer);clearTimeout(c.ringT);clearInterval(c.tick);c.timers.forEach(t=>clearTimeout(t));
   if(byMe&&c.id){try{await fb.update('calls/'+c.id,{status:c.everConnected||c.answered?'ended':'cancelled',endedAt:TS,endedBy:'caller'})}catch(e){}}
