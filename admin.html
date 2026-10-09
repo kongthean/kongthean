@@ -1274,6 +1274,18 @@ body.tcall-on.tcall-mini{overflow:auto}
 .ivh5{margin:10px 0 0;font-size:.9rem;border-top:1px solid var(--line);padding-top:12px}.ivsec-b>.ivh5:first-child{border-top:0;padding-top:0;margin-top:0}
 .ivnote{color:var(--muted);font-size:.82rem;line-height:1.5}.ivh6{margin:4px 0 0;font-size:.84rem;color:var(--muted)}
 .ivfoot{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap;position:sticky;bottom:-16px;background:var(--surface);padding:10px 0}
+
+.khqrwrap{position:relative}
+.khout.khexp canvas{filter:blur(6px) grayscale(1);opacity:.5}
+.khtimer{font-weight:600;font-variant-numeric:tabular-nums;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}.khtimer.warn{color:#b42318}
+.khbanks{width:100%;max-width:360px;display:grid;gap:8px}.khbanks>small{color:var(--muted);font-weight:600}
+.khbgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.khbgrid button{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:8px 10px;cursor:pointer;font:inherit;font-weight:600;font-size:.86rem;text-align:left;min-height:48px}
+.khbgrid button:active{background:var(--bg2)}
+.khlogo{width:30px;height:30px;border-radius:9px;background:var(--bg2);color:var(--ink);display:inline-grid;place-items:center;font-size:.72rem;font-weight:800;letter-spacing:.02em;flex:none;overflow:hidden}
+.khlogo img{width:100%;height:100%;object-fit:contain;background:#fff}
+.khsheet{display:grid;gap:14px}.khstep{display:flex;gap:12px;align-items:flex-start}.khstep>b{width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--surface);display:grid;place-items:center;flex:none}
+.khstep>div{display:grid;gap:8px;flex:1}.khstep .btn{justify-self:start}
 </style>
 </head>
 <body>
@@ -1350,6 +1362,7 @@ var P={users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s
  sound:'<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',
  trash:'<path d="M4.5 7h15M9.5 7V4.8h5V7M6.5 7l.9 12.2h9.2L17.5 7M10 10.5v5.5M14 10.5v5.5"/>',
  dots:'<circle cx="5.5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="18.5" cy="12" r="1.6" fill="currentColor"/>',
+ ext:'<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
  mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/>',grid:'<circle cx="6" cy="5" r="1.3"/><circle cx="12" cy="5" r="1.3"/><circle cx="18" cy="5" r="1.3"/><circle cx="6" cy="11" r="1.3"/><circle cx="12" cy="11" r="1.3"/><circle cx="18" cy="11" r="1.3"/><circle cx="6" cy="17" r="1.3"/><circle cx="12" cy="17" r="1.3"/><circle cx="18" cy="17" r="1.3"/><circle cx="12" cy="22" r=".9"/>',phoneoff:'<path d="M3 13.6c5-4.6 13-4.6 18 0l-2.3 2.6-3.6-1.4-.3-2.5a10 10 0 0 0-5.6 0l-.3 2.5-3.6 1.4z"/>',
  close:'<path d="M6 6l12 12M18 6L6 18"/>', menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
  left:'<path d="M15 5l-7 7 7 7"/>', right:'<path d="M9 5l7 7-7 7"/>', arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
@@ -1925,10 +1938,33 @@ function khAscii(x,n){return String(x||'').normalize('NFD').replace(/[^\x20-\x7E
 function khqrString(D,amt,cur){
   var now=Date.now(),a=cur==='KHR'?String(Math.round(amt)):String(Math.round(amt*100)/100);
   var s=khTlv('00','01')+khTlv('01',amt>0?'12':'11')+khTlv('29',khTlv('00',String(D.bakongId).trim()))+khTlv('52','5999')+khTlv('58','KH')+khTlv('59',khAscii(D.khName||S.brand.name||'THEAN',25)||'THEAN')+khTlv('60',khAscii(D.khCity||'Phnom Penh',15)||'Phnom Penh');
-  if(amt>0)s+=khTlv('99',khTlv('00',String(now))+khTlv('01',String(now+86400000)));
+  if(amt>0)s+=khTlv('99',khTlv('00',String(now))+khTlv('01',String(now+(+D.khExp>0?+D.khExp*1000:86400000))));
   s+=khTlv('53',cur==='KHR'?'116':'840');if(amt>0)s+=khTlv('54',a);
   s+='6304';return s+khCrc(s)}
 var KH={cur:null,amt:''};
+var KHBANKS=[{id:'aba',name:'ABA',full:'ABA Bank',q:'ABA Mobile'},{id:'acleda',name:'ACLEDA',full:'ACLEDA Bank',q:'ACLEDA mobile'},{id:'wing',name:'Wing',full:'Wing Bank',q:'Wing Bank'},{id:'canadia',name:'Canadia',full:'Canadia Bank',q:'Canadia Bank'},
+  {id:'chipmong',name:'Chip Mong',full:'Chip Mong Bank',q:'Chip Mong Bank'},{id:'ftb',name:'FTB',full:'FTB Bank',q:'FTB Bank Cambodia'},{id:'prasac',name:'KB PRASAC',full:'KB PRASAC Bank',q:'KB PRASAC'},{id:'bakong',name:'Bakong',full:'Bakong Wallet',q:'Bakong'}];
+function khBanks(){var D=S.donate||{},cfg=D.banks||{};return KHBANKS.map(function(b){var c=cfg[b.id]||{};return {id:b.id,name:b.name,full:c.name||b.full,q:b.q,on:c.on!==false,link:c.link||'',logo:c.logo||''}}).filter(function(b){return b.on})}
+function khMono(b){var w=b.name.split(/\s+/);return (w.length>1?w[0][0]+w[1][0]:b.name.length<=4?b.name:b.name.slice(0,2)).toUpperCase()}
+function khStoreLink(b){var q=encodeURIComponent(b.q),ua=navigator.userAgent||'';
+  if(/iPhone|iPad|iPod/.test(ua))return 'itms-apps://search.itunes.apple.com/WebObjects/MZSearch.woa/wa/search?media=software&term='+q;
+  if(/Android/.test(ua))return 'https://play.google.com/store/search?q='+q+'&c=apps';return 'https://www.google.com/search?q='+q+'+app'}
+function khBankBtns(){var km=lang==='km',L=khBanks();if(!L.length)return '';
+  return '<div class="khbanks"><small>'+(km?'បន្តទៅកាន់ធនាគាររបស់អ្នក':'Continue in your bank app')+'</small><div class="khbgrid">'+L.map(function(b){return '<button type="button" data-kh="bank:'+b.id+'"><span class="khlogo">'+(b.logo?'<img alt="" src="'+esc(b.logo)+'">':esc(khMono(b)))+'</span><span>'+esc(b.full)+'</span></button>'}).join('')+'</div></div>'}
+function khSaveQr(){var cv=document.getElementById('khcv');if(!cv)return;cv.toBlob(function(bl){var f;try{f=new File([bl],'thean-khqr.png',{type:'image/png'})}catch(e){}
+    if(f&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:'KHQR'}).catch(function(){})}
+    else{var u=URL.createObjectURL(bl),l=document.createElement('a');l.href=u;l.download='thean-khqr.png';document.body.appendChild(l);l.click();setTimeout(function(){URL.revokeObjectURL(u);l.remove()},1500)}},'image/png')}
+function khBankSheet(id){var km=lang==='km',b=khBanks().filter(function(x){return x.id===id})[0];if(!b)return;
+  var m=modal(b.full,'<div class="khsheet"><div class="khstep"><b>1</b><div><span>'+(km?'រក្សាទុករូប QR ក្នុងទូរស័ព្ទរបស់អ្នក':'Save the QR to your phone')+'</span><button class="btn" type="button" data-khs="save">'+I('download')+(km?' រក្សាទុក QR':' Save QR')+'</button></div></div>'+
+    '<div class="khstep"><b>2</b><div><span>'+(km?'បើកកម្មវិធី '+esc(b.full):'Open the '+esc(b.full)+' app')+'</span><a class="btn" href="'+esc(b.link||khStoreLink(b))+'" target="_blank" rel="noopener">'+I('ext')+(km?' បើកកម្មវិធី':' Open app')+'</a></div></div>'+
+    '<div class="khstep"><b>3</b><div><span>'+(km?'ក្នុងកម្មវិធី ចុច «ស្កេន» → «រូបភាព» ហើយជ្រើសរូប QR ដែលបានរក្សាទុក។ ពិនិត្យឈ្មោះ និងចំនួនទឹកប្រាក់ រួចបញ្ជាក់។':'In the app, tap Scan → Photo (or Gallery) and choose the saved QR. Check the name and amount, then confirm.')+'</span></div></div></div>');
+  m.addEventListener('click',function(e){var x=e.target.closest('[data-khs]');if(x)khSaveQr()})}
+function khStartTimer(D){clearInterval(KH.tm);var sec=+D.khExp||0,el=document.getElementById('khtimer');if(!sec||!el)return;var end=Date.now()+sec*1000,km=lang==='km';
+  var f=function(){var e=document.getElementById('khtimer');if(!e){clearInterval(KH.tm);return}var left=Math.max(0,Math.ceil((end-Date.now())/1000));
+    if(left>0){e.textContent=(km?'QR ផុតកំណត់ក្នុងរយៈពេល ':'QR expires in ')+Math.floor(left/60)+':'+String(left%60).padStart(2,'0');e.className='khtimer'+(left<=10?' warn':'');return}
+    clearInterval(KH.tm);var out=document.getElementById('khout');if(out)out.classList.add('khexp');e.className='khtimer warn';e.innerHTML=(km?'QR នេះបានផុតកំណត់ហើយ។ ':'This QR has expired. ')+'<button class="btn sm" type="button" data-kh="go">'+(km?'បង្ហាញ QR ថ្មី':'Show a new QR')+'</button>'};
+  f();KH.tm=setInterval(f,1000)}
+
 function khFmt(a,cur){return cur==='KHR'?Math.round(a).toLocaleString('en-US')+' ៛':'$'+(Math.round(a*100)/100).toFixed(2)}
 function khDraw(cv,D,amt,cur){
   var str=khqrString(D,amt,cur),M=QR.make(str),N=M.length,W=600,pad=60,cell=Math.floor((W-pad*2)/N),qs=cell*N,H=300+qs+90;
@@ -1954,9 +1990,10 @@ function khAct(a,t){var D=S.donate,km=lang==='km';var inp=document.getElementByI
   if(a==='go'){var cur=KH.cur||D.khCur||'USD',v=parseFloat(String(KH.amt).replace(/[^0-9.]/g,''));var out=document.getElementById('khout');
     if(!(v>0)){out.innerHTML='<p style="color:#b42318;margin:0">'+(km?'សូមបញ្ចូលចំនួនទឹកប្រាក់':'Please enter an amount')+'</p>';return}
     if(cur==='USD'&&v>10000||cur==='KHR'&&v>40000000){out.innerHTML='<p style="color:#b42318;margin:0">'+(km?'ចំនួនធំពេក':'That amount is too large')+'</p>';return}
-    out.innerHTML='<canvas id="khcv" style="width:100%;max-width:320px;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.15)"></canvas><div class="khact"><button class="btn" type="button" data-kh="save">'+I('download')+(km?' រក្សាទុក QR':' Save QR image')+'</button></div><ol class="khsteps"><li>'+(km?'រក្សាទុករូប QR ឬថតអេក្រង់':'Save the QR image (or take a screenshot)')+'</li><li>'+(km?'បើកកម្មវិធីធនាគាររបស់អ្នក (ABA, ACLEDA, Wing, Bakong…) → ស្កេន → ជ្រើសរូបភាព':'Open your banking app (ABA, ACLEDA, Wing, Bakong…) → Scan → choose the photo')+'</li><li>'+(km?'ពិនិត្យឈ្មោះ និងចំនួន '+khFmt(v,cur)+' រួចបញ្ជាក់':'Check the name and the amount '+khFmt(v,cur)+', then confirm')+'</li></ol>';
-    try{khDraw(document.getElementById('khcv'),D,v,cur)}catch(e){out.innerHTML='<p>'+esc(e.message)+'</p>'}return}
-  if(a==='save'){var cv=document.getElementById('khcv');if(!cv)return;cv.toBlob(function(bl){var f;try{f=new File([bl],'thean-khqr.png',{type:'image/png'})}catch(e){}
+    out.classList.remove('khexp');out.innerHTML='<div class="khqrwrap"><canvas id="khcv" style="width:100%;max-width:320px;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.15)"></canvas></div>'+(+D.khExp>0?'<div class="khtimer" id="khtimer"></div>':'')+khBankBtns()+'<div class="khact"><button class="btn" type="button" data-kh="save">'+I('download')+(km?' រក្សាទុក QR':' Save QR image')+'</button></div><ol class="khsteps"><li>'+(km?'រក្សាទុករូប QR ឬថតអេក្រង់':'Save the QR image (or take a screenshot)')+'</li><li>'+(km?'បើកកម្មវិធីធនាគាររបស់អ្នក (ABA, ACLEDA, Wing, Bakong…) → ស្កេន → ជ្រើសរូបភាព':'Open your banking app (ABA, ACLEDA, Wing, Bakong…) → Scan → choose the photo')+'</li><li>'+(km?'ពិនិត្យឈ្មោះ និងចំនួន '+khFmt(v,cur)+' រួចបញ្ជាក់':'Check the name and the amount '+khFmt(v,cur)+', then confirm')+'</li></ol>';
+    try{khDraw(document.getElementById('khcv'),D,v,cur);khStartTimer(D)}catch(e){out.innerHTML='<p>'+esc(e.message)+'</p>'}return}
+  if(a.indexOf('bank:')===0){if(document.getElementById('khout').classList.contains('khexp')){toast(km?'QR បានផុតកំណត់ សូមបង្ហាញ QR ថ្មី':'This QR has expired. Show a new QR first.');return}khBankSheet(a.slice(5));return}
+  if(a==='save'){khSaveQr();return;var cv=document.getElementById('khcv');if(!cv)return;cv.toBlob(function(bl){var f;try{f=new File([bl],'thean-khqr.png',{type:'image/png'})}catch(e){}
       if(f&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:'KHQR'}).catch(function(){})}
       else{var u=URL.createObjectURL(bl),l=document.createElement('a');l.href=u;l.download='thean-khqr.png';document.body.appendChild(l);l.click();setTimeout(function(){URL.revokeObjectURL(u);l.remove()},1500)}},'image/png');return}
 }
@@ -2876,9 +2913,16 @@ function linksForm(){
 }
 function donateForm(){
   var D=S.donate,qr=D.qr;
-  var m=modal('Payment details','<div style="padding:12px;border-radius:12px;background:var(--bg2);display:grid;gap:8px"><b>Bakong KHQR (customer types the amount, QR shows it)</b>'+fieldHtml(['bakongId','Bakong account ID (e.g. kong_thean@aba). Find it in the Bakong app or your bank app → KHQR','text'],D.bakongId)+fieldHtml(['khName','Name shown to payers (English letters, max 25)','text'],D.khName||'')+fieldHtml(['khCity','City','text'],D.khCity||'Phnom Penh')+fieldHtml(['khCur','Default currency','select:USD,KHR'],D.khCur||'USD')+'<small style="color:var(--muted)">Test it once: open the Donation page, make a QR for $0.10 and scan it with your own bank app before sharing.</small></div><b style="margin-top:6px">Or a fixed QR image & bank details</b>'+fieldHtml(['qr','QR code image','img'],D.qr)+fieldHtml(['bank','Bank (e.g. ABA)','text'],D.bank)+fieldHtml(['accName','Account name','text'],D.accName)+fieldHtml(['accNo','Account number','text'],D.accNo)+'<div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-ok>Update</button></div>');
+  var m=modal('Payment details','<div style="padding:12px;border-radius:12px;background:var(--bg2);display:grid;gap:8px"><b>Bakong KHQR (customer types the amount, QR shows it)</b>'+fieldHtml(['bakongId','Bakong account ID (e.g. kong_thean@aba). Find it in the Bakong app or your bank app → KHQR','text'],D.bakongId)+fieldHtml(['khName','Name shown to payers (English letters, max 25)','text'],D.khName||'')+fieldHtml(['khCity','City','text'],D.khCity||'Phnom Penh')+fieldHtml(['khCur','Default currency','select:USD,KHR'],D.khCur||'USD')+'<label class="f">QR expires after<select data-k="khExp">'+[['0','24 hours (default)'],['30','30 seconds'],['60','60 seconds'],['120','2 minutes'],['300','5 minutes']].map(function(o){return '<option value="'+o[0]+'"'+(String(D.khExp||0)===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select></label><small style="color:var(--muted)">The payer sees a countdown. When it ends, the QR is blurred and they tap Show a new QR. Banks also refuse an expired QR.</small>'+'<b style="margin-top:6px">Bank buttons under the QR</b><small style="color:var(--muted)">Each button helps the payer save the QR and open their bank app. Switch off banks you do not want. Optional: add the bank app link and a logo image you have permission to use.</small><div data-bk style="display:grid;gap:8px"></div>'+'<small style="color:var(--muted)">Test it once: open the Donation page, make a QR for $0.10 and scan it with your own bank app before sharing.</small></div><b style="margin-top:6px">Or a fixed QR image & bank details</b>'+fieldHtml(['qr','QR code image','img'],D.qr)+fieldHtml(['bank','Bank (e.g. ABA)','text'],D.bank)+fieldHtml(['accName','Account name','text'],D.accName)+fieldHtml(['accNo','Account number','text'],D.accNo)+'<div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-ok>Update</button></div>');
   m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;if(b.dataset.pick)pickImage(800,function(x){qr=x;m.querySelector('[data-pv="qr"]').innerHTML='<img alt="" src="'+x+'">'});if(b.dataset.unpick){qr='';m.querySelector('[data-pv="qr"]').innerHTML=''}
-    if(b.hasAttribute('data-ok')){D.qr=qr;['bakongId','khName','khCity','khCur','bank','accName','accNo'].forEach(function(k){D[k]=m.querySelector('[data-k="'+k+'"]').value.trim()});m.remove();changed()}});
+    if(b.dataset.bkl){var id=b.dataset.bkl;pickImage(160,function(x){BK[id]=BK[id]||{};BK[id].logo=x;drawBk()});return}
+    if(b.dataset.bkx){BK[b.dataset.bkx]=BK[b.dataset.bkx]||{};BK[b.dataset.bkx].logo='';drawBk();return}
+    if(b.hasAttribute('data-ok')){readBk();D.qr=qr;['bakongId','khName','khCity','khCur','bank','accName','accNo'].forEach(function(k){D[k]=m.querySelector('[data-k="'+k+'"]').value.trim()});D.khExp=+m.querySelector('[data-k="khExp"]').value||0;D.banks=BK;m.remove();changed()}});
+  var BK=JSON.parse(JSON.stringify(D.banks||{}));
+  function readBk(){m.querySelectorAll('[data-bkrow]').forEach(function(r){var id=r.dataset.bkrow;BK[id]=BK[id]||{};BK[id].on=r.querySelector('[data-bkon]').checked;BK[id].link=r.querySelector('[data-bklink]').value.trim()})}
+  function drawBk(){m.querySelector('[data-bk]').innerHTML=KHBANKS.map(function(k){var c=BK[k.id]||{};return '<div data-bkrow="'+k.id+'" style="border:1px solid var(--line);border-radius:12px;padding:10px;display:grid;gap:6px"><label style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="checkbox" data-bkon style="width:auto"'+(c.on!==false?' checked':'')+'><span class="khlogo">'+(c.logo?'<img alt="" src="'+c.logo+'">':khMono(k))+'</span>'+esc(k.full)+'</label><input data-bklink placeholder="App link (optional). Empty = opens the app store" value="'+esc(c.link||'')+'"><div style="display:flex;gap:6px"><button class="btn sm soft" type="button" data-bkl="'+k.id+'">'+I('image')+' Logo</button>'+(c.logo?'<button class="btn sm del" type="button" data-bkx="'+k.id+'">Remove logo</button>':'')+'</div></div>'}).join('')}
+  m.addEventListener('change',function(e){if(e.target.closest('[data-bkrow]'))readBk()});m.addEventListener('input',function(e){if(e.target.closest('[data-bkrow]'))readBk()});
+  drawBk();
 }
 function bioForm(){
   var m=modal('About me',fieldHtml(['bio','Bio (blank line = new paragraph)','biarea'],S.about.bio)+'<div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-ok>Update</button></div>');
@@ -3486,7 +3530,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261009-0149',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261009-0622',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
