@@ -2740,9 +2740,9 @@ function callForm(){var c=JSON.parse(JSON.stringify(S.call||{})),P=c.prompts=c.p
    '<label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-con style="width:auto"'+(c.enabled===false?'':' checked')+'> Show the Call us button</label>'+
    fieldHtml(['number','Number shown on the call screen','text'],c.number||'203')+'<label class="f">Number style<select data-nst>'+[['thin','Thin'],['light','Light'],['regular','Regular'],['bold','Bold (default)']].map(function(o){return '<option value="'+o[0]+'"'+((c.numStyle||'bold')===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select></label>'+fieldHtml(['ringSec','Seconds of ringing tone before the no-answer message','text'],String(c.ringSec||35))+
    '<button class="btn" type="button" data-openivr style="justify-content:center">'+I('sound')+' Edit call menu (IVR)</button>'+
-   '<h4 style="margin:6px 0 0">Call connection (relay server)</h4><p style="margin:0;color:var(--muted);font-size:.86rem;line-height:1.55">Many mobile networks block direct web calls, so the call stays on “Connecting…” and then ends. A relay (TURN) server passes the voice along when that happens. Get a free one at <b>metered.ca</b> (Open Relay, 20 GB a month free): sign up, create a TURN app, then copy its <b>credentials link</b> (it starts with https:// and ends with ?apiKey=…) and paste it here.</p>'+
-   fieldHtml(['turnLink','Relay credentials link','text'],c.turnLink||'')+
-   '<details><summary style="cursor:pointer;font-size:.86rem;color:var(--muted)">Other relay provider (advanced)</summary><div style="display:grid;gap:8px;margin-top:8px">'+fieldHtml(['turnServer','TURN server address(es), e.g. turn:relay.example.com:443','text'],c.turnServer||'')+fieldHtml(['turnUser','Username','text'],c.turnUser||'')+fieldHtml(['turnPass','Password','text'],c.turnPass||'')+'</div></details>'+
+   '<h4 style="margin:6px 0 0">Call connection (relay server)</h4><p style="margin:0;color:var(--muted);font-size:.86rem;line-height:1.55">Many mobile networks block direct web calls, so the call stays on “Connecting…” and then ends. A relay (TURN) server passes the voice along. Copy these three items from your relay account (for example <b>metered.ca → Credentials</b>):</p>'+
+   fieldHtml(['turnServer','1. Server addresses (start with turn: or turns:)','text'],c.turnServer||'')+fieldHtml(['turnUser','2. Username','text'],c.turnUser||'')+'<label class="f">3. Password<input type="password" data-k="turnPass" value="'+esc(c.turnPass||'')+'" autocomplete="off"></label>'+
+   '<details'+(c.turnLink?' open':'')+'><summary style="cursor:pointer;font-size:.86rem;color:var(--muted)">Or use a credentials link instead (starts with https://)</summary><div style="margin-top:8px">'+fieldHtml(['turnLink','Credentials link (https://…?apiKey=…)','text'],c.turnLink||'')+'</div></details>'+
    '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="btn sm soft" type="button" data-turncheck>'+I('check')+' Check relay</button><small data-turnres style="color:var(--muted)"></small></div>'+
    '<h4 style="margin:6px 0 0">Away and opening hours</h4><p style="margin:0;color:var(--muted);font-size:.86rem;line-height:1.55">When the line is Away or closed, callers hear the Away message and the call ends. Your inbox does not ring. Times are Cambodia time.</p>'+
    '<label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-aon style="width:auto"'+(AW.on?' checked':'')+'> Away now (no calls ring)</label>'+
@@ -2757,13 +2757,16 @@ function callForm(){var c=JSON.parse(JSON.stringify(S.call||{})),P=c.prompts=c.p
   function collect(){c.enabled=m.querySelector('[data-con]').checked;c.number=(m.querySelector('[data-k="number"]').value.trim()||'203').slice(0,20);c.numStyle=m.querySelector('[data-nst]').value;
     c.ringSec=Math.max(15,Math.min(180,parseInt(m.querySelector('[data-k="ringSec"]').value,10)||35));
     ['turnLink','turnServer','turnUser','turnPass'].forEach(function(k){var el=m.querySelector('[data-k="'+k+'"]');if(el)c[k]=el.value.trim()});
+    if(c.turnLink&&!/^https:\/\//.test(c.turnLink)){if(/turns?:/.test(c.turnLink)&&!c.turnServer)c.turnServer=c.turnLink;c.turnLink=''}
     var nAW={on:m.querySelector('[data-aon]').checked,sched:m.querySelector('[data-asch]').checked,open:m.querySelector('[data-aopen]').value||'08:00',close:m.querySelector('[data-aclose]').value||'17:00',days:[].slice.call(m.querySelectorAll('[data-aday]')).filter(function(x){return x.checked}).map(function(x){return +x.dataset.aday}),at:Date.now()};
     if(JSON.stringify([nAW.on,nAW.sched,nAW.open,nAW.close,nAW.days])!==JSON.stringify([!!AW.on,!!AW.sched,AW.open||'08:00',AW.close||'17:00',Array.isArray(AW.days)?AW.days:[1,2,3,4,5,6,0]]))awaySet(nAW,'');
     kit.stop();S.call=Object.assign({},S.call||{},c)}
   m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
     if(b.hasAttribute('data-openivr')){collect();m.remove();changed();ivrForm();return}
     if(b.hasAttribute('data-turncheck')){var res=m.querySelector('[data-turnres]'),cc={};['turnLink','turnServer','turnUser','turnPass'].forEach(function(k){var el=m.querySelector('[data-k="'+k+'"]');cc[k]=el?el.value.trim():''});
-      if(!cc.turnLink&&!cc.turnServer){res.textContent='Paste a relay link first.';res.style.color='var(--danger)';return}
+      if(cc.turnLink&&!/^https:\/\//.test(cc.turnLink)){if(/turns?:/.test(cc.turnLink)&&!cc.turnServer){cc.turnServer=cc.turnLink;var sv=m.querySelector('[data-k="turnServer"]');if(sv)sv.value=cc.turnLink}cc.turnLink='';var lk=m.querySelector('[data-k="turnLink"]');if(lk)lk.value=''}
+      if(cc.turnServer&&(!cc.turnUser||!cc.turnPass)){res.textContent='Add the username and password too.';res.style.color='var(--danger)';return}
+      if(!cc.turnLink&&!cc.turnServer){res.textContent='Fill in the server addresses, username and password first.';res.style.color='var(--danger)';return}
       res.textContent='Checking…';res.style.color='var(--muted)';ICE_CACHE={t:0,v:null};
       iceServersFor(cc).then(function(cfg){var pc=new RTCPeerConnection({iceServers:cfg.iceServers,iceTransportPolicy:'relay'}),ok=false,done=function(msg,good){if(ok)return;ok=true;try{pc.close()}catch(x){}res.textContent=msg;res.style.color=good?'var(--ok)':'var(--danger)'};
         pc.createDataChannel('t');pc.onicecandidate=function(e){if(e.candidate&&/ relay /.test(e.candidate.candidate))done('Relay works. Calls can now connect on mobile networks. Tap Save.',true)};
@@ -3483,7 +3486,7 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261008-0455',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261009-0149',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
