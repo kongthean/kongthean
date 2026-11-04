@@ -259,7 +259,7 @@ function drawKey(){var b=$('kst');b.className='kst'+(KS==='ok'?' ok':KS==='bad'?
 function checkKey(){if(!C.token){KS='none';drawKey();return}KS='chk';drawKey();
   if(!navigator.onLine){KS='off';drawKey();return}
   gget('me?fields=id,name,category').then(function(j){if(!j.category)throw new Error(t('tokPerson'));C.pageId=j.id;C.pageName=j.name;save();KS='ok';drawKey()})
-  .catch(function(e){var m=String(e&&e.message||'');if(/Failed to fetch|NetworkError|Load failed/i.test(m)){KS='off'}else{KS='bad';KERR=m}drawKey()})}
+  .catch(function(e){var m=String(e&&e.message||'');if(/Failed to fetch|NetworkError|Load failed|timeout/i.test(m)){KS='off'}else{KS='bad';KERR=m}drawKey()})}
 window.addEventListener('online',checkKey);
 document.addEventListener('visibilitychange',function(){if(!document.hidden&&C.token&&KS!=='chk')checkKey()});
 function applyLang(){drawKey();document.documentElement.lang=C.lang;document.body.classList.toggle('km',C.lang==='km');
@@ -275,10 +275,22 @@ var ST={kind:'',video:'',images:[],sel:[],files:[],text:'',tags:[],user:'',name:
 
 /* ---------- getting the TikTok post ---------- */
 function abs(u){u=String(u||'');if(!u)return '';if(/^\/\//.test(u))return 'https:'+u;if(/^\//.test(u))return 'https://www.tikwm.com'+u;return u}
-function splitCaption(s){s=String(s||'');var tags=s.match(/#[^\s#]+/g)||[];var text=s.replace(/#[^\s#]+/g,'').replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n').replace(/[ \t]{2,}/g,' ').trim();return {text:text,tags:tags}}
+function splitCaption(s){s=String(s||'');var tags=s.match(/#[^\s#]+/g)||[];var text=s.replace(/#[^\s#]+/g,'').replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n').replace(/[ \t]{2,}/g,' ').split('\n').map(function(l){return l.trim()}).join('\n').replace(/\n{3,}/g,'\n\n').trim();return {text:text,tags:tags}}
 function withTimeout(p,ms){return Promise.race([p,new Promise(function(_,r){setTimeout(function(){r(new Error('timeout'))},ms)})])}
 function tikwm(link){var fd=new FormData();fd.append('url',link);fd.append('hd','1');
   return withTimeout(fetch('https://www.tikwm.com/api/',{method:'POST',body:fd}),25000).then(function(r){return r.json()}).then(function(j){if(!j||j.code!==0||!j.data)throw new Error((j&&j.msg)||'no data');return j.data})}
+/* photo posts have a headline title plus a description: join both */
+function fullCaption(d){var main=String(d.title||'').trim(),found=[];
+  (function walk(o,key,depth){if(!o||depth>5)return;if(/^(author|music|music_info|anchors?|commerce)/i.test(key||''))return;
+    if(typeof o==='string'){if(depth>0&&/^(title|desc|description|caption|content|text|image_post_title)$/i.test(key||''))found.push(o.trim());return}
+    if(typeof o!=='object')return;Object.keys(o).forEach(function(k){if(depth===0&&k==='title')return;walk(o[k],k,depth+1)})})(d,'',0);
+  if(d.__oe)found.push(String(d.__oe).trim());
+  var norm=function(x){return x.replace(/\s+/g,' ').trim().toLowerCase()},m=norm(main),heads=[];
+  found.forEach(function(x){var n=norm(x);if(n.length<3||/^https?:/.test(n))return;
+    if(m.indexOf(n)>=0)return;
+    if(n.indexOf(m)>=0&&m){main=x;m=n;return}
+    if(heads.some(function(h){return norm(h).indexOf(n)>=0}))return;heads.push(x)});
+  return heads.concat(main?[main]:[]).join('\n\n')}
 function oembed(link){return withTimeout(fetch('https://www.tiktok.com/oembed?url='+encodeURIComponent(link)),15000).then(function(r){return r.json()})}
 
 $('paste').onclick=function(){if(!navigator.clipboard||!navigator.clipboard.readText){$('link').focus();return}
@@ -287,8 +299,9 @@ $('link').addEventListener('keydown',function(e){if(e.key==='Enter')$('get').cli
 $('get').onclick=function(){var raw=$('link').value.trim(),m=raw.match(/https?:\/\/\S+/),link=m?m[0]:raw;
   if(!/tiktok\.com/i.test(link)){msg('m1','bad',esc(t('badLink')));return}
   $('link').value=link;reset();msg('m1','info',esc(t('loading')));$('get').disabled=true;
-  tikwm(link).then(function(d){var a=d.author||{},cap=splitCaption(d.title);
-    ST.srcLink=link;ST.full=String(d.title||'').trim();ST.text=cap.text;ST.tags=cap.tags;ST.user=a.unique_id||'';ST.name=a.nickname||'';ST.avatar=abs(a.avatar);
+  var oeP=oembed(link).then(function(o){return o&&o.title||''}).catch(function(){return ''});
+  tikwm(link).then(function(d){return withTimeout(oeP,7000).catch(function(){return ''}).then(function(oe){d.__oe=oe;return d})}).then(function(d){var a=d.author||{},full=fullCaption(d),cap=splitCaption(full);
+    ST.srcLink=link;ST.full=full;ST.text=cap.text;ST.tags=cap.tags;ST.user=a.unique_id||'';ST.name=a.nickname||'';ST.avatar=abs(a.avatar);
     var imgs=(d.images||[]).map(abs).filter(Boolean);
     if(imgs.length){ST.kind='photos';ST.images=imgs;ST.sel=imgs.map(function(){return true});msg('m1','ok',esc(t('gotPhotos',{n:imgs.length})))}
     else{ST.kind='video';ST.video=abs(d.hdplay||d.play||d.wmplay);ST.cover=abs(d.cover);msg('m1','ok',esc(t('gotVideo')))}
@@ -354,7 +367,7 @@ function localISO(d){function p(n){return String(n).padStart(2,'0')}return d.get
 var G='https://graph.facebook.com/';
 function gcall(path,params,host){var fd=new FormData();Object.keys(params||{}).forEach(function(k){if(params[k]!=null)fd.append(k,params[k])});fd.append('access_token',C.token);
   return fetch((host||G)+path,{method:'POST',body:fd}).then(function(r){return r.json()}).then(function(j){if(j&&j.error){if(j.error.code===190||j.error.type==='OAuthException'&&/token|session/i.test(j.error.message||'')){KS='bad';KERR=j.error.message;drawKey()}throw new Error(j.error.error_user_msg||j.error.message||'Facebook error')}return j})}
-function gget(path){return fetch(G+path+(path.indexOf('?')<0?'?':'&')+'access_token='+encodeURIComponent(C.token)).then(function(r){return r.json()}).then(function(j){if(j&&j.error)throw new Error(j.error.message);return j})}
+function gget(path){return withTimeout(fetch(G+path+(path.indexOf('?')<0?'?':'&')+'access_token='+encodeURIComponent(C.token)),15000).then(function(r){return r.json()}).then(function(j){if(j&&j.error)throw new Error(j.error.message);return j})}
 function cldUp(u){if(!C.cld||!C.pre)return Promise.reject(new Error('no backup'));var fd=new FormData();fd.append('file',u);fd.append('upload_preset',C.pre);
   return fetch('https://api.cloudinary.com/v1_1/'+encodeURIComponent(C.cld)+'/auto/upload',{method:'POST',body:fd}).then(function(r){return r.json()}).then(function(j){if(!j.secure_url)throw new Error((j.error&&j.error.message)||'upload failed');return j.secure_url})}
 function prog(f){$('bar').hidden=f==null;$('bar').firstChild.style.width=Math.round((f||0)*100)+'%'}
