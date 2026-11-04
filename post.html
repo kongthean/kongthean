@@ -382,7 +382,7 @@ $('gear').onclick=openSettings;
 document.addEventListener('click',function(e){if(e.target.closest('[data-open-settings]'))openSettings()});
 $('settings').addEventListener('click',function(e){if(e.target===$('settings')||e.target.closest('[data-close]'))closeSettings()});
 $('tokShow').onclick=function(){var p=$('tok').type==='password';$('tok').type=p?'text':'password';this.textContent=t(p?'hide':'show')};
-$('tokCheck').onclick=function(){var v=$('tok').value.replace(/\s+/g,'');if(!v){msg('m4','bad',esc(t('tokEmpty')));return}
+$('tokCheck').onclick=function(){var raw=$('tok').value.replace(/\s+/g,''),mk=raw.match(/EAA[A-Za-z0-9]+/),v=mk?mk[0]:raw.replace(/^.*access_token"?:?/,'').replace(/["',{}]/g,'');$('tok').value=v;if(!v){msg('m4','bad',esc(t('tokEmpty')));return}
   var old=C.token;C.token=v;
   gget('me?fields=id,name,category').then(function(j){if(!j.category){throw {person:true}}C.pageId=j.id;C.pageName=j.name;save();msg('m4','ok',esc(t('tokOk',{p:j.name})));applyLang()})
   .catch(function(e){C.token=old;msg('m4','bad',e&&e.person?esc(t('tokPerson')):esc(t('tokBad',{e:e&&e.message||''})))})};
