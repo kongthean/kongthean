@@ -22,7 +22,13 @@ body.km{font-family:"Kantumruy Pro",Inter,system-ui,sans-serif}
 .top .in{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:10px}
 .brand{flex:1;min-width:0}
 .brand b{display:block;font-size:1.05rem;letter-spacing:.06em}
-.brand small{color:var(--muted);font-size:.8rem}
+.brand small{display:block;color:var(--muted);font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kst{display:inline-flex;align-items:center;gap:7px;max-width:42vw;border:0;border-radius:999px;padding:7px 12px 7px 10px;font:inherit;font-size:.8rem;font-weight:600;cursor:pointer;background:var(--soft);color:var(--ink)}
+.kst i{width:9px;height:9px;border-radius:50%;flex:none;background:var(--muted)}
+.kst span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kst.ok{background:var(--okbg);color:var(--ok)}.kst.ok i{background:var(--ok)}
+.kst.bad{background:var(--badbg);color:var(--bad)}.kst.bad i{background:var(--bad)}
+.kst.chk i{animation:kp 1s infinite alternate}@keyframes kp{to{opacity:.25}}
 .lang{display:flex;background:var(--soft);border-radius:999px;padding:3px}
 .lang button{border:0;background:none;color:var(--ink);font:inherit;font-size:.82rem;font-weight:600;padding:6px 11px;border-radius:999px;cursor:pointer}
 .lang button.on{background:var(--char);color:var(--char-ink)}
@@ -93,6 +99,7 @@ summary{cursor:pointer;font-weight:600;font-size:.92rem}
 <body>
 <header class="top"><div class="in">
   <div class="brand"><b>THEAN</b><small data-t="appSub"></small></div>
+  <button class="kst" id="kst" data-open-settings><i></i><span id="kstT"></span></button>
   <div class="lang" role="group" aria-label="Language"><button data-lang="km">ខ្មែរ</button><button data-lang="en">EN</button></div>
   <button class="ib" id="gear" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
 </div></header>
@@ -202,7 +209,7 @@ var T={
   posted:'Posted to {p}.',scheduled:'Scheduled on {p} for {d}.',openPost:'Open on Facebook',videoNote:'Facebook needs a few minutes to process a video before it appears.',
   noSel:'Select at least one photo.',noMedia:'Get a post or choose files first.',badTime:'Choose a time between 15 minutes and 30 days from now.',
   history:'Recent posts (this phone)',settings:'Settings',setSub:'Saved only on this phone. Never share the Page key or show it in a screenshot.',
-  tokLabel:'Facebook Page key (Page access token)',show:'Show',hide:'Hide',checkSave:'Check and save',forget:'Remove',tokOk:'Connected to the Page: {p}',tokBad:'This key did not work: {e}',tokPerson:'This key belongs to a person, not the Page. Use the Page key from me/accounts (see the guide).',tokEmpty:'Paste the Page key first.',removed:'Removed from this phone.',
+  tokLabel:'Facebook Page key (Page access token)',show:'Show',hide:'Hide',checkSave:'Check and save',forget:'Remove',tokOk:'Connected to the Page: {p}',kNone:'Not connected',kChk:'Checking key…',kBad:'Key problem',kOff:'Offline',tokBad:'This key did not work: {e}',tokPerson:'This key belongs to a person, not the Page. Use the Page key from me/accounts (see the guide).',tokEmpty:'Paste the Page key first.',removed:'Removed from this phone.',
   myTagsLabel:'My hashtags (added when the switch is on)',creditLabel:'Credit line',creditNote:'{user} becomes the owner’s @username, {name} their display name.',
   cldTitle:'Backup upload (Cloudinary)',cldNote:'Used only if Facebook cannot fetch a file from TikTok directly.',guideTitle:'How to get the Page key',done:'Done',
   rights:'Credit is not permission. Post other creators’ videos or photos only when you have their permission, or Facebook may remove the post or limit your Page.',
@@ -223,7 +230,7 @@ var T={
   posted:'បានបង្ហោះទៅ {p}។',scheduled:'បានកំណត់ពេលនៅ {p} សម្រាប់ {d}។',openPost:'បើកនៅលើ Facebook',videoNote:'Facebook ត្រូវការពីរបីនាទីដើម្បីដំណើរការវីដេអូ មុនពេលវាបង្ហាញ។',
   noSel:'សូមជ្រើសរូបភាពយ៉ាងហោចណាស់មួយ។',noMedia:'សូមយកប៉ុស្តិ៍ ឬជ្រើសឯកសារជាមុនសិន។',badTime:'សូមជ្រើសម៉ោងចន្លោះ ១៥ នាទី ដល់ ៣០ ថ្ងៃពីឥឡូវ។',
   history:'ប៉ុស្តិ៍ថ្មីៗ (ទូរស័ព្ទនេះ)',settings:'ការកំណត់',setSub:'រក្សាទុកតែនៅលើទូរស័ព្ទនេះប៉ុណ្ណោះ។ កុំចែករំលែកកូនសោទំព័រ ឬបង្ហាញវាក្នុងរូបថតអេក្រង់។',
-  tokLabel:'កូនសោទំព័រ Facebook (Page access token)',show:'បង្ហាញ',hide:'លាក់',checkSave:'ពិនិត្យ និងរក្សាទុក',forget:'លុបចេញ',tokOk:'បានភ្ជាប់ទៅទំព័រ៖ {p}',tokBad:'កូនសោនេះមិនដំណើរការ៖ {e}',tokPerson:'កូនសោនេះជារបស់មនុស្ស មិនមែនរបស់ទំព័រទេ។ សូមប្រើកូនសោទំព័រពី me/accounts (មើលការណែនាំ)។',tokEmpty:'សូមបិទភ្ជាប់កូនសោទំព័រជាមុនសិន។',removed:'បានលុបចេញពីទូរស័ព្ទនេះ។',
+  tokLabel:'កូនសោទំព័រ Facebook (Page access token)',show:'បង្ហាញ',hide:'លាក់',checkSave:'ពិនិត្យ និងរក្សាទុក',forget:'លុបចេញ',tokOk:'បានភ្ជាប់ទៅទំព័រ៖ {p}',kNone:'មិនទាន់ភ្ជាប់',kChk:'កំពុងពិនិត្យកូនសោ…',kBad:'កូនសោមានបញ្ហា',kOff:'គ្មានអ៊ីនធឺណិត',tokBad:'កូនសោនេះមិនដំណើរការ៖ {e}',tokPerson:'កូនសោនេះជារបស់មនុស្ស មិនមែនរបស់ទំព័រទេ។ សូមប្រើកូនសោទំព័រពី me/accounts (មើលការណែនាំ)។',tokEmpty:'សូមបិទភ្ជាប់កូនសោទំព័រជាមុនសិន។',removed:'បានលុបចេញពីទូរស័ព្ទនេះ។',
   myTagsLabel:'ហាស់ថាក់របស់ខ្ញុំ (បន្ថែមពេលបើកកុងតាក់)',creditLabel:'បន្ទាត់ផ្តល់កិត្តិយស',creditNote:'{user} ក្លាយជា @username របស់ម្ចាស់ ហើយ {name} ជាឈ្មោះបង្ហាញរបស់គេ។',
   cldTitle:'ការផ្ទុកបម្រុង (Cloudinary)',cldNote:'ប្រើតែពេល Facebook មិនអាចយកឯកសារពី TikTok ដោយផ្ទាល់ប៉ុណ្ណោះ។',guideTitle:'របៀបយកកូនសោទំព័រ',done:'រួចរាល់',
   rights:'ការផ្តល់កិត្តិយសមិនមែនជាការអនុញ្ញាតទេ។ សូមបង្ហោះវីដេអូ ឬរូបភាពរបស់អ្នកបង្កើតផ្សេង តែពេលមានការអនុញ្ញាតពីពួកគេ បើមិនដូច្នោះទេ Facebook អាចលុបប៉ុស្តិ៍ ឬកំណត់ទំព័ររបស់អ្នក។',
@@ -245,7 +252,17 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){retur
 function msg(box,kind,html){$(box).innerHTML=html?'<div class="msg '+kind+'">'+html+'</div>':''}
 
 /* ---------- language ---------- */
-function applyLang(){document.documentElement.lang=C.lang;document.body.classList.toggle('km',C.lang==='km');
+var KS=C.token?'chk':'none',KERR='';
+function drawKey(){var b=$('kst');b.className='kst'+(KS==='ok'?' ok':KS==='bad'?' bad':KS==='chk'?' chk':'');
+  $('kstT').textContent=KS==='ok'?(C.pageName||'Facebook'):KS==='bad'?t('kBad'):KS==='off'?t('kOff'):KS==='chk'?t('kChk'):t('kNone');
+  b.title=KS==='bad'&&KERR?KERR:'';b.setAttribute('aria-label',$('kstT').textContent)}
+function checkKey(){if(!C.token){KS='none';drawKey();return}KS='chk';drawKey();
+  if(!navigator.onLine){KS='off';drawKey();return}
+  gget('me?fields=id,name,category').then(function(j){if(!j.category)throw new Error(t('tokPerson'));C.pageId=j.id;C.pageName=j.name;save();KS='ok';drawKey()})
+  .catch(function(e){var m=String(e&&e.message||'');if(/Failed to fetch|NetworkError|Load failed/i.test(m)){KS='off'}else{KS='bad';KERR=m}drawKey()})}
+window.addEventListener('online',checkKey);
+document.addEventListener('visibilitychange',function(){if(!document.hidden&&C.token&&KS!=='chk')checkKey()});
+function applyLang(){drawKey();document.documentElement.lang=C.lang;document.body.classList.toggle('km',C.lang==='km');
   document.querySelectorAll('[data-t]').forEach(function(el){el.textContent=t(el.getAttribute('data-t'))});
   document.querySelectorAll('[data-lang]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-lang')===C.lang)});
   $('guide').innerHTML=t('guide').map(function(s){return '<li>'+s+'</li>'}).join('');
@@ -336,7 +353,7 @@ function localISO(d){function p(n){return String(n).padStart(2,'0')}return d.get
 /* ---------- Facebook ---------- */
 var G='https://graph.facebook.com/';
 function gcall(path,params,host){var fd=new FormData();Object.keys(params||{}).forEach(function(k){if(params[k]!=null)fd.append(k,params[k])});fd.append('access_token',C.token);
-  return fetch((host||G)+path,{method:'POST',body:fd}).then(function(r){return r.json()}).then(function(j){if(j&&j.error)throw new Error(j.error.error_user_msg||j.error.message||'Facebook error');return j})}
+  return fetch((host||G)+path,{method:'POST',body:fd}).then(function(r){return r.json()}).then(function(j){if(j&&j.error){if(j.error.code===190||j.error.type==='OAuthException'&&/token|session/i.test(j.error.message||'')){KS='bad';KERR=j.error.message;drawKey()}throw new Error(j.error.error_user_msg||j.error.message||'Facebook error')}return j})}
 function gget(path){return fetch(G+path+(path.indexOf('?')<0?'?':'&')+'access_token='+encodeURIComponent(C.token)).then(function(r){return r.json()}).then(function(j){if(j&&j.error)throw new Error(j.error.message);return j})}
 function cldUp(u){if(!C.cld||!C.pre)return Promise.reject(new Error('no backup'));var fd=new FormData();fd.append('file',u);fd.append('upload_preset',C.pre);
   return fetch('https://api.cloudinary.com/v1_1/'+encodeURIComponent(C.cld)+'/auto/upload',{method:'POST',body:fd}).then(function(r){return r.json()}).then(function(j){if(!j.secure_url)throw new Error((j.error&&j.error.message)||'upload failed');return j.secure_url})}
@@ -386,14 +403,14 @@ $('settings').addEventListener('click',function(e){if(e.target===$('settings')||
 $('tokShow').onclick=function(){var p=$('tok').type==='password';$('tok').type=p?'text':'password';this.textContent=t(p?'hide':'show')};
 $('tokCheck').onclick=function(){var raw=$('tok').value.replace(/\s+/g,''),mk=raw.match(/EAA[A-Za-z0-9]+/),v=mk?mk[0]:raw.replace(/^.*access_token"?:?/,'').replace(/["',{}]/g,'');$('tok').value=v;if(!v){msg('m4','bad',esc(t('tokEmpty')));return}
   var old=C.token;C.token=v;
-  gget('me?fields=id,name,category').then(function(j){if(!j.category){throw {person:true}}C.pageId=j.id;C.pageName=j.name;save();msg('m4','ok',esc(t('tokOk',{p:j.name})));applyLang()})
+  gget('me?fields=id,name,category').then(function(j){if(!j.category){throw {person:true}}C.pageId=j.id;C.pageName=j.name;save();KS='ok';msg('m4','ok',esc(t('tokOk',{p:j.name})));applyLang()})
   .catch(function(e){C.token=old;msg('m4','bad',e&&e.person?esc(t('tokPerson')):esc(t('tokBad',{e:e&&e.message||''})))})};
-$('tokForget').onclick=function(){delete C.token;delete C.pageId;delete C.pageName;save();$('tok').value='';msg('m4','ok',esc(t('removed')));applyLang()};
+$('tokForget').onclick=function(){delete C.token;delete C.pageId;delete C.pageName;save();KS='none';$('tok').value='';msg('m4','ok',esc(t('removed')));applyLang()};
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('settings').hidden)closeSettings()});
 
 /* share target: ?url=... or #link */
 try{var q=new URLSearchParams(location.search).get('url')||new URLSearchParams(location.search).get('text')||'';var mm=q.match(/https?:\/\/\S+/);if(mm)$('link').value=mm[0]}catch(e){}
-applyLang();
+applyLang();checkKey();
 })();
 </script>
 </body>
