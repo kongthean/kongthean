@@ -42,7 +42,7 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;stroke
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:999px;padding:10px 18px;font-weight:600;cursor:pointer;background:var(--char);color:var(--char-ink);text-decoration:none}
 .btn.soft{background:var(--bg2);color:var(--ink)}.btn.sm{padding:6px 13px;font-size:.85rem}.btn.ok{background:var(--ok);color:#fff}.btn.del{background:transparent;color:var(--danger);border:1.5px solid var(--danger)}
 .btn:disabled{opacity:.5;cursor:default}
-.logo{width:40px;height:40px;border-radius:50%;background:var(--bg2);display:grid;place-items:center;font-family:var(--display);font-size:1.2rem;flex:none;overflow:hidden}
+.logo{width:40px;height:40px;border-radius:50%;background:#163023;box-shadow:0 0 0 2px #f3b11c;display:grid;place-items:center;font-family:var(--display);font-size:1.2rem;flex:none;overflow:hidden}
 
 /* login */
 .login{min-height:100%;display:grid;place-items:center;padding:24px 16px;background:radial-gradient(120% 80% at 50% 0%,var(--surface),var(--bg))}
@@ -534,7 +534,7 @@ function cleanup(){[chatUnsub,msgUnsub,meUnsub,connUnsub,callUnsub].forEach(f=>f
 
 function drawLogin(msg,mode){
   const create=mode==='create';
-  root.innerHTML='<div class="login"><form class="lcard" novalidate><div style="display:flex;align-items:center;gap:12px"><span class="logo">T</span><div><h1 class="emb">THEAN</h1><p>Team inbox · live chat</p></div></div>'+(msg?'<div class="err">'+esc(msg)+'</div>':'')+
+  root.innerHTML='<div class="login"><form class="lcard" novalidate><div style="display:flex;align-items:center;gap:12px"><span class="logo"><img alt="Thean" src="/icons/favicon-192.png" style="width:122%;height:122%;max-width:none;margin:-11%;object-fit:cover;display:block"></span><div><h1 class="emb">THEAN</h1><p>Team inbox · live chat</p></div></div>'+(msg?'<div class="err">'+esc(msg)+'</div>':'')+
    (create?'<div class="note">New team member? Use the email the owner invited, and choose a password (at least 6 characters).</div>':'')+
    '<label class="f">Email<input id="em" type="email" autocomplete="username" required></label><label class="f">Password<input id="pw" type="password" autocomplete="'+(create?'new-password':'current-password')+'" required></label>'+
    '<button class="btn" type="submit" id="go">'+(create?'Create my account':'Sign in')+'</button>'+
@@ -623,7 +623,7 @@ function drawShell(){
 function counts(){const c={waiting:0,mine:0,open:0,unread:0,reports:0};chats.forEach(x=>{if(x.reportOpen)c.reports++;if(x.status==='waiting')c.waiting++;if(x.status==='assigned'&&x.agentUid===me.uid)c.mine++;if(x.status==='waiting'||x.status==='assigned')c.open++;c.unread+=x.status!=='closed'&&x.status!=='bot'?(x.unreadAgent||0):0});return c}
 function drawTop(){
   const t=root.querySelector('#top');if(!t)return;const c=counts(),on=agent&&agent.online;
-  t.innerHTML='<div class="ttl"><span class="logo">T</span><div><b>THEAN</b><small>Inbox · '+esc((agent&&agent.name)||me.email)+'</small></div></div>'+
+  t.innerHTML='<div class="ttl"><span class="logo"><img alt="Thean" src="/icons/favicon-192.png" style="width:122%;height:122%;max-width:none;margin:-11%;object-fit:cover;display:block"></span><div><b>THEAN</b><small>Inbox · '+esc((agent&&agent.name)||me.email)+'</small></div></div>'+
    '<button class="tb '+(on?'on':'away')+'" id="st" title="Availability">'+I(on?'check':'clock')+'<span class="tl">'+(on?'Available':'Away')+'</span></button>'+
    '<button class="tb" id="nt" title="Notifications">'+I('bell')+'<span class="tl">Alerts</span>'+(c.unread+c.waiting?'<span class="bd">'+(c.unread+c.waiting)+'</span>':'')+'</button>'+
    '<button class="tb" id="cl" title="Web calls">'+I('phone')+'<span class="tl">Calls</span>'+(missedCount()?'<span class="bd">'+missedCount()+'</span>':'')+'</button>'+
