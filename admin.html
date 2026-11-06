@@ -1540,7 +1540,7 @@ function showMaint(){var el=document.getElementById('maint'),on=!!(MAINT&&MAINT.
   if(!on){if(el)el.remove();return}
   if(!el){el=document.createElement('div');el.id='maint';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-label',MT.en.t);document.body.appendChild(el)}
   var L=S.links||{},m=MAINT,soc=['facebook','telegram','tiktok','youtube','instagram'].filter(function(k){return L[k]});
-  el.innerHTML='<div class="mcard">'+(S.brand.logo?'<span class="logo"><img alt="" src="'+S.brand.logo+'"></span>':'')+'<div class="mico">'+I('gear')+'</div>'+
+  el.innerHTML='<div class="mcard">'+(S.brand.logo?'<span class="logo"><img alt="" src="'+S.brand.logo+'"></span>':'')+''+
     '<h1 lang="km">'+esc(MT.km.t)+'</h1><p lang="km">'+esc(String(m.km||'').trim()||MT.km.p)+'</p><div class="mdiv"></div>'+
     '<h2 lang="en">'+esc(MT.en.t)+'</h2><p lang="en">'+esc(String(m.en||'').trim()||MT.en.p)+'</p>'+
     (m.backEn||m.backKm?'<div class="mback">'+I('clock')+'<span>'+esc(m.backKm||'')+(m.backKm&&m.backEn?' · ':'')+esc(m.backEn||'')+'</span></div>':'')+
