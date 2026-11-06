@@ -548,7 +548,7 @@ body:not(.editing) .qmov{display:none!important}
 .dbody{display:grid;grid-template-columns:230px minmax(0,1fr);gap:0;max-width:1200px;margin:0 auto}
 @media(max-width:820px){.dbody{grid-template-columns:1fr}}
 .dnav{display:grid;gap:4px;padding:16px;align-content:start;position:sticky;top:70px}
-@media(max-width:820px){.dnav{display:flex;overflow-x:auto;position:static;padding:12px 16px 4px;scrollbar-width:none}}
+@media(max-width:820px){.dnav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;position:static;padding:12px 16px 6px;overflow:visible}.dnav button{flex-direction:column;justify-content:center;text-align:center;gap:4px;padding:10px 4px;white-space:normal;line-height:1.2;font-size:.8rem;min-height:62px}.dnav button svg{font-size:1.25rem}}
 .dnav button{display:flex;align-items:center;gap:10px;border:0;background:transparent;border-radius:12px;padding:10px 12px;cursor:pointer;color:var(--ink);font-weight:500;text-align:left;white-space:nowrap;flex:none}
 .dnav button svg{font-size:1.15rem;color:var(--muted)}
 .dnav button.on{background:var(--char);color:var(--char-ink)}.dnav button.on svg{color:inherit}
@@ -2749,7 +2749,7 @@ function mediaForm(){var M=S.media||{};
   m.querySelector('[data-ok]').onclick=function(){S.media={cloud:m.querySelector('[data-k="cloud"]').value.trim(),preset:m.querySelector('[data-k="preset"]').value.trim()};m.remove();changed();toast('Saved. You can upload videos now.')};
 }
 /* =================== ADMIN DASHBOARD =================== */
-var DSECS=[['overview','home','Overview'],['home','star','Home page'],['posts','calendar','Posts & news'],['videos','video','Videos'],['places','pin','Places & temples'],['pages','menu','Menu pages'],['stays','bed','Hotels & stays'],['festivals','lotus','Festivals'],['tips','bulb','Travel tips'],['about','user','About & donation'],['texts','edit','Words & headings'],['settings','link','Contact & settings']];
+var DSECS=[['overview','home','Overview'],['home','star','Home page'],['posts','calendar','Posts & news'],['videos','image','Media'],['places','pin','Places & temples'],['pages','menu','Menu pages'],['stays','bed','Hotels & stays'],['festivals','lotus','Festivals'],['tips','bulb','Travel tips'],['about','user','About & donation'],['texts','edit','Words & headings'],['settings','link','Contact & settings']];
 function setText(path,l,val){var k=path.split('.'),o=S;if(k[0]==='ui'){S.ui=S.ui||{};if(!S.ui[k[1]])S.ui[k[1]]={en:UI.en[k[1]]||'',km:UI.km[k[1]]||''}}for(var i=0;i<k.length-1;i++){o[k[i]]=o[k[i]]||{};o=o[k[i]]}var last=k[k.length-1];if(l){if(!o[last]||typeof o[last]!=='object')o[last]={en:'',km:''};o[last][l]=val}else o[last]=val}
 function moveItem(list,id,dir){var a=S[list];if(!a)return;var i=a.findIndex(function(x){return x.id===id}),j=i+dir;if(i<0||j<0||j>=a.length)return;var t=a[i];a[i]=a[j];a[j]=t;changed()}
 function rmItem(list,id){var a=S[list]||[],o=a.find(function(x){return x.id===id});S[list]=a.filter(function(x){return x.id!==id});if(list==='pages'&&o&&o.list)delete S[o.list];changed();toast('Deleted')}
