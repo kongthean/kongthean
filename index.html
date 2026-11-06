@@ -468,6 +468,7 @@ body.admin footer .wrap{padding-bottom:170px}
 .fbrail{grid-auto-columns:minmax(230px,280px)}
 .mgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
 @media(min-width:760px){.mgrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}}
+@media(min-width:1000px){#mbox .mgrid,#mbox .mgrid.mv{grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}.mt .mcap{font-size:.72rem;padding:18px 8px 6px}.mt .mpl{width:40px;height:40px;font-size:1rem}.mt{border-radius:10px}.mt.v{border-radius:12px}}
 .mgrid.mv{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media(min-width:760px){.mgrid.mv{grid-template-columns:repeat(4,minmax(0,1fr))}}
 .mt{position:relative;display:block;aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--bg2);text-decoration:none}
@@ -2001,12 +2002,14 @@ function fbMedia(vid){return ((FBD&&FBD.items)||[]).filter(function(p){return /^
 function fbTile(p,vid){var t=String(p.text||'').split('\n')[0];
   return '<a class="mt'+(vid?' v':'')+'" href="'+esc(p.link)+'" target="_blank" rel="noopener" aria-label="'+esc(u('fbOpen'))+'"><img loading="lazy" alt="" referrerpolicy="no-referrer" src="'+esc(p.img)+'" onerror="this.closest(\'.mt\').remove()">'+(vid?'<span class="mpl">'+I('play')+'</span>':'')+(vid&&t?'<i class="mcap">'+esc(t)+'</i>':'')+'</a>'}
 var MTAB='v';
+function mPer(){return (window.innerWidth||0)>=760?28:26}
+var MPW=mPer();window.addEventListener('resize',function(){var n=mPer();if(n===MPW)return;MPW=n;var box=document.getElementById('mbox');if(box)box.innerHTML=mediaBox()});
 function mediaBox(){var ph=fbMedia(false),vd=fbMedia(true),L=S.links||{},fbl=L.facebook?linkOf('facebook',L.facebook):'',h='';
   if(MTAB==='p'){
-    h+=ph.length?paged('fbp',ph,function(p){return fbTile(p,false)},26,'<div class="mgrid">',true):'<p class="lead">'+ut('mediaEmpty')+'</p>';
+    h+=ph.length?paged('fbp',ph,function(p){return fbTile(p,false)},mPer(),'<div class="mgrid">',true):'<p class="lead">'+ut('mediaEmpty')+'</p>';
     if(fbl&&ph.length)h+='<div class="mmore"><a class="btn soft sm" target="_blank" rel="noopener" href="'+esc(fbl)+'">'+ut('moreOnFb')+' '+I('ext')+'</a></div>';
   }else{
-    if(vd.length)h+=paged('fbv',vd,function(p){return fbTile(p,true)},26,'<div class="mgrid mv">',true);
+    if(vd.length)h+=paged('fbv',vd,function(p){return fbTile(p,true)},mPer(),'<div class="mgrid mv">',true);
     var own=visVideos();
     if(own.length||admin)h+='<div class="msub"><h3>'+ut('ourVideos')+'</h3>'+addBtn('videos','','Add video')+'</div>'+paged('videos',pinFirst(own),videoCard,10);
     else if(!vd.length)h+='<p class="lead">'+ut('mediaEmptyV')+'</p>';
