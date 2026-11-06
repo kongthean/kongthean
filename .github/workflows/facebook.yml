@@ -71,7 +71,7 @@ jobs:
               page = fb('me', fields='id,name,followers_count,fan_count,link')
               if page.get('followers_count') is None and page.get('fan_count') is None:
                   raise RuntimeError('This key belongs to a person, not to the Page. Copy the Page key (step 3 of the guide).')
-              first = fb('me/posts', fields='message,story,created_time,full_picture,permalink_url,status_type,attachments{media_type}', limit=25)
+              first = fb('me/posts', fields='message,story,created_time,full_picture,permalink_url,status_type,attachments{media_type}', limit=50)
               items = []
               for p in first.get('data', []):
                   text = (p.get('message') or p.get('story') or '').strip()
@@ -81,7 +81,7 @@ jobs:
                   mt = [a.get('media_type', '') for a in (p.get('attachments') or {}).get('data', [])]
                   items.append({'id': p.get('id', ''), 'text': text[:600], 'img': img, 'link': p.get('permalink_url') or '',
                                 'video': 'video' in mt or p.get('status_type') == 'added_video', 't': when(p.get('created_time', ''))})
-                  if len(items) >= 12:
+                  if len(items) >= 30:
                       break
               count, nxt, pages = 0, G + 'me/posts?' + urllib.parse.urlencode({'fields': 'id', 'limit': 100, 'access_token': TOKEN}), 0
               while nxt and pages < 200:
