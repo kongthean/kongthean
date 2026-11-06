@@ -461,6 +461,30 @@ body.admin footer .wrap{padding-bottom:170px}
 .aonly{display:none!important}
 .editing .aonly{display:inline-flex!important}
 .editing .aonly.edbtn{display:grid!important}
+.fbrail{grid-auto-columns:minmax(230px,280px)}
+.fbc{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;text-decoration:none;color:inherit;transition:transform .15s,box-shadow .15s}
+.fbc:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.08)}
+.fbc .fbi{position:relative;display:block;aspect-ratio:4/3;background:var(--bg2);overflow:hidden}
+.fbc .fbi img{width:100%;height:100%;object-fit:cover;display:block}
+.fbc .fbp{position:absolute;inset:0;margin:auto;width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center}
+.fbc .fbt{display:flex;flex-direction:column;gap:8px;padding:14px 16px 16px;flex:1}
+.fbc small{color:var(--muted);font-size:.8rem}
+.fbc .fbx{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5;font-size:.93rem;white-space:pre-line}
+.fbc.noimg .fbx{-webkit-line-clamp:9}
+.fbc b{margin-top:auto;display:inline-flex;align-items:center;gap:6px;font-size:.86rem;color:var(--accent)}
+.fbc b .i{width:15px;height:15px}
+.popn{position:fixed;inset:0;z-index:72;background:rgba(10,12,12,.62);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;transition:opacity .25s}
+.popn.on{opacity:1}
+.popn .pbox{position:relative;background:var(--surface);color:var(--ink);border-radius:20px;width:100%;max-width:440px;max-height:88vh;overflow:auto;box-shadow:0 24px 60px rgba(0,0,0,.35);transform:translateY(14px) scale(.98);transition:transform .3s}
+.popn.on .pbox{transform:none}
+.popn .pimg{display:block;width:100%;max-height:58vh;object-fit:contain;background:var(--bg2)}
+.popn .pbd{padding:20px 22px 22px}
+.popn h3{margin:0 0 8px;font-size:1.25rem;line-height:1.3}
+.popn .pbox.noimg h3{padding-right:40px}
+.popn p{margin:0 0 16px;color:var(--muted);white-space:pre-line;line-height:1.55}
+.popn .pact{display:flex;gap:8px;flex-wrap:wrap}
+.popn .pact .btn{flex:1;justify-content:center}
+.popn .px{position:absolute;top:10px;right:10px;z-index:2;background:rgba(255,255,255,.92);color:#1b1b1b;box-shadow:0 2px 8px rgba(0,0,0,.2)}
 .modal{position:fixed;inset:0;z-index:70;background:rgba(10,12,12,.6);display:flex;align-items:center;justify-content:center;padding:16px}
 .sheet{background:var(--surface);border-radius:20px;width:100%;max-width:640px;max-height:92vh;overflow:auto}
 .sheet .hd{position:sticky;top:0;z-index:2;background:var(--surface);border-bottom:1px solid var(--line);padding:14px 18px;display:flex;align-items:center;gap:10px}
@@ -1319,8 +1343,8 @@ var app=document.getElementById('app');
 
 /* ---------- UI words ---------- */
 var UI={
-en:{storiesKick:'Angkor',latestKick:'News & stories',home:'Home',explore:'Explore',menuSub:'Everything on this site, one tap away',followers:'Followers',postsN:'Posts',provinces:'Provinces',temples:'Temples & sites',featured:'Featured places',featuredSub:'Where to go next',seeAll:'See all',season:'When to visit',seasonSub:'Cambodia has three seasons',cool:'Cool & dry',hot:'Hot',wet:'Green / rainy',bestTime:'Best time',gettingThere:'Getting there',region:'Province',built:'Built',openMap:'Open in Google Maps',tip:'Our tip',related:'You may also like',watch:'Watch video',videos:'Videos',map:'Cambodia map',mapSub:'Tap a province to open it on the map',tribute:'A message of gratitude',stories:'Temple stories',chatTitle:'Chat with us',chatSub:'Online · our team usually replies within hours',chatPick:'What do you want to talk about?',chatHow:'Choose where to continue the conversation:',copy:'Copy',copied:'Copied',empty:'Nothing here yet.',back:'Back',all:'All',name:'Your name',message:'Message',sendEmail:'Send by email',sendMsgr:'Copy & open Messenger',rate:'How was your experience?',thanks:'Thank you!',menu:'Menu',close:'Close',readMore:'Read more',joinTrip:'Plan a trip with us',joinTripSub:'Ask about routes, places to stay or collaborations.',startChat:'Start a chat',exploreBtn:'Explore destinations',watchBtn:'Watch videos',quickLinks:'Pages',follow:'Follow',followUs:'Follow & contact us',aboutShort:'A Cambodian travel team sharing scenic routes, travel spots and peaceful places.',rights:'All rights reserved.',festivals:'Festivals through the year',arts:'Arts & living traditions',areas:'Where to stay, by area',picks:'Our picks',support:'Ways to support',payInfo:'Scan to support',giveWell:'Give responsibly',whatIDo:'What we share',collab:'Work with us',contactWays:'Reach us',writeMe:'Write to us',facebook:'Facebook',messenger:'Messenger',telegram:'Telegram',tiktok:'TikTok',youtube:'YouTube',instagram:'Instagram',email:'Email',phone:'Phone',address:'Address',website:'Website',topicTrip:'Plan a trip',topicCollab:'Collaboration',topicHotel:'Hotels',topicOther:'Something else',accountName:'Account name',accountNo:'Account number',latest:'Latest',filter:'Filter',share:'Share',shareThis:'Share with friends',copyLink:'Copy link',linkCopied:'Link copied',theme:'Theme',skinClassic:'Classic',skinHeritage:'Khmer Heritage',skinApsara:'Apsara Night',skinKbach:'Kbach Gold',skinPchum:'Pchum Ben',cultureKick:'Khmer culture',cultureHome:'Explore Khmer culture',inThis:'In this section',nextSec:'Next'},
-km:{storiesKick:'អង្គរ',latestKick:'ព័ត៌មាន និងរឿងរ៉ាវ',home:'ទំព័រដើម',explore:'ស្វែងយល់',menuSub:'គ្រប់យ៉ាងនៅលើគេហទំព័រនេះ ក្នុងមួយចុច',followers:'អ្នកតាមដាន',postsN:'ការបង្ហោះ',provinces:'ខេត្ត-រាជធានី',temples:'ប្រាសាទ និងរមណីយដ្ឋាន',featured:'កន្លែងពិសេស',featuredSub:'ទៅណាបន្ទាប់?',seeAll:'មើលទាំងអស់',season:'ពេលល្អសម្រាប់ទស្សនា',seasonSub:'កម្ពុជាមានបីរដូវ',cool:'រដូវត្រជាក់',hot:'រដូវក្ដៅ',wet:'រដូវវស្សា',bestTime:'ពេលល្អបំផុត',gettingThere:'របៀបធ្វើដំណើរ',region:'ខេត្ត',built:'កសាងឡើង',openMap:'បើកក្នុង Google Maps',tip:'គន្លឹះពីយើង',related:'កន្លែងផ្សេងទៀត',watch:'មើលវីដេអូ',videos:'វីដេអូ',map:'ផែនទីកម្ពុជា',mapSub:'ចុចលើខេត្ត ដើម្បីបើកលើផែនទី',tribute:'សារដឹងគុណ',stories:'រឿងរ៉ាវប្រាសាទ',chatTitle:'ជជែកជាមួយយើង',chatSub:'អនឡាញ · ជាធម្មតាឆ្លើយតបក្នុងរយៈពេលប៉ុន្មានម៉ោង',chatPick:'តើអ្នកចង់និយាយអំពីអ្វី?',chatHow:'ជ្រើសរើសកន្លែងបន្តការសន្ទនា៖',copy:'ចម្លង',copied:'បានចម្លង',empty:'មិនទាន់មានអ្វីនៅទីនេះទេ។',back:'ត្រឡប់',all:'ទាំងអស់',name:'ឈ្មោះរបស់អ្នក',message:'សារ',sendEmail:'ផ្ញើតាមអ៊ីមែល',sendMsgr:'ចម្លង ហើយបើក Messenger',rate:'តើបទពិសោធន៍របស់អ្នកយ៉ាងដូចម្ដេច?',thanks:'អរគុណ!',menu:'ម៉ឺនុយ',close:'បិទ',readMore:'អានបន្ត',joinTrip:'រៀបចំដំណើរជាមួយយើង',joinTripSub:'សួរយើងអំពីផ្លូវធ្វើដំណើរ កន្លែងស្នាក់នៅ ឬការសហការ។',startChat:'ចាប់ផ្ដើមជជែក',exploreBtn:'ស្វែងរកគោលដៅ',watchBtn:'មើលវីដេអូ',quickLinks:'ទំព័រ',follow:'តាមដាន',followUs:'តាមដាន និងទាក់ទងយើង',aboutShort:'ក្រុមការងារធ្វើដំណើរកម្ពុជា ចែករំលែកផ្លូវទេសភាព កន្លែងទេសចរណ៍ និងទីកន្លែងស្ងប់ស្ងាត់។',rights:'រក្សាសិទ្ធិគ្រប់យ៉ាង។',festivals:'ពិធីបុណ្យពេញមួយឆ្នាំ',arts:'សិល្បៈ និងប្រពៃណីរស់',areas:'កន្លែងស្នាក់នៅតាមតំបន់',picks:'ជម្រើសរបស់យើង',support:'វិធីគាំទ្រ',payInfo:'ស្កេនដើម្បីគាំទ្រ',giveWell:'បរិច្ចាគឱ្យបានត្រឹមត្រូវ',whatIDo:'អ្វីដែលយើងចែករំលែក',collab:'សហការជាមួយយើង',contactWays:'ទាក់ទងយើង',writeMe:'សរសេរមកយើង',facebook:'Facebook',messenger:'Messenger',telegram:'Telegram',tiktok:'TikTok',youtube:'YouTube',instagram:'Instagram',email:'អ៊ីមែល',phone:'ទូរស័ព្ទ',address:'អាសយដ្ឋាន',website:'គេហទំព័រ',topicTrip:'រៀបចំដំណើរ',topicCollab:'ការសហការ',topicHotel:'សណ្ឋាគារ',topicOther:'ផ្សេងៗ',accountName:'ឈ្មោះគណនី',accountNo:'លេខគណនី',latest:'ថ្មីៗ',filter:'តម្រង',share:'ចែករំលែក',shareThis:'ចែករំលែកទៅមិត្តភក្តិ',copyLink:'ចម្លងតំណ',linkCopied:'បានចម្លងតំណ',theme:'រចនាប័ទ្ម',skinClassic:'បុរាណ',skinHeritage:'បេតិកភណ្ឌខ្មែរ',skinApsara:'រាត្រីអប្សរា',skinKbach:'ក្បាច់មាស',skinPchum:'ភ្ជុំបិណ្ឌ',cultureKick:'វប្បធម៌ខ្មែរ',cultureHome:'ស្វែងយល់វប្បធម៌ខ្មែរ',inThis:'នៅក្នុងផ្នែកនេះ',nextSec:'បន្ទាប់'}
+en:{fbKick:'Fresh from our page',fbLatest:'Latest from Facebook',fbOpen:'View on Facebook',storiesKick:'Angkor',latestKick:'News & stories',home:'Home',explore:'Explore',menuSub:'Everything on this site, one tap away',followers:'Followers',postsN:'Posts',provinces:'Provinces',temples:'Temples & sites',featured:'Featured places',featuredSub:'Where to go next',seeAll:'See all',season:'When to visit',seasonSub:'Cambodia has three seasons',cool:'Cool & dry',hot:'Hot',wet:'Green / rainy',bestTime:'Best time',gettingThere:'Getting there',region:'Province',built:'Built',openMap:'Open in Google Maps',tip:'Our tip',related:'You may also like',watch:'Watch video',videos:'Videos',map:'Cambodia map',mapSub:'Tap a province to open it on the map',tribute:'A message of gratitude',stories:'Temple stories',chatTitle:'Chat with us',chatSub:'Online · our team usually replies within hours',chatPick:'What do you want to talk about?',chatHow:'Choose where to continue the conversation:',copy:'Copy',copied:'Copied',empty:'Nothing here yet.',back:'Back',all:'All',name:'Your name',message:'Message',sendEmail:'Send by email',sendMsgr:'Copy & open Messenger',rate:'How was your experience?',thanks:'Thank you!',menu:'Menu',close:'Close',readMore:'Read more',joinTrip:'Plan a trip with us',joinTripSub:'Ask about routes, places to stay or collaborations.',startChat:'Start a chat',exploreBtn:'Explore destinations',watchBtn:'Watch videos',quickLinks:'Pages',follow:'Follow',followUs:'Follow & contact us',aboutShort:'A Cambodian travel team sharing scenic routes, travel spots and peaceful places.',rights:'All rights reserved.',festivals:'Festivals through the year',arts:'Arts & living traditions',areas:'Where to stay, by area',picks:'Our picks',support:'Ways to support',payInfo:'Scan to support',giveWell:'Give responsibly',whatIDo:'What we share',collab:'Work with us',contactWays:'Reach us',writeMe:'Write to us',facebook:'Facebook',messenger:'Messenger',telegram:'Telegram',tiktok:'TikTok',youtube:'YouTube',instagram:'Instagram',email:'Email',phone:'Phone',address:'Address',website:'Website',topicTrip:'Plan a trip',topicCollab:'Collaboration',topicHotel:'Hotels',topicOther:'Something else',accountName:'Account name',accountNo:'Account number',latest:'Latest',filter:'Filter',share:'Share',shareThis:'Share with friends',copyLink:'Copy link',linkCopied:'Link copied',theme:'Theme',skinClassic:'Classic',skinHeritage:'Khmer Heritage',skinApsara:'Apsara Night',skinKbach:'Kbach Gold',skinPchum:'Pchum Ben',cultureKick:'Khmer culture',cultureHome:'Explore Khmer culture',inThis:'In this section',nextSec:'Next'},
+km:{fbKick:'ថ្មីៗពីទំព័ររបស់យើង',fbLatest:'ថ្មីៗពី Facebook',fbOpen:'មើលនៅលើ Facebook',storiesKick:'អង្គរ',latestKick:'ព័ត៌មាន និងរឿងរ៉ាវ',home:'ទំព័រដើម',explore:'ស្វែងយល់',menuSub:'គ្រប់យ៉ាងនៅលើគេហទំព័រនេះ ក្នុងមួយចុច',followers:'អ្នកតាមដាន',postsN:'ការបង្ហោះ',provinces:'ខេត្ត-រាជធានី',temples:'ប្រាសាទ និងរមណីយដ្ឋាន',featured:'កន្លែងពិសេស',featuredSub:'ទៅណាបន្ទាប់?',seeAll:'មើលទាំងអស់',season:'ពេលល្អសម្រាប់ទស្សនា',seasonSub:'កម្ពុជាមានបីរដូវ',cool:'រដូវត្រជាក់',hot:'រដូវក្ដៅ',wet:'រដូវវស្សា',bestTime:'ពេលល្អបំផុត',gettingThere:'របៀបធ្វើដំណើរ',region:'ខេត្ត',built:'កសាងឡើង',openMap:'បើកក្នុង Google Maps',tip:'គន្លឹះពីយើង',related:'កន្លែងផ្សេងទៀត',watch:'មើលវីដេអូ',videos:'វីដេអូ',map:'ផែនទីកម្ពុជា',mapSub:'ចុចលើខេត្ត ដើម្បីបើកលើផែនទី',tribute:'សារដឹងគុណ',stories:'រឿងរ៉ាវប្រាសាទ',chatTitle:'ជជែកជាមួយយើង',chatSub:'អនឡាញ · ជាធម្មតាឆ្លើយតបក្នុងរយៈពេលប៉ុន្មានម៉ោង',chatPick:'តើអ្នកចង់និយាយអំពីអ្វី?',chatHow:'ជ្រើសរើសកន្លែងបន្តការសន្ទនា៖',copy:'ចម្លង',copied:'បានចម្លង',empty:'មិនទាន់មានអ្វីនៅទីនេះទេ។',back:'ត្រឡប់',all:'ទាំងអស់',name:'ឈ្មោះរបស់អ្នក',message:'សារ',sendEmail:'ផ្ញើតាមអ៊ីមែល',sendMsgr:'ចម្លង ហើយបើក Messenger',rate:'តើបទពិសោធន៍របស់អ្នកយ៉ាងដូចម្ដេច?',thanks:'អរគុណ!',menu:'ម៉ឺនុយ',close:'បិទ',readMore:'អានបន្ត',joinTrip:'រៀបចំដំណើរជាមួយយើង',joinTripSub:'សួរយើងអំពីផ្លូវធ្វើដំណើរ កន្លែងស្នាក់នៅ ឬការសហការ។',startChat:'ចាប់ផ្ដើមជជែក',exploreBtn:'ស្វែងរកគោលដៅ',watchBtn:'មើលវីដេអូ',quickLinks:'ទំព័រ',follow:'តាមដាន',followUs:'តាមដាន និងទាក់ទងយើង',aboutShort:'ក្រុមការងារធ្វើដំណើរកម្ពុជា ចែករំលែកផ្លូវទេសភាព កន្លែងទេសចរណ៍ និងទីកន្លែងស្ងប់ស្ងាត់។',rights:'រក្សាសិទ្ធិគ្រប់យ៉ាង។',festivals:'ពិធីបុណ្យពេញមួយឆ្នាំ',arts:'សិល្បៈ និងប្រពៃណីរស់',areas:'កន្លែងស្នាក់នៅតាមតំបន់',picks:'ជម្រើសរបស់យើង',support:'វិធីគាំទ្រ',payInfo:'ស្កេនដើម្បីគាំទ្រ',giveWell:'បរិច្ចាគឱ្យបានត្រឹមត្រូវ',whatIDo:'អ្វីដែលយើងចែករំលែក',collab:'សហការជាមួយយើង',contactWays:'ទាក់ទងយើង',writeMe:'សរសេរមកយើង',facebook:'Facebook',messenger:'Messenger',telegram:'Telegram',tiktok:'TikTok',youtube:'YouTube',instagram:'Instagram',email:'អ៊ីមែល',phone:'ទូរស័ព្ទ',address:'អាសយដ្ឋាន',website:'គេហទំព័រ',topicTrip:'រៀបចំដំណើរ',topicCollab:'ការសហការ',topicHotel:'សណ្ឋាគារ',topicOther:'ផ្សេងៗ',accountName:'ឈ្មោះគណនី',accountNo:'លេខគណនី',latest:'ថ្មីៗ',filter:'តម្រង',share:'ចែករំលែក',shareThis:'ចែករំលែកទៅមិត្តភក្តិ',copyLink:'ចម្លងតំណ',linkCopied:'បានចម្លងតំណ',theme:'រចនាប័ទ្ម',skinClassic:'បុរាណ',skinHeritage:'បេតិកភណ្ឌខ្មែរ',skinApsara:'រាត្រីអប្សរា',skinKbach:'ក្បាច់មាស',skinPchum:'ភ្ជុំបិណ្ឌ',cultureKick:'វប្បធម៌ខ្មែរ',cultureHome:'ស្វែងយល់វប្បធម៌ខ្មែរ',inThis:'នៅក្នុងផ្នែកនេះ',nextSec:'បន្ទាប់'}
 };
 function u(k){var o=S.ui&&S.ui[k];if(o&&o[lang])return o[lang];return (UI[lang]&&UI[lang][k])||UI.en[k]||k}
 function ut(k){return admin?'<span data-edit="ui.'+k+'">'+esc(u(k))+'</span>':esc(u(k))}
@@ -1486,8 +1510,53 @@ function render(){
   if(editing)app.querySelectorAll('[data-edit]').forEach(function(el){try{el.contentEditable='plaintext-only'}catch(x){el.contentEditable='true'}el.spellcheck=false});
   startAuto();initTiles();
   if(R.name==='v'&&location.hash!==vOpened){vOpened=location.hash;var vv=(S.videos||[]).filter(function(x){return x.id===R.id})[0];if(vv){var pv=playable(vv);if(pv)setTimeout(function(){playVideo(pv)},60);else{var ul=url(vv.link);if(ul)setTimeout(function(){var c=app.querySelector('[data-vid="'+vv.id+'"]');if(c){c.scrollIntoView({block:'center'});c.classList.add('flash')}},60)}}}
+  if(R.name==='home'&&!ADMIN_PAGE&&!popDone&&popReady()){popDone=true;var pk=popKey(),seen='';try{seen=localStorage.getItem('thean_pop')||''}catch(e){}if(seen!==pk)setTimeout(function(){if(route().name==='home')popShow()},900)}
   try{document.dispatchEvent(new Event('thean:render'))}catch(e){}
 }
+/* one-time pop-up notice on the home page */
+var popDone=false;
+function popReady(any){var p=S.popup;return !!(p&&(any||p.on!==false)&&(p.img||tr(p.title)||tr(p.text)))}
+function popKey(){var p=S.popup||{},t=JSON.stringify([p.img||'',p.title||'',p.text||'',p.btn||'',p.link||'']),h=0;for(var i=0;i<t.length;i++){h=(h*31+t.charCodeAt(i))|0}return 'p'+(h>>>0).toString(36)}
+function popShow(test){var p=S.popup;if(!p)return;popClose();
+  var ti=tr(p.title),tx=tr(p.text),bt=tr(p.btn),lk=String(p.link||'').trim(),href=lk?(/^#/.test(lk)?lk:url(lk)):'';
+  var d=document.createElement('div');d.className='popn';d.id='popn';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');if(ti)d.setAttribute('aria-label',ti);
+  d.innerHTML='<div class="pbox'+(p.img?'':' noimg')+'"><button class="ib px" data-act="popclose" aria-label="'+esc(u('close'))+'">'+I('close')+'</button>'+(p.img?'<img class="pimg" alt="'+esc(ti)+'" src="'+esc(p.img)+'">':'')+
+    ((ti||tx||href)?'<div class="pbd">'+(ti?'<h3>'+esc(ti)+'</h3>':'')+(tx?'<p>'+esc(tx)+'</p>':'')+'<div class="pact">'+(href?'<a class="btn" data-popgo href="'+esc(href)+'"'+(/^#/.test(href)?'':' target="_blank" rel="noopener"')+'>'+esc(bt||u('readMore'))+'</a>':'')+'<button class="btn soft" data-act="popclose">'+esc(u('close'))+'</button></div></div>':'')+'</div>';
+  d.addEventListener('click',function(e){if(e.target===d)popClose();if(e.target.closest('[data-popgo]'))setTimeout(popClose,50);if(e.target.closest('[data-act="popclose"]')){e.stopPropagation();popClose()}});
+  document.body.appendChild(d);requestAnimationFrame(function(){d.classList.add('on')});
+  if(!test){try{localStorage.setItem('thean_pop',popKey())}catch(e){}}
+  var bx=d.querySelector('.px');if(bx)try{bx.focus({preventScroll:true})}catch(e){}}
+function popClose(){var d=document.getElementById('popn');if(d)d.remove()}
+/* live Facebook numbers and posts (written every hour by the GitHub job) */
+var FBD=null;try{FBD=JSON.parse(localStorage.getItem('thean_fb')||'null')}catch(e){}
+function fbCfg(){return S.fbAuto||{}}
+function fbStatsOn(){return !!(FBD&&FBD.at&&fbCfg().stats!==false)}
+function fmtN(v){v=Math.max(0,Math.round(+v||0));return num(String(v).replace(/\B(?=(\d{3})+(?!\d))/g,','))}
+function statVal(k){if(fbStatsOn()&&FBD[k]!=null)return fmtN(FBD[k]);return esc(S.stats[k])}
+function fbDate(t){var d=new Date(+t||0);if(!t||isNaN(d))return '';return num(d.getDate())+' '+MONTHS[lang==='km'?'km':'en'][d.getMonth()]+' '+num(d.getFullYear())}
+function fbCard(p){var img=String(p.img||''),lk=String(p.link||'');if(!/^https:\/\//.test(img))img='';if(!/^https:\/\//.test(lk))lk='';
+  return '<a class="fbc'+(img?'':' noimg')+'"'+(lk?' href="'+esc(lk)+'" target="_blank" rel="noopener"':'')+'>'+(img?'<span class="fbi"><img loading="lazy" alt="" referrerpolicy="no-referrer" src="'+esc(img)+'" onerror="this.parentNode.remove()">'+(p.video?'<span class="fbp">'+I('play')+'</span>':'')+'</span>':'')+
+    '<span class="fbt"><small>'+esc(fbDate(p.t))+'</small><span class="fbx">'+esc(p.text||'')+'</span>'+(lk?'<b>'+esc(u('fbOpen'))+' '+I('ext')+'</b>':'')+'</span></a>'}
+function fbFeedHtml(){var c=fbCfg(),it=(FBD&&FBD.items)||[];if(c.feed===false||!it.length)return '';var cnt=+c.count||6,L=S.links||{};
+  return '<section><div class="sh"><div><div class="kick">'+ut('fbKick')+'</div><h2 class="emb">'+ut('fbLatest')+'</h2></div>'+(L.facebook?'<a class="more" target="_blank" rel="noopener" href="'+esc(linkOf('facebook',L.facebook))+'">'+ut('follow')+' '+I('arrow')+'</a>':'')+'</div><div class="rail fbrail">'+it.slice(0,cnt).map(fbCard).join('')+'</div></section>'}
+function agoTxt(t){var m=Math.round((Date.now()-t)/60000);if(m<2)return 'just now';if(m<60)return m+' minutes ago';var h=Math.round(m/60);if(h<48)return h+' hour'+(h>1?'s':'')+' ago';return Math.round(h/24)+' days ago'}
+window.TheanSite.setFb=function(v){if(!v||typeof v!=='object')return;FBD=v;try{localStorage.setItem('thean_fb',JSON.stringify(v))}catch(e){}
+  if(ADMIN_PAGE&&admin&&adminView==='dash'){if(dashSec==='home'||dashSec==='overview')render();return}
+  document.querySelectorAll('[data-fbs]').forEach(function(b){if(fbStatsOn())b.innerHTML=statVal(b.getAttribute('data-fbs'))});
+  var bx=document.getElementById('fbfeedbox');if(bx)bx.innerHTML=fbFeedHtml()};
+function fbDash(){var c=fbCfg(),d=FBD,st,warn='';
+  if(!d||!d.at)st=d&&d.err?'Not connected: '+esc(d.err):'Not connected yet. Follow the setup steps we sent you; this box turns green when the first update arrives.';
+  else{st='Last update '+agoTxt(d.at)+' · <b>'+fmtN(d.followers)+'</b> followers · <b>'+fmtN(d.posts)+'</b> posts · '+((d.items||[]).length)+' latest posts copied';
+    if(d.err&&d.errAt>d.at)warn='Last try failed: '+esc(d.err);else if(Date.now()-d.at>3*3600000)warn='No update for '+agoTxt(d.at).replace(' ago','')+'. On GitHub open Actions and check "Facebook to website" (GitHub pauses it if the website has had no changes for 60 days: tap Enable).'}
+  var ok=d&&d.at&&!warn;
+  return '<h3 class="dsub">Facebook auto-update</h3><div class="dnote" style="border-left:4px solid '+(ok?'#2f8f5b':'#c58a1a')+'">'+st+(warn?'<br><b style="color:#b0461f">'+warn+'</b>':'')+'</div>'+
+    '<div class="dlist"><div class="ditem" style="grid-template-columns:1fr"><div class="dtx"><b>Followers and Posts numbers</b><small>'+(c.stats===false?'Using the numbers you typed in Links, stats & chat':'Exact numbers from Facebook, updated every hour')+'</small></div><div class="dact"><button class="btn sm '+(c.stats===false?'':'soft')+'" data-act="fbstats">'+(c.stats===false?'Use Facebook numbers':'Use my typed numbers')+'</button></div></div>'+
+    '<div class="ditem" style="grid-template-columns:1fr"><div class="dtx"><b>Latest from Facebook (home page)</b><small>'+(c.feed===false?'Hidden':'Showing your newest '+(+c.count||6)+' posts')+'</small></div><div class="dact">'+(c.feed===false?'<button class="btn sm" data-act="fbfeed">Show</button>':[3,6,9,12].map(function(k){return '<button class="btn sm '+((+c.count||6)===k?'':'soft')+'" data-act="fbcount:'+k+'">'+k+'</button>'}).join('')+'<button class="btn sm soft" data-act="fbfeed">Hide</button>')+'</div></div></div>'}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')popClose()});
+function popDash(){var p=S.popup,has=popReady(true);
+  return '<h3 class="dsub">One-time pop-up notice</h3><div class="dlist"><div class="ditem">'+(has&&p.img?'<img class="dth" alt="" src="'+esc(p.img)+'" style="object-fit:cover">':'<span class="dth">'+I('image')+'</span>')+
+    '<div class="dtx"><b>'+(has?esc(tr(p.title)||tr(p.text)||'Picture only'):'Nothing yet')+'</b><small>'+(has?(p.on===false?'Hidden from visitors':'Opens once for each visitor on the home page. When you change it, everyone sees the new one once.'):'Add a picture and a short message. Each visitor sees it once.')+'</small></div>'+
+    '<div class="dact"><button class="btn sm" data-act="popedit">'+I('edit')+' '+(has?'Edit':'Create')+'</button>'+(has?'<button class="btn sm soft" data-act="poptest">Preview</button>'+(p.on===false?'<button class="btn sm soft" data-act="popshow">Show</button>':'<button class="btn sm soft" data-act="pophide">Hide</button>'):'')+'</div></div></div>'}
 
 var vOpened='';var navDepth=0;window.addEventListener('hashchange',function(){navDepth++});
 function backBtn(){return '<a class="navback" href="#/" data-act="back" aria-label="'+esc(u('back'))+'" title="'+esc(u('back'))+'">'+I('left')+'</a>'}
@@ -1584,7 +1653,8 @@ function renderHome(){
   h+='<section><div class="sh"><div><div class="kick">'+ut('menuSub')+'</div><h2 class="emb">'+ut('explore')+'</h2></div></div>'+tilesHtml(true)+socialBar();
   /* stats */
   var temples=S.places.filter(function(p){return p.cat==='temple'}).length;
-  h+='<div class="stats"><div class="stat"><b'+E('stats.followers')+'>'+esc(S.stats.followers)+'</b><span>'+ut('followers')+'</span></div><div class="stat"><b'+E('stats.posts')+'>'+esc(S.stats.posts)+'</b><span>'+ut('postsN')+'</span></div><div class="stat"><b>'+num(25)+'</b><span>'+ut('provinces')+'</span></div><div class="stat"><b>'+num(temples)+'</b><span>'+ut('temples')+'</span></div></div></section>';
+  h+='<div class="stats"><div class="stat"><b data-fbs="followers"'+(fbStatsOn()?'':E('stats.followers'))+'>'+statVal('followers')+'</b><span>'+ut('followers')+'</span></div><div class="stat"><b data-fbs="posts"'+(fbStatsOn()?'':E('stats.posts'))+'>'+statVal('posts')+'</b><span>'+ut('postsN')+'</span></div><div class="stat"><b>'+num(25)+'</b><span>'+ut('provinces')+'</span></div><div class="stat"><b>'+num(temples)+'</b><span>'+ut('temples')+'</span></div></div></section>';
+  h+='<div id="fbfeedbox">'+fbFeedHtml()+'</div>';
   /* featured */
   var feat=S.places.filter(function(p){return p.featured}).slice(0,10);
   h+='<section><div class="sh"><div><div class="kick">'+ut('featuredSub')+'</div><h2 class="emb">'+ut('featured')+'</h2></div><a class="more" href="#/p/destinations">'+ut('seeAll')+' '+I('arrow')+'</a></div><div class="rail">'+feat.map(placeCard).join('')+'</div></section>';
@@ -2030,7 +2100,7 @@ function aboutBlock(){return aboutBlock0()+creditsBlock()}
 function aboutBlock0(){
   var A=S.about;
   var h='<section><div class="aboutgrid"><div class="portrait">'+(A.photo||S.brand.logo?'<img alt="Thean" src="'+(A.photo||S.brand.logo)+'">':'')+'</div><div class="prose">'+(admin?'<button class="btn sm soft aonly" data-act="aboutphoto" style="margin-bottom:12px">'+I('image')+' Photo</button>':'')+String(tr(A.bio)).split(/\n\n+/).map(function(par,i){return '<p>'+esc(par)+'</p>'}).join('')+(admin?'<button class="btn sm aonly" data-act="aboutbio">'+I('edit')+' Edit bio</button>':'')+
-   '<div class="stats" style="margin-top:18px;grid-template-columns:repeat(2,1fr)"><div class="stat"><b>'+esc(S.stats.followers)+'</b><span>'+ut('followers')+'</span></div><div class="stat"><b>'+esc(S.stats.posts)+'</b><span>'+ut('postsN')+'</span></div></div></div></div></section>';
+   '<div class="stats" style="margin-top:18px;grid-template-columns:repeat(2,1fr)"><div class="stat"><b data-fbs="followers">'+statVal('followers')+'</b><span>'+ut('followers')+'</span></div><div class="stat"><b data-fbs="posts">'+statVal('posts')+'</b><span>'+ut('postsN')+'</span></div></div></div></div></section>';
   h+='<section><div class="sh"><h2 class="emb">'+ut('whatIDo')+'</h2>'+(admin?'<button class="btn sm soft aonly" data-arr="about.does">'+I('edit')+' Edit list</button>':'')+'</div><div class="grid">'+A.does.map(function(d,i){return '<div class="card" style="padding:20px;gap:8px"><span class="ccard" style="border:0;padding:0;background:transparent"><span class="ic">'+I(d.icon)+'</span><b'+E('about.does.'+i+'.title')+'>'+esc(tr(d.title))+'</b></span><p style="-webkit-line-clamp:unset"'+E('about.does.'+i+'.text')+'>'+esc(tr(d.text))+'</p></div>'}).join('')+'</div></section>';
   h+='<section><div class="sh"><h2 class="emb">'+ut('collab')+'</h2>'+(admin?'<button class="btn sm soft aonly" data-arr="about.collab">'+I('edit')+' Edit list</button>':'')+'</div><ul class="checks">'+A.collab.map(function(c,i){return '<li>'+I('check')+'<span'+E('about.collab.'+i)+'>'+esc(tr(c))+'</span></li>'}).join('')+'</ul></section>';
   return h;
@@ -2318,6 +2388,7 @@ app.addEventListener('click',function(e){
   if(d.pg){e.preventDefault();var pq=d.pg.split(':'),pk=pq.slice(0,-1).join(':');PG[pk]=PG[pk]||{q:'',p:1};PG[pk].p=+pq[pq.length-1];plRefresh(pk);var pe=app.querySelector('[data-pl="'+pk+'"]');if(pe){var y=pe.getBoundingClientRect().top+scrollY-140;scrollTo({top:y,behavior:'smooth'})}return}
   if(d.kh){e.preventDefault();khAct(d.kh,t);return}
   if(d.pageimg!=null){pickImage(1600,function(x){S.pages[+d.pageimg].img=x;changed()});return}
+  if(d.act&&d.act.indexOf('fbcount:')===0){S.fbAuto=S.fbAuto||{};S.fbAuto.count=+d.act.slice(8)||6;S.fbAuto.feed=true;changed();render();return}
   switch(d.act){
     case 'chat':if(window.TheanChat)window.TheanChat.open();return;
     case 'drawer':drawer=!drawer;render();return;
@@ -2340,6 +2411,13 @@ app.addEventListener('click',function(e){
     case 'mapimg':pickImage(1400,function(x){S.mapImg=x;changed()});return;
     case 'aboutphoto':pickImage(800,function(x){S.about.photo=x;changed()});return;
     case 'aboutbio':bioForm();return;
+    case 'fbstats':S.fbAuto=S.fbAuto||{};S.fbAuto.stats=S.fbAuto.stats===false;changed();render();return;
+    case 'fbfeed':S.fbAuto=S.fbAuto||{};S.fbAuto.feed=S.fbAuto.feed===false;changed();render();return;
+    case 'popedit':editObj('popup',SCHEMA.popup,'One-time pop-up notice',true);return;
+    case 'popshow':if(S.popup){S.popup.on=true;changed();render()}return;
+    case 'pophide':if(S.popup){S.popup.on=false;changed();render()}return;
+    case 'poptest':if(popReady(true))popShow(true);else toast('Add a picture, headline or message first');return;
+    case 'popclose':popClose();return;
     case 'msgvideo':editObj('message.video',SCHEMA.media,'Photo or video under the message',true);return;
     case 'logo':pickImage(400,function(x){S.brand.logo=x;changed()});return;
     case 'edit':editing=!editing;render();return;
@@ -2444,6 +2522,7 @@ var SCHEMA={
  news:[['title','Title','bi'],['date','Date (YYYY-MM-DD)','text'],['sum','Short caption for the news list (optional)','biarea'],['img','Photo','img'],['gallery','More photos','imgs'],['video','Video from your device','video'],['text','Text','biarea'],['link','Link','text']],
  videos:[['title','Title','bi'],['video','Video from your device','video'],['img','Cover image (optional)','img'],['text','Short description','biarea'],['link','Or a video link (YouTube, TikTok, Facebook): plays on the website too','text']],
  pages:[['label','Page name','bi'],['hint','Small line under icon','bi'],['icon','Icon','icon'],['intro','Introduction text','biarea']],
+ popup:[['img','Picture (optional)','img'],['title','Headline','bi'],['text','Message','biarea'],['btn','Button text (optional, e.g. Read more)','bi'],['link','Button link (optional: a web address, or a page of your website such as #/p/news)','text']],
  media:[['img','Photo','img'],['video','Or a video from your device','video'],['link','Or a video link (YouTube, Facebook, TikTok)','text'],['title','Title (optional)','bi'],['text','Short text (optional)','biarea']],
  post:[['title','Title','bi'],['date','Date (YYYY-MM-DD)','text'],['sum','Short caption for the news list (optional)','biarea'],['img','Main photo','img'],['gallery','More photos','imgs'],['video','Video from your device','video'],['text','Text','biarea'],['link','Link (video, Facebook post…)','text']]
 };
@@ -2584,7 +2663,7 @@ function dashSection(){
     h+='<div class="dwelcome"><h2>Hello'+(adminUser&&adminUser.agent&&adminUser.agent.name?', '+esc(adminUser.agent.name):'')+'</h2><p>Everything you change here <b>saves and goes live automatically</b> within a few seconds. Watch the status at the top: <b>Live on the website</b> means visitors can see it.</p></div>';
     var need=photoTargets().length;
     h+='<div class="autobox"><span style="font-size:1.8rem;color:var(--accent)">'+I('image')+'</span><div><b>HD photos & videos</b><small style="color:var(--muted)">'+(need?need+' places, slides or videos have no photo yet. Add free HD photos from Wikimedia Commons in one tap.':'Every place has a photo. You can change any photo with <b>Online photo</b>.')+'</small></div>'+(need?'<button class="btn" data-act="autophotos">'+I('image')+' Add HD photos</button>':'')+'</div>';
-    h+='<h3 class="dsub">Quick actions</h3><div class="dcards">'+maintCard()+awayCard()+dCard('calendar','Add news','Title, photo, short caption, full story, photos & video','data-add="news:"')+dCard('video','Add a video','Upload from your phone or paste a link','data-add="videos:"')+dCard('pin','Add a place','Destination, temple or culture story','data-add="places:destination"')+dCard('star','Home page','Slideshow, announcement, message of gratitude','data-dash="home"')+dCard('bell','Edit announcement','The red/dark bar under the slideshow','data-dash="texts"')+dCard('menu','Add a menu page','New icon in the menu with its own posts','data-add="pages:custom"')+'</div>';
+    h+='<h3 class="dsub">Quick actions</h3><div class="dcards">'+maintCard()+awayCard()+dCard('calendar','Add news','Title, photo, short caption, full story, photos & video','data-add="news:"')+dCard('video','Add a video','Upload from your phone or paste a link','data-add="videos:"')+dCard('pin','Add a place','Destination, temple or culture story','data-add="places:destination"')+dCard('star','Home page','Slideshow, announcement, message of gratitude','data-dash="home"')+dCard('bell','Edit announcement','The red/dark bar under the slideshow','data-dash="texts"')+dCard('image','Pop-up notice',popReady(true)?(S.popup.on===false?'Hidden. Tap to edit or show it.':'Showing once to each visitor. Tap to edit.'):'A picture and message that opens once on the home page','data-act="popedit"')+dCard('menu','Add a menu page','New icon in the menu with its own posts','data-add="pages:custom"')+'</div>';
     h+='<h3 class="dsub">Your website</h3><div class="dstats">'+[['Posts',(S.news||[]).length+(S.social||[]).length+S.pages.reduce(function(a,p){return a+(p.custom&&S[p.list]?S[p.list].length:0)},0),'posts'],['Videos',(S.videos||[]).length,'videos'],['Places',S.places.length,'places'],['Menu pages',S.pages.length,'pages'],['Slides',S.slides.length,'home']].map(function(r){return '<button class="dstat" data-dash="'+r[2]+'"><b>'+r[1]+'</b><span>'+r[0]+'</span></button>'}).join('')+'</div>';
     h+='<div class="dnote">'+(mediaOK()?'Photo & video storage is connected (Cloudinary).':'⚠️ Photo & video storage is not connected yet. <button class="btn sm" data-act="media">Set up now</button>')+'<br>Website data size: <b>'+mb.toFixed(1)+' MB</b>'+(mb>8?' — large. New photos go to Cloudinary once it is connected, which keeps the site fast.':' — good.')+'</div>';
   }
@@ -2592,6 +2671,7 @@ function dashSection(){
     h+=dHead('Home page','Everything at the top and middle of your home page, in one place.');
     h+='<h3 class="dsub">Slideshow <button class="btn sm soft" data-act="slides">'+I('image')+' Edit slideshow</button></h3><div class="dgrid">'+S.slides.map(function(sl,i){return '<div class="dslide">'+(sl.img?'<img alt="" src="'+sl.img+'">':art('temple','d'+i))+'<span>'+(i+1)+'. '+esc(tr(sl.cap)||'(no headline)')+'</span></div>'}).join('')+'</div>';
     h+='<h3 class="dsub">Announcement bar</h3>'+dField('notice','The dark bar under the slideshow',true);
+    h+=popDash()+fbDash();
     var mv=S.message&&S.message.video;
     h+='<h3 class="dsub">A message of gratitude</h3><div class="dnote" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span style="flex:1">'+(S.message.show===false?'Hidden from visitors. Nothing is left in its place.':'Showing on the home page.')+'</span>'+(S.message.show===false?'<button class="btn sm" data-act="msgshow">Show on website</button>':'<button class="btn sm soft" data-act="msghide">Hide</button>')+'</div>';
     h+='<div class="dfield"><b>Message text</b><div class="two"><label class="f">ខ្មែរ<textarea data-tp="message.km" rows="4">'+esc(S.message.km||'')+'</textarea></label><label class="f">English<textarea data-tp="message.en" rows="4">'+esc(S.message.en||'')+'</textarea></label></div></div>';
@@ -2905,7 +2985,7 @@ function tileStyleForm(){
 function linksForm(){
   var L=S.links;
   var m=modal('Links, stats & chat',LINKS.map(function(k){return fieldHtml([k,UI.en[k]+(k==='messenger'?' (page name or m.me link)':k==='telegram'?' (username or t.me link)':k==='tiktok'?' (username, e.g. @thean)':''),'text'],L[k])}).join('')+
-    '<div class="two">'+fieldHtml(['followers','Followers number','text'],S.stats.followers)+fieldHtml(['posts','Posts number','text'],S.stats.posts)+'</div>'+
+    (fbStatsOn()?'<div class="dnote">Followers and Posts now update by themselves from Facebook. The numbers below are only used if the automatic update is turned off.</div>':'')+'<div class="two">'+fieldHtml(['followers','Followers number','text'],S.stats.followers)+fieldHtml(['posts','Posts number','text'],S.stats.posts)+'</div>'+
     fieldHtml(['greet','Chat greeting','biarea'],S.chatGreet)+fieldHtml(['bname','Website name (top left)','text'],S.brand.name)+fieldHtml(['sub','Line under the name','bi'],S.brand.sub)+
     '<div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-ok>Update</button></div>');
   m.querySelector('[data-ok]').onclick=function(){function q(k,l){return m.querySelector('[data-k="'+k+'"]'+(l?'[data-l="'+l+'"]':'')).value.trim()}
@@ -3530,11 +3610,12 @@ draw();
 
 /* ---------------- live website content ---------------- */
 function readCache(){try{return JSON.parse(localStorage.getItem(CACHE)||'null')}catch(e){return null}}
-const SYNC={build:'20261009-0622',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
+const SYNC={build:'20261010-0331',page:location.href,step:'start',cacheV:null,serverV:null,applied:null,error:''};
 async function syncSite(){
   const c=readCache();SYNC.cacheV=c&&c.v||null;
   if(c&&c.content&&c.v){T.setState(c.content,{live:true,v:c.v});SYNC.applied='from this phone (saved copy)'}
   try{SYNC.step='loading Firebase';await loadFb();
+    try{fb.on('settings/public/fb',v=>{try{T.setFb&&T.setFb(v)}catch(e){}})}catch(e){}
     if(!ADMIN_PAGE){try{fb.on('settings/public/maintenance',v=>{try{T.setMaint&&T.setMaint(v)}catch(e){}})}catch(e){}}
     SYNC.step='reading version';const v=await fb.get('site/version');SYNC.serverV=v||null;
     if(!v){SYNC.step='checking saved content';const c0=await fb.get('site/content');if(!c0){SYNC.step='done: nothing published yet';return}T.setState(c0,{live:true,v:1});SYNC.applied='from the server (old save)';SYNC.step='done: saved content shown';return}
