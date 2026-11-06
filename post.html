@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#102d4d">
+<title>Thean · Post to Facebook</title>
+<link rel="icon" type="image/png" sizes="48x48" href="/icons/post-favicon-48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/icons/post-favicon-96.png">
+<link rel="apple-touch-icon" href="/icons/post-apple-touch-icon.png">
+<link rel="manifest" href="/icons/post.webmanifest">
+<meta name="apple-mobile-web-app-title" content="Thean Post">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kantumruy+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef0f1;--surface:#fff;--ink:#1d2328;--muted:#68737c;--line:#dfe3e6;--char:#1f2428;--char-ink:#fff;--soft:#e7eaec;--ok:#1f7a4d;--okbg:#e5f3ec;--bad:#a8341f;--badbg:#fbeae6;--accent:#2f5f7a;--r:18px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121518;--surface:#1b1f23;--ink:#eef1f3;--muted:#9aa5ae;--line:#2c3237;--char:#eef1f3;--char-ink:#121518;--soft:#262c31;--ok:#5fd09a;--okbg:#14291f;--bad:#ff9a85;--badbg:#2e1a16;--accent:#8cc3e3}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Kantumruy Pro",system-ui,-apple-system,sans-serif;-webkit-text-size-adjust:100%}
+body.km{font-family:"Kantumruy Pro",Inter,system-ui,sans-serif}
+.top{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--line);padding:calc(10px + env(safe-area-inset-top)) 16px 10px}
+.top .in{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:10px}
+.brand{flex:1;min-width:0}
+.brand b{display:block;font-size:1.05rem;letter-spacing:.06em}
+.brand small{display:block;color:var(--muted);font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kst{display:inline-flex;align-items:center;gap:7px;max-width:42vw;border:0;border-radius:999px;padding:7px 12px 7px 10px;font:inherit;font-size:.8rem;font-weight:600;cursor:pointer;background:var(--soft);color:var(--ink)}
+.kst i{width:9px;height:9px;border-radius:50%;flex:none;background:var(--muted)}
+.kst span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kst.ok{background:var(--okbg);color:var(--ok)}.kst.ok i{background:var(--ok)}
+.kst.bad{background:var(--badbg);color:var(--bad)}.kst.bad i{background:var(--bad)}
+.kst.chk i{animation:kp 1s infinite alternate}@keyframes kp{to{opacity:.25}}
+.lang{display:flex;background:var(--soft);border-radius:999px;padding:3px}
+.lang button{border:0;background:none;color:var(--ink);font:inherit;font-size:.82rem;font-weight:600;padding:6px 11px;border-radius:999px;cursor:pointer}
+.lang button.on{background:var(--char);color:var(--char-ink)}
+.ib{border:0;background:var(--soft);color:var(--ink);width:40px;height:40px;border-radius:50%;display:grid;place-items:center;cursor:pointer}
+.ib svg,.btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+main{max-width:640px;margin:0 auto;padding:16px 16px calc(40px + env(safe-area-inset-bottom))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.card h2{margin:0 0 4px;font-size:1.02rem}
+.card .sub{margin:0 0 12px;color:var(--muted);font-size:.86rem;line-height:1.45}
+label.f{display:block;font-size:.84rem;color:var(--muted);font-weight:500;margin:10px 0 6px}
+input[type=text],input[type=password],input[type=url],input[type=datetime-local],textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 13px;outline:none}
+input:focus,textarea:focus{border-color:var(--accent)}
+textarea{min-height:170px;resize:vertical;line-height:1.5}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row>input{flex:1;min-width:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:12px 18px;font:inherit;font-weight:600;font-size:.94rem;cursor:pointer;background:var(--char);color:var(--char-ink);text-decoration:none}
+.btn.soft{background:var(--soft);color:var(--ink)}
+.btn.sm{padding:8px 13px;font-size:.84rem}
+.btn.wide{width:100%;padding:15px}
+.btn:disabled{opacity:.5;cursor:default}
+.link{background:none;border:0;padding:0;color:var(--accent);font:inherit;font-size:.88rem;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.msg{border-radius:12px;padding:11px 13px;font-size:.9rem;line-height:1.45;margin-top:12px}
+.msg.ok{background:var(--okbg);color:var(--ok)}
+.msg.bad{background:var(--badbg);color:var(--bad)}
+.msg.info{background:var(--soft);color:var(--ink)}
+.owner{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.owner img{width:42px;height:42px;border-radius:50%;object-fit:cover;background:var(--soft)}
+.owner b{display:block}
+.owner small{color:var(--muted)}
+.vid{width:100%;max-height:70vh;border-radius:14px;background:#000;display:block}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.ph{position:relative;aspect-ratio:3/4;border-radius:10px;overflow:hidden;background:var(--soft);border:0;padding:0;cursor:pointer}
+.ph img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .15s}
+.ph .n{position:absolute;top:6px;right:6px;min-width:24px;height:24px;border-radius:12px;background:var(--char);color:var(--char-ink);font-size:.75rem;font-weight:700;display:grid;place-items:center;padding:0 6px;border:2px solid #fff}
+.ph.off img{opacity:.28}
+.ph.off .n{background:rgba(255,255,255,.85);color:#1d2328}
+.tg{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:.92rem}
+.tg:first-of-type{border-top:0}
+.sw{position:relative;width:46px;height:28px;flex:none}
+.sw input{opacity:0;width:0;height:0;position:absolute}
+.sw span{position:absolute;inset:0;background:var(--line);border-radius:14px;transition:background .15s;cursor:pointer}
+.sw span:after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .15s}
+.sw input:checked+span{background:var(--ok)}
+.sw input:checked+span:after{transform:translateX(18px)}
+.seg{display:flex;background:var(--soft);border-radius:999px;padding:4px;margin-bottom:10px}
+.seg button{flex:1;border:0;background:none;font:inherit;font-weight:600;font-size:.9rem;padding:9px;border-radius:999px;color:var(--ink);cursor:pointer}
+.seg button.on{background:var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.cnt{color:var(--muted);font-size:.84rem}
+.hist a{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line);color:var(--ink);text-decoration:none;font-size:.9rem}
+.hist a:first-child{border-top:0}
+.hist a span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hist a small{color:var(--muted);flex:none}
+.note{font-size:.82rem;color:var(--muted);line-height:1.5;margin-top:10px}
+.modal{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--surface);width:100%;max-width:640px;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:18px 16px calc(24px + env(safe-area-inset-bottom))}
+@media(min-width:700px){.modal{align-items:center}.sheet{border-radius:22px}}
+.sheet .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.sheet h3{margin:0;font-size:1.1rem}
+ol.steps{padding-left:20px;margin:8px 0 0;font-size:.88rem;line-height:1.6}
+ol.steps li{margin-bottom:8px}
+code{background:var(--soft);padding:1px 6px;border-radius:6px;font-size:.85em;word-break:break-all}
+details{border-top:1px solid var(--line);margin-top:14px;padding-top:10px}
+summary{cursor:pointer;font-weight:600;font-size:.92rem}
+.bar{height:6px;background:var(--soft);border-radius:3px;overflow:hidden;margin-top:10px}
+.bar i{display:block;height:100%;width:0;background:var(--ok);transition:width .3s}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+  <div class="brand"><b>THEAN</b><small data-t="appSub"></small></div>
+  <button class="kst" id="kst" data-open-settings><i></i><span id="kstT"></span></button>
+  <div class="lang" role="group" aria-label="Language"><button data-lang="km">ខ្មែរ</button><button data-lang="en">EN</button></div>
+  <button class="ib" id="gear" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+</div></header>
+
+<main>
+  <div class="msg info" id="needSetup" hidden><span data-t="needSetup"></span> <button class="link" data-open-settings data-t="openSettings"></button></div>
+
+  <section class="card">
+    <h2 data-t="step1"></h2>
+    <p class="sub" data-t="step1Sub"></p>
+    <div class="row">
+      <input type="url" id="link" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://vt.tiktok.com/...">
+      <button class="btn soft" id="paste" data-t="paste"></button>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button class="btn" id="get" style="flex:1" data-t="get"></button>
+    </div>
+    <div class="row" style="margin-top:12px;justify-content:space-between">
+      <button class="link" id="pickFiles" data-t="orFiles"></button>
+      <input type="file" id="files" accept="video/*,image/*" multiple hidden>
+    </div>
+    <div id="m1"></div>
+  </section>
+
+  <section class="card" id="mediaCard" hidden>
+    <div class="owner" id="owner"></div>
+    <div id="media"></div>
+    <div class="row" id="photoTools" style="margin-top:10px;justify-content:space-between" hidden>
+      <span class="cnt" id="selCount"></span>
+      <span class="row"><button class="btn soft sm" id="selAll" data-t="selAll"></button><button class="btn soft sm" id="selNone" data-t="selNone"></button></span>
+    </div>
+  </section>
+
+  <section class="card" id="capCard" hidden>
+    <h2 data-t="step2"></h2>
+    <p class="sub" data-t="step2Sub"></p>
+    <div class="tg"><span data-t="keepText"></span><label class="sw"><input type="checkbox" id="oText" checked><span></span></label></div>
+    <div class="tg"><span data-t="keepTags"></span><label class="sw"><input type="checkbox" id="oTags" checked><span></span></label></div>
+    <div class="tg"><span data-t="credit"></span><label class="sw"><input type="checkbox" id="oCredit" checked><span></span></label></div>
+    <div class="tg"><span data-t="myTags"></span><label class="sw"><input type="checkbox" id="oMine"><span></span></label></div>
+    <label class="f" for="cap" data-t="captionLabel"></label>
+    <textarea id="cap"></textarea>
+    <div class="row" style="margin-top:8px"><button class="btn soft sm" id="copyCap" data-t="copyCap"></button></div>
+  </section>
+
+  <section class="card" id="postCard" hidden>
+    <h2 data-t="step3"></h2>
+    <div class="seg"><button data-when="now" class="on" data-t="now"></button><button data-when="later" data-t="later"></button></div>
+    <div id="laterBox" hidden>
+      <label class="f" for="at" data-t="whenLabel"></label>
+      <input type="datetime-local" id="at">
+      <p class="note" data-t="whenNote"></p>
+    </div>
+    <button class="btn wide" id="post" data-t="postBtn"></button>
+    <div class="bar" id="bar" hidden><i></i></div>
+    <div id="m3"></div>
+  </section>
+
+  <section class="card" id="histCard" hidden>
+    <h2 data-t="history"></h2>
+    <div class="hist" id="hist"></div>
+  </section>
+
+  <p class="note" data-t="rights"></p>
+</main>
+
+<div class="modal" id="settings" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="setTitle">
+    <div class="hd"><h3 id="setTitle" data-t="settings"></h3><button class="ib" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <p class="sub" style="color:var(--muted);font-size:.86rem" data-t="setSub"></p>
+    <label class="f" for="tok" data-t="tokLabel"></label>
+    <div class="row"><input type="password" id="tok" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="EAA..."><button class="btn soft sm" id="tokShow" data-t="show"></button></div>
+    <div class="row" style="margin-top:10px"><button class="btn sm" id="tokCheck" data-t="checkSave"></button><button class="btn soft sm" id="tokForget" data-t="forget"></button></div>
+    <div id="m4"></div>
+    <label class="f" for="mine" data-t="myTagsLabel"></label>
+    <input type="text" id="mine" placeholder="#Thean #Cambodia #KhmerTravel">
+    <label class="f" for="creditTpl" data-t="creditLabel"></label>
+    <input type="text" id="creditTpl">
+    <p class="note" data-t="creditNote"></p>
+    <details>
+      <summary data-t="cldTitle"></summary>
+      <p class="note" data-t="cldNote"></p>
+      <label class="f" for="cld">Cloud name</label><input type="text" id="cld" autocapitalize="off" spellcheck="false">
+      <label class="f" for="pre">Upload preset (unsigned)</label><input type="text" id="pre" autocapitalize="off" spellcheck="false">
+    </details>
+    <details>
+      <summary data-t="guideTitle"></summary>
+      <ol class="steps" id="guide"></ol>
+    </details>
+    <div class="row" style="margin-top:16px"><button class="btn wide" data-close data-t="done"></button></div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+var T={
+ en:{appSub:'Post to Facebook',needSetup:'First, connect your Facebook Page (one time on this phone).',openSettings:'Open settings',
+  step1:'1. Paste a TikTok link',step1Sub:'In TikTok tap Share, then Copy link. Videos and photo posts (many photos) both work.',paste:'Paste',get:'Get video or photos',
+  orFiles:'Or choose a video or photos from this phone',loading:'Getting the post…',gotVideo:'Video ready.',gotPhotos:'{n} photos ready. Tap a photo to leave it out.',
+  badLink:'Paste a TikTok link first.',fetchFail:'Could not get this post. Check the link is public, then try again in a minute.',captionOnly:'Could not get the video file, but the caption was copied. You can choose the video from this phone.',
+  selAll:'Select all',selNone:'Clear',selCount:'{a} of {b} photos selected',
+  step2:'2. Caption',step2Sub:'Filled in from the owner’s post. Turning a switch rebuilds the caption.',keepText:'Owner’s caption',keepTags:'Owner’s hashtags',credit:'Credit the owner (@username)',myTags:'Add my hashtags',
+  captionLabel:'Caption that will be posted',copyCap:'Copy caption',copied:'Copied',
+  step3:'3. Post to your Page',now:'Post now',later:'Schedule',whenLabel:'Date and time',whenNote:'Facebook allows 15 minutes to 30 days ahead. Time is your phone’s time.',
+  postBtn:'Post to Facebook',posting:'Posting…',upPhoto:'Uploading photo {i} of {n}…',upVideo:'Sending video to Facebook…',retryCld:'Facebook could not fetch it directly. Trying through Cloudinary…',
+  posted:'Posted to {p}.',scheduled:'Scheduled on {p} for {d}.',openPost:'Open on Facebook',videoNote:'Facebook needs a few minutes to process a video before it appears.',
+  noSel:'Select at least one photo.',noMedia:'Get a post or choose files first.',badTime:'Choose a time between 15 minutes and 30 days from now.',
+  history:'Recent posts (this phone)',settings:'Settings',setSub:'Saved only on this phone. Never share the Page key or show it in a screenshot.',
+  tokLabel:'Facebook Page key (Page access token)',show:'Show',hide:'Hide',checkSave:'Check and save',forget:'Remove',tokOk:'Connected to the Page: {p}',kNone:'Not connected',kChk:'Checking key…',kBad:'Key problem',kOff:'Offline',kOffNote:'Could not reach Facebook (weak or no internet). Your key is probably fine; the page will check again by itself. Tap Check and save to try now.',tokBad:'This key did not work: {e}',tokPerson:'This key belongs to a person, not the Page. Use the Page key from me/accounts (see the guide).',tokEmpty:'Paste the Page key first.',removed:'Removed from this phone.',
+  myTagsLabel:'My hashtags (added when the switch is on)',creditLabel:'Credit line',creditNote:'{user} becomes the owner’s @username, {name} their display name.',
+  cldTitle:'Backup upload (Cloudinary)',cldNote:'Used only if Facebook cannot fetch a file from TikTok directly.',guideTitle:'How to get the Page key',done:'Done',
+  rights:'Credit is not permission. Post other creators’ videos or photos only when you have their permission, or Facebook may remove the post or limit your Page.',
+  guide:['On a computer, open developers.facebook.com and log in with the account that manages the Thean page. Open your app (for example "Thean website").',
+   'Open Tools, then Graph API Explorer. Choose your app. Add these permissions: <code>pages_show_list</code>, <code>pages_read_engagement</code>, <code>pages_manage_posts</code>. Tap Generate Access Token and allow the Thean page.',
+   'Tap the small i next to the token, then Open in Access Token Tool, then Extend Access Token. Copy the new token.',
+   'Back in the Explorer, paste it in the token box, type <code>me/accounts</code> and tap Submit.',
+   'Under Thean, copy the <code>access_token</code> value (starts with EAA). Paste it above and tap Check and save. This key does not expire.']},
+ km:{appSub:'បង្ហោះទៅ Facebook',needSetup:'ជាដំបូង សូមភ្ជាប់ទំព័រ Facebook របស់អ្នក (ម្តងគត់នៅលើទូរស័ព្ទនេះ)។',openSettings:'បើកការកំណត់',
+  step1:'១. បិទភ្ជាប់តំណ TikTok',step1Sub:'ក្នុង TikTok ចុច Share រួច Copy link។ អាចប្រើបានទាំងវីដេអូ និងប៉ុស្តិ៍រូបភាព (រូបច្រើន)។',paste:'បិទភ្ជាប់',get:'យកវីដេអូ ឬរូបភាព',
+  orFiles:'ឬជ្រើសវីដេអូ ឬរូបភាពពីទូរស័ព្ទនេះ',loading:'កំពុងយកប៉ុស្តិ៍…',gotVideo:'វីដេអូរួចរាល់។',gotPhotos:'រូបភាព {n} រួចរាល់។ ចុចលើរូបដើម្បីដកចេញ។',
+  badLink:'សូមបិទភ្ជាប់តំណ TikTok ជាមុនសិន។',fetchFail:'មិនអាចយកប៉ុស្តិ៍នេះបានទេ។ សូមពិនិត្យថាតំណជាសាធារណៈ រួចព្យាយាមម្តងទៀតក្នុងមួយនាទី។',captionOnly:'មិនអាចយកឯកសារវីដេអូបាន ប៉ុន្តែបានចម្លងចំណងជើងហើយ។ អ្នកអាចជ្រើសវីដេអូពីទូរស័ព្ទនេះ។',
+  selAll:'ជ្រើសទាំងអស់',selNone:'សម្អាត',selCount:'បានជ្រើស {a} ក្នុងចំណោម {b} រូប',
+  step2:'២. ចំណងជើង',step2Sub:'បំពេញពីប៉ុស្តិ៍របស់ម្ចាស់។ ការបិទ/បើកកុងតាក់នឹងបង្កើតចំណងជើងឡើងវិញ។',keepText:'ចំណងជើងរបស់ម្ចាស់',keepTags:'ហាស់ថាក់របស់ម្ចាស់',credit:'ផ្តល់កិត្តិយសដល់ម្ចាស់ (@username)',myTags:'បន្ថែមហាស់ថាក់របស់ខ្ញុំ',
+  captionLabel:'ចំណងជើងដែលនឹងបង្ហោះ',copyCap:'ចម្លងចំណងជើង',copied:'បានចម្លង',
+  step3:'៣. បង្ហោះទៅទំព័ររបស់អ្នក',now:'បង្ហោះឥឡូវ',later:'កំណត់ពេល',whenLabel:'កាលបរិច្ឆេទ និងម៉ោង',whenNote:'Facebook អនុញ្ញាតពី ១៥ នាទី ដល់ ៣០ ថ្ងៃខាងមុខ។ ម៉ោងតាមទូរស័ព្ទរបស់អ្នក។',
+  postBtn:'បង្ហោះទៅ Facebook',posting:'កំពុងបង្ហោះ…',upPhoto:'កំពុងផ្ទុករូបទី {i} ក្នុងចំណោម {n}…',upVideo:'កំពុងផ្ញើវីដេអូទៅ Facebook…',retryCld:'Facebook មិនអាចយកដោយផ្ទាល់បានទេ។ កំពុងព្យាយាមតាម Cloudinary…',
+  posted:'បានបង្ហោះទៅ {p}។',scheduled:'បានកំណត់ពេលនៅ {p} សម្រាប់ {d}។',openPost:'បើកនៅលើ Facebook',videoNote:'Facebook ត្រូវការពីរបីនាទីដើម្បីដំណើរការវីដេអូ មុនពេលវាបង្ហាញ។',
+  noSel:'សូមជ្រើសរូបភាពយ៉ាងហោចណាស់មួយ។',noMedia:'សូមយកប៉ុស្តិ៍ ឬជ្រើសឯកសារជាមុនសិន។',badTime:'សូមជ្រើសម៉ោងចន្លោះ ១៥ នាទី ដល់ ៣០ ថ្ងៃពីឥឡូវ។',
+  history:'ប៉ុស្តិ៍ថ្មីៗ (ទូរស័ព្ទនេះ)',settings:'ការកំណត់',setSub:'រក្សាទុកតែនៅលើទូរស័ព្ទនេះប៉ុណ្ណោះ។ កុំចែករំលែកកូនសោទំព័រ ឬបង្ហាញវាក្នុងរូបថតអេក្រង់។',
+  tokLabel:'កូនសោទំព័រ Facebook (Page access token)',show:'បង្ហាញ',hide:'លាក់',checkSave:'ពិនិត្យ និងរក្សាទុក',forget:'លុបចេញ',tokOk:'បានភ្ជាប់ទៅទំព័រ៖ {p}',kNone:'មិនទាន់ភ្ជាប់',kChk:'កំពុងពិនិត្យកូនសោ…',kBad:'កូនសោមានបញ្ហា',kOff:'គ្មានអ៊ីនធឺណិត',kOffNote:'មិនអាចភ្ជាប់ទៅ Facebook បានទេ (អ៊ីនធឺណិតខ្សោយ ឬគ្មាន)។ កូនសោរបស់អ្នកប្រហែលជាមិនអីទេ ទំព័រនឹងពិនិត្យម្តងទៀតដោយខ្លួនឯង។ ចុច ពិនិត្យ និងរក្សាទុក ដើម្បីសាកឥឡូវ។',tokBad:'កូនសោនេះមិនដំណើរការ៖ {e}',tokPerson:'កូនសោនេះជារបស់មនុស្ស មិនមែនរបស់ទំព័រទេ។ សូមប្រើកូនសោទំព័រពី me/accounts (មើលការណែនាំ)។',tokEmpty:'សូមបិទភ្ជាប់កូនសោទំព័រជាមុនសិន។',removed:'បានលុបចេញពីទូរស័ព្ទនេះ។',
+  myTagsLabel:'ហាស់ថាក់របស់ខ្ញុំ (បន្ថែមពេលបើកកុងតាក់)',creditLabel:'បន្ទាត់ផ្តល់កិត្តិយស',creditNote:'{user} ក្លាយជា @username របស់ម្ចាស់ ហើយ {name} ជាឈ្មោះបង្ហាញរបស់គេ។',
+  cldTitle:'ការផ្ទុកបម្រុង (Cloudinary)',cldNote:'ប្រើតែពេល Facebook មិនអាចយកឯកសារពី TikTok ដោយផ្ទាល់ប៉ុណ្ណោះ។',guideTitle:'របៀបយកកូនសោទំព័រ',done:'រួចរាល់',
+  rights:'ការផ្តល់កិត្តិយសមិនមែនជាការអនុញ្ញាតទេ។ សូមបង្ហោះវីដេអូ ឬរូបភាពរបស់អ្នកបង្កើតផ្សេង តែពេលមានការអនុញ្ញាតពីពួកគេ បើមិនដូច្នោះទេ Facebook អាចលុបប៉ុស្តិ៍ ឬកំណត់ទំព័ររបស់អ្នក។',
+  guide:['នៅលើកុំព្យូទ័រ បើក developers.facebook.com ហើយចូលដោយគណនីដែលគ្រប់គ្រងទំព័រ Thean។ បើកកម្មវិធីរបស់អ្នក (ឧ. "Thean website")។',
+   'បើក Tools រួច Graph API Explorer។ ជ្រើសកម្មវិធីរបស់អ្នក។ បន្ថែមការអនុញ្ញាត៖ <code>pages_show_list</code>, <code>pages_read_engagement</code>, <code>pages_manage_posts</code>។ ចុច Generate Access Token ហើយអនុញ្ញាតទំព័រ Thean។',
+   'ចុចអក្សរ i តូចនៅជាប់ token រួច Open in Access Token Tool រួច Extend Access Token។ ចម្លង token ថ្មី។',
+   'ត្រឡប់ទៅ Explorer វិញ បិទភ្ជាប់វាក្នុងប្រអប់ token វាយ <code>me/accounts</code> ហើយចុច Submit។',
+   'នៅក្រោម Thean ចម្លងតម្លៃ <code>access_token</code> (ចាប់ផ្តើមដោយ EAA)។ បិទភ្ជាប់ខាងលើ ហើយចុច ពិនិត្យ និងរក្សាទុក។ កូនសោនេះមិនផុតកំណត់ទេ។']}
+};
+var KEY='thean_post_v1';
+function load(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){return {}}}
+var C=load();
+C.lang=C.lang||'en';C.cld=C.cld==null?'lzqrjkc8':C.cld;C.pre=C.pre==null?'thean_video':C.pre;
+if(!C.creditTpl||C.creditTpl==='Credit: @{user} on TikTok')C.creditTpl='Credit: @{user}';C.hist=C.hist||[];
+function save(){try{localStorage.setItem(KEY,JSON.stringify(C))}catch(e){}}
+function t(k,o){var s=(T[C.lang]&&T[C.lang][k])||T.en[k]||k;if(o)Object.keys(o).forEach(function(x){s=s.split('{'+x+'}').join(o[x])});return s}
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function msg(box,kind,html){$(box).innerHTML=html?'<div class="msg '+kind+'">'+html+'</div>':''}
+
+/* ---------- language ---------- */
+var KS=C.token?'chk':'none',KERR='';
+function drawKey(){var b=$('kst');b.className='kst'+(KS==='ok'?' ok':KS==='bad'?' bad':KS==='chk'?' chk':'');
+  $('kstT').textContent=KS==='ok'?(C.pageName||'Facebook'):KS==='bad'?t('kBad'):KS==='off'?t('kOff'):KS==='chk'?t('kChk'):t('kNone');
+  b.title=KS==='bad'&&KERR?KERR:'';b.setAttribute('aria-label',$('kstT').textContent)}
+function checkKey(){if(!C.token){KS='none';drawKey();return}KS='chk';drawKey();
+  if(!navigator.onLine){KS='off';drawKey();return}
+  gget('me?fields=id,name,category').then(function(j){if(!j.category){var er=new Error(t('tokPerson'));er.fb=true;er.code=190;throw er}C.pageId=j.id;C.pageName=j.name;save();KS='ok';KTRY=0;drawKey();if(!$('settings').hidden)keyMsg()})
+  .catch(function(e){var m=String(e&&e.message||'');
+    if(e&&e.fb&&(e.code===190||e.type==='OAuthException'||/token|session|permission/i.test(m))){KS='bad';KERR=m;KTRY=0}
+    else{KS='off';if(KTRY<3){KTRY++;setTimeout(checkKey,20000)}}
+    drawKey();if(!$('settings').hidden)keyMsg()})}
+var KTRY=0;
+function keyMsg(){if(!C.token){msg('m4','','');return}
+  if(KS==='ok')msg('m4','ok',esc(t('tokOk',{p:C.pageName||''})));
+  else if(KS==='bad')msg('m4','bad',esc(t('tokBad',{e:KERR||''})));
+  else if(KS==='off')msg('m4','info',esc(t('kOffNote')));
+  else msg('m4','info',esc(t('kChk')))}
+window.addEventListener('online',checkKey);
+document.addEventListener('visibilitychange',function(){if(!document.hidden&&C.token&&KS!=='chk')checkKey()});
+function applyLang(){drawKey();document.documentElement.lang=C.lang;document.body.classList.toggle('km',C.lang==='km');
+  document.querySelectorAll('[data-t]').forEach(function(el){el.textContent=t(el.getAttribute('data-t'))});
+  document.querySelectorAll('[data-lang]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-lang')===C.lang)});
+  $('guide').innerHTML=t('guide').map(function(s){return '<li>'+s+'</li>'}).join('');
+  if(ST.kind==='photos')countSel();
+  $('needSetup').hidden=!!C.token;drawHist()}
+document.querySelectorAll('[data-lang]').forEach(function(b){b.onclick=function(){C.lang=b.getAttribute('data-lang');save();applyLang()}});
+
+/* ---------- state ---------- */
+var ST={kind:'',video:'',images:[],sel:[],files:[],text:'',tags:[],user:'',name:'',avatar:'',srcLink:''};
+
+/* ---------- getting the TikTok post ---------- */
+function abs(u){u=String(u||'');if(!u)return '';if(/^\/\//.test(u))return 'https:'+u;if(/^\//.test(u))return 'https://www.tikwm.com'+u;return u}
+function splitCaption(s){s=String(s||'');var tags=s.match(/#[^\s#]+/g)||[];var text=s.replace(/#[^\s#]+/g,'').replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n').replace(/[ \t]{2,}/g,' ').split('\n').map(function(l){return l.trim()}).join('\n').replace(/\n{3,}/g,'\n\n').trim();return {text:text,tags:tags}}
+function withTimeout(p,ms){return Promise.race([p,new Promise(function(_,r){setTimeout(function(){r(new Error('timeout'))},ms)})])}
+function tikwm(link){var fd=new FormData();fd.append('url',link);fd.append('hd','1');
+  return withTimeout(fetch('https://www.tikwm.com/api/',{method:'POST',body:fd}),25000).then(function(r){return r.json()}).then(function(j){if(!j||j.code!==0||!j.data)throw new Error((j&&j.msg)||'no data');return j.data})}
+/* photo posts have a headline title plus a description: join both */
+function fullCaption(d){var main=String(d.title||'').trim(),found=[];
+  (function walk(o,key,depth){if(!o||depth>5)return;if(/^(author|music|music_info|anchors?|commerce)/i.test(key||''))return;
+    if(typeof o==='string'){if(depth>0&&/^(title|desc|description|caption|content|text|image_post_title)$/i.test(key||''))found.push(o.trim());return}
+    if(typeof o!=='object')return;Object.keys(o).forEach(function(k){if(depth===0&&k==='title')return;walk(o[k],k,depth+1)})})(d,'',0);
+  if(d.__oe)found.push(String(d.__oe).trim());
+  var norm=function(x){return x.replace(/\s+/g,' ').trim().toLowerCase()},m=norm(main),heads=[];
+  found.forEach(function(x){var n=norm(x);if(n.length<3||/^https?:/.test(n))return;
+    if(m.indexOf(n)>=0)return;
+    if(n.indexOf(m)>=0&&m){main=x;m=n;return}
+    if(heads.some(function(h){return norm(h).indexOf(n)>=0}))return;heads.push(x)});
+  return heads.concat(main?[main]:[]).join('\n\n')}
+function oembed(link){return withTimeout(fetch('https://www.tiktok.com/oembed?url='+encodeURIComponent(link)),15000).then(function(r){return r.json()})}
+
+$('paste').onclick=function(){if(!navigator.clipboard||!navigator.clipboard.readText){$('link').focus();return}
+  navigator.clipboard.readText().then(function(s){var m=String(s||'').match(/https?:\/\/\S+/);$('link').value=m?m[0]:String(s||'').trim()}).catch(function(){$('link').focus()})};
+$('link').addEventListener('keydown',function(e){if(e.key==='Enter')$('get').click()});
+$('get').onclick=function(){var raw=$('link').value.trim(),m=raw.match(/https?:\/\/\S+/),link=m?m[0]:raw;
+  if(!/tiktok\.com/i.test(link)){msg('m1','bad',esc(t('badLink')));return}
+  $('link').value=link;reset();msg('m1','info',esc(t('loading')));$('get').disabled=true;
+  var oeP=oembed(link).then(function(o){return o&&o.title||''}).catch(function(){return ''});
+  tikwm(link).then(function(d){return withTimeout(oeP,7000).catch(function(){return ''}).then(function(oe){d.__oe=oe;return d})}).then(function(d){var a=d.author||{},full=fullCaption(d),cap=splitCaption(full);
+    ST.srcLink=link;ST.full=full;ST.text=cap.text;ST.tags=cap.tags;ST.user=a.unique_id||'';ST.name=a.nickname||'';ST.avatar=abs(a.avatar);
+    var imgs=(d.images||[]).map(abs).filter(Boolean);
+    if(imgs.length){ST.kind='photos';ST.images=imgs;ST.sel=imgs.map(function(){return true});msg('m1','ok',esc(t('gotPhotos',{n:imgs.length})))}
+    else{ST.kind='video';ST.video=abs(d.hdplay||d.play||d.wmplay);ST.cover=abs(d.cover);msg('m1','ok',esc(t('gotVideo')))}
+    show()})
+  .catch(function(){return oembed(link).then(function(o){var cap=splitCaption(o.title);ST.full=String(o.title||'').trim();ST.srcLink=link;ST.text=cap.text;ST.tags=cap.tags;ST.user=o.author_unique_id||String(o.author_url||'').split('@')[1]||'';ST.name=o.author_name||'';
+      ST.kind='';msg('m1','info',esc(t('captionOnly')));show()})
+    .catch(function(){msg('m1','bad',esc(t('fetchFail')))})})
+  .then(function(){$('get').disabled=false})};
+
+$('pickFiles').onclick=function(){$('files').click()};
+$('files').onchange=function(){var fs=[].slice.call(this.files||[]);if(!fs.length)return;
+  var vid=fs.filter(function(f){return /^video\//.test(f.type)})[0];
+  ST.files=vid?[vid]:fs.filter(function(f){return /^image\//.test(f.type)});
+  if(!ST.files.length)return;
+  ST.kind=vid?'fvideo':'fphotos';ST.images=[];ST.video='';
+  if(ST.kind==='fphotos'){ST.images=ST.files.map(function(f){return URL.createObjectURL(f)});ST.sel=ST.images.map(function(){return true})}
+  else ST.video=URL.createObjectURL(vid);
+  msg('m1','ok',esc(vid?t('gotVideo'):t('gotPhotos',{n:ST.files.length})));show();this.value=''};
+
+function reset(){ST={full:'',kind:'',video:'',images:[],sel:[],files:[],text:'',tags:[],user:'',name:'',avatar:'',srcLink:''};
+  ['mediaCard','capCard','postCard'].forEach(function(id){$(id).hidden=true});msg('m3','','')}
+
+function show(){
+  $('owner').innerHTML=ST.user||ST.name?(ST.avatar?'<img alt="" src="'+esc(ST.avatar)+'">':'')+'<span><b>'+esc(ST.name||ST.user)+'</b><small>@'+esc(ST.user)+'</small></span>':'';
+  var h='';
+  if(ST.kind==='video'||ST.kind==='fvideo')h='<video class="vid" controls playsinline preload="metadata" src="'+esc(ST.video)+'"'+(ST.cover?' poster="'+esc(ST.cover)+'"':'')+'></video>';
+  else if(ST.kind==='photos'||ST.kind==='fphotos')h='<div class="grid">'+ST.images.map(function(u,i){return '<button class="ph" data-i="'+i+'" aria-pressed="true"><img alt="" loading="lazy" src="'+esc(u)+'"><span class="n"></span></button>'}).join('')+'</div>';
+  $('media').innerHTML=h;
+  $('mediaCard').hidden=!h&&!ST.user;
+  $('photoTools').hidden=!(ST.kind==='photos'||ST.kind==='fphotos');
+  if(!$('photoTools').hidden)countSel();
+  $('capCard').hidden=false;$('postCard').hidden=false;buildCaption()}
+
+$('media').addEventListener('click',function(e){var b=e.target.closest('.ph');if(!b)return;var i=+b.getAttribute('data-i');ST.sel[i]=!ST.sel[i];countSel()});
+$('selAll').onclick=function(){ST.sel=ST.sel.map(function(){return true});countSel()};
+$('selNone').onclick=function(){ST.sel=ST.sel.map(function(){return false});countSel()};
+function countSel(){var k=0;document.querySelectorAll('.ph').forEach(function(b){var i=+b.getAttribute('data-i'),on=!!ST.sel[i];b.classList.toggle('off',!on);b.setAttribute('aria-pressed',on);if(on){k++;b.querySelector('.n').textContent=k}else b.querySelector('.n').textContent=''});
+  $('selCount').textContent=t('selCount',{a:k,b:ST.sel.length})}
+
+/* ---------- caption ---------- */
+function buildCaption(){var main='',extra=[],have={};
+  var useText=$('oText').checked,useTags=$('oTags').checked;
+  if(useText&&useTags)main=ST.full||[ST.text,ST.tags.join(' ')].filter(Boolean).join('\n\n');
+  else if(useText)main=ST.text;
+  else if(useTags)main=ST.tags.join(' ');
+  (main.match(/#[^\s#]+/g)||[]).forEach(function(x){have[x.toLowerCase()]=1});
+  if($('oMine').checked&&C.mine)String(C.mine).split(/\s+/).filter(Boolean).forEach(function(x){x=x[0]==='#'?x:'#'+x;if(!have[x.toLowerCase()]){have[x.toLowerCase()]=1;extra.push(x)}});
+  var parts=[];if(main)parts.push(main);if(extra.length)parts.push(extra.join(' '));
+  if($('oCredit').checked&&(ST.user||ST.name))parts.push((C.creditTpl||'Credit: @{user}').split('{user}').join(ST.user||ST.name).split('{name}').join(ST.name||ST.user));
+  $('cap').value=parts.join('\n\n')}
+C.sw=C.sw||{oText:true,oTags:false,oCredit:true,oMine:!!C.useMine};
+['oText','oTags','oCredit','oMine'].forEach(function(id){$(id).checked=!!C.sw[id];$(id).onchange=function(){C.sw[id]=this.checked;save();buildCaption()}});
+$('copyCap').onclick=function(){var b=this,v=$('cap').value;function done(){b.textContent=t('copied');setTimeout(function(){b.textContent=t('copyCap')},1500)}
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(v).then(done).catch(function(){$('cap').select();document.execCommand('copy');done()});else{$('cap').select();document.execCommand('copy');done()}};
+
+/* ---------- when ---------- */
+var WHEN='now';
+document.querySelectorAll('[data-when]').forEach(function(b){b.onclick=function(){WHEN=b.getAttribute('data-when');document.querySelectorAll('[data-when]').forEach(function(x){x.classList.toggle('on',x===b)});$('laterBox').hidden=WHEN!=='later';
+  if(WHEN==='later'&&!$('at').value){var d=new Date(Date.now()+60*60000);d.setMinutes(0,0,0);d.setHours(d.getHours()+1);$('at').value=localISO(d)}}});
+function localISO(d){function p(n){return String(n).padStart(2,'0')}return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes())}
+
+/* ---------- Facebook ---------- */
+var G='https://graph.facebook.com/';
+function gcall(path,params,host){var fd=new FormData();Object.keys(params||{}).forEach(function(k){if(params[k]!=null)fd.append(k,params[k])});fd.append('access_token',C.token);
+  return fetch((host||G)+path,{method:'POST',body:fd}).then(function(r){return r.json()}).then(function(j){if(j&&j.error){if(j.error.code===190||j.error.type==='OAuthException'&&/token|session/i.test(j.error.message||'')){KS='bad';KERR=j.error.message;drawKey()}throw new Error(j.error.error_user_msg||j.error.message||'Facebook error')}return j})}
+function gget(path){return withTimeout(fetch(G+path+(path.indexOf('?')<0?'?':'&')+'access_token='+encodeURIComponent(C.token)),15000).then(function(r){return r.json()}).then(function(j){if(j&&j.error){var er=new Error(j.error.message||'Facebook error');er.fb=true;er.code=j.error.code;er.type=j.error.type;throw er}return j})}
+function cldUp(u){if(!C.cld||!C.pre)return Promise.reject(new Error('no backup'));var fd=new FormData();fd.append('file',u);fd.append('upload_preset',C.pre);
+  return fetch('https://api.cloudinary.com/v1_1/'+encodeURIComponent(C.cld)+'/auto/upload',{method:'POST',body:fd}).then(function(r){return r.json()}).then(function(j){if(!j.secure_url)throw new Error((j.error&&j.error.message)||'upload failed');return j.secure_url})}
+function prog(f){$('bar').hidden=f==null;$('bar').firstChild.style.width=Math.round((f||0)*100)+'%'}
+
+$('post').onclick=function(){
+  if(!C.token){openSettings();return}
+  var cap=$('cap').value,sched=null;
+  if(WHEN==='later'){var d=new Date($('at').value),s=Math.floor(d.getTime()/1000),now=Date.now()/1000;if(!$('at').value||isNaN(s)||s<now+15*60||s>now+30*86400){msg('m3','bad',esc(t('badTime')));return}sched=s}
+  var pub=sched?{published:'false',scheduled_publish_time:String(sched)}:{};
+  var idx=[];ST.sel.forEach(function(v,i){if(v)idx.push(i)});
+  if(ST.kind==='photos'||ST.kind==='fphotos'){if(!idx.length){msg('m3','bad',esc(t('noSel')));return}}
+  else if(ST.kind!=='video'&&ST.kind!=='fvideo'){msg('m3','bad',esc(t('noMedia')));return}
+  var btn=$('post');btn.disabled=true;btn.textContent=t('posting');msg('m3','','');prog(0.05);
+  var pageName=C.pageName||'Facebook',job;
+  if(ST.kind==='video'){msg('m3','info',esc(t('upVideo')));
+    job=gcall(C.pageId+'/videos',Object.assign({file_url:ST.video,description:cap},pub)).catch(function(){msg('m3','info',esc(t('retryCld')));prog(0.3);
+      return cldUp(ST.video).then(function(u){prog(0.7);return gcall(C.pageId+'/videos',Object.assign({file_url:u,description:cap},pub))})})
+      .then(function(j){return {id:j.id,video:true}})}
+  else if(ST.kind==='fvideo'){msg('m3','info',esc(t('upVideo')));
+    job=gcall(C.pageId+'/videos',Object.assign({source:ST.files[0],description:cap},pub),'https://graph-video.facebook.com/').then(function(j){return {id:j.id,video:true}})}
+  else{var ids=[],n=idx.length,k=0;
+    var one=function(i){k++;msg('m3','info',esc(t('upPhoto',{i:k,n:n})));prog(k/(n+1));
+      var base={published:'false'};if(sched)base.temporary='true';
+      if(ST.kind==='fphotos')return gcall(C.pageId+'/photos',Object.assign({source:ST.files[i]},base));
+      return gcall(C.pageId+'/photos',Object.assign({url:ST.images[i]},base)).catch(function(){return cldUp(ST.images[i]).then(function(u){return gcall(C.pageId+'/photos',Object.assign({url:u},base))})})};
+    job=idx.reduce(function(p,i){return p.then(function(){return one(i).then(function(j){ids.push(j.id)})})},Promise.resolve())
+      .then(function(){var params=Object.assign({message:cap},pub);ids.forEach(function(id,i){params['attached_media['+i+']']=JSON.stringify({media_fbid:id})});return gcall(C.pageId+'/feed',params)})
+      .then(function(j){return {id:j.id}})}
+  job.then(function(r){prog(1);var url='https://www.facebook.com/'+r.id;
+    var line=sched?t('scheduled',{p:esc(pageName),d:esc(new Date(sched*1000).toLocaleString())}):t('posted',{p:esc(pageName)});
+    msg('m3','ok',line+(r.video?' '+esc(t('videoNote')):'')+'<div style="margin-top:8px"><a class="btn sm" target="_blank" rel="noopener" href="'+esc(url)+'">'+esc(t('openPost'))+'</a></div>');
+    C.hist.unshift({u:url,c:(cap.split('\n')[0]||ST.user||'').slice(0,80),at:Date.now(),s:sched||0});C.hist=C.hist.slice(0,15);save();drawHist()})
+  .catch(function(e){msg('m3','bad',esc(e&&e.message||'Error'))})
+  .then(function(){btn.disabled=false;btn.textContent=t('postBtn');setTimeout(function(){prog(null)},800)})};
+
+function drawHist(){var h=C.hist||[];$('histCard').hidden=!h.length;
+  $('hist').innerHTML=h.map(function(x){var d=new Date(x.s?x.s*1000:x.at);return '<a target="_blank" rel="noopener" href="'+esc(x.u)+'"><span>'+esc(x.c||'Post')+'</span><small>'+esc((x.s?t('later')+' · ':'')+d.toLocaleDateString()+' '+d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}))+'</small></a>'}).join('')}
+
+/* ---------- settings ---------- */
+function openSettings(){$('tok').value=C.token||'';$('mine').value=C.mine||'';$('creditTpl').value=C.creditTpl||'';$('cld').value=C.cld||'';$('pre').value=C.pre||'';
+  keyMsg();$('settings').hidden=false}
+function closeSettings(){C.mine=$('mine').value.trim();C.creditTpl=$('creditTpl').value.trim()||'Credit: @{user}';C.cld=$('cld').value.trim();C.pre=$('pre').value.trim();save();$('settings').hidden=true;if(!$('capCard').hidden)buildCaption()}
+$('gear').onclick=openSettings;
+document.addEventListener('click',function(e){if(e.target.closest('[data-open-settings]'))openSettings()});
+$('settings').addEventListener('click',function(e){if(e.target===$('settings')||e.target.closest('[data-close]'))closeSettings()});
+$('tokShow').onclick=function(){var p=$('tok').type==='password';$('tok').type=p?'text':'password';this.textContent=t(p?'hide':'show')};
+$('tokCheck').onclick=function(){var raw=$('tok').value.replace(/\s+/g,''),mk=raw.match(/EAA[A-Za-z0-9]+/),v=mk?mk[0]:raw.replace(/^.*access_token"?:?/,'').replace(/["',{}]/g,'');$('tok').value=v;if(!v){msg('m4','bad',esc(t('tokEmpty')));return}
+  var old=C.token;C.token=v;
+  gget('me?fields=id,name,category').then(function(j){if(!j.category){throw {person:true,fb:true}}C.pageId=j.id;C.pageName=j.name;save();KS='ok';KTRY=0;msg('m4','ok',esc(t('tokOk',{p:j.name})));applyLang()})
+  .catch(function(e){if(e&&e.fb){C.token=old;msg('m4','bad',e.person?esc(t('tokPerson')):esc(t('tokBad',{e:e.message||''})))}else{C.token=old;msg('m4','info',esc(t('kOffNote')))}})};
+$('tokForget').onclick=function(){delete C.token;delete C.pageId;delete C.pageName;save();KS='none';$('tok').value='';msg('m4','ok',esc(t('removed')));applyLang()};
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('settings').hidden)closeSettings()});
+
+/* share target: ?url=... or #link */
+try{var q=new URLSearchParams(location.search).get('url')||new URLSearchParams(location.search).get('text')||'';var mm=q.match(/https?:\/\/\S+/);if(mm)$('link').value=mm[0]}catch(e){}
+applyLang();checkKey();
+})();
+</script>
+</body>
+</html>
