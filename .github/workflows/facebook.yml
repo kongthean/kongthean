@@ -72,17 +72,21 @@ jobs:
               if page.get('followers_count') is None and page.get('fan_count') is None:
                   raise RuntimeError('This key belongs to a person, not to the Page. Copy the Page key (step 3 of the guide).')
               first = fb('me/posts', fields='message,story,created_time,full_picture,permalink_url,status_type,attachments{media_type}', limit=50)
-              items = []
-              for p in first.get('data', []):
-                  text = (p.get('message') or p.get('story') or '').strip()
-                  img = p.get('full_picture') or ''
-                  if not text and not img:
-                      continue
-                  mt = [a.get('media_type', '') for a in (p.get('attachments') or {}).get('data', [])]
-                  items.append({'id': p.get('id', ''), 'text': text[:600], 'img': img, 'link': ('https://www.facebook.com/' + p['id']) if p.get('id') else (p.get('permalink_url') or ''),
-                                'video': 'video' in mt or p.get('status_type') == 'added_video', 't': when(p.get('created_time', ''))})
-                  if len(items) >= 30:
-                      break
+              items, pg, guard = [], first, 0
+              while pg and len(items) < 100 and guard < 6:
+                  for p in pg.get('data', []):
+                      text = (p.get('message') or p.get('story') or '').strip()
+                      img = p.get('full_picture') or ''
+                      if not text and not img:
+                          continue
+                      mt = [a.get('media_type', '') for a in (p.get('attachments') or {}).get('data', [])]
+                      items.append({'id': p.get('id', ''), 'text': text[:300], 'img': img, 'link': ('https://www.facebook.com/' + p['id']) if p.get('id') else (p.get('permalink_url') or ''),
+                                    'video': 'video' in mt or p.get('status_type') == 'added_video', 't': when(p.get('created_time', ''))})
+                      if len(items) >= 100:
+                          break
+                  nxt = (pg.get('paging') or {}).get('next')
+                  pg = call(nxt) if (nxt and len(items) < 100) else None
+                  guard += 1
               count, nxt, pages = 0, G + 'me/posts?' + urllib.parse.urlencode({'fields': 'id', 'limit': 100, 'access_token': TOKEN}), 0
               while nxt and pages < 200:
                   r = call(nxt)
