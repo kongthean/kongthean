@@ -65,6 +65,16 @@ jobs:
               except Exception:
                   return NOW
 
+          def plink(p, is_video):
+              perma = p.get('permalink_url') or ''
+              pid = p.get('id', '')
+              if is_video and perma:
+                  return perma
+              if '_' in pid:
+                  page_id, post_id = pid.split('_', 1)
+                  return 'https://www.facebook.com/%s/posts/%s' % (page_id, post_id)
+              return perma
+
           def main():
               if not TOKEN or not KEY:
                   raise RuntimeError('A secret is missing in GitHub: FB_PAGE_TOKEN and FIREBASE_KEY are both needed.')
@@ -80,7 +90,7 @@ jobs:
                       if not text and not img:
                           continue
                       mt = [a.get('media_type', '') for a in (p.get('attachments') or {}).get('data', [])]
-                      items.append({'id': p.get('id', ''), 'text': text[:300], 'img': img, 'link': ('https://www.facebook.com/' + p['id']) if p.get('id') else (p.get('permalink_url') or ''),
+                      items.append({'id': p.get('id', ''), 'text': text[:300], 'img': img, 'link': plink(p, 'video' in mt or p.get('status_type') == 'added_video'),
                                     'video': 'video' in mt or p.get('status_type') == 'added_video', 't': when(p.get('created_time', ''))})
                       if len(items) >= 100:
                           break
