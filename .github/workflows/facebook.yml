@@ -79,7 +79,7 @@ jobs:
                   if not text and not img:
                       continue
                   mt = [a.get('media_type', '') for a in (p.get('attachments') or {}).get('data', [])]
-                  items.append({'id': p.get('id', ''), 'text': text[:600], 'img': img, 'link': p.get('permalink_url') or '',
+                  items.append({'id': p.get('id', ''), 'text': text[:600], 'img': img, 'link': ('https://www.facebook.com/' + p['id']) if p.get('id') else (p.get('permalink_url') or ''),
                                 'video': 'video' in mt or p.get('status_type') == 'added_video', 't': when(p.get('created_time', ''))})
                   if len(items) >= 30:
                       break
