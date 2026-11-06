@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<base href="/">
 <meta name="robots" content="noindex">
 <script>try{(function(){var k=localStorage.getItem("thean-skin");if(k==="thean"||k==="heritage"||k==="classic"||k==="apsara"||k==="kbach"||k==="pchum"){document.documentElement.setAttribute("data-skin",k);var m=localStorage.getItem("thean-pmode");if(k==="pchum"&&(m==="light"||m==="dark"))document.documentElement.setAttribute("data-theme",m)}})()}catch(e){}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -1549,8 +1550,19 @@ function showMaint(){var el=document.getElementById('maint'),on=!!(MAINT&&MAINT.
 window.TheanSite.setMaint=function(v){MAINT=v||null;showMaint();if(admin&&adminView==='dash')render()};
 
 /* ---------- routing ---------- */
-function route(){var h=location.hash.replace(/^#\/?/,'');var p=h.split('/');return {name:p[0]||'home',id:p[1]||'',sub:p[2]||''}}
-try{var GO=new URLSearchParams(location.search).get('go');if(GO&&!location.hash){history.replaceState(null,'',location.pathname+'#/'+GO.replace(/^#?\/?/,''))}}catch(e){}
+/* clean addresses: kongthean.com/donate instead of /#/p/donate (the admin page keeps # addresses) */
+var RNAMES=['p','place','k','n','v'];
+function toPath(h){h=String(h||'').replace(/^#?\/?/,'');if(h.indexOf('p/')===0)h=h.slice(2);return '/'+h}
+function fromPath(pn){var p='';try{p=decodeURIComponent(String(pn||'/'))}catch(e){p=String(pn||'/')}p=p.replace(/^\/+/,'').replace(/\/+$/,'');if(p==='index.html'||p==='index')p='';
+  if(p&&RNAMES.indexOf(p.split('/')[0])<0)p='p/'+p;return '#/'+p}
+function curRoute(){if(ADMIN_PAGE||/^#\//.test(location.hash))return location.hash;return fromPath(location.pathname)}
+function nav(h){if(ADMIN_PAGE){location.hash=h;return}var np=toPath(h);if(np!==location.pathname||location.hash){history.pushState(null,'',np)}try{window.dispatchEvent(new Event('hashchange'))}catch(e){}}
+if(!ADMIN_PAGE){
+  try{if(/^#\//.test(location.hash))history.replaceState(null,'',toPath(location.hash)+location.search.replace(/[?&]go=[^&]*/,'').replace(/^&/,'?'))}catch(e){}
+  window.addEventListener('popstate',function(){try{window.dispatchEvent(new Event('hashchange'))}catch(e){}});
+  document.addEventListener('click',function(e){if(e.defaultPrevented||e.button||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;var a=e.target.closest&&e.target.closest('a[href^="#/"]');if(!a||a.target||a.hasAttribute('data-act'))return;e.preventDefault();nav(a.getAttribute('href'))},true)}
+function route(){var h=curRoute().replace(/^#\/?/,'');var p=h.split('/');return {name:p[0]||'home',id:p[1]||'',sub:p[2]||''}}
+try{var GO=new URLSearchParams(location.search).get('go');if(GO&&!/^#\//.test(location.hash)){if(ADMIN_PAGE)history.replaceState(null,'',location.pathname+'#/'+GO.replace(/^#?\/?/,''));else history.replaceState(null,'',toPath('#/'+GO.replace(/^#?\/?/,'')))}}catch(e){}
 var lastRK=(function(){var R=route();return R.name+'/'+R.id})();
 window.addEventListener('hashchange',function(){
   var R=route(),k=R.name+'/'+R.id,same=R.name==='p'&&k===lastRK;lastRK=k;
@@ -1580,10 +1592,10 @@ function render(){
   document.body.classList.toggle('admin',admin);
   document.body.classList.toggle('editing',editing);
   try{var md=document.querySelector('meta[name="description"]'),dsc='';if(R.name==='place'&&placeById(R.id))dsc=tr(placeById(R.id).sum);else if(R.name==='p'&&page(R.id))dsc=tr(page(R.id).intro);else if(R.name==='k'&&kObj(R.id,R.sub))dsc=tr(kObj(R.id,R.sub).text)||tr(kObj(R.id,R.sub).body);else if(R.name==='n'&&getObj(R.id,R.sub))dsc=nCap(getObj(R.id,R.sub));if(md)md.setAttribute('content',String(dsc||'Thean shares the beauty of Cambodia: Angkor and temple stories, Khmer culture, festivals, food and dances, places to visit and travel tips, in English and Khmer.').slice(0,300))}catch(e){}
-  document.title=(R.name==='home'&&!location.hash.replace(/^#\/?/,''))?'Thean · Cambodia Traveler':(R.name==='n'&&getObj(R.id,R.sub)?tr(getObj(R.id,R.sub).title)+' · ':'')+(R.name==='k'&&kObj(R.id,R.sub)?tr(kObj(R.id,R.sub).title)+' · ':'')+(R.name==='p'&&page(R.id)?tr(page(R.id).label)+' · ':'')+(R.name==='place'&&placeById(R.id)?tr(placeById(R.id).title)+' · ':'')+'Thean · Cambodia Traveler';
+  document.title=(R.name==='home'&&!curRoute().replace(/^#\/?/,''))?'Thean · Cambodia Traveler':(R.name==='n'&&getObj(R.id,R.sub)?tr(getObj(R.id,R.sub).title)+' · ':'')+(R.name==='k'&&kObj(R.id,R.sub)?tr(kObj(R.id,R.sub).title)+' · ':'')+(R.name==='p'&&page(R.id)?tr(page(R.id).label)+' · ':'')+(R.name==='place'&&placeById(R.id)?tr(placeById(R.id).title)+' · ':'')+'Thean · Cambodia Traveler';
   if(editing)app.querySelectorAll('[data-edit]').forEach(function(el){try{el.contentEditable='plaintext-only'}catch(x){el.contentEditable='true'}el.spellcheck=false});
   startAuto();initTiles();
-  if(R.name==='v'&&location.hash!==vOpened){vOpened=location.hash;var vv=(S.videos||[]).filter(function(x){return x.id===R.id})[0];if(vv){var pv=playable(vv);if(pv)setTimeout(function(){playVideo(pv)},60);else{var ul=url(vv.link);if(ul)setTimeout(function(){var c=app.querySelector('[data-vid="'+vv.id+'"]');if(c){c.scrollIntoView({block:'center'});c.classList.add('flash')}},60)}}}
+  if(R.name==='v'&&curRoute()!==vOpened){vOpened=curRoute();var vv=(S.videos||[]).filter(function(x){return x.id===R.id})[0];if(vv){var pv=playable(vv);if(pv)setTimeout(function(){playVideo(pv)},60);else{var ul=url(vv.link);if(ul)setTimeout(function(){var c=app.querySelector('[data-vid="'+vv.id+'"]');if(c){c.scrollIntoView({block:'center'});c.classList.add('flash')}},60)}}}
   if(R.name==='home'&&!ADMIN_PAGE&&!popDone&&popReady()){popDone=true;var pk=popKey(),seen='';try{seen=localStorage.getItem('thean_pop')||''}catch(e){}if(seen!==pk)setTimeout(function(){if(route().name==='home')popShow()},900)}
   try{document.dispatchEvent(new Event('thean:render'))}catch(e){}
 }
@@ -1636,7 +1648,7 @@ function popDash(){var p=S.popup,has=popReady(true);
 var vOpened='';var navDepth=0;window.addEventListener('hashchange',function(){navDepth++});
 function backBtn(){return '<a class="navback" href="#/" data-act="back" aria-label="'+esc(u('back'))+'" title="'+esc(u('back'))+'">'+I('left')+'</a>'}
 function goBack(){var R=route();if(navDepth>0){navDepth-=2;history.back();return}
-  if(R.name==='place'){var p=placeById(R.id);location.hash=p?'#/p/'+catPage(p.cat):'#/'}else if(R.name==='k'){location.hash='#/p/culture/'+kTab(R.id)}else if(R.name==='n'){location.hash='#/p/'+listPage(R.id)}else location.hash='#/'}
+  if(R.name==='place'){var p=placeById(R.id);nav(p?'#/p/'+catPage(p.cat):'#/')}else if(R.name==='k'){nav('#/p/culture/'+kTab(R.id))}else if(R.name==='n'){nav('#/p/'+listPage(R.id))}else nav('#/')}
 function header(R){
   var navIds=['destinations','temples','culture','food','stay','videos','news'];
   return '<header class="top"><div class="wrap"><a class="brand" href="#/"><span class="logo">'+(S.brand.logo?'<img alt="Thean logo" src="'+S.brand.logo+'">':'')+'</span><span><b>'+esc(S.brand.name)+'</b><small>'+esc(tr(S.brand.sub))+'</small></span></a>'+
@@ -2685,11 +2697,11 @@ function editItem(list,id,preset){
   var collect=formWire(m,o,schema);wireAutoFill(m,o);
   m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
     if(b.dataset.mv){var j=idx+(+b.dataset.mv);if(j<0||j>=arr.length)return;arr.splice(idx,1);arr.splice(j,0,it);m.remove();changed();toast('Moved')}
-    if(b.hasAttribute('data-del')){if(!b.dataset.armed){b.dataset.armed=1;b.textContent='Tap again to delete';return}setLIST(list,arr.filter(function(x){return x.id!==id}));if(list==='pages'&&o.list)delete S[o.list];m.remove();if((list==='places'&&route().name==='place')||(list==='pages'&&route().id===id)||route().name==='k')location.hash=route().name==='k'?'#/p/culture/'+kTab(route().id):'#/';changed()}
+    if(b.hasAttribute('data-del')){if(!b.dataset.armed){b.dataset.armed=1;b.textContent='Tap again to delete';return}setLIST(list,arr.filter(function(x){return x.id!==id}));if(list==='pages'&&o.list)delete S[o.list];m.remove();if((list==='places'&&route().name==='place')||(list==='pages'&&route().id===id)||route().name==='k')nav(route().name==='k'?'#/p/culture/'+kTab(route().id):'#/');changed()}
     if(b.hasAttribute('data-ok')){var r;try{r=collect()}catch(x){return}Object.keys(r).forEach(function(k){o[k]=r[k]});
       var tt=o.title||o.label;if(tt&&!tt.en&&!tt.km){toast('Add a name first');return}
       if(isNew){if(list==='pages'||/^c2\./.test(list)){arr.push(o);if(list==='pages')S[o.list]=S[o.list]||[]}else arr.unshift(o)}else setLIST(list,arr.map(function(x){return x.id===id?o:x}));
-      m.remove();changed();if(isNew&&list==='pages')location.hash='#/p/'+o.id}
+      m.remove();changed();if(isNew&&list==='pages')nav('#/p/'+o.id)}
   });
 }
 function getPath(p){return p.split('.').reduce(function(o,k){return o==null?o:o[k]},S)}
@@ -3260,7 +3272,7 @@ async function ensureChat(lang){
   await ensureUser();
   if(!chat){
     const ex=await fb.get(CP());
-    if(!ex){await fb.set(CP(),{visitorUid:user.uid,status:'bot',lang:lang||L(),name:'',contact:'',page:location.hash||'#/',createdAt:TS,updatedAt:TS,lastMsg:'',lastFrom:'',unreadAgent:0,unreadVisitor:0,ua:navigator.userAgent.slice(0,160)})}
+    if(!ex){await fb.set(CP(),{visitorUid:user.uid,status:'bot',lang:lang||L(),name:'',contact:'',page:(location.pathname+location.hash),createdAt:TS,updatedAt:TS,lastMsg:'',lastFrom:'',unreadAgent:0,unreadVisitor:0,ua:navigator.userAgent.slice(0,160)})}
     else chat=ex;
     try{localStorage.setItem(STARTED,'1')}catch(e){}
     try{const s=await fb.get('settings/public');if(s&&s.waitMin)waitMin=+s.waitMin||10;if(s&&s.autoMin)autoMin=+s.autoMin||30}catch(e){}
@@ -3361,7 +3373,7 @@ async function send(text){
   setLg(detectLang(text));
   await say({from:'visitor',text});
   const live=chat&&(chat.status==='waiting'||chat.status==='assigned');
-  if(!offline){const up={lastMsg:text.slice(0,120),lastFrom:'visitor',page:location.hash||'#/'};if(live)up.unreadAgent=INC(1);if(chat&&chat.status==='closed')up.status='bot';await touch(up)}
+  if(!offline){const up={lastMsg:text.slice(0,120),lastFrom:'visitor',page:(location.pathname+location.hash)};if(live)up.unreadAgent=INC(1);if(chat&&chat.status==='closed')up.status='bot';await touch(up)}
   if(live)return;
   const tm=text.match(/(?:^|[^\d])((?:\d[ ]?){15}\d)(?![\d])/);
   if(tm&&!offline){return ticketFlow(tm[1].replace(/\D/g,''),L())}
@@ -3944,7 +3956,7 @@ async function callStart(){
   if(!call)return;
   const awayP=loadFb().then(f=>f.get('settings/public/callAway')).catch(()=>null);
   setSt(cw('calling',lg0));await ringback(2);if(!call)return;
-  if(awayNow(await awayP)){if(!call)return;ensureUser().then(u=>fb.push('calls',{callerUid:u.uid,status:'closed',lang:lg0,createdAt:TS,page:location.hash||'#/'})).catch(()=>{});return closedFlow()}
+  if(awayNow(await awayP)){if(!call)return;ensureUser().then(u=>fb.push('calls',{callerUid:u.uid,status:'closed',lang:lg0,createdAt:TS,page:(location.pathname+location.hash)})).catch(()=>{});return closedFlow()}
   call.state='menu';startClock();
   const tok=call.flow={};await ivNotes('start','menu',true);if(!call||call.flow!==tok||call.state!=='menu')return;
   const LS=ivLangs(),iv=ivr();
@@ -3984,7 +3996,7 @@ function drawLabels(){const el=callEl();if(!el)return;const lg=call.lang;[['data
 async function anyAgentOnline(){try{const a=await fb.get('agents')||{};const now=Date.now();return Object.keys(a).some(k=>a[k]&&a[k].online&&(!a[k].lastSeen||now-ms(a[k].lastSeen)<5*60000))}catch(e){return false}}
 async function afterLang(){const lg=call.lang;
   try{await ensureChat(lg)}catch(e){await ensureUser()}if(!call)return;
-  const ref=await fb.push('calls',{callerUid:user.uid,lang:lg,langName:call.langName||'',topic:call.topic||'general',topicName:call.topicEn||'',topicKm:call.topicKm||'',callerRec:!!call.rec,status:'ringing',leg:0,createdAt:TS,name:(chat&&chat.name)||'',page:location.hash||'#/',ua:navigator.userAgent.slice(0,120)});
+  const ref=await fb.push('calls',{callerUid:user.uid,lang:lg,langName:call.langName||'',topic:call.topic||'general',topicName:call.topicEn||'',topicKm:call.topicKm||'',callerRec:!!call.rec,status:'ringing',leg:0,createdAt:TS,name:(chat&&chat.name)||'',page:(location.pathname+location.hash),ua:navigator.userAgent.slice(0,120)});
   if(!call){fb.update('calls/'+ref.key,{status:'cancelled',endedAt:TS}).catch(()=>{});return}
   call.id=ref.key;call.leg=0;const P='calls/'+call.id;
   try{await say({from:'system',text:'Web call started · '+(call.langName||lg)+' · '+(call.topicEn||'General inquiry'),staff:true});await touch({lastMsg:'Web call: '+(call.topicEn||'General inquiry')+' ('+(call.langName||lg)+')',lastFrom:'visitor'})}catch(e){}
