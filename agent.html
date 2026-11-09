@@ -180,9 +180,11 @@ label.f input,label.f textarea{border:1px solid var(--line);border-radius:12px;p
 #agcall .ag-flags{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;min-height:28px}
 #agcall .ag-flags i{font-style:normal;font-size:.8rem;padding:4px 12px;border-radius:99px;background:rgba(255,255,255,.12)}
 #agcall .ag-flags i.rec{background:#e5483f}
-#agcall .ag-cv{display:flex;align-items:center;gap:8px;margin:0 auto 22px;border:0;border-radius:999px;padding:8px 16px;background:rgba(80,200,140,.22);color:#d9f7e7;font:inherit;font-size:.85rem;cursor:pointer}
-.ag-cv.off{background:rgba(255,255,255,.12);color:#fff}
-.ag-cv .i{width:18px;height:18px}
+#agcall .ag-pills{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:0 auto 22px;padding:0 12px}
+.vlist{display:grid;gap:8px}.vopt{display:grid;gap:2px;text-align:left;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:11px 14px;font:inherit;cursor:pointer}.vopt small{color:var(--muted)}.vopt.on{border-color:var(--ok);box-shadow:0 0 0 2px color-mix(in srgb,var(--ok) 25%,transparent)}
+#agcall .ag-cv{display:flex;align-items:center;gap:8px;margin:0;border:0;border-radius:999px;padding:8px 16px;background:rgba(80,200,140,.22);color:#d9f7e7;font:inherit;font-size:.85rem;cursor:pointer}
+#agcall .ag-cv.off{background:rgba(255,255,255,.12);color:#fff}
+#agcall .ag-cv .i{width:18px;height:18px}
 .ag-grid{display:grid;grid-template-columns:repeat(3,80px);gap:22px 26px;justify-content:center}
 #agcall .ag-grid button{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:.78rem;text-align:center}
 #agcall .ag-grid button span{width:68px;height:68px;border-radius:50%;background:#353d48;display:grid;place-items:center}
@@ -630,6 +632,7 @@ function drawTop(){
    '<button class="tb '+(on?'on':'away')+'" id="st" title="Availability">'+I(on?'check':'clock')+'<span class="tl">'+(on?'Available':'Away')+'</span></button>'+
    '<button class="tb" id="nt" title="Notifications">'+I('bell')+'<span class="tl">Alerts</span>'+(c.unread+c.waiting?'<span class="bd">'+(c.unread+c.waiting)+'</span>':'')+'</button>'+
    '<button class="tb" id="cl" title="Web calls">'+I('phone')+'<span class="tl">Calls</span>'+(missedCount()?'<span class="bd">'+missedCount()+'</span>':'')+'</button>'+
+   '<button class="tb" id="vs" title="Voice style" aria-label="Voice style">'+I('mic')+'<span class="tl">Voice</span></button>'+
    '<button class="tb" id="sd" title="Sound" aria-label="Sound">'+I(soundOn?'sound':'mute')+'</button>'+
    '<button class="tb" id="tm" title="Team" aria-label="Team">'+I('users')+'<span class="tl">Team</span></button>'+
    '<a class="tb" href="admin" title="Edit website" aria-label="Edit website">'+I('edit')+'<span class="tl">Website</span></a>'+
@@ -638,6 +641,7 @@ function drawTop(){
   t.querySelector('#st').onclick=()=>setOnline(!on);
   t.querySelector('#nt').onclick=askNotify;
   t.querySelector('#cl').onclick=callLog;
+  t.querySelector('#vs').onclick=voiceSheet;
   t.querySelector('#sd').onclick=()=>{soundOn=!soundOn;setPref('sound',soundOn);if(soundOn)beep();drawTop()};
   t.querySelector('#gs').onclick=settings;
   t.querySelector('#tm').onclick=team;
@@ -940,9 +944,24 @@ process(inp,out){const i=inp[0]&&inp[0][0],o=out[0][0];if(!i){return true}
  const tgt=this.hold>0?1:low,step=tgt>this.g?0.5:0.04;
  for(let k=0;k<i.length;k++){this.g+= (tgt-this.g)*step/16;o[k]=i[k]*this.g}
  for(let c=1;c<out[0].length;c++)out[0][c].set(o);return true}}
-registerProcessor('thean-gate',G)`;
+registerProcessor('thean-gate',G);
+class P extends AudioWorkletProcessor{constructor(o){super();this.N=4096;this.buf=new Float32Array(this.N);this.w=0;this.ph=0;this.W=Math.round(sampleRate*0.045);this.set((o.processorOptions||{}).st||0);this.port.onmessage=e=>this.set(e.data)}
+set(st){this.r=Math.pow(2,st/12)}
+rd(d){let x=this.w-d;while(x<0)x+=this.N;const i=Math.floor(x),f=x-i,a=this.buf[i%this.N],b=this.buf[(i+1)%this.N];return a+(b-a)*f}
+process(inp,out){const i=inp[0]&&inp[0][0],o=out[0][0];if(!i)return true;const W=this.W,inc=(1-this.r)/W;
+ for(let k=0;k<i.length;k++){this.buf[this.w]=i[k];
+  let p1=this.ph,p2=p1+.5;if(p2>=1)p2-=1;
+  const g1=Math.sin(Math.PI*p1),g2=Math.sin(Math.PI*p2);
+  o[k]=(this.rd(1+p1*W)*g1+this.rd(1+p2*W)*g2)*0.72;
+  this.ph+=inc;if(this.ph>=1)this.ph-=1;if(this.ph<0)this.ph+=1;
+  this.w=(this.w+1)%this.N}
+ for(let c=1;c<out[0].length;c++)out[0][c].set(o);return true}}
+registerProcessor('thean-pitch',P)`;
+const VSTYLES=[['natural','Natural','Your own voice, cleaned and clear',0],['studio','Warm studio','Rich and smooth, like a radio or call-centre announcer',0],['landline','Classic phone','The clear, focused sound of a landline phone',0],['lighter','Lighter voice','Pitch raised a little: softer and lighter',3],['female','Woman-like voice','Pitch raised more, toward a woman\'s voice',5],['deeper','Deeper voice','Pitch lowered: fuller and deeper',-3]];
+function vStyle(){let v='natural';try{v=localStorage.getItem('thean_vs')||'natural'}catch(e){}return VSTYLES.some(x=>x[0]===v)?v:'natural'}
 function cvMode(){let m='on';try{m=localStorage.getItem('thean_cv')||'on'}catch(e){}return m==='off'||m==='strong'?m:'on'}
-async function cvBuild(raw){const a=audioCtx();const src=a.createMediaStreamSource(raw);
+async function cvBuild(raw,style){style=style||vStyle();const a=audioCtx();const src=a.createMediaStreamSource(raw);const VS=VSTYLES.find(x=>x[0]===style)||VSTYLES[0];
+  const F=(t,f,q,g)=>{const b=a.createBiquadFilter();b.type=t;b.frequency.value=f;if(q!=null)b.Q.value=q;if(g!=null)b.gain.value=g;return b};
   const hp=a.createBiquadFilter();hp.type='highpass';hp.frequency.value=110;hp.Q.value=.7;
   const hp2=a.createBiquadFilter();hp2.type='highpass';hp2.frequency.value=90;
   const lp=a.createBiquadFilter();lp.type='lowpass';lp.frequency.value=7200;
@@ -951,17 +970,35 @@ async function cvBuild(raw){const a=audioCtx();const src=a.createMediaStreamSour
   const out=a.createGain();out.gain.value=1.25;const dest=a.createMediaStreamDestination();
   let gate=null;
   try{if(a.audioWorklet){if(!a.__gate){const u=URL.createObjectURL(new Blob([GATE],{type:'application/javascript'}));await a.audioWorklet.addModule(u);a.__gate=1}gate=new AudioWorkletNode(a,'thean-gate',{numberOfInputs:1,numberOfOutputs:1,outputChannelCount:[1]})}}catch(e){gate=null}
-  src.connect(hp);hp.connect(hp2);hp2.connect(lp);lp.connect(pr);if(gate){pr.connect(gate);gate.connect(cmp)}else pr.connect(cmp);cmp.connect(out);out.connect(dest);
-  return {stream:dest.stream,track:dest.stream.getAudioTracks()[0],gate,nodes:[src,hp,hp2,lp,pr,gate,cmp,out].filter(Boolean)}}
+  let pit=null;if(VS[3]&&gate){try{pit=new AudioWorkletNode(a,'thean-pitch',{numberOfInputs:1,numberOfOutputs:1,outputChannelCount:[1],processorOptions:{st:VS[3]}})}catch(e){pit=null}}
+  let eq=[];
+  if(style==='studio'){hp.frequency.value=85;lp.frequency.value=12000;pr.gain.value=2.5;pr.frequency.value=3200;eq=[F('lowshelf',180,null,3.5),F('peaking',420,1.1,-2.5),F('highshelf',8500,null,2.5)];cmp.threshold.value=-28;cmp.ratio.value=4.5;out.gain.value=1.45}
+  else if(style==='landline'){hp.frequency.value=300;hp2.frequency.value=300;lp.frequency.value=3400;const lp2=F('lowpass',3400,.7);eq=[lp2,F('lowpass',3500,.7),F('lowpass',3600,.7),F('peaking',1600,.9,4),F('peaking',2600,1.2,2)];cmp.threshold.value=-30;cmp.ratio.value=6;out.gain.value=1.7}
+  else if(style==='female'||style==='lighter'){hp.frequency.value=150;eq=[F('peaking',250,1,-3),F('highshelf',6000,null,1.5)];lp.frequency.value=9000}
+  else if(style==='deeper'){hp.frequency.value=70;eq=[F('lowshelf',160,null,3),F('peaking',3000,1,1)]}
+  const chain=[pr].concat(gate?[gate]:[]).concat(pit?[pit]:[]).concat(eq).concat([cmp]);
+  src.connect(hp);hp.connect(hp2);hp2.connect(lp);lp.connect(pr);for(let k=0;k<chain.length-1;k++)chain[k].connect(chain[k+1]);cmp.connect(out);out.connect(dest);
+  return {stream:dest.stream,track:dest.stream.getAudioTracks()[0],gate,style,nodes:[src,hp,hp2,lp,pr,gate,pit,cmp,out].concat(eq).filter(Boolean)}}
 async function cvApply(){if(!onCall||!onCall.pc)return;const mode=cvMode(),snd=onCall.pc.getSenders().find(x=>x.track&&x.track.kind==='audio')||onCall.sender;if(!snd)return;
   const raw=onCall.stream.getAudioTracks()[0];
-  if(mode==='off'){if(snd.track!==raw)await snd.replaceTrack(raw).catch(()=>{});onCall.sendStream=onCall.stream;return}
-  if(!onCall.cv){try{onCall.cv=await cvBuild(onCall.stream)}catch(e){onCall.cv=null}}
+  if(mode==='off'&&vStyle()==='natural'){if(snd.track!==raw)await snd.replaceTrack(raw).catch(()=>{});onCall.sendStream=onCall.stream;return}
+  if(onCall.cv&&onCall.cv.style!==vStyle()){const old=onCall.cv;onCall.cv=null;setTimeout(()=>cvFree({cv:old}),400)}
+  if(!onCall.cv){try{onCall.cv=await cvBuild(onCall.stream,vStyle())}catch(e){onCall.cv=null}}
   if(!onCall.cv){onCall.sendStream=onCall.stream;return}
   if(onCall.cv.gate)onCall.cv.gate.port.postMessage(mode);
   if(snd.track!==onCall.cv.track)await snd.replaceTrack(onCall.cv.track).catch(()=>{});onCall.sendStream=onCall.cv.stream}
 function cvTune(pc){try{pc.getSenders().forEach(sn=>{if(!sn.track||sn.track.kind!=='audio')return;const p=sn.getParameters();p.encodings=p.encodings&&p.encodings.length?p.encodings:[{}];p.encodings[0].maxBitrate=48000;p.encodings[0].priority='high';p.encodings[0].networkPriority='high';sn.setParameters(p).catch(()=>{})})}catch(e){}}
-window.TheanCV={build:(st)=>cvBuild(st),ctx:()=>audioCtx(),mic:MIC};
+window.TheanCV={build:(st,sty)=>cvBuild(st,sty),ctx:()=>audioCtx(),mic:MIC};
+let VTEST=null;
+function vTestStop(){if(!VTEST)return;try{VTEST.cv.nodes.forEach(x=>{try{x.disconnect()}catch(e){}});VTEST.mon.disconnect();VTEST.raw.getTracks().forEach(t=>t.stop())}catch(e){}VTEST=null}
+async function vTestStart(){vTestStop();try{const raw=await navigator.mediaDevices.getUserMedia(MIC);const cv=await cvBuild(raw,vStyle());if(cv.gate)cv.gate.port.postMessage(cvMode());const a=audioCtx(),mon=a.createMediaStreamSource(cv.stream);mon.connect(a.destination);VTEST={raw,cv,mon}}catch(e){toast('Allow the microphone to test your voice')}}
+function voiceSheet(){const m=modal('Voice style','<p style="margin:0;color:var(--muted);font-size:.88rem">How customers hear you on web calls. Your choice is saved for every call.</p><div class="vlist">'+VSTYLES.map(v=>'<button type="button" class="vopt'+(v[0]===vStyle()?' on':'')+'" data-vs="'+v[0]+'"><b>'+v[1]+'</b><small>'+v[2]+'</small></button>').join('')+'</div>'+
+  (onCall?'':'<button type="button" class="btn soft" data-vtest>'+I('mic')+' <span>Test my voice (use earphones)</span></button>')+
+  '<p style="margin:0;color:var(--muted);font-size:.8rem">Changed voices are made by the computer, so careful listeners may notice. Natural, Warm studio and Classic phone keep your real voice.</p>');
+  m.addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;
+    if(b.dataset.vs){try{localStorage.setItem('thean_vs',b.dataset.vs)}catch(x){}m.querySelectorAll('[data-vs]').forEach(x=>x.classList.toggle('on',x===b));if(onCall){await cvApply();redrawCall()}if(VTEST)vTestStart();toast('Voice: '+VSTYLES.find(v=>v[0]===b.dataset.vs)[1])}
+    if(b.hasAttribute('data-vtest')){if(VTEST){vTestStop();b.querySelector('span').textContent='Test my voice (use earphones)'}else{await vTestStart();if(VTEST)b.querySelector('span').textContent='Stop test'}}});
+  const obs=new MutationObserver(()=>{if(!document.body.contains(m)){vTestStop();obs.disconnect()}});obs.observe(document.body,{childList:true})}
 function cvFree(c){try{if(c.cv){c.cv.track.stop();c.cv.nodes.forEach(x=>{try{x.disconnect()}catch(e){}})}}catch(e){}}
 function audioCtx(){ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();return ac}
 function ringTone(){try{const a=audioCtx();[0,.5].forEach(t=>{[440,480].forEach(fr=>{const o=a.createOscillator(),g=a.createGain(),t0=a.currentTime+t;o.frequency.value=fr;g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(.12,t0+.03);g.gain.setValueAtTime(.12,t0+.4);g.gain.exponentialRampToValueAtTime(.0001,t0+.45);o.connect(g);g.connect(a.destination);o.start(t0);o.stop(t0+.5)})})}catch(e){}}
@@ -987,7 +1024,7 @@ function drawCallScreen(){let el=document.getElementById('agcall');
   const B=(attr,icon,label,on)=>'<button type="button" '+attr+(on?' class="on"':'')+'><span>'+I(icon)+'</span><small>'+label+'</small></button>';
   const html='<div class="ag-top"><b class="ag-name">'+esc(callWho(c))+'</b><span class="ag-topic">'+callTopic(c)+'</span><span class="ag-sub">'+callLang(c)+' · web call</span><span class="ag-st" data-ctm>'+(onCall.t0?fmtDur(Math.floor((Date.now()-onCall.t0)/1000)):'Connecting…')+'</span>'+
    '<span class="ag-flags">'+(c.callerRec?'<i class="rec">Customer is recording</i>':'')+(onCall.hold?'<i class="hold">On hold · caller hears waiting music</i>':'')+(onCall.rec?'<i class="rec">Recording</i>':'')+'</span></div>'+
-   '<button type="button" class="ag-cv'+(cvMode()==='off'?' off':'')+'" data-acv>'+I('sound')+'<span>Clear voice: <b>'+({on:'On',strong:'Strong',off:'Off'})[cvMode()]+'</b></span></button>'+
+   '<div class="ag-pills"><button type="button" class="ag-cv'+(cvMode()==='off'?' off':'')+'" data-acv>'+I('sound')+'<span>Clear voice: <b>'+({on:'On',strong:'Strong',off:'Off'})[cvMode()]+'</b></span></button><button type="button" class="ag-cv'+(vStyle()==='natural'?' off':'')+'" data-avs>'+I('mic')+'<span>Voice: <b>'+VSTYLES.find(v=>v[0]===vStyle())[1]+'</b></span></button></div>'+
    '<div class="ag-grid">'+B('data-amute','mic',onCall.muted?'Unmute':'Mute',onCall.muted)+B('data-aspk','sound','Speaker',onCall.spk)+B('data-ahold','clock',onCall.hold?'Resume':'Waiting',onCall.hold)+
      B('data-arec','rec',onCall.rec?'Stop rec':'Record',onCall.rec)+B('data-atr','swap','Transfer',false)+B('data-achat','chat','Chat',false)+'</div>'+
    '<button type="button" class="ag-end" data-cend title="End call">'+I('phoneoff')+'</button>';
@@ -1005,6 +1042,7 @@ document.addEventListener('click',e=>{
   if(b.hasAttribute('data-aspk')){onCall.spk=!onCall.spk;applySpk();redrawCall();return}
   if(b.hasAttribute('data-ahold')){onCall.hold=!onCall.hold;applyMic();applySpk();DB.update('calls/'+onCall.id,{hold:onCall.hold}).catch(()=>{});redrawCall();return}
   if(b.hasAttribute('data-arec')){if(onCall.rec)stopRec();else startRec();return}
+  if(b.hasAttribute('data-avs')){voiceSheet();return}
   if(b.hasAttribute('data-acv')){const nx={on:'strong',strong:'off',off:'on'}[cvMode()];try{localStorage.setItem('thean_cv',nx)}catch(e){}cvApply().then(()=>{redrawCall();toast(nx==='off'?'Clear voice off: the caller hears your microphone as it is':nx==='strong'?'Clear voice strong: best for noisy rooms':'Clear voice on')});return}
   if(b.hasAttribute('data-atr')){transferSheetCall();return}
   if(b.hasAttribute('data-achat')){const c=calls.find(x=>x.id===onCall.id);onCall.mini=true;redrawCall();if(c&&chats.some(x=>x.id===c.callerUid))openChat(c.callerUid);else toast('This caller has no chat yet');return}});
