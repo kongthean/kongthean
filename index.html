@@ -528,6 +528,12 @@ html[lang="km"] .mtab{letter-spacing:0}
 .tsdeco input{width:20px;height:20px;margin-top:2px;accent-color:var(--char)}
 .tsdeco small{display:block;color:var(--muted)}
 .tsnote{color:var(--muted);font-size:.85rem;margin:12px 0 0}
+.sbar .pbx{flex:1 1 100%}
+.pbx{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 14px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.pbx .pbi{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-size:1.2rem;flex:none}
+.pbx.on .pbi{background:var(--char);color:var(--char-ink)}
+.pbx .pbt{flex:1 1 180px;display:grid;line-height:1.35}.pbx .pbt small{color:var(--muted)}
+.plist{display:grid;gap:6px}.pitem{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:8px 10px;border:1px solid var(--line);border-radius:12px}.pitem span{display:grid;min-width:0}.pitem small{color:var(--muted)}
 .modal{position:fixed;inset:0;z-index:70;background:rgba(10,12,12,.6);display:flex;align-items:center;justify-content:center;padding:16px}
 .sheet{background:var(--surface);border-radius:20px;width:100%;max-width:640px;max-height:92vh;overflow:auto}
 .sheet .hd{position:sticky;top:0;z-index:2;background:var(--surface);border-bottom:1px solid var(--line);padding:14px 18px;display:flex;align-items:center;gap:10px}
@@ -2453,9 +2459,67 @@ function fact(ic,k,v){return '<div class="fact"><span class="fi">'+I(ic)+'</span
 /* ---------- FOOTER ---------- */
 function socialBar(){
   var L=S.links,ks=['facebook','messenger','telegram','tiktok','youtube','instagram'].filter(function(k){return L[k]});
-  if(!ks.length)return '';
-  return '<div class="sbar"><b>'+ut('followUs')+'</b><div class="sic">'+ks.map(function(k){return '<a class="'+k+'" target="_blank" rel="noopener" aria-label="'+esc(u(k))+'" title="'+esc(u(k))+'" href="'+esc(linkOf(k,L[k]))+'">'+I(k)+'</a>'}).join('')+'</div></div>';
+  if(!ks.length)return pushBox()?'<div class="sbar">'+pushBox()+'</div>':'';
+  return '<div class="sbar"><b>'+ut('followUs')+'</b><div class="sic">'+ks.map(function(k){return '<a class="'+k+'" target="_blank" rel="noopener" aria-label="'+esc(u(k))+'" title="'+esc(u(k))+'" href="'+esc(linkOf(k,L[k]))+'">'+I(k)+'</a>'}).join('')+'</div>'+pushBox()+'</div>';
 }
+
+/* ---------- phone notifications (visitor side) ---------- */
+var VAPID_PUB='BLNLc_OBwgzXL4Hx6r1aZEi8I3-vLXQtmHC9C7JCQ823koE9IvNaRhi8A68lTN6Q3tQek_2LCbniuowBhAEBA-8';
+function pushSup(){return 'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window}
+function isIOSdev(){var u=navigator.userAgent||'';return /iPhone|iPad|iPod/.test(u)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)}
+function isApp(){try{return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}}
+function pushMark(){try{return localStorage.getItem('thean_push')||''}catch(e){return ''}}
+function pushState(){if(ADMIN_PAGE)return 'none';if(!pushSup())return isIOSdev()&&!isApp()?'ios':'none';if(Notification.permission==='denied')return 'blocked';return Notification.permission==='granted'&&pushMark()==='on'?'on':'off'}
+function pushId(ep){var h=5381,h2=52711;for(var i=0;i<ep.length;i++){var c=ep.charCodeAt(i);h=(h*33)^c;h2=(h2*31)^c}return 'p'+(h>>>0).toString(36)+(h2>>>0).toString(36)+ep.length.toString(36)}
+function u8(b){b=b.replace(/-/g,'+').replace(/_/g,'/');b+='==='.slice((b.length+3)%4);var r=atob(b),o=new Uint8Array(r.length);for(var i=0;i<r.length;i++)o[i]=r.charCodeAt(i);return o}
+function pushBox(){var st=pushState(),km=lang==='km';if(st==='none')return '';
+  var t,s,b;
+  if(st==='on'){t=km?'ការជូនដំណឹងបានបើក':'Notifications are on';s=km?'អ្នកនឹងទទួលបានព័ត៌មានថ្មីៗ និងពិធីបុណ្យនៅលើទូរស័ព្ទរបស់អ្នក។':'You will get our news and festival updates on this device.';b=km?'បិទ':'Turn off'}
+  else if(st==='blocked'){t=km?'ការជូនដំណឹងត្រូវបានបិទ':'Notifications are blocked';s=km?'សូមអនុញ្ញាតការជូនដំណឹងសម្រាប់ kongthean.com នៅក្នុងការកំណត់ទូរស័ព្ទ ឬកម្មវិធីរុករក។':'Allow notifications for kongthean.com in your phone or browser settings.';b=''}
+  else{t=km?'ទទួលការជូនដំណឹង':'Get notifications';s=km?'ព័ត៌មានថ្មីៗ និងពិធីបុណ្យ ផ្ញើត្រង់ទៅទូរស័ព្ទរបស់អ្នក។':'News and festival updates, straight to your phone.';b=km?'បើក':'Turn on'}
+  return '<div class="pbx'+(st==='on'?' on':'')+'" data-pushbox><span class="pbi">'+I('bell')+'</span><span class="pbt"><b>'+esc(t)+'</b><small>'+esc(s)+'</small></span>'+(b?'<button type="button" class="btn sm'+(st==='on'?' soft':'')+'" data-act="push">'+esc(b)+'</button>':'')+'</div>'}
+function pushRedraw(){document.querySelectorAll('[data-pushbox]').forEach(function(x){var t=document.createElement('div');t.innerHTML=pushBox();if(t.firstChild)x.replaceWith(t.firstChild);else x.remove()})}
+function pushIOSGuide(){var km=lang==='km';modal(km?'ទទួលការជូនដំណឹងនៅលើ iPhone':'Notifications on iPhone','<ol style="margin:0;padding-left:20px;display:grid;gap:8px">'+(km?'<li>ចុចប៊ូតុង <b>Share</b> (ការ៉េមានព្រួញឡើងលើ) នៅខាងក្រោម Safari។</li><li>ជ្រើស <b>Add to Home Screen</b> រួចចុច <b>Add</b>។</li><li>បើកធាន ពីអេក្រង់ដើម (Home Screen)។</li><li>ចុច <b>ទទួលការជូនដំណឹង</b> ម្ដងទៀត ហើយចុច <b>Allow</b>។</li>':'<li>Tap the <b>Share</b> button (square with an arrow) in Safari.</li><li>Choose <b>Add to Home Screen</b>, then <b>Add</b>.</li><li>Open Thean from your Home Screen.</li><li>Tap <b>Get notifications</b> again and choose <b>Allow</b>.</li>')+'</ol><p style="margin:10px 0 0;color:var(--muted);font-size:.9rem">'+(km?'Apple អនុញ្ញាតការជូនដំណឹងពីគេហទំព័រ តែនៅពេលបើកពីអេក្រង់ដើមប៉ុណ្ណោះ។':'Apple only allows website notifications when the site is opened from the Home Screen.')+'</p>')}
+function pushSave(sub){if(!window.TheanPush)return Promise.reject(new Error('not ready'));var j=sub.toJSON();return window.TheanPush.save(pushId(j.endpoint),{endpoint:j.endpoint,keys:j.keys,lang:lang,dev:isIOSdev()?'ios':/Android/i.test(navigator.userAgent)?'android':'desktop'})}
+async function pushToggle(){var km=lang==='km',st=pushState();
+  if(st==='ios'){pushIOSGuide();return}
+  if(st==='blocked'){toast(km?'សូមអនុញ្ញាតការជូនដំណឹងនៅក្នុងការកំណត់ទូរស័ព្ទ។':'Please allow notifications in your phone settings.');return}
+  try{var reg=await navigator.serviceWorker.register('/sw.js');await navigator.serviceWorker.ready;
+    if(st==='on'){var s0=await reg.pushManager.getSubscription();if(s0){try{await window.TheanPush.remove(pushId(s0.endpoint))}catch(e){}await s0.unsubscribe()}try{localStorage.setItem('thean_push','off')}catch(e){}pushRedraw();toast(km?'បានបិទការជូនដំណឹង។':'Notifications turned off.');return}
+    var p=await Notification.requestPermission();if(p!=='granted'){pushRedraw();toast(km?'មិនបានអនុញ្ញាតទេ។':'Notifications were not allowed.');return}
+    var sub=await reg.pushManager.getSubscription()||await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(VAPID_PUB)});
+    await pushSave(sub);try{localStorage.setItem('thean_push','on')}catch(e){}pushRedraw();toast(km?'រួចរាល់! អ្នកនឹងទទួលបានការជូនដំណឹងពីធាន។':'Done. You will get notifications from Thean.')}
+  catch(e){toast((km?'មិនអាចបើកបានទេ៖ ':'Could not turn on: ')+(e&&e.message||e))}}
+function pushRefresh(){if(pushState()!=='on')return;navigator.serviceWorker.getRegistration().then(function(r){return r&&r.pushManager.getSubscription()}).then(function(s){if(s)pushSave(s).catch(function(){})}).catch(function(){})}
+if(!ADMIN_PAGE)setTimeout(pushRefresh,4000);
+
+function pushForm(){
+  var pages=[['/','Home page']].concat(S.pages.map(function(p){return [toPath('#/p/'+p.id),tr(p.label)||p.id]}));
+  var img='',m=modal('Send notification','<p style="margin:0;color:var(--muted)" data-pcount>Counting phones…</p>'+
+    '<div class="two"><label class="f">Title (English)<input data-pn="te" maxlength="60" placeholder="e.g. Water Festival this weekend"></label><label class="f">Title (Khmer)<input data-pn="tk" maxlength="60" placeholder="ឧ. បុណ្យអុំទូកចុងសប្ដាហ៍នេះ"></label></div>'+
+    '<div class="two"><label class="f">Message (English)<textarea data-pn="be" maxlength="240" rows="3"></textarea></label><label class="f">Message (Khmer)<textarea data-pn="bk" maxlength="240" rows="3"></textarea></label></div>'+
+    '<label class="f">When people tap it, open<select data-pn="url">'+pages.map(function(p){return '<option value="'+esc(p[0])+'">'+esc(p[1])+'</option>'}).join('')+'<option value="__custom">Another web address…</option></select></label>'+
+    '<label class="f" data-pcu hidden>Web address<input data-pn="cu" placeholder="https://…"></label>'+
+    '<div class="imgpick"><div class="pv" data-ppv></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm soft" type="button" data-ppick>'+I('image')+' Picture (optional)</button><button class="btn sm del" type="button" data-pclr hidden>Remove</button></div></div>'+
+    '<small style="color:var(--muted)">Pictures show on Android and computers. iPhone shows the title and message.</small>'+
+    '<div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-psend>'+I('bell')+' Send</button></div>'+
+    '<h4 style="margin:6px 0 0">Recently sent</h4><div data-plist class="plist"><small style="color:var(--muted)">Loading…</small></div>'+
+    '<p style="margin:0;color:var(--muted);font-size:.85rem">Notifications usually arrive within 5 to 15 minutes. To send one right away, open GitHub, then Actions, then <b>Send notifications</b>, then <b>Run workflow</b>.</p>');
+  function q(k){return m.querySelector('[data-pn="'+k+'"]').value.trim()}
+  window.TheanAdmin.pushCount().then(function(n){var e=m.querySelector('[data-pcount]');if(e)e.innerHTML='<b>'+n+'</b> phone'+(n===1?'':'s')+' and computer'+(n===1?'':'s')+' have turned on notifications.'}).catch(function(e){var x=m.querySelector('[data-pcount]');if(x)x.textContent=/permission/i.test(String(e&&(e.code||e.message)))?'Not set up yet: the database rules for notifications are missing. Follow the setup steps.':'Could not count phones right now.'});
+  var off=window.TheanAdmin.onPushQueue(function(L){var box=m.querySelector('[data-plist]');if(!box)return;
+    box.innerHTML=L.length?L.map(function(x){var st=x.status==='sent'?'Sent to '+(x.sent||0)+(x.failed?' · '+x.failed+' failed':''):x.status==='sending'?'Sending…':'Waiting to send';
+      return '<div class="pitem"><span><b>'+esc((x.title&&(x.title.en||x.title.km))||'')+'</b><small>'+esc(new Date(x.at||0).toLocaleString())+' · '+esc(st)+'</small></span>'+(x.status==='queued'?'<button class="btn sm del" type="button" data-pdel="'+esc(x.id)+'">Cancel</button>':'')+'</div>'}).join(''):'<small style="color:var(--muted)">Nothing sent yet.</small>'});
+  var obs=new MutationObserver(function(){if(!document.body.contains(m)){try{off&&off()}catch(e){}obs.disconnect()}});obs.observe(document.body,{childList:true});
+  m.addEventListener('change',function(e){if(e.target.matches('[data-pn="url"]'))m.querySelector('[data-pcu]').hidden=e.target.value!=='__custom'});
+  m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+    if(b.hasAttribute('data-ppick')){pickImage(1200,function(u){if(!/^https:\/\//.test(u)){toast('Connect photo storage (Cloudinary) first to add a picture');return}img=u;m.querySelector('[data-ppv]').innerHTML='<img alt="" src="'+esc(u)+'">';m.querySelector('[data-pclr]').hidden=false})}
+    if(b.hasAttribute('data-pclr')){img='';m.querySelector('[data-ppv]').innerHTML='';b.hidden=true}
+    if(b.dataset.pdel){window.TheanAdmin.pushDel(b.dataset.pdel).then(function(){toast('Cancelled')})}
+    if(b.hasAttribute('data-psend')){var te=q('te'),tk=q('tk'),be=q('be'),bk=q('bk'),url=q('url');if(url==='__custom')url=q('cu');
+      if(!te&&!tk){toast('Type a title first');return}if(url&&!/^(\/|https:\/\/)/.test(url)){toast('The web address must start with https://');return}
+      b.disabled=true;window.TheanAdmin.pushQueue({title:{en:te||tk,km:tk||te},body:{en:be||bk,km:bk||be},url:url||'/',img:img}).then(function(){toast('Queued. It will be sent within a few minutes.');['te','tk','be','bk'].forEach(function(k){m.querySelector('[data-pn="'+k+'"]').value=''});img='';m.querySelector('[data-ppv]').innerHTML='';b.disabled=false})
+      .catch(function(e){b.disabled=false;toast(/permission/i.test(String(e&&(e.code||e.message)))?'No permission: add the notification rules in Firebase (setup step).':'Not sent: '+(e&&(e.code||e.message)))})}})}
 var tPause=0,tTimer=null;
 function tStep(row){return row.querySelector('.tile')?row.querySelector('.tile').getBoundingClientRect().width+6:120}
 function tMove(row,d){var max=row.scrollWidth-row.clientWidth;if(max<=4)return;var x=row.scrollLeft+d*tStep(row);if(d>0&&row.scrollLeft>=max-4)x=0;else if(d<0&&row.scrollLeft<=4)x=max;row.scrollTo({left:x,behavior:'smooth'})}
@@ -2620,7 +2684,7 @@ app.addEventListener('click',function(e){
   if(d.skin){e.preventDefault();try{localStorage.setItem('thean-skin',d.skin)}catch(x){}applySkin(d.skin);render();return}
   if(d.ed){e.preventDefault();e.stopPropagation();var a=d.ed.split(':');editItem(a[0],a[1]);return}
   if(d.add!=null){var b=d.add.split(':');editItem(b[0],null,b[1]);return}
-  if(d.lang){lang=d.lang;try{localStorage.setItem('thean-lang',lang)}catch(x){}render();return}
+  if(d.lang){lang=d.lang;setTimeout(pushRefresh,500);try{localStorage.setItem('thean-lang',lang)}catch(x){}render();return}
   if(d.tmove){var rw=t.closest('.tslide').querySelector('.tiles.row');tPause=Date.now()+8000;tMove(rw,+d.tmove);return}
   if(d.slide){go(cur+(+d.slide));startAuto();return}
   if(d.dot!=null){go(+d.dot);startAuto();return}
@@ -2657,6 +2721,8 @@ app.addEventListener('click',function(e){
     case 'back':e.preventDefault();goBack();return;
     case 'tilestyle':tileStyleForm();return;
     case 'skinform':skinForm();return;
+    case 'push':pushToggle();return;
+    case 'pushform':pushForm();return;
     case 'tstyle':tstyleForm();return;
     case 'skins':skinPicker();return;
     case 'maint':maintToggle();return;
@@ -2925,7 +2991,7 @@ function dashSection(){
     h+='<div class="dwelcome"><h2>Hello'+(adminUser&&adminUser.agent&&adminUser.agent.name?', '+esc(adminUser.agent.name):'')+'</h2><p>Everything you change here <b>saves and goes live automatically</b> within a few seconds. Watch the status at the top: <b>Live on the website</b> means visitors can see it.</p></div>';
     var need=photoTargets().length;
     h+='<div class="autobox"><span style="font-size:1.8rem;color:var(--accent)">'+I('image')+'</span><div><b>HD photos & videos</b><small style="color:var(--muted)">'+(need?need+' places, slides or videos have no photo yet. Add free HD photos from Wikimedia Commons in one tap.':'Every place has a photo. You can change any photo with <b>Online photo</b>.')+'</small></div>'+(need?'<button class="btn" data-act="autophotos">'+I('image')+' Add HD photos</button>':'')+'</div>';
-    h+='<h3 class="dsub">Quick actions</h3><div class="dcards">'+maintCard()+awayCard()+dCard('calendar','Add news','Title, photo, short caption, full story, photos & video','data-add="news:"')+dCard('video','Add a video','Upload from your phone or paste a link','data-add="videos:"')+dCard('pin','Add a place','Destination, temple or culture story','data-add="places:destination"')+dCard('star','Home page','Slideshow, announcement, message of gratitude','data-dash="home"')+dCard('bell','Edit announcement','The red/dark bar under the slideshow','data-dash="texts"')+dCard('image','Pop-up notice',popReady(true)?(S.popup.on===false?'Hidden. Tap to edit or show it.':'Showing once to each visitor. Tap to edit.'):'A picture and message that opens once on the home page','data-act="popedit"')+dCard('menu','Add a menu page','New icon in the menu with its own posts','data-add="pages:custom"')+'</div>';
+    h+='<h3 class="dsub">Quick actions</h3><div class="dcards">'+maintCard()+awayCard()+dCard('bell','Send notification','A message that pops up on visitors\' phones','data-act="pushform"')+dCard('calendar','Add news','Title, photo, short caption, full story, photos & video','data-add="news:"')+dCard('video','Add a video','Upload from your phone or paste a link','data-add="videos:"')+dCard('pin','Add a place','Destination, temple or culture story','data-add="places:destination"')+dCard('star','Home page','Slideshow, announcement, message of gratitude','data-dash="home"')+dCard('bell','Edit announcement','The red/dark bar under the slideshow','data-dash="texts"')+dCard('image','Pop-up notice',popReady(true)?(S.popup.on===false?'Hidden. Tap to edit or show it.':'Showing once to each visitor. Tap to edit.'):'A picture and message that opens once on the home page','data-act="popedit"')+dCard('menu','Add a menu page','New icon in the menu with its own posts','data-add="pages:custom"')+'</div>';
     h+='<h3 class="dsub">Your website</h3><div class="dstats">'+[['Posts',(S.news||[]).length+(S.social||[]).length+S.pages.reduce(function(a,p){return a+(p.custom&&S[p.list]?S[p.list].length:0)},0),'posts'],['Videos',(S.videos||[]).length,'videos'],['Places',S.places.length,'places'],['Menu pages',S.pages.length,'pages'],['Slides',S.slides.length,'home']].map(function(r){return '<button class="dstat" data-dash="'+r[2]+'"><b>'+r[1]+'</b><span>'+r[0]+'</span></button>'}).join('')+'</div>';
     h+='<div class="dnote">'+(mediaOK()?'Photo & video storage is connected (Cloudinary).':'⚠️ Photo & video storage is not connected yet. <button class="btn sm" data-act="media">Set up now</button>')+'<br>Website data size: <b>'+mb.toFixed(1)+' MB</b>'+(mb>8?' — large. New photos go to Cloudinary once it is connected, which keeps the site fast.':' — good.')+'</div>';
   }
@@ -3914,6 +3980,9 @@ function showCheck(){
 window.addEventListener('hashchange',()=>{if(location.hash==='#check')showCheck()});
 syncSite();
 
+window.TheanPush={
+  async save(id,v){await loadFb();let u=await authUser();if(!u)u=await ensureUser();v.at=TS;await fb.set('push/subs/'+id,v)},
+  async remove(id){await loadFb();let u=await authUser();if(!u)u=await ensureUser();await fb.set('push/subs/'+id,null)}};
 /* ---------------- admin page API ---------------- */
 if(ADMIN_PAGE){
   window.TheanAdmin={
@@ -3925,6 +3994,10 @@ if(ADMIN_PAGE){
     async setMaint(v){await loadFb();await fb.set('settings/public/maintenance',v)},
     onMaint(cb){loadFb().then(()=>fb.on('settings/public/maintenance',cb)).catch(()=>{})},
     async setCallAway(v){await loadFb();await fb.set('settings/public/callAway',v)},
+    async pushQueue(v){await loadFb();const u=await authUser();v.at=TS;v.status='queued';v.by=(u&&u.email)||'';return fb.push('push/queue',v)},
+    onPushQueue(cb){let off=null,dead=false;loadFb().then(()=>{if(!dead)off=fb.onRecent('push/queue','at',15,cb)}).catch(()=>{});return()=>{dead=true;try{off&&off()}catch(e){}}},
+    async pushCount(){await loadFb();const v=await fb.get('push/subs');return v?Object.keys(v).length:0},
+    async pushDel(id){await loadFb();await fb.set('push/queue/'+id,null)},
     onCallAway(cb){loadFb().then(()=>fb.on('settings/public/callAway',cb)).catch(()=>{})},
     async publish(S){await loadFb();
       const to=new Promise((_,rej)=>setTimeout(()=>rej(new Error('network: the server did not answer in 40 seconds')),40000));
@@ -4120,7 +4193,7 @@ async function callStart(){
   catch(e){setSt(cw('micNo',lg0));await sleepC(4500);return callEnd(false)}
   if(!call)return;
   const awayP=loadFb().then(f=>f.get('settings/public/callAway')).catch(()=>null);
-  setSt(cw('calling',lg0));await ringback(2);if(!call)return;
+  setSt(cw('calling',lg0));await sleepC(700);if(!call)return; /* no ring music before the menu */
   if(awayNow(await awayP)){if(!call)return;ensureUser().then(u=>fb.push('calls',{callerUid:u.uid,status:'closed',lang:lg0,createdAt:TS,page:(location.pathname+location.hash)})).catch(()=>{});return closedFlow()}
   call.state='menu';startClock();
   const tok=call.flow={};await ivNotes('start','menu',true);if(!call||call.flow!==tok||call.state!=='menu')return;
