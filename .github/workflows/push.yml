@@ -1,0 +1,187 @@
+name: Send notifications
+# Every 5 minutes: sends the notifications you queued in admin to every phone that turned them on.
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: push
+  cancel-in-progress: false
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Install helper
+        run: pip install --quiet google-auth requests cryptography
+      - name: Send queued notifications
+        env:
+          FIREBASE_KEY: ${{ secrets.FIREBASE_KEY }}
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import os, json, time, base64, urllib.request, urllib.parse, urllib.error
+          from cryptography.hazmat.primitives.asymmetric import ec
+          from cryptography.hazmat.primitives.asymmetric.utils import decode_dss_signature
+          from cryptography.hazmat.primitives import hashes, serialization
+          from cryptography.hazmat.primitives.kdf.hkdf import HKDF
+          from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+
+          KEY = os.environ.get('FIREBASE_KEY', '').strip()
+          VAPID = os.environ.get('VAPID_PRIVATE_KEY', '').strip()
+          DB = os.environ.get('DB_URL', 'https://thean-12952-default-rtdb.asia-southeast1.firebasedatabase.app').rstrip('/')
+          SITE = os.environ.get('SITE_URL', 'https://kongthean.com').rstrip('/')
+          CONTACT = 'mailto:info@kongthean.com'
+          NOW = int(time.time() * 1000)
+
+
+          def b64d(s):
+              s = s.strip()
+              return base64.urlsafe_b64decode(s + '=' * (-len(s) % 4))
+
+
+          def b64e(b):
+              return base64.urlsafe_b64encode(b).decode().rstrip('=')
+
+
+          def http(url, data=None, method='GET', headers=None, raw=False):
+              req = urllib.request.Request(url, method=method, data=data, headers=headers or {})
+              try:
+                  with urllib.request.urlopen(req, timeout=30) as r:
+                      body = r.read()
+                      return r.status, (body if raw else (json.loads(body) if body else None))
+              except urllib.error.HTTPError as e:
+                  return e.code, e.read()[:300]
+
+
+          def db_auth():
+              if KEY.startswith('{'):
+                  from google.oauth2 import service_account
+                  import google.auth.transport.requests
+                  c = service_account.Credentials.from_service_account_info(json.loads(KEY), scopes=[
+                      'https://www.googleapis.com/auth/firebase.database', 'https://www.googleapis.com/auth/userinfo.email'])
+                  c.refresh(google.auth.transport.requests.Request())
+                  return 'access_token=' + c.token
+              return 'auth=' + urllib.parse.quote(KEY)
+
+
+          AUTH = None
+
+
+          def db(path, method='GET', data=None):
+              global AUTH
+              AUTH = AUTH or db_auth()
+              st, body = http(DB + '/' + path + '.json?' + AUTH, None if data is None else json.dumps(data).encode(), method,
+                              {'Content-Type': 'application/json'})
+              if st >= 300:
+                  raise RuntimeError('Database error %s: %s' % (st, body))
+              return body
+
+
+          # ---------- Web Push (RFC 8291 encryption + RFC 8292 VAPID) ----------
+          def vapid_keys():
+              d = int.from_bytes(b64d(VAPID), 'big')
+              priv = ec.derive_private_key(d, ec.SECP256R1())
+              pub = priv.public_key().public_bytes(serialization.Encoding.X962, serialization.PublicFormat.UncompressedPoint)
+              return priv, pub
+
+
+          def vapid_header(endpoint, priv, pub):
+              u = urllib.parse.urlparse(endpoint)
+              head = b64e(json.dumps({'typ': 'JWT', 'alg': 'ES256'}, separators=(',', ':')).encode())
+              claims = b64e(json.dumps({'aud': u.scheme + '://' + u.netloc, 'exp': int(time.time()) + 12 * 3600, 'sub': CONTACT},
+                                       separators=(',', ':')).encode())
+              msg = (head + '.' + claims).encode()
+              r, s = decode_dss_signature(priv.sign(msg, ec.ECDSA(hashes.SHA256())))
+              sig = b64e(r.to_bytes(32, 'big') + s.to_bytes(32, 'big'))
+              return 'vapid t=%s.%s.%s, k=%s' % (head, claims, sig, b64e(pub))
+
+
+          def hkdf(salt, ikm, info, n):
+              return HKDF(algorithm=hashes.SHA256(), length=n, salt=salt, info=info).derive(ikm)
+
+
+          def encrypt(payload, p256dh, auth):
+              ua_pub = b64d(p256dh)
+              secret = b64d(auth)
+              as_priv = ec.generate_private_key(ec.SECP256R1())
+              as_pub = as_priv.public_key().public_bytes(serialization.Encoding.X962, serialization.PublicFormat.UncompressedPoint)
+              shared = as_priv.exchange(ec.ECDH(), ec.EllipticCurvePublicKey.from_encoded_point(ec.SECP256R1(), ua_pub))
+              ikm = hkdf(secret, shared, b'WebPush: info\x00' + ua_pub + as_pub, 32)
+              salt = os.urandom(16)
+              cek = hkdf(salt, ikm, b'Content-Encoding: aes128gcm\x00', 16)
+              nonce = hkdf(salt, ikm, b'Content-Encoding: nonce\x00', 12)
+              ct = AESGCM(cek).encrypt(nonce, payload + b'\x02', None)
+              return salt + (4096).to_bytes(4, 'big') + bytes([len(as_pub)]) + as_pub + ct
+
+
+          def send_one(sub, payload, priv, pub):
+              ep = sub.get('endpoint', '')
+              keys = sub.get('keys') or {}
+              if not (ep.startswith('https://') or (os.environ.get('PUSH_TEST') and ep.startswith('http://127.'))) or not keys.get('p256dh') or not keys.get('auth'):
+                  return 410
+              body = encrypt(payload, keys['p256dh'], keys['auth'])
+              st, _ = http(ep, body, 'POST', {'Content-Type': 'application/octet-stream', 'Content-Encoding': 'aes128gcm',
+                                              'TTL': '86400', 'Urgency': 'normal', 'Authorization': vapid_header(ep, priv, pub)}, raw=True)
+              return st
+
+
+          def pick(o, lang):
+              if isinstance(o, dict):
+                  return (o.get(lang) or o.get('en') or o.get('km') or '').strip()
+              return str(o or '').strip()
+
+
+          def main():
+              if not KEY or not VAPID:
+                  raise RuntimeError('A secret is missing in GitHub: FIREBASE_KEY and VAPID_PRIVATE_KEY are both needed.')
+              queue = db('push/queue') or {}
+              todo = sorted([(k, v) for k, v in queue.items() if isinstance(v, dict) and v.get('status') == 'queued'],
+                            key=lambda kv: kv[1].get('at', 0))
+              if not todo:
+                  print('Nothing to send.')
+                  return
+              subs = db('push/subs') or {}
+              priv, pub = vapid_keys()
+              gone = set()
+              for qid, n in todo:
+                  db('push/queue/' + qid, 'PATCH', {'status': 'sending'})
+                  url = n.get('url') or '/'
+                  if url.startswith('/'):
+                      url = SITE + url
+                  sent = failed = 0
+                  for sid, s in subs.items():
+                      if sid in gone or not isinstance(s, dict):
+                          continue
+                      lang = 'km' if s.get('lang') == 'km' else 'en'
+                      data = {'title': pick(n.get('title'), lang)[:80] or 'Thean', 'body': pick(n.get('body'), lang)[:300],
+                              'url': url, 'tag': qid, 'lang': lang}
+                      if str(n.get('img') or '').startswith('https://'):
+                          data['img'] = n['img']
+                      try:
+                          st = send_one(s, json.dumps(data, ensure_ascii=False).encode('utf-8'), priv, pub)
+                      except Exception as e:
+                          print('  error for one phone:', str(e)[:120])
+                          st = 0
+                      if 200 <= st < 300:
+                          sent += 1
+                      else:
+                          failed += 1
+                          if st in (404, 410):
+                              gone.add(sid)
+                  db('push/queue/' + qid, 'PATCH', {'status': 'sent', 'sent': sent, 'failed': failed, 'sentAt': int(time.time() * 1000)})
+                  print('Sent "%s" to %d phones (%d failed)' % (pick(n.get('title'), 'en'), sent, failed))
+              for sid in gone:
+                  db('push/subs/' + sid, 'DELETE')
+              if gone:
+                  print('Removed %d phones that turned notifications off.' % len(gone))
+
+
+          try:
+              main()
+          except Exception as e:
+              print('Problem:', str(e)[:400])
+              raise SystemExit(1)
+          PY
