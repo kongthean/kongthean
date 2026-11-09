@@ -180,7 +180,10 @@ label.f input,label.f textarea{border:1px solid var(--line);border-radius:12px;p
 #agcall .ag-flags{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;min-height:28px}
 #agcall .ag-flags i{font-style:normal;font-size:.8rem;padding:4px 12px;border-radius:99px;background:rgba(255,255,255,.12)}
 #agcall .ag-flags i.rec{background:#e5483f}
-#agcall .ag-grid{display:grid;grid-template-columns:repeat(3,80px);gap:22px 26px;justify-content:center}
+#agcall .ag-cv{display:flex;align-items:center;gap:8px;margin:0 auto 22px;border:0;border-radius:999px;padding:8px 16px;background:rgba(80,200,140,.22);color:#d9f7e7;font:inherit;font-size:.85rem;cursor:pointer}
+.ag-cv.off{background:rgba(255,255,255,.12);color:#fff}
+.ag-cv .i{width:18px;height:18px}
+.ag-grid{display:grid;grid-template-columns:repeat(3,80px);gap:22px 26px;justify-content:center}
 #agcall .ag-grid button{display:flex;flex-direction:column;align-items:center;gap:7px;font-size:.78rem;text-align:center}
 #agcall .ag-grid button span{width:68px;height:68px;border-radius:50%;background:#353d48;display:grid;place-items:center}
 #agcall .ag-grid button.on span{background:#fff;color:#1c2531}
@@ -924,6 +927,42 @@ function callTopic(c){return c.topicName||TOPICS[c.topic]||'General inquiry'}
 function callWho(c){const ch=chats.find(x=>x.id===c.callerUid);return (ch&&ch.name)||c.name||('Visitor '+String(c.callerUid||'').slice(0,4).toUpperCase())}
 function callNotify(c){const t=c.status==='transfer'?'Call transferred to you':'Incoming web call';if('Notification' in window&&Notification.permission==='granted'){try{const n=new Notification(t,{body:callWho(c)+' · '+callTopic(c)+' · '+callLang(c)+(c.transferFromName?' · from '+c.transferFromName:''),tag:'call-'+c.id,renotify:true,requireInteraction:true});n.onclick=()=>{window.focus();n.close()}}catch(e){}}
   try{navigator.vibrate&&navigator.vibrate([300,150,300,150,300])}catch(e){}}
+
+/* ---------- Clear voice: cleans the agent's microphone before it goes to the caller ---------- */
+const MIC={audio:{echoCancellation:{ideal:true},noiseSuppression:{ideal:true},autoGainControl:{ideal:true},channelCount:{ideal:1},sampleRate:{ideal:48000},voiceIsolation:{ideal:true}}};
+const GATE=`class G extends AudioWorkletProcessor{constructor(){super();this.env=0;this.floor=0.003;this.g=1;this.hold=0;this.mode='on';this.port.onmessage=e=>{this.mode=e.data}}
+process(inp,out){const i=inp[0]&&inp[0][0],o=out[0][0];if(!i){return true}
+ let s=0;for(let k=0;k<i.length;k++)s+=i[k]*i[k];const rms=Math.sqrt(s/i.length);
+ this.env=rms>this.env?rms*.6+this.env*.4:rms*.08+this.env*.92;
+ if(this.env<this.floor)this.floor=this.floor*.9+this.env*.1;else this.floor=Math.min(this.floor*1.0008,0.05);
+ const strong=this.mode==='strong',thr=Math.max(this.floor*(strong?4.2:2.6),strong?0.012:0.006),low=this.mode==='off'?1:(strong?0.03:0.12);
+ if(this.env>thr)this.hold=strong?9:12;else if(this.hold>0)this.hold--;
+ const tgt=this.hold>0?1:low,step=tgt>this.g?0.5:0.04;
+ for(let k=0;k<i.length;k++){this.g+= (tgt-this.g)*step/16;o[k]=i[k]*this.g}
+ for(let c=1;c<out[0].length;c++)out[0][c].set(o);return true}}
+registerProcessor('thean-gate',G)`;
+function cvMode(){let m='on';try{m=localStorage.getItem('thean_cv')||'on'}catch(e){}return m==='off'||m==='strong'?m:'on'}
+async function cvBuild(raw){const a=audioCtx();const src=a.createMediaStreamSource(raw);
+  const hp=a.createBiquadFilter();hp.type='highpass';hp.frequency.value=110;hp.Q.value=.7;
+  const hp2=a.createBiquadFilter();hp2.type='highpass';hp2.frequency.value=90;
+  const lp=a.createBiquadFilter();lp.type='lowpass';lp.frequency.value=7200;
+  const pr=a.createBiquadFilter();pr.type='peaking';pr.frequency.value=2800;pr.Q.value=1;pr.gain.value=3;
+  const cmp=a.createDynamicsCompressor();cmp.threshold.value=-26;cmp.knee.value=12;cmp.ratio.value=3.5;cmp.attack.value=.004;cmp.release.value=.18;
+  const out=a.createGain();out.gain.value=1.25;const dest=a.createMediaStreamDestination();
+  let gate=null;
+  try{if(a.audioWorklet){if(!a.__gate){const u=URL.createObjectURL(new Blob([GATE],{type:'application/javascript'}));await a.audioWorklet.addModule(u);a.__gate=1}gate=new AudioWorkletNode(a,'thean-gate',{numberOfInputs:1,numberOfOutputs:1,outputChannelCount:[1]})}}catch(e){gate=null}
+  src.connect(hp);hp.connect(hp2);hp2.connect(lp);lp.connect(pr);if(gate){pr.connect(gate);gate.connect(cmp)}else pr.connect(cmp);cmp.connect(out);out.connect(dest);
+  return {stream:dest.stream,track:dest.stream.getAudioTracks()[0],gate,nodes:[src,hp,hp2,lp,pr,gate,cmp,out].filter(Boolean)}}
+async function cvApply(){if(!onCall||!onCall.pc)return;const mode=cvMode(),snd=onCall.pc.getSenders().find(x=>x.track&&x.track.kind==='audio')||onCall.sender;if(!snd)return;
+  const raw=onCall.stream.getAudioTracks()[0];
+  if(mode==='off'){if(snd.track!==raw)await snd.replaceTrack(raw).catch(()=>{});onCall.sendStream=onCall.stream;return}
+  if(!onCall.cv){try{onCall.cv=await cvBuild(onCall.stream)}catch(e){onCall.cv=null}}
+  if(!onCall.cv){onCall.sendStream=onCall.stream;return}
+  if(onCall.cv.gate)onCall.cv.gate.port.postMessage(mode);
+  if(snd.track!==onCall.cv.track)await snd.replaceTrack(onCall.cv.track).catch(()=>{});onCall.sendStream=onCall.cv.stream}
+function cvTune(pc){try{pc.getSenders().forEach(sn=>{if(!sn.track||sn.track.kind!=='audio')return;const p=sn.getParameters();p.encodings=p.encodings&&p.encodings.length?p.encodings:[{}];p.encodings[0].maxBitrate=48000;p.encodings[0].priority='high';p.encodings[0].networkPriority='high';sn.setParameters(p).catch(()=>{})})}catch(e){}}
+window.TheanCV={build:(st)=>cvBuild(st),ctx:()=>audioCtx(),mic:MIC};
+function cvFree(c){try{if(c.cv){c.cv.track.stop();c.cv.nodes.forEach(x=>{try{x.disconnect()}catch(e){}})}}catch(e){}}
 function audioCtx(){ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();return ac}
 function ringTone(){try{const a=audioCtx();[0,.5].forEach(t=>{[440,480].forEach(fr=>{const o=a.createOscillator(),g=a.createGain(),t0=a.currentTime+t;o.frequency.value=fr;g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(.12,t0+.03);g.gain.setValueAtTime(.12,t0+.4);g.gain.exponentialRampToValueAtTime(.0001,t0+.45);o.connect(g);g.connect(a.destination);o.start(t0);o.stop(t0+.5)})})}catch(e){}}
 function fmtDur(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
@@ -948,6 +987,7 @@ function drawCallScreen(){let el=document.getElementById('agcall');
   const B=(attr,icon,label,on)=>'<button type="button" '+attr+(on?' class="on"':'')+'><span>'+I(icon)+'</span><small>'+label+'</small></button>';
   const html='<div class="ag-top"><b class="ag-name">'+esc(callWho(c))+'</b><span class="ag-topic">'+callTopic(c)+'</span><span class="ag-sub">'+callLang(c)+' · web call</span><span class="ag-st" data-ctm>'+(onCall.t0?fmtDur(Math.floor((Date.now()-onCall.t0)/1000)):'Connecting…')+'</span>'+
    '<span class="ag-flags">'+(c.callerRec?'<i class="rec">Customer is recording</i>':'')+(onCall.hold?'<i class="hold">On hold · caller hears waiting music</i>':'')+(onCall.rec?'<i class="rec">Recording</i>':'')+'</span></div>'+
+   '<button type="button" class="ag-cv'+(cvMode()==='off'?' off':'')+'" data-acv>'+I('sound')+'<span>Clear voice: <b>'+({on:'On',strong:'Strong',off:'Off'})[cvMode()]+'</b></span></button>'+
    '<div class="ag-grid">'+B('data-amute','mic',onCall.muted?'Unmute':'Mute',onCall.muted)+B('data-aspk','sound','Speaker',onCall.spk)+B('data-ahold','clock',onCall.hold?'Resume':'Waiting',onCall.hold)+
      B('data-arec','rec',onCall.rec?'Stop rec':'Record',onCall.rec)+B('data-atr','swap','Transfer',false)+B('data-achat','chat','Chat',false)+'</div>'+
    '<button type="button" class="ag-end" data-cend title="End call">'+I('phoneoff')+'</button>';
@@ -965,6 +1005,7 @@ document.addEventListener('click',e=>{
   if(b.hasAttribute('data-aspk')){onCall.spk=!onCall.spk;applySpk();redrawCall();return}
   if(b.hasAttribute('data-ahold')){onCall.hold=!onCall.hold;applyMic();applySpk();DB.update('calls/'+onCall.id,{hold:onCall.hold}).catch(()=>{});redrawCall();return}
   if(b.hasAttribute('data-arec')){if(onCall.rec)stopRec();else startRec();return}
+  if(b.hasAttribute('data-acv')){const nx={on:'strong',strong:'off',off:'on'}[cvMode()];try{localStorage.setItem('thean_cv',nx)}catch(e){}cvApply().then(()=>{redrawCall();toast(nx==='off'?'Clear voice off: the caller hears your microphone as it is':nx==='strong'?'Clear voice strong: best for noisy rooms':'Clear voice on')});return}
   if(b.hasAttribute('data-atr')){transferSheetCall();return}
   if(b.hasAttribute('data-achat')){const c=calls.find(x=>x.id===onCall.id);onCall.mini=true;redrawCall();if(c&&chats.some(x=>x.id===c.callerUid))openChat(c.callerUid);else toast('This caller has no chat yet');return}});
 function applyMic(){if(onCall&&onCall.stream)onCall.stream.getAudioTracks().forEach(t=>t.enabled=!onCall.muted&&!onCall.hold)}
@@ -972,7 +1013,7 @@ function applySpk(){if(!onCall)return;if(onCall.au)onCall.au.muted=!!onCall.hold
   if(onCall.remote){try{const a=audioCtx();if(!onCall.rg){onCall.rg=a.createGain();a.createMediaStreamSource(onCall.remote).connect(onCall.rg);onCall.rg.connect(a.destination)}onCall.rg.gain.value=onCall.spk&&!onCall.hold?1.6:0}catch(e){}}}
 async function answer(id){if(onCall){toast('Finish your current call first');return}
   if(!navigator.mediaDevices||!window.RTCPeerConnection){toast('This browser cannot take calls. Use Chrome or Safari.');return}
-  let stream;try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}})}catch(e){toast('Allow the microphone for this page to answer calls');return}
+  let stream;try{stream=await navigator.mediaDevices.getUserMedia(MIC).catch(()=>navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}}))}catch(e){toast('Allow the microphone for this page to answer calls');return}
   if(ringT){clearInterval(ringT);ringT=null}
   let r;try{r=await DB.tx('calls/'+id+'/status',cur=>(cur==='ringing'||cur==='transfer')?'active':undefined)}catch(e){r={committed:false}}
   if(!r.committed||r.val!=='active'){stream.getTracks().forEach(t=>t.stop());toast('This call was already answered or ended');drawIncoming();return}
@@ -981,7 +1022,7 @@ async function answer(id){if(onCall){toast('Finish your current call first');ret
   await DB.update('calls/'+id,up).catch(()=>{});
   await loadSite();const cfgI=await iceServersFor((SITE.S&&SITE.S.call)||{});
   const pc=new RTCPeerConnection(cfgI);onCall={id,pc,stream,leg,muted:false,spk:false,hold:false,seen:{},unsub:[]};
-  stream.getTracks().forEach(t=>pc.addTrack(t,stream));
+  stream.getTracks().forEach(t=>{onCall.sender=pc.addTrack(t,stream)});onCall.sendStream=stream;await cvApply();
   const au=document.createElement('audio');au.autoplay=true;au.setAttribute('playsinline','');document.body.appendChild(au);onCall.au=au;
   pc.ontrack=e=>{onCall&&(onCall.remote=e.streams[0]);au.srcObject=e.streams[0];au.play().catch(()=>{});applySpk()};
   const L='calls/'+id+'/sig/'+leg;
@@ -992,12 +1033,12 @@ async function answer(id){if(onCall){toast('Finish your current call first');ret
   redrawCall();
   let done=false;
   onCall.unsub.push(DB.on(L+'/offer',async v=>{if(!v||done||!onCall||onCall.pc!==pc)return;done=true;
-    try{await pc.setRemoteDescription(v);const ans=await pc.createAnswer();await pc.setLocalDescription(ans);await DB.update(L,{answer:{type:ans.type,sdp:ans.sdp}})}catch(e){toast('Could not connect the call: '+(e.code||e.message));hangUp(true)}}));
+    try{await pc.setRemoteDescription(v);const ans=await pc.createAnswer();ans.sdp=ans.sdp.replace(/(a=fmtp:\d+ [^\r\n]*minptime=10[^\r\n]*)/g,m=>m.indexOf('useinbandfec')<0?m+';useinbandfec=1':m);await pc.setLocalDescription(ans);cvTune(pc);await DB.update(L,{answer:{type:ans.type,sdp:ans.sdp}})}catch(e){toast('Could not connect the call: '+(e.code||e.message));hangUp(true)}}));
   onCall.unsub.push(DB.on(L+'/cc',v=>{if(!v||!onCall||onCall.pc!==pc)return;Object.keys(v).forEach(k=>{if(onCall.seen[k])return;onCall.seen[k]=1;pc.addIceCandidate(v[k]).catch(()=>{})})}));
   setTimeout(()=>{if(onCall&&onCall.pc===pc&&!done){toast('The caller did not connect');hangUp(true)}},25000)}
 function endLocal(){const c=onCall;onCall=null;if(!c)return 0;
   clearInterval(c.tick);c.unsub.forEach(u=>{try{u()}catch(e){}});
-  try{c.pc.close()}catch(e){}try{c.stream.getTracks().forEach(t=>t.stop())}catch(e){}try{c.au.remove()}catch(e){}try{c.rg&&c.rg.disconnect()}catch(e){}
+  cvFree(c);try{c.pc.close()}catch(e){}try{c.stream.getTracks().forEach(t=>t.stop())}catch(e){}try{c.au.remove()}catch(e){}try{c.rg&&c.rg.disconnect()}catch(e){}
   return c.t0?Math.round((Date.now()-c.t0)/1000):0}
 async function hangUp(byMe,why){if(!onCall)return;const id=onCall.id;if(onCall.rec)await stopRec();const dur=endLocal();
   if(byMe)await DB.update('calls/'+id,{status:'ended',endedAt:TS,endedBy:'agent',duration:dur}).catch(()=>{});
@@ -1015,7 +1056,7 @@ async function transferSheetCall(){let ag={};try{ag=await DB.get('agents')||{}}c
     endLocal();redrawCall();toast('Transferred to '+(to==='*'?'any available agent':((ag[to]&&ag[to].name)||'agent')))})}
 /* record */
 async function startRec(){if(!onCall)return;if(!window.MediaRecorder){toast('Recording is not supported in this browser');return}
-  try{const a=audioCtx(),dest=a.createMediaStreamDestination();a.createMediaStreamSource(onCall.stream).connect(dest);if(onCall.remote)a.createMediaStreamSource(onCall.remote).connect(dest);
+  try{const a=audioCtx(),dest=a.createMediaStreamDestination();a.createMediaStreamSource(onCall.sendStream||onCall.stream).connect(dest);if(onCall.remote)a.createMediaStreamSource(onCall.remote).connect(dest);
     const mt=['audio/webm;codecs=opus','audio/mp4','audio/webm'].filter(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))[0];
     const mr=new MediaRecorder(dest.stream,mt?{mimeType:mt}:undefined),ch=[];mr.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};mr.start(1000);
     onCall.rec={mr,ch,type:mr.mimeType||mt||'audio/webm',t0:Date.now(),id:onCall.id};redrawCall();toast('Recording started')}catch(e){toast('Could not start recording')}}
