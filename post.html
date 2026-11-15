@@ -71,6 +71,17 @@ textarea{min-height:170px;resize:vertical;line-height:1.5}
 .ph.off img{opacity:.28}
 .ph.off .n{background:rgba(255,255,255,.85);color:#1d2328}
 .sh4{margin:18px 0 4px;font-size:1rem}
+.dests{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.dest{display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 13px;font:inherit;font-size:.86rem;font-weight:600;cursor:pointer}
+.dest i{width:16px;height:16px;border-radius:50%;border:2px solid var(--line);display:inline-block;flex:none}
+.dest.on{border-color:var(--ok);background:var(--okbg);color:var(--ok)}
+.dest.on i{border-color:var(--ok);background:var(--ok);box-shadow:inset 0 0 0 2.5px var(--okbg)}
+.dest.off{opacity:.45}
+.dest small{font-weight:500;opacity:.8}
+.res{display:grid;gap:6px;margin-top:4px}
+.res div{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.9rem}
+.res b{font-weight:600}.res .ok{color:var(--ok)}.res .bad{color:var(--bad)}.res .wait{color:var(--muted)}
+
 .tg{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:.92rem}
 .tg:first-of-type{border-top:0}
 .sw{position:relative;width:46px;height:28px;flex:none}
@@ -134,7 +145,9 @@ summary{cursor:pointer;font-weight:600;font-size:.92rem}
     <h2 data-t="step2"></h2>
     <textarea id="cap" aria-label="Caption" data-tph="capPh"></textarea>
     <div class="row" style="margin-top:8px;justify-content:space-between"><button class="btn soft sm" id="copyCap" data-t="copyCap"></button><button class="link" data-open-settings data-t="capOpts"></button></div>
-    <div class="seg" style="margin-top:14px"><button data-when="now" class="on" data-t="now"></button><button data-when="later" data-t="later"></button></div>
+    <p class="note" id="destSum" style="margin-top:10px"></p>
+    <p class="note" id="schedNote" hidden data-t="schedOnlyFb"></p>
+    <div class="seg" style="margin-top:12px"><button data-when="now" class="on" data-t="now"></button><button data-when="later" data-t="later"></button></div>
     <div id="laterBox" hidden>
       <label class="f" for="at" data-t="whenLabel"></label>
       <input type="datetime-local" id="at">
@@ -165,11 +178,25 @@ summary{cursor:pointer;font-weight:600;font-size:.92rem}
 <div class="modal" id="settings" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="setTitle">
     <div class="hd"><h3 id="setTitle" data-t="settings"></h3><button class="ib" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-    <p class="sub" style="color:var(--muted);font-size:.86rem" data-t="setSub"></p>
+    <h4 class="sh4" style="margin-top:6px" data-t="postTo"></h4>
+    <div class="dests" id="dests" style="margin-top:6px"></div>
+    <p class="sub" style="color:var(--muted);font-size:.86rem;margin-top:16px" data-t="setSub"></p>
     <label class="f" for="tok" data-t="tokLabel"></label>
     <div class="row"><input type="password" id="tok" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="EAA..."><button class="btn soft sm" id="tokShow" data-t="show"></button></div>
     <div class="row" style="margin-top:10px"><button class="btn sm" id="tokCheck" data-t="checkSave"></button><button class="btn soft sm" id="tokForget" data-t="forget"></button></div>
     <div id="m4"></div>
+    <h4 class="sh4">Instagram</h4>
+    <p class="note" style="margin-top:0" data-t="igSub"></p>
+    <div class="row"><button class="btn sm" id="igCheck" data-t="igConnect"></button><button class="btn soft sm" id="igForget" data-t="forget"></button></div>
+    <div id="m5"></div>
+    <h4 class="sh4">Telegram</h4>
+    <p class="note" style="margin-top:0" data-t="tgSub"></p>
+    <label class="f" for="tgTok" data-t="tgTokLabel"></label>
+    <div class="row"><input type="password" id="tgTok" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="123456789:AA..."><button class="btn soft sm" id="tgShow" data-t="show"></button></div>
+    <label class="f" for="tgChat" data-t="tgChatLabel"></label>
+    <input type="text" id="tgChat" autocapitalize="off" spellcheck="false" placeholder="@tg_thean">
+    <div class="row" style="margin-top:10px"><button class="btn sm" id="tgCheck" data-t="checkSave"></button><button class="btn soft sm" id="tgForget" data-t="forget"></button></div>
+    <div id="m6"></div>
     <h4 class="sh4" data-t="capSet"></h4>
     <p class="note" style="margin-top:0" data-t="capSetSub"></p>
     <div class="tg"><span data-t="keepText"></span><label class="sw"><input type="checkbox" id="oText" checked><span></span></label></div>
@@ -191,6 +218,10 @@ summary{cursor:pointer;font-weight:600;font-size:.92rem}
       <summary data-t="guideTitle"></summary>
       <ol class="steps" id="guide"></ol>
     </details>
+    <details>
+      <summary data-t="tgGuideTitle"></summary>
+      <ol class="steps" id="tgGuide"></ol>
+    </details>
     <div class="row" style="margin-top:16px"><button class="btn wide" data-close data-t="done"></button></div>
   </div>
 </div>
@@ -204,10 +235,10 @@ var T={
   orFiles:'Or choose a video or photos from this phone',loading:'Getting the post…',gotVideo:'Video ready.',gotPhotos:'{n} photos ready. Tap a photo to leave it out.',
   badLink:'Paste a TikTok link first.',fetchFail:'Could not get this post. Check the link is public, then try again in a minute.',captionOnly:'Could not get the video file, but the caption was copied. You can choose the video from this phone.',
   selAll:'Select all',selNone:'Clear',selCount:'{a} of {b} photos selected',
-  step2:'2. Caption and post',capPh:'Write a caption…',capOpts:'Caption settings',capSet:'Caption',capSetSub:'Choose what goes into the caption automatically.',keepText:'Owner’s caption',keepTags:'Owner’s hashtags',credit:'Credit the owner (@username)',myTags:'Add my hashtags',
+  step2:'2. Caption and post',capPh:'Write a caption…',capOpts:'Settings',postTo:'Post to',postingTo:'Posting to: {d}',capSet:'Caption',capSetSub:'Choose what goes into the caption automatically.',keepText:'Owner’s caption',keepTags:'Owner’s hashtags',credit:'Credit the owner (@username)',myTags:'Add my hashtags',
   captionLabel:'Caption that will be posted',copyCap:'Copy caption',copied:'Copied',
   step3:'3. Post to your Page',now:'Post now',later:'Schedule',whenLabel:'Date and time',whenNote:'Facebook allows 15 minutes to 30 days ahead. Time is your phone’s time.',
-  postBtn:'Post to Facebook',posting:'Posting…',upPhoto:'Uploading photo {i} of {n}…',upVideo:'Sending video to Facebook…',retryCld:'Facebook could not fetch it directly. Trying through Cloudinary…',
+  postBtn:'Post',dFbPost:'Facebook',dFbStory:'Facebook Story',dIgPost:'Instagram',dIgStory:'Instagram Story',dTg:'Telegram',setupNeeded:'set up in Settings',schedOnlyFb:'Scheduling works only for Facebook posts. Stories, Instagram and Telegram are sent when you tap Post now.',noDest:'Choose at least one place to post.',stDone:'Done',stFail:'Failed',stSkip:'Skipped',stWait:'Waiting…',stWork:'Working…',open:'Open',schedSkip:'cannot be scheduled',needCld:'needs the Cloudinary backup (Settings) for files from this phone',igSub:'Your Instagram must be a Professional account linked to your Facebook Page, and your Page key must include the Instagram permissions (see the guide).',igConnect:'Connect Instagram',igOk:'Connected to Instagram: @{u}',igNone:'No Instagram account is linked to this Page yet, or the key is missing the Instagram permissions.',tgSub:'Posts go to your Telegram channel through your own bot.',tgTokLabel:'Telegram bot key (from @BotFather)',tgChatLabel:'Channel (e.g. @tg_thean)',tgOk:'Connected to {c}. The bot can post there.',tgNotAdmin:'The bot is not an admin of {c} yet. Add it as an admin with permission to post.',tgBad:'This did not work: {e}',tgGuideTitle:'How to set up Telegram',igProc:'Instagram is processing the video…',posting:'Posting…',upPhoto:'Uploading photo {i} of {n}…',upVideo:'Sending video to Facebook…',retryCld:'Facebook could not fetch it directly. Trying through Cloudinary…',
   posted:'Posted to {p}.',scheduled:'Scheduled on {p} for {d}.',openPost:'Open on Facebook',videoNote:'Facebook needs a few minutes to process a video before it appears.',
   noSel:'Select at least one photo.',noMedia:'Get a post or choose files first.',badTime:'Choose a time between 15 minutes and 30 days from now.',
   history:'Recent posts (this phone)',settings:'Settings',setSub:'Saved only on this phone. Never share the Page key or show it in a screenshot.',
@@ -215,8 +246,8 @@ var T={
   myTagsLabel:'My hashtags (added when the switch is on)',creditLabel:'Credit line',creditNote:'{user} becomes the owner’s @username, {name} their display name.',
   cldTitle:'Backup upload (Cloudinary)',cldNote:'Used only if Facebook cannot fetch a file from TikTok directly.',guideTitle:'How to get the Page key',done:'Done',
   rights:'Credit is not permission. Post other creators’ videos or photos only when you have their permission, or Facebook may remove the post or limit your Page.',
-  guide:['On a computer, open developers.facebook.com and log in with the account that manages the Thean page. Open your app (for example "Thean website").',
-   'Open Tools, then Graph API Explorer. Choose your app. Add these permissions: <code>pages_show_list</code>, <code>pages_read_engagement</code>, <code>pages_manage_posts</code>. Tap Generate Access Token and allow the Thean page.',
+  tgGuide:['In Telegram, open <b>@BotFather</b>, send <code>/newbot</code>, choose a name and a username ending in <code>bot</code>.','BotFather sends you the bot key (looks like <code>123456789:AA...</code>). Copy it.','Open your channel, tap its name, then <b>Administrators</b>, then <b>Add Admin</b>. Search your bot and allow <b>Post messages</b>.','Paste the bot key and your channel (for example <code>@tg_thean</code>) in Settings above, then tap <b>Check and save</b>.'],guide:['On a computer, open developers.facebook.com and log in with the account that manages the Thean page. Open your app (for example "Thean website").',
+   'Open Tools, then Graph API Explorer. Choose your app. Add these permissions: <code>pages_show_list</code>, <code>pages_read_engagement</code>, <code>pages_manage_posts</code>, and for Instagram also <code>instagram_basic</code>, <code>instagram_content_publish</code>, <code>business_management</code>. Tap Generate Access Token and allow the Thean page and your Instagram account.',
    'Tap the small i next to the token, then Open in Access Token Tool, then Extend Access Token. Copy the new token.',
    'Back in the Explorer, paste it in the token box, type <code>me/accounts</code> and tap Submit.',
    'Under Thean, copy the <code>access_token</code> value (starts with EAA). Paste it above and tap Check and save. This key does not expire.']},
@@ -225,10 +256,10 @@ var T={
   orFiles:'ឬជ្រើសវីដេអូ ឬរូបភាពពីទូរស័ព្ទនេះ',loading:'កំពុងយកប៉ុស្តិ៍…',gotVideo:'វីដេអូរួចរាល់។',gotPhotos:'រូបភាព {n} រួចរាល់។ ចុចលើរូបដើម្បីដកចេញ។',
   badLink:'សូមបិទភ្ជាប់តំណ TikTok ជាមុនសិន។',fetchFail:'មិនអាចយកប៉ុស្តិ៍នេះបានទេ។ សូមពិនិត្យថាតំណជាសាធារណៈ រួចព្យាយាមម្តងទៀតក្នុងមួយនាទី។',captionOnly:'មិនអាចយកឯកសារវីដេអូបាន ប៉ុន្តែបានចម្លងចំណងជើងហើយ។ អ្នកអាចជ្រើសវីដេអូពីទូរស័ព្ទនេះ។',
   selAll:'ជ្រើសទាំងអស់',selNone:'សម្អាត',selCount:'បានជ្រើស {a} ក្នុងចំណោម {b} រូប',
-  step2:'២. ចំណងជើង និងបង្ហោះ',capPh:'សរសេរចំណងជើង…',capOpts:'ការកំណត់ចំណងជើង',capSet:'ចំណងជើង',capSetSub:'ជ្រើសរើសអ្វីដែលនឹងដាក់ក្នុងចំណងជើងដោយស្វ័យប្រវត្តិ។',step2Sub:'បំពេញពីប៉ុស្តិ៍របស់ម្ចាស់។ ការបិទ/បើកកុងតាក់នឹងបង្កើតចំណងជើងឡើងវិញ។',keepText:'ចំណងជើងរបស់ម្ចាស់',keepTags:'ហាស់ថាក់របស់ម្ចាស់',credit:'ផ្តល់កិត្តិយសដល់ម្ចាស់ (@username)',myTags:'បន្ថែមហាស់ថាក់របស់ខ្ញុំ',
+  step2:'២. ចំណងជើង និងបង្ហោះ',capPh:'សរសេរចំណងជើង…',capOpts:'ការកំណត់',postTo:'បង្ហោះទៅ',postingTo:'នឹងបង្ហោះទៅ៖ {d}',capSet:'ចំណងជើង',capSetSub:'ជ្រើសរើសអ្វីដែលនឹងដាក់ក្នុងចំណងជើងដោយស្វ័យប្រវត្តិ។',step2Sub:'បំពេញពីប៉ុស្តិ៍របស់ម្ចាស់។ ការបិទ/បើកកុងតាក់នឹងបង្កើតចំណងជើងឡើងវិញ។',keepText:'ចំណងជើងរបស់ម្ចាស់',keepTags:'ហាស់ថាក់របស់ម្ចាស់',credit:'ផ្តល់កិត្តិយសដល់ម្ចាស់ (@username)',myTags:'បន្ថែមហាស់ថាក់របស់ខ្ញុំ',
   captionLabel:'ចំណងជើងដែលនឹងបង្ហោះ',copyCap:'ចម្លងចំណងជើង',copied:'បានចម្លង',
   step3:'៣. បង្ហោះទៅទំព័ររបស់អ្នក',now:'បង្ហោះឥឡូវ',later:'កំណត់ពេល',whenLabel:'កាលបរិច្ឆេទ និងម៉ោង',whenNote:'Facebook អនុញ្ញាតពី ១៥ នាទី ដល់ ៣០ ថ្ងៃខាងមុខ។ ម៉ោងតាមទូរស័ព្ទរបស់អ្នក។',
-  postBtn:'បង្ហោះទៅ Facebook',posting:'កំពុងបង្ហោះ…',upPhoto:'កំពុងផ្ទុករូបទី {i} ក្នុងចំណោម {n}…',upVideo:'កំពុងផ្ញើវីដេអូទៅ Facebook…',retryCld:'Facebook មិនអាចយកដោយផ្ទាល់បានទេ។ កំពុងព្យាយាមតាម Cloudinary…',
+  postBtn:'បង្ហោះ',dFbPost:'Facebook',dFbStory:'Facebook Story',dIgPost:'Instagram',dIgStory:'Instagram Story',dTg:'Telegram',setupNeeded:'កំណត់នៅក្នុងការកំណត់',schedOnlyFb:'ការកំណត់ពេលអាចប្រើបានតែសម្រាប់ប៉ុស្តិ៍ Facebook ប៉ុណ្ណោះ។ Story, Instagram និង Telegram នឹងផ្ញើនៅពេលអ្នកចុច បង្ហោះឥឡូវ។',noDest:'សូមជ្រើសកន្លែងបង្ហោះយ៉ាងហោចណាស់មួយ។',stDone:'រួចរាល់',stFail:'បរាជ័យ',stSkip:'រំលង',stWait:'កំពុងរង់ចាំ…',stWork:'កំពុងដំណើរការ…',open:'បើក',schedSkip:'មិនអាចកំណត់ពេលបានទេ',needCld:'ត្រូវការការផ្ទុកបម្រុង Cloudinary (ការកំណត់) សម្រាប់ឯកសារពីទូរស័ព្ទនេះ',igSub:'Instagram របស់អ្នកត្រូវតែជាគណនី Professional ដែលភ្ជាប់ជាមួយទំព័រ Facebook ហើយកូនសោទំព័រត្រូវមានការអនុញ្ញាត Instagram (មើលការណែនាំ)។',igConnect:'ភ្ជាប់ Instagram',igOk:'បានភ្ជាប់ទៅ Instagram៖ @{u}',igNone:'មិនទាន់មានគណនី Instagram ភ្ជាប់ជាមួយទំព័រនេះ ឬកូនសោខ្វះការអនុញ្ញាត Instagram។',tgSub:'ប៉ុស្តិ៍នឹងទៅកាន់ឆានែល Telegram របស់អ្នក តាមរយៈ bot ផ្ទាល់ខ្លួន។',tgTokLabel:'កូនសោ bot Telegram (ពី @BotFather)',tgChatLabel:'ឆានែល (ឧ. @tg_thean)',tgOk:'បានភ្ជាប់ទៅ {c}។ bot អាចបង្ហោះនៅទីនោះបាន។',tgNotAdmin:'bot មិនទាន់ជាអ្នកគ្រប់គ្រងរបស់ {c} នៅឡើយទេ។ សូមបន្ថែមវាជាអ្នកគ្រប់គ្រង ដែលមានសិទ្ធិបង្ហោះ។',tgBad:'មិនដំណើរការ៖ {e}',tgGuideTitle:'របៀបរៀបចំ Telegram',igProc:'Instagram កំពុងដំណើរការវីដេអូ…',posting:'កំពុងបង្ហោះ…',upPhoto:'កំពុងផ្ទុករូបទី {i} ក្នុងចំណោម {n}…',upVideo:'កំពុងផ្ញើវីដេអូទៅ Facebook…',retryCld:'Facebook មិនអាចយកដោយផ្ទាល់បានទេ។ កំពុងព្យាយាមតាម Cloudinary…',
   posted:'បានបង្ហោះទៅ {p}។',scheduled:'បានកំណត់ពេលនៅ {p} សម្រាប់ {d}។',openPost:'បើកនៅលើ Facebook',videoNote:'Facebook ត្រូវការពីរបីនាទីដើម្បីដំណើរការវីដេអូ មុនពេលវាបង្ហាញ។',
   noSel:'សូមជ្រើសរូបភាពយ៉ាងហោចណាស់មួយ។',noMedia:'សូមយកប៉ុស្តិ៍ ឬជ្រើសឯកសារជាមុនសិន។',badTime:'សូមជ្រើសម៉ោងចន្លោះ ១៥ នាទី ដល់ ៣០ ថ្ងៃពីឥឡូវ។',
   history:'ប៉ុស្តិ៍ថ្មីៗ (ទូរស័ព្ទនេះ)',settings:'ការកំណត់',setSub:'រក្សាទុកតែនៅលើទូរស័ព្ទនេះប៉ុណ្ណោះ។ កុំចែករំលែកកូនសោទំព័រ ឬបង្ហាញវាក្នុងរូបថតអេក្រង់។',
@@ -236,8 +267,8 @@ var T={
   myTagsLabel:'ហាស់ថាក់របស់ខ្ញុំ (បន្ថែមពេលបើកកុងតាក់)',creditLabel:'បន្ទាត់ផ្តល់កិត្តិយស',creditNote:'{user} ក្លាយជា @username របស់ម្ចាស់ ហើយ {name} ជាឈ្មោះបង្ហាញរបស់គេ។',
   cldTitle:'ការផ្ទុកបម្រុង (Cloudinary)',cldNote:'ប្រើតែពេល Facebook មិនអាចយកឯកសារពី TikTok ដោយផ្ទាល់ប៉ុណ្ណោះ។',guideTitle:'របៀបយកកូនសោទំព័រ',done:'រួចរាល់',
   rights:'ការផ្តល់កិត្តិយសមិនមែនជាការអនុញ្ញាតទេ។ សូមបង្ហោះវីដេអូ ឬរូបភាពរបស់អ្នកបង្កើតផ្សេង តែពេលមានការអនុញ្ញាតពីពួកគេ បើមិនដូច្នោះទេ Facebook អាចលុបប៉ុស្តិ៍ ឬកំណត់ទំព័ររបស់អ្នក។',
-  guide:['នៅលើកុំព្យូទ័រ បើក developers.facebook.com ហើយចូលដោយគណនីដែលគ្រប់គ្រងទំព័រ Thean។ បើកកម្មវិធីរបស់អ្នក (ឧ. "Thean website")។',
-   'បើក Tools រួច Graph API Explorer។ ជ្រើសកម្មវិធីរបស់អ្នក។ បន្ថែមការអនុញ្ញាត៖ <code>pages_show_list</code>, <code>pages_read_engagement</code>, <code>pages_manage_posts</code>។ ចុច Generate Access Token ហើយអនុញ្ញាតទំព័រ Thean។',
+  tgGuide:['ក្នុង Telegram បើក <b>@BotFather</b> ផ្ញើ <code>/newbot</code> ជ្រើសឈ្មោះ និង username ដែលបញ្ចប់ដោយ <code>bot</code>។','BotFather ផ្ញើកូនសោ bot មកអ្នក (មើលទៅដូចជា <code>123456789:AA...</code>)។ ចម្លងវា។','បើកឆានែលរបស់អ្នក ចុចឈ្មោះ រួច <b>Administrators</b> រួច <b>Add Admin</b>។ ស្វែងរក bot របស់អ្នក ហើយអនុញ្ញាត <b>Post messages</b>។','បិទភ្ជាប់កូនសោ bot និងឆានែល (ឧ. <code>@tg_thean</code>) ក្នុងការកំណត់ខាងលើ រួចចុច <b>ពិនិត្យ និងរក្សាទុក</b>។'],guide:['នៅលើកុំព្យូទ័រ បើក developers.facebook.com ហើយចូលដោយគណនីដែលគ្រប់គ្រងទំព័រ Thean។ បើកកម្មវិធីរបស់អ្នក (ឧ. "Thean website")។',
+   'បើក Tools រួច Graph API Explorer។ ជ្រើសកម្មវិធីរបស់អ្នក។ បន្ថែមការអនុញ្ញាត៖ <code>pages_show_list</code>, <code>pages_read_engagement</code>, <code>pages_manage_posts</code> ហើយសម្រាប់ Instagram ក៏ <code>instagram_basic</code>, <code>instagram_content_publish</code>, <code>business_management</code>។ ចុច Generate Access Token ហើយអនុញ្ញាតទំព័រ Thean និងគណនី Instagram។',
    'ចុចអក្សរ i តូចនៅជាប់ token រួច Open in Access Token Tool រួច Extend Access Token។ ចម្លង token ថ្មី។',
    'ត្រឡប់ទៅ Explorer វិញ បិទភ្ជាប់វាក្នុងប្រអប់ token វាយ <code>me/accounts</code> ហើយចុច Submit។',
    'នៅក្រោម Thean ចម្លងតម្លៃ <code>access_token</code> (ចាប់ផ្តើមដោយ EAA)។ បិទភ្ជាប់ខាងលើ ហើយចុច ពិនិត្យ និងរក្សាទុក។ កូនសោនេះមិនផុតកំណត់ទេ។']}
@@ -276,7 +307,7 @@ document.addEventListener('visibilitychange',function(){if(!document.hidden&&C.t
 function applyLang(){drawKey();document.documentElement.lang=C.lang;document.body.classList.toggle('km',C.lang==='km');
   document.querySelectorAll('[data-t]').forEach(function(el){el.textContent=t(el.getAttribute('data-t'))});document.querySelectorAll('[data-tph]').forEach(function(el){el.placeholder=t(el.getAttribute('data-tph'))});
   document.querySelectorAll('[data-lang]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-lang')===C.lang)});
-  $('guide').innerHTML=t('guide').map(function(s){return '<li>'+s+'</li>'}).join('');
+  $('guide').innerHTML=t('guide').map(function(s){return '<li>'+s+'</li>'}).join('');$('tgGuide').innerHTML=t('tgGuide').map(function(s){return '<li>'+s+'</li>'}).join('');drawDests();
   if(ST.kind==='photos')countSel();
   $('needSetup').hidden=!!C.token;drawHist()}
 document.querySelectorAll('[data-lang]').forEach(function(b){b.onclick=function(){C.lang=b.getAttribute('data-lang');save();applyLang()}});
@@ -370,7 +401,7 @@ $('copyCap').onclick=function(){var b=this,v=$('cap').value;function done(){b.te
 
 /* ---------- when ---------- */
 var WHEN='now';
-document.querySelectorAll('[data-when]').forEach(function(b){b.onclick=function(){WHEN=b.getAttribute('data-when');document.querySelectorAll('[data-when]').forEach(function(x){x.classList.toggle('on',x===b)});$('laterBox').hidden=WHEN!=='later';
+document.querySelectorAll('[data-when]').forEach(function(b){b.onclick=function(){WHEN=b.getAttribute('data-when');document.querySelectorAll('[data-when]').forEach(function(x){x.classList.toggle('on',x===b)});$('laterBox').hidden=WHEN!=='later';drawDests();
   if(WHEN==='later'&&!$('at').value){var d=new Date(Date.now()+60*60000);d.setMinutes(0,0,0);d.setHours(d.getHours()+1);$('at').value=localISO(d)}}});
 function localISO(d){function p(n){return String(n).padStart(2,'0')}return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes())}
 
@@ -383,42 +414,110 @@ function cldUp(u){if(!C.cld||!C.pre)return Promise.reject(new Error('no backup')
   return fetch('https://api.cloudinary.com/v1_1/'+encodeURIComponent(C.cld)+'/auto/upload',{method:'POST',body:fd}).then(function(r){return r.json()}).then(function(j){if(!j.secure_url)throw new Error((j.error&&j.error.message)||'upload failed');return j.secure_url})}
 function prog(f){$('bar').hidden=f==null;$('bar').firstChild.style.width=Math.round((f||0)*100)+'%'}
 
+/* ---------- where to post ---------- */
+C.dest=C.dest||{fb:true};
+var DESTS=[['fb','dFbPost'],['fbs','dFbStory'],['ig','dIgPost'],['igs','dIgStory'],['tg','dTg']];
+function destReady(k){if(k==='ig'||k==='igs')return !!C.igId;if(k==='tg')return !!(C.tgToken&&C.tgChat);return !!C.token}
+function drawDests(){var box=$('dests');if(!box)return;box.innerHTML=DESTS.map(function(d){var on=!!C.dest[d[0]],ready=destReady(d[0]),sk=WHEN==='later'&&d[0]!=='fb';
+  return '<button type="button" class="dest'+(on?' on':'')+(sk||!ready?' off':'')+'" data-dest="'+d[0]+'"><i></i>'+esc(t(d[1]))+(ready?'':' <small>· '+esc(t('setupNeeded'))+'</small>')+'</button>'}).join('');
+  var on=DESTS.filter(function(d){return C.dest[d[0]]&&destReady(d[0])&&!(WHEN==='later'&&d[0]!=='fb')}).map(function(d){return t(d[1])});$('destSum').textContent=on.length?t('postingTo',{d:on.join(', ')}):t('noDest');
+  $('schedNote').hidden=!(WHEN==='later'&&DESTS.some(function(d){return d[0]!=='fb'&&C.dest[d[0]]}))}
+document.addEventListener('click',function(e){var b=e.target.closest('[data-dest]');if(!b)return;var k=b.getAttribute('data-dest');if(!destReady(k)){openSettings();return}C.dest[k]=!C.dest[k];save();drawDests()});
+
+/* ---------- media helpers ---------- */
+function mediaList(){var out=[];
+  if(ST.kind==='video')out.push({type:'video',url:ST.video});
+  else if(ST.kind==='fvideo')out.push({type:'video',file:ST.files[0]});
+  else ST.sel.forEach(function(v,i){if(v)out.push(ST.kind==='fphotos'?{type:'photo',file:ST.files[i]}:{type:'photo',url:ST.images[i]})});
+  return out}
+function asJpg(u){return u.replace(/\.(webp|png|heic|heif|gif|avif|jpeg)(\?.*)?$/i,'.jpg')}
+function pubUrl(it,needJpg){if(it.cld)return Promise.resolve(needJpg&&it.type==='photo'?asJpg(it.cld):it.cld);
+  if(!C.cld||!C.pre){if(it.url)return Promise.resolve(it.url);return Promise.reject(new Error(t('needCld')))}
+  return cldUp(it.file||it.url).then(function(u){it.cld=u;return needJpg&&it.type==='photo'?asJpg(u):u}).catch(function(e){if(it.url)return it.url;throw e})}
+function wait(ms){return new Promise(function(r){setTimeout(r,ms)})}
+
+/* ---------- Facebook post ---------- */
+function fbPost(cap,sched,it){var pub=sched?{published:'false',scheduled_publish_time:String(sched)}:{};
+  if(ST.kind==='video')return gcall(C.pageId+'/videos',Object.assign({file_url:ST.video,description:cap},pub)).catch(function(){return pubUrl(it[0]).then(function(u){return gcall(C.pageId+'/videos',Object.assign({file_url:u,description:cap},pub))})}).then(function(j){return {url:'https://www.facebook.com/'+j.id,video:true}});
+  if(ST.kind==='fvideo')return gcall(C.pageId+'/videos',Object.assign({source:ST.files[0],description:cap},pub),'https://graph-video.facebook.com/').then(function(j){return {url:'https://www.facebook.com/'+j.id,video:true}});
+  var ids=[];return it.reduce(function(p,x){return p.then(function(){return fbPhoto(x,sched).then(function(id){ids.push(id)})})},Promise.resolve())
+    .then(function(){var params=Object.assign({message:cap},pub);ids.forEach(function(id,i){params['attached_media['+i+']']=JSON.stringify({media_fbid:id})});return gcall(C.pageId+'/feed',params)})
+    .then(function(j){return {url:'https://www.facebook.com/'+j.id}})}
+function fbPhoto(x,sched){var base={published:'false'};if(sched)base.temporary='true';
+  if(x.file)return gcall(C.pageId+'/photos',Object.assign({source:x.file},base)).then(function(j){return j.id});
+  return gcall(C.pageId+'/photos',Object.assign({url:x.url},base)).catch(function(){return pubUrl(x).then(function(u){return gcall(C.pageId+'/photos',Object.assign({url:u},base))})}).then(function(j){return j.id})}
+
+/* ---------- Facebook Story ---------- */
+function fbStory(it){
+  if(it[0].type==='video'){var v=it[0];
+    return gcall(C.pageId+'/video_stories',{upload_phase:'start'}).then(function(st){
+      var h={Authorization:'OAuth '+C.token},body=null;
+      var up=v.file?Promise.resolve(null):pubUrl(v).then(function(u){h.file_url=u});
+      return up.then(function(){if(v.file){h.offset='0';h.file_size=String(v.file.size);body=v.file}
+        return fetch(st.upload_url,{method:'POST',headers:h,body:body}).then(function(r){return r.json().catch(function(){return {}})}).then(function(j){if(j&&j.error)throw new Error(j.error.message||'upload failed')})})
+      .then(function(){return gcall(C.pageId+'/video_stories',{upload_phase:'finish',video_id:st.video_id})})}).then(function(){return {url:'https://www.facebook.com/'+C.pageId}})}
+  return it.slice(0,10).reduce(function(p,x){return p.then(function(){return fbPhoto(x,null).then(function(id){return gcall(C.pageId+'/photo_stories',{photo_id:id})})})},Promise.resolve()).then(function(){return {url:'https://www.facebook.com/'+C.pageId}})}
+
+/* ---------- Instagram ---------- */
+function igWait(id,onMsg){var tries=0;return (function loop(){return gget(id+'?fields=status_code,status').then(function(j){
+  if(j.status_code==='FINISHED')return;if(j.status_code==='ERROR'||j.status_code==='EXPIRED')throw new Error('Instagram could not use this file: '+(j.status||j.status_code));
+  if(++tries>60)throw new Error('Instagram is taking too long to process the video');if(onMsg&&tries===2)onMsg();return wait(4000).then(loop)})})()}
+function igMake(params,onMsg){return gcall(C.igId+'/media',params).then(function(j){return igWait(j.id,onMsg).then(function(){return j.id})})}
+function igPublish(id){return gcall(C.igId+'/media_publish',{creation_id:id}).then(function(j){return gget(j.id+'?fields=permalink').then(function(x){return x.permalink||''}).catch(function(){return ''})})}
+function igCap(cap){var tags=0;cap=cap.replace(/#[^\s#]+/g,function(m){tags++;return tags>30?'':m});return cap.slice(0,2200)}
+function igPost(cap,it,onMsg){cap=igCap(cap);var list=it.slice(0,10);
+  if(list.length===1){var x=list[0];return pubUrl(x,true).then(function(u){return igMake(x.type==='video'?{media_type:'REELS',video_url:u,caption:cap,share_to_feed:'true'}:{image_url:u,caption:cap},onMsg)}).then(igPublish).then(function(u){return {url:u}})}
+  var kids=[];return list.reduce(function(p,x){return p.then(function(){return pubUrl(x,true).then(function(u){return igMake(x.type==='video'?{media_type:'VIDEO',video_url:u,is_carousel_item:'true'}:{image_url:u,is_carousel_item:'true'},onMsg)}).then(function(id){kids.push(id)})})},Promise.resolve())
+    .then(function(){return igMake({media_type:'CAROUSEL',children:kids.join(','),caption:cap})}).then(igPublish).then(function(u){return {url:u}})}
+function igStory(it,onMsg){return it.slice(0,10).reduce(function(p,x){return p.then(function(){return pubUrl(x,true).then(function(u){return igMake(x.type==='video'?{media_type:'STORIES',video_url:u}:{media_type:'STORIES',image_url:u},onMsg)}).then(igPublish)})},Promise.resolve())
+  .then(function(){return {url:C.igUser?'https://www.instagram.com/stories/'+C.igUser+'/':''}})}
+
+/* ---------- Telegram ---------- */
+function tgCall(m,fd){return fetch('https://api.telegram.org/bot'+C.tgToken+'/'+m,{method:'POST',body:fd}).then(function(r){return r.json()}).then(function(j){if(!j.ok)throw new Error(j.description||'Telegram error');return j.result})}
+function tgLink(msg){var c=String(C.tgChat||'');return c.charAt(0)==='@'&&msg&&msg.message_id?'https://t.me/'+c.slice(1)+'/'+msg.message_id:''}
+function tgPost(cap,it){var long=cap.length>1024,capOne=long?'':cap,first=null;
+  function fd(o){var f=new FormData();f.append('chat_id',C.tgChat);Object.keys(o).forEach(function(k){if(o[k]!=null&&o[k]!=='')f.append(k,o[k])});return f}
+  var job;
+  if(it.length===1){var x=it[0],m=x.type==='video'?'sendVideo':'sendPhoto',key=x.type==='video'?'video':'photo';
+    job=(x.file?Promise.resolve(x.file):pubUrl(x).catch(function(){return x.url})).then(function(src){var o={caption:capOne};o[key]=src;if(x.type==='video')o.supports_streaming='true';
+      return tgCall(m,fd(o)).catch(function(e){if(!x.file&&x.url&&src!==x.url){o[key]=x.url;return tgCall(m,fd(o))}throw e})}).then(function(r){first=r})}
+  else{var chunks=[];for(var i=0;i<it.length;i+=10)chunks.push(it.slice(i,i+10));
+    job=chunks.reduce(function(p,ch,ci){return p.then(function(){var f=new FormData();f.append('chat_id',C.tgChat);
+      return Promise.all(ch.map(function(x,k){return x.file?Promise.resolve('attach://f'+k):pubUrl(x).catch(function(){return x.url})})).then(function(srcs){
+        var media=ch.map(function(x,k){var o={type:x.type==='video'?'video':'photo',media:srcs[k]};if(x.file)f.append('f'+k,x.file);if(ci===0&&k===0&&capOne)o.caption=capOne;return o});
+        f.append('media',JSON.stringify(media));return tgCall('sendMediaGroup',f)}).then(function(r){if(!first)first=r[0]})})},Promise.resolve())}
+  return job.then(function(){if(long)return tgCall('sendMessage',fd({text:cap.slice(0,4096)}))}).then(function(){return {url:tgLink(first)}})}
+
+/* ---------- post everywhere ---------- */
+function drawRes(R){$('m3').innerHTML='<div class="msg info"><div class="res">'+R.map(function(r){var cls=r.st==='done'?'ok':r.st==='fail'?'bad':'wait',txt=r.st==='done'?t('stDone'):r.st==='fail'?t('stFail')+(r.err?': '+r.err:''):r.st==='skip'?t('stSkip')+(r.err?': '+r.err:''):r.st==='work'?(r.note||t('stWork')):t('stWait');
+  return '<div><span><b>'+esc(t(r.label))+'</b> · <span class="'+cls+'">'+esc(txt)+'</span></span>'+(r.url?'<a class="btn sm soft" target="_blank" rel="noopener" href="'+esc(r.url)+'">'+esc(t('open'))+'</a>':'')+'</div>'}).join('')+'</div></div>'}
 $('post').onclick=function(){
-  if(!C.token){openSettings();return}
   var cap=$('cap').value,sched=null;
   if(WHEN==='later'){var d=new Date($('at').value),s=Math.floor(d.getTime()/1000),now=Date.now()/1000;if(!$('at').value||isNaN(s)||s<now+15*60||s>now+30*86400){msg('m3','bad',esc(t('badTime')));return}sched=s}
-  var pub=sched?{published:'false',scheduled_publish_time:String(sched)}:{};
-  var idx=[];ST.sel.forEach(function(v,i){if(v)idx.push(i)});
-  if(ST.kind==='photos'||ST.kind==='fphotos'){if(!idx.length){msg('m3','bad',esc(t('noSel')));return}}
+  var sel=DESTS.filter(function(x){return C.dest[x[0]]&&destReady(x[0])});
+  if(!sel.length){msg('m3','bad',esc(t('noDest')));return}
+  var it=mediaList();
+  if(ST.kind==='photos'||ST.kind==='fphotos'){if(!it.length){msg('m3','bad',esc(t('noSel')));return}}
   else if(ST.kind!=='video'&&ST.kind!=='fvideo'){msg('m3','bad',esc(t('noMedia')));return}
-  var btn=$('post');btn.disabled=true;btn.textContent=t('posting');msg('m3','','');prog(0.05);
-  var pageName=C.pageName||'Facebook',job;
-  if(ST.kind==='video'){msg('m3','info',esc(t('upVideo')));
-    job=gcall(C.pageId+'/videos',Object.assign({file_url:ST.video,description:cap},pub)).catch(function(){msg('m3','info',esc(t('retryCld')));prog(0.3);
-      return cldUp(ST.video).then(function(u){prog(0.7);return gcall(C.pageId+'/videos',Object.assign({file_url:u,description:cap},pub))})})
-      .then(function(j){return {id:j.id,video:true}})}
-  else if(ST.kind==='fvideo'){msg('m3','info',esc(t('upVideo')));
-    job=gcall(C.pageId+'/videos',Object.assign({source:ST.files[0],description:cap},pub),'https://graph-video.facebook.com/').then(function(j){return {id:j.id,video:true}})}
-  else{var ids=[],n=idx.length,k=0;
-    var one=function(i){k++;msg('m3','info',esc(t('upPhoto',{i:k,n:n})));prog(k/(n+1));
-      var base={published:'false'};if(sched)base.temporary='true';
-      if(ST.kind==='fphotos')return gcall(C.pageId+'/photos',Object.assign({source:ST.files[i]},base));
-      return gcall(C.pageId+'/photos',Object.assign({url:ST.images[i]},base)).catch(function(){return cldUp(ST.images[i]).then(function(u){return gcall(C.pageId+'/photos',Object.assign({url:u},base))})})};
-    job=idx.reduce(function(p,i){return p.then(function(){return one(i).then(function(j){ids.push(j.id)})})},Promise.resolve())
-      .then(function(){var params=Object.assign({message:cap},pub);ids.forEach(function(id,i){params['attached_media['+i+']']=JSON.stringify({media_fbid:id})});return gcall(C.pageId+'/feed',params)})
-      .then(function(j){return {id:j.id}})}
-  job.then(function(r){prog(1);var url='https://www.facebook.com/'+r.id;
-    var line=sched?t('scheduled',{p:esc(pageName),d:esc(new Date(sched*1000).toLocaleString())}):t('posted',{p:esc(pageName)});
-    msg('m3','ok',line+(r.video?' '+esc(t('videoNote')):'')+'<div style="margin-top:8px"><a class="btn sm" target="_blank" rel="noopener" href="'+esc(url)+'">'+esc(t('openPost'))+'</a></div>');
-    C.hist.unshift({u:url,c:(cap.split('\n')[0]||ST.user||'').slice(0,80),at:Date.now(),s:sched||0});C.hist=C.hist.slice(0,15);save();drawHist()})
-  .catch(function(e){msg('m3','bad',esc(e&&e.message||'Error'))})
-  .then(function(){btn.disabled=false;btn.textContent=t('postBtn');setTimeout(function(){prog(null)},800)})};
+  var btn=$('post');btn.disabled=true;btn.textContent=t('posting');prog(0.05);
+  var R=sel.map(function(x){return {k:x[0],label:x[1],st:'wait'}});drawRes(R);
+  var runs={fb:function(r){return fbPost(cap,sched,it)},fbs:function(){return fbStory(it)},ig:function(r){return igPost(cap,it,function(){r.note=t('igProc');drawRes(R)})},igs:function(r){return igStory(it,function(){r.note=t('igProc');drawRes(R)})},tg:function(){return tgPost(cap,it)}};
+  var fbUrl='';
+  R.reduce(function(p,r,i){return p.then(function(){
+    if(sched&&r.k!=='fb'){r.st='skip';r.err=t('schedSkip');drawRes(R);return}
+    r.st='work';drawRes(R);
+    return runs[r.k](r).then(function(o){r.st='done';r.url=o&&o.url||'';if(r.k==='fb')fbUrl=r.url;if(r.k==='fb'&&o&&o.video)r.note=''})
+      .catch(function(e){r.st='fail';r.err=String(e&&e.message||e).slice(0,160)})
+      .then(function(){prog((i+1)/R.length);drawRes(R)})})},Promise.resolve())
+  .then(function(){var ok=R.filter(function(r){return r.st==='done'});
+    if(ok.length){var u=fbUrl||ok[0].url||'';C.hist.unshift({u:u,c:(cap.split('\n')[0]||ST.user||'').slice(0,80),at:Date.now(),s:sched||0,d:ok.map(function(r){return r.k})});C.hist=C.hist.slice(0,15);save();drawHist()}
+    btn.disabled=false;btn.textContent=t('postBtn');setTimeout(function(){prog(null)},800)})};
 
 function drawHist(){var h=C.hist||[];$('histCard').hidden=!h.length;
-  $('hist').innerHTML=h.map(function(x){var d=new Date(x.s?x.s*1000:x.at);return '<a target="_blank" rel="noopener" href="'+esc(x.u)+'"><span>'+esc(x.c||'Post')+'</span><small>'+esc((x.s?t('later')+' · ':'')+d.toLocaleDateString()+' '+d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}))+'</small></a>'}).join('')}
+  $('hist').innerHTML=h.map(function(x){var d=new Date(x.s?x.s*1000:x.at);return '<a target="_blank" rel="noopener" href="'+esc(x.u||'#')+'"><span>'+esc(x.c||'Post')+(x.d&&x.d.length>1?' · '+x.d.length+' places':'')+'</span><small>'+esc((x.s?t('later')+' · ':'')+d.toLocaleDateString()+' '+d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}))+'</small></a>'}).join('')}
 
 /* ---------- settings ---------- */
-function openSettings(){$('tok').value=C.token||'';$('mine').value=C.mine||'';$('creditTpl').value=C.creditTpl||'';$('cld').value=C.cld||'';$('pre').value=C.pre||'';
+function openSettings(){$('tgTok').value=C.tgToken||'';$('tgChat').value=C.tgChat||'@tg_thean';msg('m5',C.igId?'ok':'',C.igId?esc(t('igOk',{u:C.igUser||''})):'');msg('m6',C.tgToken?'ok':'',C.tgToken?esc(t('tgOk',{c:C.tgTitle||C.tgChat||''})):'');$('tok').value=C.token||'';$('mine').value=C.mine||'';$('creditTpl').value=C.creditTpl||'';$('cld').value=C.cld||'';$('pre').value=C.pre||'';
   keyMsg();$('settings').hidden=false}
 function closeSettings(){C.mine=$('mine').value.trim();C.creditTpl=$('creditTpl').value.trim()||'Credit: @{user}';C.cld=$('cld').value.trim();C.pre=$('pre').value.trim();save();$('settings').hidden=true;if(!$('capCard').hidden)buildCaption()}
 $('gear').onclick=openSettings;
@@ -429,6 +528,18 @@ $('tokCheck').onclick=function(){var raw=$('tok').value.replace(/\s+/g,''),mk=ra
   var old=C.token;C.token=v;
   gget('me?fields=id,name,category').then(function(j){if(!j.category){throw {person:true,fb:true}}C.pageId=j.id;C.pageName=j.name;save();KS='ok';KTRY=0;msg('m4','ok',esc(t('tokOk',{p:j.name})));applyLang()})
   .catch(function(e){if(e&&e.fb){C.token=old;msg('m4','bad',e.person?esc(t('tokPerson')):esc(t('tokBad',{e:e.message||''})))}else{C.token=old;msg('m4','info',esc(t('kOffNote')))}})};
+$('igCheck').onclick=function(){if(!C.token||!C.pageId){msg('m5','bad',esc(t('tokEmpty')));return}
+  gget(C.pageId+'?fields=instagram_business_account{id,username}').then(function(j){var a=j.instagram_business_account;if(!a){msg('m5','bad',esc(t('igNone')));return}
+    C.igId=a.id;C.igUser=a.username||'';C.dest.ig=true;save();msg('m5','ok',esc(t('igOk',{u:C.igUser})));drawDests()}).catch(function(e){msg('m5','bad',esc(t('tokBad',{e:e&&e.message||''})))})};
+$('igForget').onclick=function(){delete C.igId;delete C.igUser;C.dest.ig=false;C.dest.igs=false;save();msg('m5','ok',esc(t('removed')));drawDests()};
+$('tgShow').onclick=function(){var p=$('tgTok').type==='password';$('tgTok').type=p?'text':'password';this.textContent=t(p?'hide':'show')};
+$('tgCheck').onclick=function(){var tok=$('tgTok').value.replace(/\s+/g,''),ch=$('tgChat').value.trim()||'@tg_thean';if(/^[A-Za-z0-9_]{5,}$/.test(ch))ch='@'+ch;ch=ch.replace(/^https?:\/\/t\.me\//,'@');
+  if(!tok){msg('m6','bad',esc(t('tokEmpty')));return}var old=[C.tgToken,C.tgChat];C.tgToken=tok;C.tgChat=ch;var f=new FormData();f.append('chat_id',ch);
+  tgCall('getMe',new FormData()).then(function(me){var g=new FormData();g.append('chat_id',ch);g.append('user_id',me.id);return tgCall('getChat',f).then(function(c){return tgCall('getChatMember',g).then(function(m){return {c:c,m:m}})})})
+  .then(function(o){var name=o.c.title||ch;if(o.m.status!=='administrator'&&o.m.status!=='creator'){msg('m6','bad',esc(t('tgNotAdmin',{c:name})));C.tgToken=old[0];C.tgChat=old[1];return}
+    C.tgTitle=name;C.dest.tg=true;save();$('tgChat').value=ch;msg('m6','ok',esc(t('tgOk',{c:name})));drawDests()})
+  .catch(function(e){C.tgToken=old[0];C.tgChat=old[1];msg('m6','bad',esc(t('tgBad',{e:e&&e.message||''})))})};
+$('tgForget').onclick=function(){delete C.tgToken;delete C.tgChat;delete C.tgTitle;C.dest.tg=false;save();$('tgTok').value='';msg('m6','ok',esc(t('removed')));drawDests()};
 $('tokForget').onclick=function(){delete C.token;delete C.pageId;delete C.pageName;save();KS='none';$('tok').value='';msg('m4','ok',esc(t('removed')));applyLang()};
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('settings').hidden)closeSettings()});
 
