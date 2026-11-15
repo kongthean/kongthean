@@ -1,0 +1,286 @@
+name: Check payments
+# Every 5 minutes: reads receipts that customers uploaded in the posting app and turns their plan on when the receipt checks out.
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: payments
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Prepare the checker
+        run: |
+          pip install --quiet google-auth requests
+          cat > /tmp/verify_pay.py <<'PY'
+          """Thean payment checker: reads receipts that customers uploaded in the posting app,
+          reads the text on each receipt (OCR), checks amount, receiver, date and transaction number,
+          then turns the plan on automatically or sends it to the team for a manual check.
+          Every result is logged in the database (pays) and posted to the customer's chat in the agent inbox."""
+          import os, re, io, json, time, hashlib, calendar, urllib.request, urllib.parse, urllib.error
+          from datetime import datetime, timezone, timedelta
+
+          KEY = os.environ.get('FIREBASE_KEY', '').strip()
+          DB = os.environ.get('DB_URL', 'https://thean-12952-default-rtdb.asia-southeast1.firebasedatabase.app').rstrip('/')
+          ONLY_CHECK = os.environ.get('ONLY_CHECK') == '1'
+          KH = timezone(timedelta(hours=7))
+          NOW = int(time.time() * 1000)
+          PK = {'fb': 'Facebook', 'fbig': 'Facebook + Instagram', 'all': 'All'}
+          MON = {'jan': 1, 'feb': 2, 'mar': 3, 'apr': 4, 'may': 5, 'jun': 6, 'jul': 7, 'aug': 8, 'sep': 9, 'oct': 10, 'nov': 11, 'dec': 12}
+
+
+          def http(url, data=None, method='GET', raw=False):
+              req = urllib.request.Request(url, method=method, data=None if data is None else json.dumps(data).encode(),
+                                           headers={'Content-Type': 'application/json', 'User-Agent': 'thean-pay-check'})
+              with urllib.request.urlopen(req, timeout=40) as r:
+                  body = r.read()
+                  return body if raw else (json.loads(body) if body else None)
+
+
+          AUTH = None
+
+
+          def db_auth():
+              if KEY.startswith('{'):
+                  from google.oauth2 import service_account
+                  import google.auth.transport.requests
+                  c = service_account.Credentials.from_service_account_info(json.loads(KEY), scopes=[
+                      'https://www.googleapis.com/auth/firebase.database', 'https://www.googleapis.com/auth/userinfo.email'])
+                  c.refresh(google.auth.transport.requests.Request())
+                  return 'access_token=' + c.token
+              return 'auth=' + urllib.parse.quote(KEY)
+
+
+          def db(path, method='GET', data=None):
+              global AUTH
+              AUTH = AUTH or db_auth()
+              return http(DB + '/' + path + '.json?' + AUTH, data, method)
+
+
+          def pending():
+              users = db('postusers') or {}
+              return users, [(uid, u) for uid, u in users.items() if isinstance(u, dict) and isinstance(u.get('req'), dict)
+                             and str(u['req'].get('img', '')).startswith('https://') and not u['req'].get('st')]
+
+
+          # ---------- reading the receipt ----------
+          def ocr(url):
+              from PIL import Image, ImageOps
+              import pytesseract
+              raw = http(url, raw=True)
+              im = Image.open(io.BytesIO(raw)).convert('L')
+              if im.width < 1400:
+                  im = im.resize((im.width * 2, im.height * 2))
+              texts = []
+              for x in (im, ImageOps.invert(im)):
+                  try:
+                      texts.append(pytesseract.image_to_string(x, config='--psm 6'))
+                  except Exception as e:
+                      print('  OCR problem:', str(e)[:120])
+              return raw, '\n'.join(texts)
+
+
+          def nums(text):
+              out = []
+              for m in re.finditer(r'(?<![\d.])(\d{1,3}(?:[,\s]\d{3})+|\d+)(?:[.,](\d{1,2}))?(?![\d])', text):
+                  whole = re.sub(r'[,\s]', '', m.group(1))
+                  try:
+                      out.append(float(whole + ('.' + m.group(2) if m.group(2) else '')))
+                  except ValueError:
+                      pass
+              return out
+
+
+          def amount_ok(text, amt, cur):
+              vals = nums(text)
+              return any(abs(v - amt) < (0.5 if cur == 'KHR' else 0.005) for v in vals)
+
+
+          def receiver_ok(text, don):
+              up = re.sub(r'\s+', ' ', text.upper())
+              words = set()
+              for k in ('khName', 'accName'):
+                  for w in re.findall(r'[A-Z]{3,}', str(don.get(k) or '').upper()):
+                      if w not in ('BANK', 'THE', 'AND', 'LTD', 'PLC', 'CO'):
+                          words.add(w)
+              if any(w in up for w in words):
+                  return True
+              digits = re.sub(r'\D', '', text)
+              acc = re.sub(r'\D', '', str(don.get('accNo') or ''))
+              if len(acc) >= 4 and acc[-4:] in digits:
+                  return True
+              bid = str(don.get('bakongId') or '').split('@')[0].upper()
+              return len(bid) >= 3 and bid in up.replace(' ', '')
+
+
+          def dates(text):
+              found = []
+              t = text.replace('\n', ' ')
+              for d, mo, y in re.findall(r'\b(\d{1,2})[/.-](\d{1,2})[/.-](20\d{2})\b', t):
+                  found.append((int(y), int(mo), int(d)))
+              for y, mo, d in re.findall(r'\b(20\d{2})[/.-](\d{1,2})[/.-](\d{1,2})\b', t):
+                  found.append((int(y), int(mo), int(d)))
+              for d, mo, y in re.findall(r'\b(\d{1,2})[\s-]+([A-Za-z]{3})[A-Za-z]*[\s,-]+(20\d{2})\b', t):
+                  if mo.lower()[:3] in MON:
+                      found.append((int(y), MON[mo.lower()[:3]], int(d)))
+              for mo, d, y in re.findall(r'\b([A-Za-z]{3})[A-Za-z]*[\s.-]+(\d{1,2})(?:st|nd|rd|th)?[\s,-]+(20\d{2})\b', t):
+                  if mo.lower()[:3] in MON:
+                      found.append((int(y), MON[mo.lower()[:3]], int(d)))
+              out = []
+              for y, mo, d in found:
+                  try:
+                      out.append(datetime(y, mo, d, tzinfo=KH))
+                  except ValueError:
+                      pass
+              return out
+
+
+          def date_ok(text, req_at):
+              start = datetime.fromtimestamp(req_at / 1000, KH).date() - timedelta(days=1)
+              end = datetime.now(KH).date() + timedelta(days=1)
+              return any(start <= d.date() <= end for d in dates(text))
+
+
+          def tx_id(text):
+              m = re.search(r'(?:trx|txn|transaction|reference|ref|hash|apv)\.?\s*(?:id|no|number|#)?\.?\s*[:#]?\s*([A-Za-z0-9]{6,40})', text, re.I)
+              if m and re.search(r'\d', m.group(1)):
+                  return m.group(1).upper()
+              runs = sorted(re.findall(r'\d{9,}', re.sub(r'(?<=\d)[\s-](?=\d)', '', text)), key=len, reverse=True)
+              return runs[0] if runs else ''
+
+
+          def add_months(ms, n):
+              d = datetime.fromtimestamp(ms / 1000, timezone.utc)
+              m = d.month - 1 + n
+              y, m = d.year + m // 12, m % 12 + 1
+              day = min(d.day, calendar.monthrange(y, m)[1])
+              return int(d.replace(year=y, month=m, day=day).timestamp() * 1000)
+
+
+          def chat_note(uid, u, customer_text, staff_text):
+              prof = u.get('profile') or {}
+              ch = db('chats/' + uid)
+              ts = {'.sv': 'timestamp'}
+              if not ch:
+                  db('chats/' + uid, 'PUT', {'visitorUid': uid, 'status': 'bot', 'lang': 'en', 'name': (prof.get('name') or prof.get('email') or 'Customer') + ' · Posting app',
+                                             'contact': prof.get('email', ''), 'page': '/post', 'createdAt': ts, 'updatedAt': ts, 'lastMsg': '', 'lastFrom': '',
+                                             'unreadAgent': 0, 'unreadVisitor': 0})
+              db('messages/' + uid, 'POST', {'from': 'bot', 'text': customer_text[:2000], 'ts': ts})
+              db('messages/' + uid, 'POST', {'from': 'system', 'text': staff_text[:2000], 'ts': ts, 'staff': True})
+              cur = db('chats/' + uid) or {}
+              db('chats/' + uid, 'PATCH', {'updatedAt': ts, 'lastMsg': staff_text[:120], 'lastFrom': 'system',
+                                           'unreadAgent': int(cur.get('unreadAgent') or 0) + 1, 'unreadVisitor': int(cur.get('unreadVisitor') or 0) + 1})
+
+
+          def money(v, cur):
+              return ('{:,.0f} KHR'.format(v)) if cur == 'KHR' else ('$%.2f' % v).replace('.00', '')
+
+
+          def check(uid, u, cfg, don):
+              q = u['req']
+              pkg, m = q.get('pkg'), int(q.get('m') or 0)
+              price = float((((cfg.get('packs') or {}).get(pkg) or {}).get('p') or {}).get(str(m)) or 0)
+              cur = 'KHR' if cfg.get('cur') == 'KHR' else 'USD'
+              prof = u.get('profile') or {}
+              who = prof.get('name') or prof.get('email') or uid
+              print('Checking receipt from', who, '|', pkg, m, 'months', price, cur)
+              res = {'amount': False, 'receiver': False, 'date': False, 'tx': 'none', 'image': 'new', 'code': False}
+              raw, text, tx = b'', '', ''
+              try:
+                  raw, text = ocr(q['img'])
+              except Exception as e:
+                  print('  could not read the receipt:', str(e)[:200])
+              ih = hashlib.sha256(raw).hexdigest()[:32] if raw else ''
+              if text:
+                  res['amount'] = price > 0 and amount_ok(text, price, cur)
+                  res['receiver'] = receiver_ok(text, don)
+                  res['date'] = date_ok(text, int(q.get('at') or NOW))
+                  res['code'] = bool(q.get('code')) and str(q['code']).upper() in text.upper().replace(' ', '')
+                  tx = tx_id(text)
+                  if tx:
+                      res['tx'] = 'used' if db('paytx/' + re.sub(r'[^A-Za-z0-9]', '', tx)) else 'new'
+              if ih and db('paytx/img_' + ih):
+                  res['image'] = 'used'
+              ok = res['amount'] and res['receiver'] and res['date'] and res['tx'] != 'used' and res['image'] != 'used' and price > 0
+              reasons = [k for k, bad in (('amount not found', not res['amount']), ('receiver name not found', not res['receiver']),
+                                          ('date not recent', not res['date']), ('transaction used before', res['tx'] == 'used'),
+                                          ('same picture used before', res['image'] == 'used')) if bad]
+              log = {'uid': uid, 'email': prof.get('email', ''), 'name': prof.get('name', ''), 'pkg': pkg, 'm': m, 'amt': price, 'cur': cur,
+                     'img': q['img'], 'reqAt': q.get('at'), 'at': {'.sv': 'timestamp'}, 'checks': res, 'tx': tx, 'text': text[:1500], 'seen': False}
+              if ok:
+                  old = u.get('plan') or {}
+                  base = int(old['until']) if old.get('until') and int(old['until']) > NOW and old.get('pkg') == pkg else NOW
+                  until = add_months(base, m)
+                  log.update({'result': 'auto', 'until': until, 'prevPlan': old or None})
+                  db('postusers/' + uid, 'PATCH', {'plan': {'pkg': pkg, 'until': until, 'm': m, 'at': NOW, 'by': 'bot'}, 'req': None})
+                  if tx:
+                      db('paytx/' + re.sub(r'[^A-Za-z0-9]', '', tx), 'PUT', {'uid': uid, 'at': NOW})
+                  if ih:
+                      db('paytx/img_' + ih, 'PUT', {'uid': uid, 'at': NOW})
+                  day = datetime.fromtimestamp(until / 1000, KH).strftime('%d/%m/%Y')
+                  db('pays', 'POST', log)
+                  chat_note(uid, u, 'Thank you! Your payment was received. Your plan %s is on until %s.' % (PK.get(pkg, pkg), day),
+                            'Payment auto-approved: %s, %s, %d month(s), %s. Please check the money arrived and the receipt is real.' % (who, PK.get(pkg, pkg), m, money(price, cur)))
+                  print('  approved automatically until', day)
+              else:
+                  log.update({'result': 'review', 'why': reasons})
+                  db('postusers/' + uid + '/req', 'PATCH', {'st': 'review', 'why': ', '.join(reasons)[:200]})
+                  db('pays', 'POST', log)
+                  chat_note(uid, u, 'We received your receipt. Our team will check it and turn on your plan soon.',
+                            'Payment needs a manual check: %s, %s, %d month(s), %s. Reason: %s.' % (who, PK.get(pkg, pkg), m, money(price, cur), ', '.join(reasons) or 'unknown'))
+                  print('  sent to the team for a manual check:', ', '.join(reasons))
+
+
+          def main():
+              if not KEY:
+                  raise RuntimeError('A secret is missing in GitHub: FIREBASE_KEY is needed.')
+              users, todo = pending()
+              if ONLY_CHECK:
+                  with open(os.environ.get('GITHUB_OUTPUT', '/dev/null'), 'a') as f:
+                      f.write('has=%s\n' % ('1' if todo else '0'))
+                  print('%d receipt(s) waiting' % len(todo))
+                  return
+              if not todo:
+                  print('No receipts to check.')
+                  return
+              cfg = db('settings/public/postPlans') or {}
+              don = dict(db('site/content/donate') or {})
+              for k, v in (cfg.get('pay') or {}).items():
+                  if str(v or '').strip():
+                      don[k] = str(v).strip()
+              for uid, u in todo:
+                  try:
+                      check(uid, u, cfg, don)
+                  except Exception as e:
+                      print('  problem with one receipt:', str(e)[:300])
+
+
+          try:
+              main()
+          except Exception as e:
+              print('Problem:', str(e)[:400])
+              raise SystemExit(1)
+
+          PY
+      - name: Any receipts waiting?
+        id: q
+        env:
+          FIREBASE_KEY: ${{ secrets.FIREBASE_KEY }}
+          ONLY_CHECK: '1'
+        run: python3 /tmp/verify_pay.py
+      - name: Install the receipt reader
+        if: steps.q.outputs.has == '1'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq tesseract-ocr
+          pip install --quiet pytesseract pillow
+      - name: Check receipts
+        if: steps.q.outputs.has == '1'
+        env:
+          FIREBASE_KEY: ${{ secrets.FIREBASE_KEY }}
+        run: python3 /tmp/verify_pay.py
