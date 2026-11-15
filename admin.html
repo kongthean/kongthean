@@ -547,6 +547,11 @@ html[lang="km"] .mtab{letter-spacing:0}
 .pareq{background:rgba(217,154,26,.14);border-radius:10px;padding:8px 10px;font-size:.88rem}
 .paact{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.paact select{width:auto;flex:1;min-width:120px}
 .paprices{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px}
+.pathumb{flex:none;width:64px;height:84px;border-radius:10px;overflow:hidden;border:1px solid var(--line);display:block}.pathumb img{width:100%;height:100%;object-fit:cover}
+.pachecks{display:flex;flex-wrap:wrap;gap:6px}.pachecks span{font-size:.78rem;padding:3px 8px;border-radius:999px;background:var(--mist1)}.pachecks .ok{background:rgba(31,122,77,.14);color:#1f7a4d}.pachecks .bad{background:rgba(168,52,31,.12);color:#a8341f}
+.past{font-weight:700}.past.review{color:#b7791f}.past.auto,.past.approved{color:#1f7a4d}.past.rejected,.past.undone{color:#a8341f}
+.pamsg{display:flex;flex-direction:column;gap:8px;border-top:1px dashed var(--line);padding-top:8px}.pamsg textarea,.pamsg input{width:100%}
+.dcard{position:relative}.pabadge{position:absolute;top:8px;right:10px;background:#d9381e;color:#fff;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:999px}
 .imgpick .pv{width:120px;aspect-ratio:4/3;border-radius:10px;overflow:hidden;background:var(--mist1)}
 .imgpick .pv img{width:100%;height:100%;object-fit:cover;display:block}
 .slr{display:grid;grid-template-columns:110px 1fr;gap:12px;border:1px solid var(--line);border-radius:14px;padding:10px}
@@ -2528,36 +2533,74 @@ function pushForm(){
       if(!te&&!tk){toast('Type a title first');return}if(url&&!/^(\/|https:\/\/)/.test(url)){toast('The web address must start with https://');return}
       b.disabled=true;window.TheanAdmin.pushQueue({title:{en:te||tk,km:tk||te},body:{en:be||bk,km:bk||be},url:url||'/',img:img}).then(function(){toast('Queued. It will be sent within a few minutes.');['te','tk','be','bk'].forEach(function(k){m.querySelector('[data-pn="'+k+'"]').value=''});img='';m.querySelector('[data-ppv]').innerHTML='';b.disabled=false})
       .catch(function(e){b.disabled=false;toast(/permission/i.test(String(e&&(e.code||e.message)))?'No permission: add the notification rules in Firebase (setup step).':'Not sent: '+(e&&(e.code||e.message)))})}})}
-/* ---------- Posting app: customers, plans and prices ---------- */
+/* ---------- Posting app: payments, customers, plans and prices ---------- */
 var PA_PK=[['fb','Facebook','Facebook post and Story'],['fbig','Facebook + Instagram','Facebook and Instagram, posts and Stories'],['all','All','Facebook, Instagram and Telegram']],PA_M=[1,2,3,6,12];
+var PA_NEW=0;
 function paDay(ms){var d=new Date(+ms);return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear()}
+function paTime(ms){var d=new Date(+ms);return paDay(ms)+' '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)}
 function paMoney(v,c){return c==='KHR'?Math.round(+v).toLocaleString('en-US')+' ៛':'$'+(+v).toFixed(2).replace(/\.00$/,'')}
+function paAddMonths(ms,n){var d=new Date(ms);var day=d.getDate();d.setDate(1);d.setMonth(d.getMonth()+n);var last=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();d.setDate(Math.min(day,last));return d.getTime()}
+function paBadge(){document.querySelectorAll('[data-act="postapp"]').forEach(function(c){var b=c.querySelector('.pabadge');if(!PA_NEW){if(b)b.remove();return}if(!b){b=document.createElement('span');b.className='pabadge';c.appendChild(b)}b.textContent=PA_NEW+' new payment'+(PA_NEW>1?'s':'')})}
+var PA_W=false;function paWatch(){if(PA_W||!window.TheanAdmin)return;PA_W=true;try{window.TheanAdmin.onPays(function(v){var L=v?Object.keys(v).map(function(k){return v[k]}):[];PA_NEW=L.filter(function(x){return x&&!x.seen}).length;paBadge()},function(){PA_W=false})}catch(e){PA_W=false}}
+document.addEventListener('thean:admin-ready',paWatch);
+document.addEventListener('thean:render',function(){setTimeout(function(){paWatch();paBadge()},0)});
+(function(){var q=0;new MutationObserver(function(){if(q)return;q=requestAnimationFrame(function(){q=0;if(!PA_NEW)return;var c=document.querySelector('[data-act="postapp"]');if(c&&!c.querySelector('.pabadge'))paBadge()})}).observe(document.body,{childList:true,subtree:true})})();
 function postAppForm(){
-  var tab='cust',U={},CF={},off=null,m=modal('Posting app','<div class="seg2" data-patabs><button type="button" class="on" data-pat="cust">Customers</button><button type="button" data-pat="plans">Plans and prices</button></div><div data-pabody><small style="color:var(--muted)">Loading…</small></div>');
+  var tab=PA_NEW?'pay':'cust',U={},PY={},CF={},offs=[],open={},m=modal('Posting app','<div class="seg2" data-patabs><button type="button" data-pat="pay">Payments</button><button type="button" data-pat="cust">Customers</button><button type="button" data-pat="plans">Plans and prices</button></div><div data-pabody><small style="color:var(--muted)">Loading…</small></div>');
   var body=m.querySelector('[data-pabody]');
   function permErr(e){return /permission/i.test(String(e&&(e.code||e.message)))?'No permission yet: add the new database rules in Firebase (setup step).':'Problem: '+(e&&(e.code||e.message))}
+  function pkn(k){var r=PA_PK.filter(function(z){return z[0]===k})[0];return (((CF.packs||{})[k]||{}).name||{}).en||(r?r[1]:k)}
+  function who(uid){var p=(U[uid]||{}).profile||{};return p.name||p.email||uid}
+  function locked(x){var l=x&&x.lock;return l&&(!(+l.until)||+l.until>Date.now())?l:null}
+  function msgBox(uid){return open['msg:'+uid]?'<div class="pamsg"><textarea rows="3" data-pamsgt="'+esc(uid)+'" placeholder="Write a message to '+esc(who(uid))+'"></textarea><div class="paact"><button class="btn sm" type="button" data-pasend="'+esc(uid)+'">Send</button><button class="btn sm soft" type="button" data-patog="msg:'+esc(uid)+'">Cancel</button></div><small style="color:var(--muted)">It appears in the chat inside their posting app, and in your Inbox.</small></div>':''}
+  function lockBox(uid){return open['lock:'+uid]?'<div class="pamsg"><div class="paact"><select data-palen="'+esc(uid)+'"><option value="1">1 day</option><option value="7">7 days</option><option value="30">30 days</option><option value="0" selected>Until I unpause</option></select></div><input data-pawhy="'+esc(uid)+'" placeholder="Reason the customer sees (optional)" value="Payment not received"><div class="paact"><button class="btn sm del" type="button" data-palock="'+esc(uid)+'">Pause account</button><button class="btn sm soft" type="button" data-patog="lock:'+esc(uid)+'">Cancel</button></div></div>':''}
+  function drawPay(){var L=Object.keys(PY).map(function(k){return Object.assign({id:k},PY[k])}).sort(function(a,b){return (+b.at||0)-(+a.at||0)});
+    var h='<p style="margin:0;color:var(--muted)">Receipts are checked automatically every 5 to 15 minutes. Always check that the money really arrived in your bank.</p>';
+    if(!L.length){body.innerHTML=h+'<small style="color:var(--muted)">No payments yet.</small>';return}
+    h+=L.map(function(x){var c=x.checks||{},st={auto:'Turned on automatically',review:'Needs your check',approved:'Approved by you',rejected:'Rejected',undone:'Undone, plan removed'}[x.result]||x.result,u=U[x.uid]||{},lk=locked(u);
+      var ck=[['Amount',c.amount?'found':'not found',c.amount],['Receiver name',c.receiver?'found':'not found',c.receiver],['Date',c.date?'recent':'not recent',c.date],['Transaction number',{new:'new',used:'used before',none:'not found'}[c.tx]||'-',c.tx==='new'],['Picture',c.image==='used'?'used before':'new',c.image!=='used']];
+      return '<div class="pacard'+(x.seen?'':' req')+'"><div class="pahd"><span><b>'+esc(x.name||x.email||who(x.uid))+'</b><small>'+esc(x.email||'')+' · '+esc(paTime(x.at||x.reqAt))+'</small></span>'+(x.img?'<a href="'+esc(x.img)+'" target="_blank" rel="noopener" class="pathumb"><img alt="Receipt" src="'+esc(x.img)+'"></a>':'')+'</div>'+
+        '<div class="pameta"><span><b>'+esc(pkn(x.pkg))+'</b> · '+x.m+' month'+(x.m>1?'s':'')+' · <b>'+esc(paMoney(x.amt,x.cur))+'</b></span><span class="past '+esc(x.result||'')+'">'+esc(st)+'</span></div>'+
+        '<div class="pachecks">'+ck.map(function(k){return '<span class="'+(k[2]?'ok':'bad')+'">'+esc(k[0])+': '+esc(k[1])+'</span>'}).join('')+(x.tx?'<span>Number: '+esc(x.tx)+'</span>':'')+'</div>'+
+        (lk?'<div class="pareq">This account is paused'+(+lk.until?' until '+paDay(lk.until):'')+'.</div>':'')+
+        '<div class="paact">'+
+          (x.result==='review'?'<button class="btn sm" type="button" data-paok="'+x.id+'">Approve and turn on</button><button class="btn sm soft" type="button" data-pano="'+x.id+'">Reject</button>':'')+
+          (x.result==='auto'&&!x.seen?'<button class="btn sm" type="button" data-paseen="'+x.id+'">Money arrived, looks good</button>':'')+
+          (x.result==='auto'?'<button class="btn sm del" type="button" data-paundo="'+x.id+'">Undo plan</button>':'')+
+          (lk?'<button class="btn sm soft" type="button" data-paunlock="'+esc(x.uid)+'">Unpause</button>':'<button class="btn sm soft" type="button" data-patog="lock:'+esc(x.uid)+'">Pause account</button>')+
+          '<button class="btn sm soft" type="button" data-patog="msg:'+esc(x.uid)+'">'+I('chat')+' Message</button></div>'+lockBox(x.uid)+msgBox(x.uid)+'</div>'}).join('');
+    body.innerHTML=h}
   function drawCust(){var L=Object.keys(U).map(function(k){return Object.assign({uid:k},U[k])}),now=Date.now(),cur=CF.cur==='KHR'?'KHR':'USD';
     L.sort(function(a,b){return (b.req?1:0)-(a.req?1:0)||((b.profile||{}).at||0)-((a.profile||{}).at||0)});
-    var nReq=L.filter(function(x){return x.req}).length,nNew=L.filter(function(x){return !x.tester}).length;
-    var h='<p style="margin:0;color:var(--muted)"><b>'+L.length+'</b> customers · <b>'+nReq+'</b> waiting for payment check · <b>'+nNew+'</b> not yet added as Tester</p>'+
+    var nNew=L.filter(function(x){return !x.tester}).length;
+    var h='<p style="margin:0;color:var(--muted)"><b>'+L.length+'</b> customers · <b>'+nNew+'</b> not yet added as Tester</p>'+
       '<details style="margin:6px 0"><summary style="cursor:pointer;font-weight:600">How to add a new customer as a Tester</summary><ol style="margin:6px 0;padding-left:20px;line-height:1.6"><li>Tap <b>Open App roles</b> (opens your Facebook app).</li><li>Tap <b>Add People</b>, choose <b>Tester</b>, and paste the customer\'s Facebook link or name.</li><li>Come back here and tick <b>Added as Tester</b>.</li><li>Tell the customer to open <b>developers.facebook.com/requests</b> and tap <b>Accept</b>.</li></ol>'+
       (CF.fbAppId?'<a class="btn sm" target="_blank" rel="noopener" href="https://developers.facebook.com/apps/'+esc(CF.fbAppId)+'/roles/roles/">'+I('ext')+' Open App roles</a>':'<small style="color:var(--muted)">Add your Facebook App ID in Plans and prices first.</small>')+'</details>';
     if(!L.length){body.innerHTML=h+'<small style="color:var(--muted)">No customers yet.</small>';return}
-    h+=L.map(function(x){var p=x.profile||{},pl=x.plan,on=pl&&+pl.until>now,q=x.req,pkn=function(k){var r=PA_PK.filter(function(z){return z[0]===k})[0];return (((CF.packs||{})[k]||{}).name||{}).en||(r?r[1]:k)};
-      return '<div class="pacard'+(q?' req':'')+'"><div class="pahd"><span><b>'+esc(p.name||p.email||'(no name)')+'</b><small>'+esc(p.email||'')+(p.at?' · joined '+paDay(p.at):'')+'</small></span>'+
+    h+=L.map(function(x){var p=x.profile||{},pl=x.plan,on=pl&&+pl.until>now,q=x.req,lk=locked(x);
+      return '<div class="pacard'+(q?' req':'')+'"><div class="pahd"><span><b>'+esc(p.name||p.email||'(no name)')+'</b><small>'+esc(p.email||'')+(p.phone?' · '+esc(p.phone):'')+(p.at?' · joined '+paDay(p.at):'')+'</small></span>'+
         (p.fb?'<a class="btn sm soft" target="_blank" rel="noopener" href="'+esc(/^https?:/.test(p.fb)?p.fb:'https://www.facebook.com/'+p.fb)+'">'+I('facebook')+' Profile</a>':'')+'</div>'+
-        '<div class="pameta"><span>Posts made: <b>'+(+x.used||0)+'</b></span><span>'+(on?'Plan: <b>'+esc(pkn(pl.pkg))+'</b> until <b>'+paDay(pl.until)+'</b>':pl?'Plan ended '+paDay(pl.until):'Free posts')+'</span>'+
+        '<div class="pameta"><span>Posts made: <b>'+(+x.used||0)+'</b></span><span>'+(on?'Plan: <b>'+esc(pkn(pl.pkg))+'</b> until <b>'+paDay(pl.until)+'</b>':pl?'Plan ended '+paDay(pl.until):'Free (Facebook only)')+'</span>'+
         '<label class="pachk"><input type="checkbox" data-patest="'+esc(x.uid)+'"'+(x.tester?' checked':'')+'> Added as Tester</label></div>'+
-        (q?'<div class="pareq">Says paid: <b>'+esc(pkn(q.pkg))+' · '+q.m+' month'+(q.m>1?'s':'')+' · '+esc(paMoney(q.amt,q.cur||cur))+'</b> on '+paDay(q.at)+'. Check the money arrived in your bank, then tap Turn on.</div>':'')+
+        (lk?'<div class="pareq">Paused'+(+lk.until?' until '+paDay(lk.until):' until you unpause')+(lk.reason?'. Reason: '+esc(lk.reason):'')+'</div>':'')+
+        (q?'<div class="pareq">Receipt sent: <b>'+esc(pkn(q.pkg))+' · '+q.m+' month'+(q.m>1?'s':'')+' · '+esc(paMoney(q.amt,q.cur||cur))+'</b>'+(q.st==='review'?' · needs your check ('+esc(q.why||'')+')':' · waiting for the automatic check')+(q.img?' · <a href="'+esc(q.img)+'" target="_blank" rel="noopener">See receipt</a>':'')+'</div>':'')+
         '<div class="paact"><select data-papk="'+esc(x.uid)+'">'+PA_PK.map(function(k){return '<option value="'+k[0]+'"'+((q?q.pkg:(pl&&pl.pkg)||'all')===k[0]?' selected':'')+'>'+esc(pkn(k[0]))+'</option>'}).join('')+'</select>'+
         '<select data-pam="'+esc(x.uid)+'">'+PA_M.map(function(n){return '<option value="'+n+'"'+((q?+q.m:1)===n?' selected':'')+'>'+n+' month'+(n>1?'s':'')+'</option>'}).join('')+'</select>'+
-        '<button class="btn sm" type="button" data-paon="'+esc(x.uid)+'">'+I('check')+' Turn on</button>'+
+        '<button class="btn sm" type="button" data-paon="'+esc(x.uid)+'">Turn on</button>'+
         (on?'<button class="btn sm del" type="button" data-pastop="'+esc(x.uid)+'">Stop plan</button>':'')+
-        (q?'<button class="btn sm soft" type="button" data-panoreq="'+esc(x.uid)+'">Not paid</button>':'')+'</div></div>'}).join('');
+        (q?'<button class="btn sm soft" type="button" data-panoreq="'+esc(x.uid)+'">Not paid</button>':'')+'</div>'+
+        '<div class="paact">'+(lk?'<button class="btn sm soft" type="button" data-paunlock="'+esc(x.uid)+'">Unpause</button>':'<button class="btn sm soft" type="button" data-patog="lock:'+esc(x.uid)+'">Pause account</button>')+
+        '<button class="btn sm soft" type="button" data-patog="msg:'+esc(x.uid)+'">'+I('chat')+' Message</button></div>'+lockBox(x.uid)+msgBox(x.uid)+'</div>'}).join('');
     body.innerHTML=h}
   function drawPlans(){var c=CF,pk=c.packs||{};
-    body.innerHTML='<div class="two"><label class="f">Free posts for new accounts<input data-pc="free" inputmode="numeric" value="'+esc(c.free==null?5:c.free)+'"></label>'+
+    body.innerHTML='<div class="two"><label class="f">Free Facebook posts for new accounts<input data-pc="free" inputmode="numeric" value="'+esc(c.free==null?5:c.free)+'"></label>'+
       '<label class="f">Currency<select data-pc="cur"><option value="USD"'+(c.cur!=='KHR'?' selected':'')+'>USD $</option><option value="KHR"'+(c.cur==='KHR'?' selected':'')+'>KHR ៛</option></select></label></div>'+
+      '<small style="color:var(--muted)">Free accounts post to Facebook only. Facebook Story, Instagram and Telegram come with a plan.</small>'+
+      '<div class="pacard"><b>Payment KHQR</b><small style="color:var(--muted)">What customers see on the plan payment QR, and the name our checker looks for on receipts. Leave a box empty to use your Donate page setting.</small>'+
+        '<div class="two"><label class="f">Name on the KHQR (English letters)<input data-pq="khName" maxlength="25" placeholder="e.g. THEAN POST" value="'+esc((c.pay||{}).khName||'')+'"></label>'+
+        '<label class="f">Bakong account ID<input data-pq="bakongId" placeholder="e.g. name@aclb" value="'+esc((c.pay||{}).bakongId||'')+'"></label></div>'+
+        '<div class="two"><label class="f">Account name on receipts<input data-pq="accName" placeholder="As your bank shows it, e.g. KONG THEAN" value="'+esc((c.pay||{}).accName||'')+'"></label>'+
+        '<label class="f">City<input data-pq="khCity" maxlength="15" placeholder="Phnom Penh" value="'+esc((c.pay||{}).khCity||'')+'"></label></div></div>'+
       '<div class="two"><label class="f">Facebook App ID<input data-pc="fbAppId" inputmode="numeric" placeholder="e.g. 1234567890123456" value="'+esc(c.fbAppId||'')+'"></label>'+
       '<label class="f">Login configuration ID (only if Facebook gave you one)<input data-pc="fbConfigId" inputmode="numeric" value="'+esc(c.fbConfigId||'')+'"></label></div>'+
       PA_PK.map(function(k){var p=pk[k[0]]||{},n=p.name||{},pr=p.p||{};
@@ -2565,19 +2608,36 @@ function postAppForm(){
           '<div class="two"><label class="f">Name (English)<input data-pne="'+k[0]+'" value="'+esc(n.en||'')+'" placeholder="'+esc(k[1])+'"></label><label class="f">Name (Khmer)<input data-pnk="'+k[0]+'" value="'+esc(n.km||'')+'" placeholder="'+esc(k[1])+'"></label></div>'+
           '<div class="paprices">'+PA_M.map(function(mo){return '<label class="f">'+mo+' month'+(mo>1?'s':'')+'<input data-pp="'+k[0]+':'+mo+'" inputmode="decimal" value="'+esc(pr[mo]||'')+'" placeholder="no"></label>'}).join('')+'</div></div>'}).join('')+
       '<small style="color:var(--muted)">Leave a price empty to hide that length. Customers pay with the same KHQR as your Donate page.</small>'+
-      '<div style="display:flex;justify-content:flex-end"><button class="btn" type="button" data-pasave>'+I('check')+' Save</button></div>'}
-  function draw(){m.querySelectorAll('[data-pat]').forEach(function(b){b.classList.toggle('on',b.dataset.pat===tab)});if(tab==='cust')drawCust();else drawPlans()}
-  off=window.TheanAdmin.onPostUsers(function(v){U=v||{};if(tab==='cust')drawCust()},function(e){body.innerHTML='<div class="msg bad" style="padding:10px">'+esc(permErr(e))+'</div>'});
+      '<div style="display:flex;justify-content:flex-end"><button class="btn" type="button" data-pasave>Save</button></div>'}
+  function draw(){var keep=document.activeElement&&document.activeElement.matches&&document.activeElement.matches('textarea[data-pamsgt],input[data-pawhy]')?document.activeElement:null;if(keep&&tab!=='plans')return;
+    m.querySelectorAll('[data-pat]').forEach(function(b){b.classList.toggle('on',b.dataset.pat===tab)});if(tab==='cust')drawCust();else if(tab==='pay')drawPay();else drawPlans()}
+  var err=function(e){body.innerHTML='<div class="msg bad" style="padding:10px">'+esc(permErr(e))+'</div>'};
+  offs.push(window.TheanAdmin.onPostUsers(function(v){U=v||{};if(tab!=='plans')draw()},err));
+  offs.push(window.TheanAdmin.onPays(function(v){PY=v||{};if(tab==='pay')draw()},err));
   window.TheanAdmin.postPlans().then(function(v){CF=v||{};draw()}).catch(function(){CF={};draw()});
-  var obs=new MutationObserver(function(){if(!document.body.contains(m)){try{off&&off()}catch(e){}obs.disconnect()}});obs.observe(document.body,{childList:true});
+  var obs=new MutationObserver(function(){if(!document.body.contains(m)){offs.forEach(function(f){try{f&&f()}catch(e){}});obs.disconnect()}});obs.observe(document.body,{childList:true});
   m.addEventListener('change',function(e){var x=e.target;if(x.dataset.patest)window.TheanAdmin.postUser(x.dataset.patest,{tester:x.checked||null}).catch(function(err){toast(permErr(err))})});
-  m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
-    if(b.dataset.pat){tab=b.dataset.pat;draw();return}
-    if(b.dataset.paon){var id=b.dataset.paon,pkg=m.querySelector('[data-papk="'+id+'"]').value,mo=+m.querySelector('[data-pam="'+id+'"]').value,old=(U[id]||{}).plan,base=old&&+old.until>Date.now()&&old.pkg===pkg?+old.until:Date.now(),d=new Date(base);d.setMonth(d.getMonth()+mo);
-      b.disabled=true;window.TheanAdmin.postUser(id,{plan:{pkg:pkg,until:d.getTime(),m:mo,at:Date.now()},req:null}).then(function(){toast('Plan turned on until '+paDay(d.getTime()))}).catch(function(err){b.disabled=false;toast(permErr(err))});return}
-    if(b.dataset.pastop){if(!confirm('Stop this plan now?'))return;window.TheanAdmin.postUser(b.dataset.pastop,{plan:null}).then(function(){toast('Plan stopped')}).catch(function(err){toast(permErr(err))});return}
-    if(b.dataset.panoreq){window.TheanAdmin.postUser(b.dataset.panoreq,{req:null}).then(function(){toast('Request removed')}).catch(function(err){toast(permErr(err))});return}
-    if(b.hasAttribute('data-pasave')){var q=function(s){var x=m.querySelector(s);return x?x.value.trim():''},o={free:Math.max(0,parseInt(q('[data-pc="free"]'),10)||0),cur:q('[data-pc="cur"]')||'USD',fbAppId:q('[data-pc="fbAppId"]').replace(/\D/g,''),fbConfigId:q('[data-pc="fbConfigId"]').replace(/\D/g,''),packs:{}};
+  function grant(uid,pkg,mo,extra){var old=(U[uid]||{}).plan,base=old&&+old.until>Date.now()&&old.pkg===pkg?+old.until:Date.now(),until=paAddMonths(base,mo);
+    return window.TheanAdmin.postUser(uid,Object.assign({plan:{pkg:pkg,until:until,m:mo,at:Date.now(),by:'admin'},req:null},extra||{})).then(function(){return until})}
+  m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var d=b.dataset;
+    if(d.pat){tab=d.pat;draw();return}
+    if(d.patog){open[d.patog]=!open[d.patog];draw();return}
+    if(d.paon){var id=d.paon,pkg=m.querySelector('[data-papk="'+id+'"]').value,mo=+m.querySelector('[data-pam="'+id+'"]').value;
+      b.disabled=true;grant(id,pkg,mo).then(function(u){toast('Plan turned on until '+paDay(u));window.TheanAdmin.postMsg(id,'Your plan '+pkn(pkg)+' is on until '+paDay(u)+'. Thank you!').catch(function(){})}).catch(function(err){b.disabled=false;toast(permErr(err))});return}
+    if(d.pastop){if(!confirm('Stop this plan now?'))return;window.TheanAdmin.postUser(d.pastop,{plan:null}).then(function(){toast('Plan stopped')}).catch(function(err){toast(permErr(err))});return}
+    if(d.panoreq){window.TheanAdmin.postUser(d.panoreq,{req:null}).then(function(){toast('Request removed')}).catch(function(err){toast(permErr(err))});return}
+    if(d.paok){var x=PY[d.paok];b.disabled=true;grant(x.uid,x.pkg,+x.m).then(function(u){return window.TheanAdmin.setPay(d.paok,{result:'approved',seen:true,until:u}).then(function(){return window.TheanAdmin.postMsg(x.uid,'Your payment was confirmed. Your plan '+pkn(x.pkg)+' is on until '+paDay(u)+'. Thank you!')})}).then(function(){toast('Approved')}).catch(function(err){b.disabled=false;toast(permErr(err))});return}
+    if(d.pano){var y=PY[d.pano];if(!confirm('Reject this receipt? The customer is told we could not confirm the payment.'))return;
+      window.TheanAdmin.postUser(y.uid,{req:null}).then(function(){return window.TheanAdmin.setPay(d.pano,{result:'rejected',seen:true})}).then(function(){return window.TheanAdmin.postMsg(y.uid,'We could not confirm your payment. Please check the amount and send the receipt again, or reply here.')}).then(function(){toast('Rejected')}).catch(function(err){toast(permErr(err))});return}
+    if(d.paseen){window.TheanAdmin.setPay(d.paseen,{seen:true}).then(function(){toast('Marked as checked')}).catch(function(err){toast(permErr(err))});return}
+    if(d.paundo){var z=PY[d.paundo];if(!confirm('Remove the plan this payment turned on? You can also pause the account after.'))return;
+      window.TheanAdmin.postUser(z.uid,{plan:z.prevPlan&&+z.prevPlan.until>Date.now()?z.prevPlan:null}).then(function(){return window.TheanAdmin.setPay(d.paundo,{result:'undone',seen:true})}).then(function(){open['lock:'+z.uid]=true;draw();toast('Plan removed. Choose if you want to pause the account.')}).catch(function(err){toast(permErr(err))});return}
+    if(d.palock){var uid=d.palock,days=+m.querySelector('[data-palen="'+uid+'"]').value,why=(m.querySelector('[data-pawhy="'+uid+'"]').value||'').trim().slice(0,160);
+      window.TheanAdmin.postUser(uid,{lock:{until:days?Date.now()+days*864e5:0,reason:why,at:Date.now()}}).then(function(){open['lock:'+uid]=false;draw();toast('Account paused')}).catch(function(err){toast(permErr(err))});return}
+    if(d.paunlock){window.TheanAdmin.postUser(d.paunlock,{lock:null}).then(function(){toast('Account unpaused')}).catch(function(err){toast(permErr(err))});return}
+    if(d.pasend){var tx=m.querySelector('[data-pamsgt="'+d.pasend+'"]'),t=(tx&&tx.value||'').trim();if(!t)return;b.disabled=true;
+      window.TheanAdmin.postMsg(d.pasend,t).then(function(){open['msg:'+d.pasend]=false;draw();toast('Message sent')}).catch(function(err){b.disabled=false;toast(permErr(err))});return}
+    if(b.hasAttribute('data-pasave')){var q=function(s){var x=m.querySelector(s);return x?x.value.trim():''},o={free:Math.max(0,parseInt(q('[data-pc="free"]'),10)||0),cur:q('[data-pc="cur"]')||'USD',fbAppId:q('[data-pc="fbAppId"]').replace(/\D/g,''),fbConfigId:q('[data-pc="fbConfigId"]').replace(/\D/g,''),pay:{khName:q('[data-pq="khName"]').replace(/[^\x20-\x7E]/g,'').slice(0,25),bakongId:q('[data-pq="bakongId"]'),accName:q('[data-pq="accName"]'),khCity:q('[data-pq="khCity"]').replace(/[^\x20-\x7E]/g,'').slice(0,15)},packs:{}};
       PA_PK.forEach(function(k){var p={on:m.querySelector('[data-pon="'+k[0]+'"]').checked,name:{en:q('[data-pne="'+k[0]+'"]'),km:q('[data-pnk="'+k[0]+'"]')},p:{}};PA_M.forEach(function(mo){var v=parseFloat(q('[data-pp="'+k[0]+':'+mo+'"]'));if(v>0)p.p[mo]=v});o.packs[k[0]]=p});
       b.disabled=true;window.TheanAdmin.setPostPlans(o).then(function(){CF=o;b.disabled=false;toast('Saved. Customers see the new prices right away.')}).catch(function(err){b.disabled=false;toast(permErr(err))})}})}
 var tPause=0,tTimer=null;
@@ -4063,6 +4123,13 @@ if(ADMIN_PAGE){
     async postPlans(){await loadFb();return await fb.get('settings/public/postPlans')},
     async setPostPlans(v){await loadFb();await fb.set('settings/public/postPlans',v)},
     async postUser(uid,patch){await loadFb();await fb.update('postusers/'+uid,patch)},
+    onPays(cb,err){let off=null,dead=false;loadFb().then(()=>{if(!dead)off=fb.on('pays',cb,err)}).catch(e=>err&&err(e));return()=>{dead=true;try{off&&off()}catch(e){}}},
+    async setPay(id,patch){await loadFb();await fb.update('pays/'+id,patch)},
+    async postMsg(uid,text){await loadFb();const u=await authUser();const a=await fb.get('agents/'+u.uid);const name=(a&&a.name)||'Thean';
+      const ch=await fb.get('chats/'+uid);
+      if(!ch){const p=(await fb.get('postusers/'+uid+'/profile'))||{};await fb.set('chats/'+uid,{visitorUid:uid,status:'bot',lang:'en',name:(p.name||p.email||'Customer')+' · Posting app',contact:p.email||'',page:'/post',createdAt:TS,updatedAt:TS,lastMsg:'',lastFrom:'',unreadAgent:0,unreadVisitor:0})}
+      await fb.push('messages/'+uid,{from:'agent',text:String(text).slice(0,2000),agentName:name,agentUid:u.uid,ts:TS});
+      await fb.update('chats/'+uid,{updatedAt:TS,lastMsg:String(text).slice(0,120),lastFrom:'agent',unreadVisitor:INC(1)})},
     onCallAway(cb){loadFb().then(()=>fb.on('settings/public/callAway',cb)).catch(()=>{})},
     async publish(S){await loadFb();
       const to=new Promise((_,rej)=>setTimeout(()=>rej(new Error('network: the server did not answer in 40 seconds')),40000));

@@ -122,7 +122,30 @@ input[type=email]{width:100%;font:inherit;font-size:16px;color:var(--ink);backgr
 body.out main>section:not(#authCard),body.out #needSetup,body.out .top .kst,body.out .top #gear,body.out main>p.note{display:none!important}
 body.cust [data-owner]{display:none!important}body:not(.cust) [data-cust]{display:none!important}
 #authCard h2{margin:0 0 4px;font-size:1.25rem}#authCard .seg{margin:14px 0 4px}
-.acc{display:flex;flex-direction:column;gap:2px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:.9rem}.acc span{color:var(--muted)}
+.top .ib{position:relative}.badge{position:absolute;top:-2px;right:-2px;min-width:18px;height:18px;border-radius:9px;background:#e5484d;color:#fff;font-size:.7rem;font-weight:700;display:grid;place-items:center;padding:0 4px}
+.av{width:40px;height:40px;border-radius:50%;border:0;display:grid;place-items:center;font:inherit;font-weight:700;font-size:1rem;color:#fff;background:var(--grad);cursor:pointer;flex:none;box-shadow:0 0 0 2px rgba(255,255,255,.25)}
+.av.own{box-shadow:0 0 0 2px #f3b11c}.av.big{width:56px;height:56px;font-size:1.4rem;cursor:default}
+body.out .top #chatBtn,body.out .top #meBtn{display:none}
+.alang{display:flex;justify-content:flex-end;margin-bottom:6px}.alang .lang2{background:var(--soft)}
+.lang2{display:inline-flex;border-radius:999px;padding:3px;background:var(--bg)}.lang2 button{border:0;background:none;color:var(--ink);font:inherit;font-size:.82rem;font-weight:600;padding:6px 12px;border-radius:999px;cursor:pointer}.lang2 button.on{background:var(--grad);color:#fff}
+.mehd{display:flex;align-items:center;gap:14px;margin:4px 0 14px}.mehd b{display:block;font-size:1.1rem}.mehd small{color:var(--muted)}
+.mecard{border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:4px;align-items:flex-start;background:var(--bg)}.mecard b{font-size:1.02rem}.mecard span{color:var(--muted);font-size:.88rem}.mecard .btn{margin-top:8px}
+.mecard.prem{border-color:transparent;background:linear-gradient(135deg,rgba(54,168,220,.16),rgba(26,111,189,.22))}.mecard.prem b{color:var(--accent)}
+.melist{margin-top:14px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.merow{display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px;border:0;border-top:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:.95rem;text-align:left;cursor:pointer;text-decoration:none}
+.melist>.merow:first-child{border-top:0}.merow i{width:8px;height:8px;border-right:2px solid var(--muted);border-top:2px solid var(--muted);transform:rotate(45deg);flex:none}.merow.red{color:var(--bad)}.merow.lang{cursor:default}
+.meform{padding:4px 14px 14px;border-top:1px solid var(--line);background:var(--bg)}.btn.danger{background:var(--bad)!important;color:#fff}
+#lockCard h2{margin:0 0 6px;font-size:1.2rem}body.locked main>section:not(#lockCard):not(#authCard),body.locked main>p.note,body.locked #needSetup{display:none!important}
+.upsell{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--soft);font-size:.86rem;color:var(--muted)}
+#chat .sheet{display:flex;flex-direction:column;height:88vh;max-height:88vh;padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+#chat .hd small{display:block;color:var(--muted);font-size:.8rem;font-weight:400}
+.chlist{flex:1;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:6px 2px}
+.bub{max-width:82%;padding:9px 12px;border-radius:16px;background:var(--soft);align-self:flex-start;font-size:.92rem;line-height:1.45}.bub p{margin:0}.bub small{display:block;font-size:.72rem;color:var(--muted);font-weight:600;margin-bottom:2px}
+.bub time{display:block;font-size:.68rem;color:var(--muted);text-align:right;margin-top:2px}.bub.me{align-self:flex-end;background:var(--grad);color:#fff}.bub.me time{color:rgba(255,255,255,.75)}
+.bub.ag{border:1px solid var(--accent)}.bub.sys{align-self:center;background:none;color:var(--muted);font-size:.8rem;text-align:center}
+.chq{display:flex;gap:8px;overflow-x:auto;padding:8px 0;scrollbar-width:none}.chip{flex:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 12px;font:inherit;font-size:.84rem;font-weight:600;cursor:pointer}
+.chin{display:flex;gap:8px}.chin input{flex:1}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:40;background:#0f2238;color:#fff;padding:12px 16px;border-radius:14px;font-size:.9rem;max-width:90vw;box-shadow:0 6px 24px rgba(0,0,0,.3)}
 #planBar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--soft);border-radius:12px;padding:9px 12px;margin-top:10px;color:var(--ink)}#planBar .bad{color:var(--bad);font-weight:600}
 .pk{border:1.5px solid var(--line);border-radius:16px;padding:12px;margin-top:10px;cursor:pointer}.pk.on{border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,111,189,.15)}
 .pkh b{display:block;font-size:1rem}.pkh small{color:var(--muted);font-size:.8rem}
@@ -138,12 +161,14 @@ body.cust [data-owner]{display:none!important}body:not(.cust) [data-cust]{displa
 <header class="top"><div class="in">
   <div class="brand"><img src="/icons/post-favicon-96.png" alt=""><b>THEAN</b></div>
   <button class="kst" id="kst" data-open-settings><i></i><span id="kstT"></span></button>
-  <div class="lang" role="group" aria-label="Language"><button data-lang="km">ខ្មែរ</button><button data-lang="en">EN</button></div>
-  <button class="ib" id="gear" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+  <button class="ib" id="chatBtn" aria-label="Chat"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4z"/></svg><span class="badge" id="chatBadge" hidden></span></button>
+  <button class="av" id="meBtn" aria-label="My account">T</button>
+  <button class="ib" hidden id="gear" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
 </div></header>
 
 <main>
   <section class="card" id="authCard" hidden>
+    <div class="alang"><div class="lang2" role="group" aria-label="Language"><button data-lang="km">ខ្មែរ</button><button data-lang="en">EN</button></div></div>
     <h2 data-t="authTitle"></h2>
     <p class="sub" data-t="authSub"></p>
     <p class="note" id="authLoad" data-t="authLoadT"></p>
@@ -162,6 +187,12 @@ body.cust [data-owner]{display:none!important}body:not(.cust) [data-cust]{displa
       <div id="m7"></div>
       <p class="note" data-t="authFree"></p>
     </div>
+  </section>
+  <section class="card" id="lockCard" hidden>
+    <h2 data-t="lockT"></h2>
+    <p id="lockTxt" style="margin:0 0 6px"></p>
+    <p class="note" style="margin-top:0" data-t="lockS"></p>
+    <div class="row" style="margin-top:12px"><button class="btn sm" data-chat data-t="helpChat"></button></div>
   </section>
   <div class="msg info" id="needSetup" hidden><span data-t="needSetup"></span> <button class="link" data-open-settings data-t="openSettings"></button></div>
 
@@ -214,11 +245,28 @@ body.cust [data-owner]{display:none!important}body:not(.cust) [data-cust]{displa
   <p class="note" data-t="rights"></p>
   <footer class="foot">
     <div class="sup"><b data-t="helpT"></b><span data-t="helpS"></span>
-      <div class="row" style="margin-top:10px;justify-content:center"><a class="btn soft sm" href="https://kongthean.com/" target="_blank" rel="noopener" data-t="helpChat"></a><a class="btn soft sm" href="mailto:info@kongthean.com" data-t="helpMail"></a></div></div>
+      <div class="row" style="margin-top:10px;justify-content:center"><a class="btn soft sm" id="footChat" href="https://kongthean.com/" target="_blank" rel="noopener" data-t="helpChat"></a><a class="btn soft sm" href="mailto:info@kongthean.com" data-t="helpMail"></a></div></div>
     <p>&copy; <span id="yr">2026</span> Thean · kongthean.com. <span data-t="allRights"></span></p>
   </footer>
 </main>
 
+<div class="modal" id="me" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="meTitle">
+    <div class="hd"><h3 id="meTitle" data-t="myAcct"></h3><button class="ib" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div id="meBody"></div>
+    <div id="m10"></div>
+  </div>
+</div>
+<div class="modal" id="chat" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="chatTitle">
+    <div class="hd"><h3 id="chatTitle"><span data-t="chatT"></span><small id="chatSt"></small></h3><button class="ib" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="chlist" id="chatList"></div>
+    <div class="chq" id="chatQ"></div>
+    <div class="chin"><input type="text" id="chatIn" data-tph="typeMsg" maxlength="2000" autocomplete="off"><button class="btn" id="chatSend" aria-label="Send"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button></div>
+  </div>
+</div>
+<input type="file" id="rcptFile" accept="image/*" hidden>
+<div class="toast" id="toast" hidden></div>
 <div class="modal" id="plans" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="plansTitle">
     <div class="hd"><h3 id="plansTitle" data-t="plansT"></h3><button class="ib" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
@@ -229,10 +277,7 @@ body.cust [data-owner]{display:none!important}body:not(.cust) [data-cust]{displa
 <div class="modal" id="settings" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="setTitle">
     <div class="hd"><h3 id="setTitle" data-t="settings"></h3><button class="ib" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-    <h4 class="sh4" style="margin-top:6px" data-t="acct"></h4>
-    <div id="accInfo"></div>
-    <div class="row" style="margin-top:10px"><button class="btn sm" data-plans data-cust data-t="seePlans"></button><button class="btn soft sm" id="signOut" data-t="signOut"></button></div>
-    <h4 class="sh4" data-t="postTo"></h4>
+    <h4 class="sh4" style="margin-top:6px" data-t="postTo"></h4>
     <div class="dests" id="dests" style="margin-top:6px"></div>
     <div data-cust>
       <h4 class="sh4">Facebook</h4>
@@ -246,18 +291,22 @@ body.cust [data-owner]{display:none!important}body:not(.cust) [data-cust]{displa
     <div class="row" data-owner><input type="password" id="tok" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="EAA..."><button class="btn soft sm" id="tokShow" data-t="show"></button></div>
     <div class="row" data-owner style="margin-top:10px"><button class="btn sm" id="tokCheck" data-t="checkSave"></button><button class="btn soft sm" id="tokForget" data-t="forget"></button></div>
     <div id="m4" data-owner></div>
+    <div id="igSec">
     <h4 class="sh4">Instagram</h4>
     <p class="note" style="margin-top:0" data-t="igSub"></p>
     <div class="row"><button class="btn sm" id="igCheck" data-t="igConnect"></button><button class="btn soft sm" id="igForget" data-t="forget"></button></div>
     <div id="m5"></div>
+    </div>
+    <div id="tgSec">
     <h4 class="sh4">Telegram</h4>
     <p class="note" style="margin-top:0" data-t="tgSub"></p>
     <label class="f" for="tgTok" data-t="tgTokLabel"></label>
     <div class="row"><input type="password" id="tgTok" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="123456789:AA..."><button class="btn soft sm" id="tgShow" data-t="show"></button></div>
     <label class="f" for="tgChat" data-t="tgChatLabel"></label>
-    <input type="text" id="tgChat" autocapitalize="off" spellcheck="false" placeholder="@tg_thean">
+    <input type="text" id="tgChat" autocapitalize="off" spellcheck="false" placeholder="@your_channel">
     <div class="row" style="margin-top:10px"><button class="btn sm" id="tgCheck" data-t="checkSave"></button><button class="btn soft sm" id="tgForget" data-t="forget"></button></div>
     <div id="m6"></div>
+    </div>
     <h4 class="sh4" data-t="capSet"></h4>
     <p class="note" style="margin-top:0" data-t="capSetSub"></p>
     <div class="tg"><span data-t="keepText"></span><label class="sw"><input type="checkbox" id="oText" checked><span></span></label></div>
@@ -370,8 +419,9 @@ function applyLang(){drawKey();document.documentElement.lang=C.lang;document.bod
   document.querySelectorAll('[data-lang]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-lang')===C.lang)});
   $('guide').innerHTML=t('guide').map(function(s){return '<li>'+s+'</li>'}).join('');$('tgGuide').innerHTML=t('tgGuide').map(function(s){return '<li>'+s+'</li>'}).join('');drawDests();
   if(ST.kind==='photos')countSel();
-  $('needSetup').hidden=!!C.token;drawHist()}
-document.querySelectorAll('[data-lang]').forEach(function(b){b.onclick=function(){C.lang=b.getAttribute('data-lang');save();applyLang()}});
+  $('needSetup').hidden=!!C.token;drawHist();if(typeof drawAll==='function'&&ACC)drawAll();if(typeof drawChat==='function'&&CH)drawChat();if(typeof drawFbBox==='function')drawFbBox()}
+document.addEventListener('click',function(e){var b=e.target.closest('[data-lang]');if(!b)return;C.lang=b.getAttribute('data-lang');save();applyLang()});
+document.addEventListener('click',function(e){if(e.target.closest('[data-chat]'))openChat()});
 
 /* ---------- state ---------- */
 var ST={kind:'',video:'',images:[],sel:[],files:[],text:'',tags:[],user:'',name:'',avatar:'',srcLink:''};
@@ -479,8 +529,8 @@ function prog(f){$('bar').hidden=f==null;$('bar').firstChild.style.width=Math.ro
 C.dest=C.dest||{fb:true};
 var DESTS=[['fb','dFbPost'],['fbs','dFbStory'],['ig','dIgPost'],['igs','dIgStory'],['tg','dTg']];
 function destReady(k){if(destLocked(k))return false;if(k==='ig'||k==='igs')return !!C.igId;if(k==='tg')return !!(C.tgToken&&C.tgChat);return !!C.token}
-function drawDests(){var box=$('dests');if(!box)return;box.innerHTML=DESTS.map(function(d){var on=!!C.dest[d[0]],ready=destReady(d[0]),sk=WHEN==='later'&&d[0]!=='fb';
-  return '<button type="button" class="dest'+(on?' on':'')+(sk||!ready?' off':'')+'" data-dest="'+d[0]+'"><i></i>'+esc(t(d[1]))+(destLocked(d[0])?' <small>· '+esc(t('lockedPlan'))+'</small>':ready?'':' <small>· '+esc(t('setupNeeded'))+'</small>')+'</button>'}).join('');
+function drawDests(){var box=$('dests');if(!box)return;var hid=DESTS.filter(function(d){return destLocked(d[0])});box.innerHTML=DESTS.filter(function(d){return !destLocked(d[0])}).map(function(d){var on=!!C.dest[d[0]],ready=destReady(d[0]),sk=WHEN==='later'&&d[0]!=='fb';
+  return '<button type="button" class="dest'+(on?' on':'')+(sk||!ready?' off':'')+'" data-dest="'+d[0]+'"><i></i>'+esc(t(d[1]))+(destLocked(d[0])?' <small>· '+esc(t('lockedPlan'))+'</small>':ready?'':' <small>· '+esc(t('setupNeeded'))+'</small>')+'</button>'}).join('')+(hid.length?'<div class="upsell"><span>'+esc(t('subsOnly'))+'</span><button class="link" data-plans>'+esc(t('seePlans'))+'</button></div>':'');
   var on=DESTS.filter(function(d){return C.dest[d[0]]&&destReady(d[0])&&!(WHEN==='later'&&d[0]!=='fb')}).map(function(d){return t(d[1])});$('destSum').textContent=on.length?t('postingTo',{d:on.join(', ')}):t('noDest');
   $('schedNote').hidden=!(WHEN==='later'&&DESTS.some(function(d){return d[0]!=='fb'&&C.dest[d[0]]}))}
 document.addEventListener('click',function(e){var b=e.target.closest('[data-dest]');if(!b)return;var k=b.getAttribute('data-dest');if(destLocked(k)){$('settings').hidden=true;openPlans();return}if(!destReady(k)){openSettings();return}C.dest[k]=!C.dest[k];save();drawDests()});
@@ -606,8 +656,8 @@ function drawHist(){var h=C.hist||[];$('histCard').hidden=!h.length;
   $('hist').innerHTML=h.map(function(x){var d=new Date(x.s?x.s*1000:x.at);return '<a target="_blank" rel="noopener" href="'+esc(x.u||'#')+'"><span>'+esc(x.c||'Post')+(x.d&&x.d.length>1?' · '+x.d.length+' places':'')+'</span><small>'+esc((x.s?t('later')+' · ':'')+d.toLocaleDateString()+' '+d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}))+'</small></a>'}).join('')}
 
 /* ---------- settings ---------- */
-function openSettings(){$('tgTok').value=C.tgToken||'';$('tgChat').value=C.tgChat||'@tg_thean';msg('m5',C.igId?'ok':'',C.igId?esc(t('igOk',{u:C.igUser||''})):'');msg('m6',C.tgToken?'ok':'',C.tgToken?esc(t('tgOk',{c:C.tgTitle||C.tgChat||''})):'');$('tok').value=C.token||'';$('mine').value=C.mine||'';$('creditTpl').value=C.creditTpl||'';$('cld').value=C.cld||'';$('pre').value=C.pre||'';
-  keyMsg();drawAccBox();drawFbBox();$('settings').hidden=false}
+function openSettings(){$('tgTok').value=C.tgToken||'';$('tgChat').value=C.tgChat||(ACC.team?'@tg_thean':'');msg('m5',C.igId?'ok':'',C.igId?esc(t('igOk',{u:C.igUser||''})):'');msg('m6',C.tgToken?'ok':'',C.tgToken?esc(t('tgOk',{c:C.tgTitle||C.tgChat||''})):'');$('tok').value=C.token||'';$('mine').value=C.mine||'';$('creditTpl').value=C.creditTpl||'';$('cld').value=C.cld||'';$('pre').value=C.pre||'';
+  keyMsg();drawFbBox();$('settings').hidden=false}
 function closeSettings(){C.mine=$('mine').value.trim();C.creditTpl=$('creditTpl').value.trim()||'Credit: @{user}';C.cld=$('cld').value.trim();C.pre=$('pre').value.trim();save();$('settings').hidden=true;if(!$('capCard').hidden)buildCaption()}
 $('gear').onclick=openSettings;
 document.addEventListener('click',function(e){if(e.target.closest('[data-open-settings]'))openSettings()});
@@ -622,7 +672,7 @@ $('igCheck').onclick=function(){if(!C.token||!C.pageId){msg('m5','bad',esc(t('to
     C.igId=a.id;C.igUser=a.username||'';C.dest.ig=true;save();msg('m5','ok',esc(t('igOk',{u:C.igUser})));drawDests()}).catch(function(e){msg('m5','bad',esc(t('tokBad',{e:e&&e.message||''})))})};
 $('igForget').onclick=function(){delete C.igId;delete C.igUser;C.dest.ig=false;C.dest.igs=false;save();msg('m5','ok',esc(t('removed')));drawDests()};
 $('tgShow').onclick=function(){var p=$('tgTok').type==='password';$('tgTok').type=p?'text':'password';this.textContent=t(p?'hide':'show')};
-$('tgCheck').onclick=function(){var tok=$('tgTok').value.replace(/[^0-9A-Za-z:_-]/g,''),ch=$('tgChat').value.trim()||'@tg_thean';if(/^[A-Za-z0-9_]{5,}$/.test(ch))ch='@'+ch;ch=ch.replace(/^https?:\/\/t\.me\//,'@');
+$('tgCheck').onclick=function(){var tok=$('tgTok').value.replace(/[^0-9A-Za-z:_-]/g,''),ch=$('tgChat').value.trim()||(ACC.team?'@tg_thean':'');if(!ch){msg('m6','bad',esc(t('tgChatBad')));return}if(/^[A-Za-z0-9_]{5,}$/.test(ch))ch='@'+ch;ch=ch.replace(/^https?:\/\/t\.me\//,'@');
   if(!tok){msg('m6','bad',esc(t('tokEmpty')));return}var old=[C.tgToken,C.tgChat];C.tgToken=tok;C.tgChat=ch;var f=new FormData();f.append('chat_id',ch);
   tgCall('getMe',null).then(function(me){var g=new FormData();g.append('chat_id',ch);g.append('user_id',me.id);return tgCall('getChat',f).then(function(c){return tgCall('getChatMember',g).then(function(m){return {c:c,m:m}})})})
   .then(function(o){var name=o.c.title||ch;if(o.m.status!=='administrator'&&o.m.status!=='creator'){msg('m6','bad',esc(t('tgNotAdmin',{c:name})));C.tgToken=old[0];C.tgChat=old[1];return}
@@ -703,7 +753,7 @@ function khCrc(str){var c=0xFFFF;for(var i=0;i<str.length;i++){c^=str.charCodeAt
 function khAscii(x,n){return String(x||'').normalize('NFD').replace(/[^\x20-\x7E]/g,'').trim().slice(0,n)}
 function khqrString(D,amt,cur){
   var now=Date.now(),a=cur==='KHR'?String(Math.round(amt)):String(Math.round(amt*100)/100);
-  var s=khTlv('00','01')+khTlv('01',amt>0?'12':'11')+khTlv('29',khTlv('00',String(D.bakongId).trim()))+khTlv('52','5999')+khTlv('58','KH')+khTlv('59',khAscii(D.khName||'THEAN'||'THEAN',25)||'THEAN')+khTlv('60',khAscii(D.khCity||'Phnom Penh',15)||'Phnom Penh');
+  var s=khTlv('00','01')+khTlv('01',amt>0?'12':'11')+khTlv('29',khTlv('00',String(D.bakongId).trim()))+khTlv('52','5999')+khTlv('58','KH')+khTlv('59',khAscii(D.khName||'THEAN'||'THEAN',25)||'THEAN')+khTlv('60',khAscii(D.khCity||'Phnom Penh',15)||'Phnom Penh')+(D.bill?khTlv('62',khTlv('01',String(D.bill).slice(0,25))):'');
   if(amt>0)s+=khTlv('99',khTlv('00',String(now))+khTlv('01',String(now+(+D.khExp>0?+D.khExp*1000:86400000))));
   s+=khTlv('53',cur==='KHR'?'116':'840');if(amt>0)s+=khTlv('54',a);
   s+='6304';return s+khCrc(s)}
@@ -727,7 +777,7 @@ function khDraw(cv,D,amt,cur){
 /* ---------- accounts, free posts and plans ---------- */
 var FBC={apiKey:'AIzaSyD9hhjSe53uha7jADGUOiWK-MLHOGoz6Pk',authDomain:'thean-12952.firebaseapp.com',projectId:'thean-12952',appId:'1:1082546170540:web:71e42aaada4df363588d09',databaseURL:'https://thean-12952-default-rtdb.asia-southeast1.firebasedatabase.app'};
 var FBV='https://www.gstatic.com/firebasejs/10.12.2/';
-var ACC={st:'load',user:null,team:false,prof:null,used:0,plan:null,req:null,cfg:null,don:null,offs:[]},FBX=null;
+var ACC={st:'load',user:null,team:false,prof:null,used:0,plan:null,req:null,lock:null,cfg:null,don:null,offs:[]},FBX=null;
 var PK=['fb','fbig','all'],MON=[1,2,3,6,12],PKD={fb:['fb','fbs'],fbig:['fb','fbs','ig','igs'],all:['fb','fbs','ig','igs','tg']};
 var FB_SCOPES='pages_show_list,pages_read_engagement,pages_manage_posts,pages_read_user_content,instagram_basic,instagram_content_publish,business_management';
 function cfg(){return ACC.cfg||{}}
@@ -740,23 +790,31 @@ function fday(ms){var d=new Date(ms);return ('0'+d.getDate()).slice(-2)+'/'+('0'
 function planOn(){return !!(ACC.plan&&+ACC.plan.until>Date.now())}
 function freeTotal(){var f=cfg().free;f=f==null||f===''?5:+f;return f>=0?f:5}
 function freeLeft(){return Math.max(0,freeTotal()-(+ACC.used||0))}
-function destLocked(k){if(ACC.team||ACC.st!=='in'||!planOn())return false;return (PKD[ACC.plan.pkg]||PKD.all).indexOf(k)<0}
-function canPost(){return ACC.team||planOn()||freeLeft()>0}
+/* free accounts post to Facebook only; Stories, Instagram and Telegram come with a plan */
+function allowed(){if(ACC.team)return PKD.all;if(planOn())return PKD[ACC.plan.pkg]||PKD.all;return ['fb']}
+function destLocked(k){if(ACC.st!=='in'||ACC.team)return false;return allowed().indexOf(k)<0}
+function isLocked(){var l=ACC.lock;return !!(l&&!ACC.team&&(!(+l.until)||+l.until>Date.now()))}
+function canPost(){return ACC.team||(!isLocked()&&(planOn()||freeLeft()>0))}
 function R(p){return FBX.d.ref(FBX.db,p)}
 function fbLoad(){if(FBX)return Promise.resolve(FBX);
   return Promise.all([import(FBV+'firebase-app.js'),import(FBV+'firebase-auth.js'),import(FBV+'firebase-database.js')]).then(function(m){
     var app=m[0].initializeApp(FBC,'post');FBX={A:m[1],auth:m[1].getAuth(app),d:m[2],db:m[2].getDatabase(app,FBC.databaseURL)};return FBX})}
+function myName(){return (ACC.prof&&ACC.prof.name)||(ACC.user&&ACC.user.email||'').split('@')[0]||''}
 
-/* the page needs an account; our team (admin login) posts free with no limit */
+/* ---------- sign in / create account ---------- */
 var AM='in';
-function drawAuth(){var out=ACC.st!=='in';document.body.classList.toggle('out',out);document.body.classList.toggle('cust',ACC.st==='in'&&!ACC.team);
-  $('authCard').hidden=!out;$('authLoad').hidden=ACC.st!=='load';$('authForm').hidden=ACC.st==='load'||ACC.st==='err';$('authErr').hidden=ACC.st!=='err';
+function drawAll(){var inn=ACC.st==='in',lk=inn&&isLocked();
+  document.body.classList.toggle('out',!inn);document.body.classList.toggle('cust',inn&&!ACC.team);document.body.classList.toggle('team',inn&&ACC.team);document.body.classList.toggle('locked',lk);
+  $('authCard').hidden=inn;$('authLoad').hidden=ACC.st!=='load';$('authForm').hidden=ACC.st==='load'||ACC.st==='err';$('authErr').hidden=ACC.st!=='err';
   document.querySelectorAll('[data-am]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-am')===AM)});
   $('upOnly').hidden=AM!=='up';$('aGo').textContent=t(AM==='up'?'signUp':'signIn');$('aPass').autocomplete=AM==='up'?'new-password':'current-password';$('aForgot').hidden=AM==='up';
-  drawPlanBar();drawAccBox();drawDests()}
-function authErr(e){var c=String(e&&e.code||''),m={'auth/invalid-credential':'aeWrong','auth/wrong-password':'aeWrong','auth/user-not-found':'aeWrong','auth/invalid-email':'aeEmail','auth/email-already-in-use':'aeUsed','auth/weak-password':'aeWeak','auth/too-many-requests':'aeMany','auth/network-request-failed':'aeNet','auth/missing-password':'aeWeak'}[c];
+  $('lockCard').hidden=!lk;if(lk){var l=ACC.lock;$('lockTxt').textContent=(+l.until?t('lockUntil',{d:fday(+l.until)}):t('lockForever'))+(l.reason?' '+t('lockWhy',{r:l.reason}):'')}
+  var av=$('meBtn');av.textContent=(myName().charAt(0)||'T').toUpperCase();av.classList.toggle('own',!!ACC.team);
+  $('igSec').hidden=destLocked('ig')&&destLocked('igs');$('tgSec').hidden=destLocked('tg');
+  drawPlanBar();drawDests();if(!$('me').hidden)drawMe();if(!$('plans').hidden)drawPlans()}
+function authErr(e){var c=String(e&&e.code||''),m={'auth/invalid-credential':'aeWrong','auth/wrong-password':'aeWrong','auth/user-not-found':'aeWrong','auth/invalid-email':'aeEmail','auth/email-already-in-use':'aeUsed','auth/weak-password':'aeWeak','auth/too-many-requests':'aeMany','auth/network-request-failed':'aeNet','auth/missing-password':'aeWeak','auth/requires-recent-login':'aeRecent'}[c];
   return m?t(m):String(e&&e.message||e||'')}
-document.addEventListener('click',function(e){var b=e.target.closest('[data-am]');if(!b)return;AM=b.getAttribute('data-am');msg('m7','','');drawAuth()});
+document.addEventListener('click',function(e){var b=e.target.closest('[data-am]');if(!b)return;AM=b.getAttribute('data-am');msg('m7','','');drawAll()});
 $('aGo').onclick=function(){var em=$('aEmail').value.trim(),pw=$('aPass').value,nm=$('aName').value.trim(),fl=$('aFb').value.trim();
   if(!/^\S+@\S+\.\S+$/.test(em)){msg('m7','bad',esc(t('aeEmail')));return}
   if(pw.length<6){msg('m7','bad',esc(t('aeWeak')));return}
@@ -768,67 +826,116 @@ $('aGo').onclick=function(){var em=$('aEmail').value.trim(),pw=$('aPass').value,
   .then(function(){msg('m7','','');$('aPass').value=''}).catch(function(e){msg('m7','bad',esc(authErr(e)))}).then(function(){btn.disabled=false})};
 $('aForgot').onclick=function(){var em=$('aEmail').value.trim();if(!/^\S+@\S+\.\S+$/.test(em)){msg('m7','bad',esc(t('aeEmailFirst')));return}
   fbLoad().then(function(X){return X.A.sendPasswordResetEmail(X.auth,em)}).then(function(){msg('m7','ok',esc(t('aReset')))}).catch(function(e){msg('m7','bad',esc(authErr(e)))})};
-$('authRetry').onclick=function(){ACC.st='load';drawAuth();accStart()};
-$('signOut').onclick=function(){if(!FBX)return;if(!ACC.team){['token','pageId','pageName','igId','igUser','fbLogin','fbPage','tgToken','tgChat','tgTitle'].forEach(function(k){delete C[k]});save();KS='none';drawKey()}
-  FBX.A.signOut(FBX.auth);$('settings').hidden=true};
+$('authRetry').onclick=function(){ACC.st='load';drawAll();accStart()};
+function clearKeys(){['token','pageId','pageName','igId','igUser','fbLogin','fbPage','tgToken','tgChat','tgTitle'].forEach(function(k){delete C[k]});save();KS='none';drawKey()}
+function signOut(){if(!FBX)return;if(!ACC.team)clearKeys();chStop();FBX.A.signOut(FBX.auth);['me','settings','plans','chat'].forEach(function(id){$(id).hidden=true})}
 
-function accOff(){ACC.offs.forEach(function(f){try{f()}catch(e){}});ACC.offs=[];ACC.team=false;ACC.prof=null;ACC.used=0;ACC.plan=null;ACC.req=null}
+function accOff(){ACC.offs.forEach(function(f){try{f()}catch(e){}});ACC.offs=[];ACC.team=false;ACC.prof=null;ACC.used=0;ACC.plan=null;ACC.req=null;ACC.lock=null}
 function accOn(u){accOff();
   FBX.d.get(R('agents/'+u.uid)).then(function(s){return s.exists()},function(){return false}).then(function(team){
     if(ACC.user!==u)return;ACC.team=team;ACC.st='in';
-    if(!team){
+    if(team){ACC.offs.push(FBX.d.onValue(R('postusers/'+u.uid+'/profile'),function(s){ACC.prof=s.val();drawAll()},function(){}))}
+    else{
       if(C.token&&!C.fbLogin){['token','pageId','pageName'].forEach(function(k){delete C[k]});save();KS='none';drawKey()}
-      ACC.offs.push(FBX.d.onValue(R('postusers/'+u.uid),function(s){var v=s.val()||{};ACC.prof=v.profile||null;ACC.used=+v.used||0;ACC.plan=v.plan||null;ACC.req=v.req||null;
+      if(C.tgChat==='@tg_thean'&&!C.tgToken){delete C.tgChat;save()}
+      ACC.offs.push(FBX.d.onValue(R('postusers/'+u.uid),function(s){var v=s.val()||{},had=planOn();ACC.prof=v.profile||null;ACC.used=+v.used||0;ACC.plan=v.plan||null;ACC.req=v.req||null;ACC.lock=v.lock||null;
         if(!v.profile)FBX.d.update(R('postusers/'+u.uid+'/profile'),{email:u.email||'',at:FBX.d.serverTimestamp()}).catch(function(){});
-        drawPlanBar();drawAccBox();drawDests();if(!$('plans').hidden)drawPlans()},function(){}));
+        if(!had&&planOn()&&ACC.seen)toast(t('planOnToast',{p:pkName(ACC.plan.pkg),d:fday(+ACC.plan.until)}));ACC.seen=true;
+        drawAll()},function(){}));
       fbSdk().then(fbSilent)}
-    drawAuth()})}
-function accStart(){drawAuth();
+    chStart();drawAll()})}
+function accStart(){drawAll();
   fbLoad().then(function(X){
-    ACC.offs0=FBX.d.onValue(R('settings/public/postPlans'),function(s){ACC.cfg=s.val()||{};drawPlanBar();drawAccBox();drawFbBox();if(!$('plans').hidden)drawPlans()},function(){ACC.cfg=ACC.cfg||{}});
-    X.A.onAuthStateChanged(X.auth,function(u){ACC.user=u;if(!u){accOff();ACC.st='out';drawAuth();return}accOn(u)})})
-  .catch(function(){ACC.st='err';drawAuth()})}
+    FBX.d.onValue(R('settings/public/postPlans'),function(s){ACC.cfg=s.val()||{};drawAll();drawFbBox()},function(){ACC.cfg=ACC.cfg||{}});
+    X.A.onAuthStateChanged(X.auth,function(u){ACC.user=u;ACC.seen=false;if(!u){accOff();chStop();ACC.st='out';drawAll();return}accOn(u)})})
+  .catch(function(){ACC.st='err';drawAll()})}
+function toast(s){var el=$('toast');el.textContent=s;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(function(){el.hidden=true},4200)}
 
-/* little status line above the Post button, and the account box in Settings */
+/* status line above the Post button */
 function drawPlanBar(){var el=$('planBar');if(!el)return;
-  if(ACC.st!=='in'||ACC.team){el.hidden=true;return}el.hidden=false;
-  el.innerHTML=planOn()?esc(t('pbPlan',{p:pkName(ACC.plan.pkg),d:fday(+ACC.plan.until)}))+' <button class="link" data-plans>'+esc(t('pbMore'))+'</button>'
-    :'<span class="'+(freeLeft()?'':'bad')+'">'+esc(t('pbFree',{n:freeLeft(),f:freeTotal()}))+'</span> <button class="link" data-plans>'+esc(t('seePlans'))+'</button>'}
-function drawAccBox(){var el=$('accInfo');if(!el)return;if(ACC.st!=='in'){el.innerHTML='';return}
-  var em=esc(ACC.user&&ACC.user.email||''),s;
-  if(ACC.team)s=t('accTeam');else if(planOn())s=t('pbPlan',{p:pkName(ACC.plan.pkg),d:fday(+ACC.plan.until)});else s=t('pbFree',{n:freeLeft(),f:freeTotal()});
-  el.innerHTML='<div class="acc"><b>'+em+'</b><span>'+esc(s)+'</span></div>'}
-document.addEventListener('click',function(e){if(e.target.closest('[data-plans]')){$('settings').hidden=true;openPlans()}});
+  if(ACC.st!=='in'||ACC.team||isLocked()){el.hidden=true;return}el.hidden=false;
+  el.innerHTML=planOn()?'<span>'+esc(t('pbPlan',{p:pkName(ACC.plan.pkg),d:fday(+ACC.plan.until)}))+'</span><button class="link" data-plans>'+esc(t('pbMore'))+'</button>'
+    :'<span class="'+(freeLeft()?'':'bad')+'">'+esc(t('pbFree',{n:freeLeft(),f:freeTotal()}))+'</span><button class="link" data-plans>'+esc(t('upgrade'))+'</button>'}
+document.addEventListener('click',function(e){if(e.target.closest('[data-plans]')){['settings','me','chat'].forEach(function(id){$(id).hidden=true});openPlans()}});
 
-/* ---------- plans and KHQR payment ---------- */
-var PS={k:null,m:1,pay:false};
+/* ---------- my account (profile icon) ---------- */
+var MEF='';
+$('meBtn').onclick=function(){MEF='';msg('m10','','');$('me').hidden=false;drawMe()};
+$('me').addEventListener('click',function(e){if(e.target===$('me')||e.target.closest('[data-close]')){$('me').hidden=true;return}
+  var b=e.target.closest('[data-mea]');if(!b)return;var a=b.getAttribute('data-mea');
+  if(a==='set'){$('me').hidden=true;openSettings();return}
+  if(a==='chat'){$('me').hidden=true;openChat();return}
+  if(a==='out'){signOut();return}
+  if(a==='edit'||a==='pw'||a==='del'){MEF=MEF===a?'':a;msg('m10','','');drawMe();return}
+  if(a==='saveEdit'){var nm=$('meN').value.trim(),ph=$('meP').value.trim(),fl=$('meF').value.trim();if(!nm){msg('m10','bad',esc(t('aeNeedName')));return}
+    b.disabled=true;FBX.d.update(R('postusers/'+ACC.user.uid+'/profile'),{email:ACC.user.email||'',name:nm.slice(0,90),phone:ph.slice(0,40),fb:fl.slice(0,290)}).then(function(){MEF='';msg('m10','ok',esc(t('saved')));drawMe()}).catch(function(err){b.disabled=false;msg('m10','bad',esc(authErr(err)))});return}
+  if(a==='savePw'){var o=$('meO').value,n=$('meNw').value;if(n.length<6){msg('m10','bad',esc(t('aeWeak')));return}b.disabled=true;
+    FBX.A.reauthenticateWithCredential(ACC.user,FBX.A.EmailAuthProvider.credential(ACC.user.email,o)).then(function(){return FBX.A.updatePassword(ACC.user,n)})
+    .then(function(){MEF='';msg('m10','ok',esc(t('pwDone')));drawMe()}).catch(function(err){b.disabled=false;msg('m10','bad',esc(authErr(err)))});return}
+  if(a==='doDel'){var p=$('meD').value;if(!p){msg('m10','bad',esc(t('aeWeak')));return}b.disabled=true;var u=ACC.user;
+    FBX.A.reauthenticateWithCredential(u,FBX.A.EmailAuthProvider.credential(u.email,p)).then(function(){return ACC.team?null:FBX.d.remove(R('postusers/'+u.uid))})
+    .then(function(){clearKeys();return FBX.A.deleteUser(u)}).then(function(){$('me').hidden=true;toast(t('delDone'))}).catch(function(err){b.disabled=false;msg('m10','bad',esc(authErr(err)))})}});
+function drawMe(){var p=ACC.prof||{},em=ACC.user&&ACC.user.email||'',h='';
+  h+='<div class="mehd"><div class="av big'+(ACC.team?' own':'')+'">'+esc((myName().charAt(0)||'T').toUpperCase())+'</div><div><b>'+esc(myName())+'</b><small>'+esc(em)+'</small></div></div>';
+  if(ACC.team)h+='<div class="mecard prem"><b>'+esc(t('ownerT'))+'</b><span>'+esc(t('ownerS'))+'</span></div>';
+  else{var st=isLocked()?t('lockShort'):planOn()?t('pbPlan',{p:pkName(ACC.plan.pkg),d:fday(+ACC.plan.until)}):t('freeAcct',{n:freeLeft(),f:freeTotal()});
+    var left=planOn()?Math.ceil((+ACC.plan.until-Date.now())/864e5):0;
+    h+='<div class="mecard'+(planOn()?' prem':'')+'"><b>'+esc(planOn()?pkName(ACC.plan.pkg):t('freePlan'))+'</b><span>'+esc(st)+(planOn()?' · '+esc(t('daysLeft',{n:left})):'')+'</span>'+
+      '<span class="inc">'+esc(t('canPostTo'))+' '+esc(allowed().map(function(d){return t({fb:'dFbPost',fbs:'dFbStory',ig:'dIgPost',igs:'dIgStory',tg:'dTg'}[d])}).join(', '))+'</span>'+
+      '<button class="btn sm" data-plans>'+esc(t(planOn()?'renew':'seePlans'))+'</button></div>'}
+  var row=function(a,k,cls){return '<button class="merow'+(cls||'')+'" data-mea="'+a+'"><span>'+esc(t(k))+'</span><i></i></button>'};
+  h+='<div class="melist">'+row('set','postSettings')+row('chat','helpChat')+row('edit','editProfile')+
+    (MEF==='edit'?'<div class="meform"><label class="f" for="meN">'+esc(t('aName'))+'</label><input type="text" id="meN" value="'+esc(p.name||'')+'">'+
+      '<label class="f" for="meP">'+esc(t('phone'))+'</label><input type="text" id="meP" inputmode="tel" value="'+esc(p.phone||'')+'">'+
+      '<label class="f" for="meF">'+esc(t('aFb'))+'</label><input type="url" id="meF" autocapitalize="off" value="'+esc(p.fb||'')+'">'+
+      '<button class="btn sm" data-mea="saveEdit" style="margin-top:10px">'+esc(t('save'))+'</button></div>':'')+
+    row('pw','changePw')+
+    (MEF==='pw'?'<div class="meform"><label class="f" for="meO">'+esc(t('curPw'))+'</label><input type="password" id="meO" autocomplete="current-password">'+
+      '<label class="f" for="meNw">'+esc(t('newPw'))+'</label><input type="password" id="meNw" autocomplete="new-password">'+
+      '<button class="btn sm" data-mea="savePw" style="margin-top:10px">'+esc(t('save'))+'</button></div>':'')+
+    '<div class="merow lang"><span>'+esc(t('language'))+'</span><div class="lang2"><button data-lang="km" class="'+(C.lang==='km'?'on':'')+'">ខ្មែរ</button><button data-lang="en" class="'+(C.lang==='en'?'on':'')+'">EN</button></div></div>'+
+    (ACC.team?'<a class="merow" href="/admin" target="_blank" rel="noopener"><span>'+esc(t('adminLink'))+'</span><i></i></a>':'')+
+    row('out','signOut')+(ACC.team?'':row('del','delAcct',' red'))+
+    (MEF==='del'?'<div class="meform"><p class="note" style="margin-top:0">'+esc(t('delWarn'))+'</p><label class="f" for="meD">'+esc(t('curPw'))+'</label><input type="password" id="meD" autocomplete="current-password">'+
+      '<button class="btn sm danger" data-mea="doDel" style="margin-top:10px">'+esc(t('delForever'))+'</button></div>':'')+'</div>';
+  var keep=document.activeElement&&document.activeElement.id;$('meBody').innerHTML=h;if(keep&&$(keep))$(keep).focus()}
+
+/* ---------- plans, KHQR and receipt ---------- */
+var PS={k:null,m:1,pay:false,up:false};
+function billCode(){var s=ACC.user?ACC.user.uid:'x',h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return 'TP'+h.toString(36).toUpperCase().slice(0,6)}
 function openPlans(){PS.pay=false;$('plans').hidden=false;drawPlans();
-  if(!ACC.don)FBX&&FBX.d.get(R('site/content/donate')).then(function(s){ACC.don=s.val()||{};if(PS.pay)drawPlans()}).catch(function(){ACC.don={}})}
+  if(!ACC.don&&FBX)FBX.d.get(R('site/content/donate')).then(function(s){ACC.don=s.val()||{};if(PS.pay)drawPlans()}).catch(function(){ACC.don={}})}
 $('plans').addEventListener('click',function(e){if(e.target===$('plans')||e.target.closest('[data-close]')){$('plans').hidden=true;return}
   var b=e.target.closest('[data-pm]');if(b){PS.k=b.getAttribute('data-pmk');PS.m=+b.getAttribute('data-pm');PS.pay=false;drawPlans();return}
   b=e.target.closest('[data-pk]');if(b){PS.k=b.getAttribute('data-pk');var ms=MON.filter(function(m){return price(PS.k,m)});if(ms.indexOf(PS.m)<0)PS.m=ms[0]||1;PS.pay=false;drawPlans();return}
   b=e.target.closest('[data-pay]');if(b){PS.pay=true;drawPlans();return}
   b=e.target.closest('[data-back]');if(b){PS.pay=false;drawPlans();return}
   b=e.target.closest('[data-saveqr]');if(b){saveQr();return}
-  b=e.target.closest('[data-paid]');if(b){b.disabled=true;FBX.d.set(R('postusers/'+ACC.user.uid+'/req'),{pkg:PS.k,m:PS.m,amt:price(PS.k,PS.m),cur:cur(),at:Date.now()}).then(function(){PS.pay=false;drawPlans()}).catch(function(err){b.disabled=false;msg('m9','bad',esc(err&&err.message||''))});return}
+  b=e.target.closest('[data-rcpt]');if(b){$('rcptFile').click();return}
+  b=e.target.closest('[data-pchat]');if(b){$('plans').hidden=true;openChat();return}
   b=e.target.closest('[data-unreq]');if(b){FBX.d.remove(R('postusers/'+ACC.user.uid+'/req')).catch(function(){})}});
+$('rcptFile').onchange=function(){var f=this.files&&this.files[0];this.value='';if(!f)return;if(!/^image\//.test(f.type)){msg('m9','bad',esc(t('rcptImg')));return}
+  PS.up=true;drawPlans();msg('m9','info',esc(t('rcptUp')));
+  cldUp(f).then(function(u){return FBX.d.set(R('postusers/'+ACC.user.uid+'/req'),{pkg:PS.k,m:PS.m,amt:price(PS.k,PS.m),cur:cur(),at:Date.now(),img:u,code:billCode()})})
+  .then(function(){PS.up=false;PS.pay=false;drawPlans()}).catch(function(err){PS.up=false;drawPlans();msg('m9','bad',esc(t('rcptFail'))+'<br><small>'+esc(err&&err.message||'')+'</small>')})};
 function nm(n){n=+n;return t(n===1?'nMonth1':'nMonths',{n:n})}
 function incl(k){return PKD[k].map(function(d){return t({fb:'dFbPost',fbs:'dFbStory',ig:'dIgPost',igs:'dIgStory',tg:'dTg'}[d])}).join(' · ')}
 function drawPlans(){var box=$('plansBody'),h='';
-  var st=ACC.team?t('accTeam'):planOn()?t('pbPlan',{p:pkName(ACC.plan.pkg),d:fday(+ACC.plan.until)}):t('pbFree',{n:freeLeft(),f:freeTotal()});
+  var st=ACC.team?t('ownerS'):planOn()?t('pbPlan',{p:pkName(ACC.plan.pkg),d:fday(+ACC.plan.until)}):t('freeAcct',{n:freeLeft(),f:freeTotal()});
   h+='<p class="note" style="margin-top:0">'+esc(st)+'</p>';
-  if(ACC.req){var q=ACC.req;h+='<div class="msg info"><b>'+esc(t('reqT'))+'</b><br>'+esc(pkName(q.pkg)+' · '+nm(q.m)+' · '+money(+q.amt))+'<br>'+esc(t('reqS'))+
-    '<div class="row" style="margin-top:10px"><a class="btn sm" href="https://kongthean.com/" target="_blank" rel="noopener">'+esc(t('helpChat'))+'</a><button class="btn soft sm" data-unreq>'+esc(t('reqCancel'))+'</button></div></div>'}
+  if(ACC.req){var q=ACC.req,rv=q.st==='review';h+='<div class="msg '+(rv?'info':'ok')+'"><b>'+esc(t(rv?'reqRevT':'reqT'))+'</b><br>'+esc(pkName(q.pkg)+' · '+nm(q.m)+' · '+money(+q.amt))+'<br>'+esc(t(rv?'reqRevS':'reqS'))+
+    '<div class="row" style="margin-top:10px"><button class="btn sm soft" data-pchat>'+esc(t('helpChat'))+'</button><button class="btn sm soft" data-unreq>'+esc(t('reqCancel'))+'</button></div></div>';box.innerHTML=h;return}
   var packs=PK.filter(function(k){return packOn(k)&&MON.some(function(m){return price(k,m)})});
   if(!packs.length){h+='<div class="msg info">'+esc(t('noPrices'))+'</div>';box.innerHTML=h;return}
-  if(!PS.k||packs.indexOf(PS.k)<0){PS.k=packs[packs.length-1];var ms0=MON.filter(function(m){return price(PS.k,m)});PS.m=ms0[0]}
-  if(PS.pay){var amt=price(PS.k,PS.m),D=ACC.don;
+  if(!PS.k||packs.indexOf(PS.k)<0){PS.k=packs[packs.length-1];PS.m=MON.filter(function(m){return price(PS.k,m)})[0]}
+  if(PS.pay){var amt=price(PS.k,PS.m),pc=cfg().pay||{},D=ACC.don?Object.assign({},ACC.don):null;if(D)['bakongId','khName','khCity'].forEach(function(k){if(String(pc[k]||'').trim())D[k]=String(pc[k]).trim()});
     h+='<div class="paybox"><p><b>'+esc(pkName(PS.k))+'</b> · '+esc(nm(PS.m))+' · <b>'+esc(money(amt))+'</b></p>';
     if(!D)h+='<p class="note">'+esc(t('aWait'))+'</p>';
     else if(!D.bakongId)h+='<div class="msg info">'+esc(t('noQr'))+'</div>';
     else h+='<canvas id="payqr"></canvas><button class="btn soft sm" data-saveqr>'+esc(t('saveQr'))+'</button><ol class="steps" style="text-align:left">'+t('paySteps').map(function(s){return '<li>'+esc(s)+'</li>'}).join('')+'</ol>';
-    h+='<div id="m9"></div><div class="row" style="margin-top:12px"><button class="btn" data-paid style="flex:1">'+esc(t('paid'))+'</button><button class="btn soft" data-back>'+esc(t('back'))+'</button></div></div>';
-    box.innerHTML=h;if(D&&D.bakongId){try{khDraw($('payqr'),D,amt,cur())}catch(e){}}return}
+    h+='<div id="m9"></div><div class="row" style="margin-top:12px"><button class="btn" data-rcpt style="flex:1"'+(PS.up?' disabled':'')+'>'+esc(t(PS.up?'rcptUp':'rcptBtn'))+'</button><button class="btn soft" data-back>'+esc(t('back'))+'</button></div>'+
+      '<p class="note">'+esc(t('rcptNote'))+'</p></div>';
+    box.innerHTML=h;if(D&&D.bakongId){try{khDraw($('payqr'),Object.assign({},D,{bill:billCode()}),amt,cur())}catch(e){}}return}
   h+=packs.map(function(k){var on=k===PS.k,p1=price(k,1);
     return '<div class="pk'+(on?' on':'')+'" data-pk="'+k+'"><div class="pkh"><b>'+esc(pkName(k))+'</b><small>'+esc(incl(k))+'</small></div>'+
       '<div class="pkm">'+MON.filter(function(m){return price(k,m)}).map(function(m){var v=price(k,m),sv=p1&&m>1?Math.round((1-v/(p1*m))*100):0;
@@ -840,7 +947,7 @@ function saveQr(){var cv=$('payqr');if(!cv)return;cv.toBlob(function(bl){var f;t
   else{var u=URL.createObjectURL(bl),l=document.createElement('a');l.href=u;l.download='thean-khqr.png';document.body.appendChild(l);l.click();setTimeout(function(){URL.revokeObjectURL(u);l.remove()},1500)}},'image/png')}
 
 /* ---------- Connect with Facebook (customers) ---------- */
-var FBSDK=null;
+var FBSDK=null,FBL=[];
 function fbSdk(){var id=cfg().fbAppId;if(!id||ACC.team)return Promise.resolve(null);if(FBSDK)return FBSDK;
   FBSDK=new Promise(function(res){window.fbAsyncInit=function(){FB.init({appId:String(id),cookie:true,xfbml:false,version:'v26.0'});res(window.FB);drawFbBox()};
     var s=document.createElement('script');s.src='https://connect.facebook.net/en_US/sdk.js';s.async=true;s.crossOrigin='anonymous';s.onerror=function(){FBSDK=null;res(null)};document.head.appendChild(s)});return FBSDK}
@@ -858,61 +965,146 @@ $('fbConn').onclick=function(){if(!cfg().fbAppId){msg('m8','info',esc(t('fbcNoAp
       if(L.length===1){usePage(L[0]);return}
       FBL=L;msg('m8','info',esc(t('fbcPick'))+'<div class="pick">'+L.map(function(p,i){return '<button class="btn soft sm" data-pg="'+i+'">'+esc(p.name)+'</button>'}).join('')+'</div>')})
     .catch(function(e){msg('m8','bad',esc(t('fbcFail'))+'<br><small>'+esc(e&&e.message||'')+'</small>')})},o)};
-var FBL=[];
 document.addEventListener('click',function(e){var b=e.target.closest('[data-pg]');if(b&&FBL[+b.getAttribute('data-pg')])usePage(FBL[+b.getAttribute('data-pg')])});
 $('fbDisc').onclick=function(){['token','pageId','pageName','igId','igUser','fbLogin','fbPage'].forEach(function(k){delete C[k]});save();KS='none';drawKey();drawDests();drawFbBox();try{window.FB&&FB.logout(function(){})}catch(e){}};
 function drawFbBox(){if(!$('m8'))return;
-  if(C.fbLogin&&C.token){if(KS==='bad')msg('m8','bad',esc(t('fbcExpired')));else msg('m8','ok',esc(t('tokOk',{p:C.pageName||''}))+(C.igId?'<br>'+esc(t('igOk',{u:C.igUser||''})):''))}
+  if(C.fbLogin&&C.token){if(KS==='bad')msg('m8','bad',esc(t('fbcExpired')));else msg('m8','ok',esc(t('tokOk',{p:C.pageName||''})))}
   else if(!/data-pg/.test($('m8').innerHTML))msg('m8','','');
   var st=$('fbcSteps');if(st)st.innerHTML=t('fbcSteps').map(function(s){return '<li>'+s+'</li>'}).join('')}
 
-Object.assign(T.en,{
-  authTitle:'Welcome',authSub:'Sign in to post to Facebook, Instagram and Telegram at once.',signIn:'Sign in',signUp:'Create account',
-  aName:'Your name',aFb:'Your Facebook profile link',aFbNote:'We need this to give your Facebook account access to posting. Open your Facebook profile, tap the three dots, then Copy link.',
-  aEmail:'Email',aPass:'Password (at least 6 characters)',forgot:'Forgot password?',authFree:'New accounts get free posts to try everything.',
-  aWait:'Please wait…',aeWrong:'The email or password is not correct.',aeEmail:'Please type a correct email.',aeUsed:'This email already has an account. Tap Sign in.',aeWeak:'The password needs at least 6 characters.',
-  aeMany:'Too many tries. Please wait a few minutes.',aeNet:'No internet. Please try again.',aeNeed:'Please type your name and your Facebook profile link.',aeEmailFirst:'Type your email first, then tap Forgot password.',
-  aReset:'We sent you an email to set a new password. Check your inbox and spam folder.',authLoadT:'Loading…',authErrT:'Could not connect. Check your internet.',retry:'Try again',
-  acct:'Account',accTeam:'Our team: unlimited posting',signOut:'Sign out',seePlans:'See plans',
-  pbFree:'Free posts left: {n} of {f}',pbPlan:'Plan: {p} · until {d}',pbMore:'Plans',
-  pk_fb:'Facebook',pk_fbig:'Facebook + Instagram',pk_all:'All',plansT:'Plans',nMonth1:'1 month',nMonths:'{n} months',save:'Save {n}%',payWith:'Pay {a} with KHQR',
-  noPrices:'Plans are not open yet. Please contact us in the chat.',noQr:'Please contact us in the chat to pay.',saveQr:'Save QR',
-  paySteps:['Save the QR, or scan it with another phone.','Open your bank app (ABA, ACLEDA, Wing or any KHQR app), tap Scan, then choose the QR picture.','Pay, then take a screenshot of the receipt.','Tap "I have paid", then send the receipt with your email in our chat.'],
-  paid:'I have paid',back:'Back',reqT:'Waiting for confirmation',reqS:'Send your receipt and your email in our chat. We will turn on your plan soon.',reqCancel:'Cancel request',
-  outOf:'You have used all free posts. Choose a plan to keep posting.',lockedPlan:'not in your plan',
-  fbcSub:'Connect your Facebook Page. Your Instagram connects at the same time if it is linked to the Page.',fbConn:'Connect with Facebook',
-  fbcNoApp:'Connecting is not open yet. Please contact us in the chat.',fbcLoad:'Facebook could not load. Check your internet, or turn off an ad blocker.',fbcAgain:'Ready. Tap Connect with Facebook again.',
-  fbcCancel:'Facebook was not connected.',fbcNoPage:'No Facebook Page was found. Choose your Page when Facebook asks, and allow all permissions.',fbcPick:'Choose your Page:',
-  fbcFail:'Facebook did not allow this yet. Make sure you accepted our invite (see the steps), then try again.',fbcExpired:'Facebook needs you to connect again. Tap Connect with Facebook.',
-  fbcHelp:'How to connect',fbcSteps:['After you create your account, our team adds you to our Facebook app (usually within 1 day).','Open <b>developers.facebook.com/requests</b> while signed in to Facebook, and tap <b>Accept</b>. If Facebook asks, confirm your phone number.','Come back here, tap <b>Connect with Facebook</b>, choose your Page, and allow everything.','For Instagram: your Instagram must be a Professional account linked to your Facebook Page.']
-});
-Object.assign(T.km,{
-  authTitle:'សូមស្វាគមន៍',authSub:'ចូលគណនី ដើម្បីបង្ហោះទៅ Facebook, Instagram និង Telegram ក្នុងពេលតែមួយ។',signIn:'ចូលគណនី',signUp:'បង្កើតគណនី',
-  aName:'ឈ្មោះរបស់អ្នក',aFb:'តំណប្រូហ្វាល Facebook របស់អ្នក',aFbNote:'យើងត្រូវការវា ដើម្បីផ្តល់សិទ្ធិបង្ហោះដល់គណនី Facebook របស់អ្នក។ បើកប្រូហ្វាល Facebook ចុចចំណុចបី រួច Copy link។',
-  aEmail:'អ៊ីមែល',aPass:'ពាក្យសម្ងាត់ (យ៉ាងតិច ៦ តួ)',forgot:'ភ្លេចពាក្យសម្ងាត់?',authFree:'គណនីថ្មីទទួលបានការបង្ហោះឥតគិតថ្លៃ ដើម្បីសាកល្បងគ្រប់យ៉ាង។',
-  aWait:'សូមរង់ចាំ…',aeWrong:'អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ។',aeEmail:'សូមវាយអ៊ីមែលឱ្យត្រឹមត្រូវ។',aeUsed:'អ៊ីមែលនេះមានគណនីរួចហើយ។ សូមចុច ចូលគណនី។',aeWeak:'ពាក្យសម្ងាត់ត្រូវមានយ៉ាងតិច ៦ តួ។',
-  aeMany:'ព្យាយាមច្រើនដងពេក។ សូមរង់ចាំប៉ុន្មាននាទី។',aeNet:'គ្មានអ៊ីនធឺណិត។ សូមព្យាយាមម្តងទៀត។',aeNeed:'សូមវាយឈ្មោះ និងតំណប្រូហ្វាល Facebook របស់អ្នក។',aeEmailFirst:'សូមវាយអ៊ីមែលជាមុនសិន រួចចុច ភ្លេចពាក្យសម្ងាត់។',
-  aReset:'យើងបានផ្ញើអ៊ីមែលសម្រាប់កំណត់ពាក្យសម្ងាត់ថ្មី។ សូមពិនិត្យប្រអប់សំបុត្រ និង Spam។',authLoadT:'កំពុងផ្ទុក…',authErrT:'មិនអាចភ្ជាប់បាន។ សូមពិនិត្យអ៊ីនធឺណិត។',retry:'ព្យាយាមម្តងទៀត',
-  acct:'គណនី',accTeam:'ក្រុមការងាររបស់យើង៖ បង្ហោះបានគ្មានដែនកំណត់',signOut:'ចាកចេញ',seePlans:'មើលគម្រោង',
-  pbFree:'ការបង្ហោះឥតគិតថ្លៃនៅសល់៖ {n} ក្នុងចំណោម {f}',pbPlan:'គម្រោង៖ {p} · ដល់ថ្ងៃ {d}',pbMore:'គម្រោង',
-  pk_fb:'Facebook',pk_fbig:'Facebook + Instagram',pk_all:'ទាំងអស់',plansT:'គម្រោង',nMonth1:'១ ខែ',nMonths:'{n} ខែ',save:'សន្សំ {n}%',payWith:'បង់ {a} តាម KHQR',
-  noPrices:'គម្រោងមិនទាន់បើកនៅឡើយទេ។ សូមទាក់ទងយើងតាមការជជែក។',noQr:'សូមទាក់ទងយើងតាមការជជែក ដើម្បីបង់ប្រាក់។',saveQr:'រក្សាទុក QR',
-  paySteps:['រក្សាទុក QR ឬស្កេនវាដោយទូរស័ព្ទមួយទៀត។','បើកកម្មវិធីធនាគាររបស់អ្នក (ABA, ACLEDA, Wing ឬកម្មវិធី KHQR ណាមួយ) ចុច ស្កេន រួចជ្រើសរូប QR។','បង់ប្រាក់ រួចថតអេក្រង់បង្កាន់ដៃ។','ចុច «ខ្ញុំបានបង់ហើយ» រួចផ្ញើបង្កាន់ដៃ និងអ៊ីមែលរបស់អ្នកក្នុងការជជែករបស់យើង។'],
-  paid:'ខ្ញុំបានបង់ហើយ',back:'ត្រឡប់',reqT:'កំពុងរង់ចាំការបញ្ជាក់',reqS:'សូមផ្ញើបង្កាន់ដៃ និងអ៊ីមែលរបស់អ្នកក្នុងការជជែករបស់យើង។ យើងនឹងបើកគម្រោងរបស់អ្នកឆាប់ៗ។',reqCancel:'បោះបង់សំណើ',
-  outOf:'អ្នកបានប្រើការបង្ហោះឥតគិតថ្លៃអស់ហើយ។ សូមជ្រើសគម្រោង ដើម្បីបន្តបង្ហោះ។',lockedPlan:'មិនមានក្នុងគម្រោងរបស់អ្នក',
-  fbcSub:'ភ្ជាប់ទំព័រ Facebook របស់អ្នក។ Instagram នឹងភ្ជាប់ក្នុងពេលតែមួយ ប្រសិនបើវាភ្ជាប់ជាមួយទំព័រ។',fbConn:'ភ្ជាប់ជាមួយ Facebook',
-  fbcNoApp:'ការភ្ជាប់មិនទាន់បើកនៅឡើយទេ។ សូមទាក់ទងយើងតាមការជជែក។',fbcLoad:'Facebook មិនអាចផ្ទុកបាន។ សូមពិនិត្យអ៊ីនធឺណិត ឬបិទកម្មវិធីទប់ស្កាត់ពាណិជ្ជកម្ម។',fbcAgain:'រួចរាល់។ សូមចុច ភ្ជាប់ជាមួយ Facebook ម្តងទៀត។',
-  fbcCancel:'Facebook មិនត្រូវបានភ្ជាប់ទេ។',fbcNoPage:'រកមិនឃើញទំព័រ Facebook ទេ។ សូមជ្រើសទំព័ររបស់អ្នក នៅពេល Facebook សួរ ហើយអនុញ្ញាតគ្រប់សិទ្ធិ។',fbcPick:'ជ្រើសទំព័ររបស់អ្នក៖',
-  fbcFail:'Facebook មិនទាន់អនុញ្ញាតនៅឡើយទេ។ សូមប្រាកដថាអ្នកបានទទួលការអញ្ជើញរបស់យើង (មើលជំហាន) រួចព្យាយាមម្តងទៀត។',fbcExpired:'Facebook ត្រូវការឱ្យអ្នកភ្ជាប់ម្តងទៀត។ សូមចុច ភ្ជាប់ជាមួយ Facebook។',
-  fbcHelp:'របៀបភ្ជាប់',fbcSteps:['បន្ទាប់ពីអ្នកបង្កើតគណនី ក្រុមការងាររបស់យើងនឹងបន្ថែមអ្នកទៅក្នុងកម្មវិធី Facebook របស់យើង (ជាធម្មតាក្នុងរយៈពេល ១ ថ្ងៃ)។','បើក <b>developers.facebook.com/requests</b> ពេលកំពុងចូល Facebook ហើយចុច <b>Accept</b>។ ប្រសិនបើ Facebook សួរ សូមបញ្ជាក់លេខទូរស័ព្ទ។','ត្រឡប់មកទីនេះវិញ ចុច <b>ភ្ជាប់ជាមួយ Facebook</b> ជ្រើសទំព័ររបស់អ្នក ហើយអនុញ្ញាតទាំងអស់។','សម្រាប់ Instagram៖ Instagram របស់អ្នកត្រូវតែជាគណនី Professional ដែលភ្ជាប់ជាមួយទំព័រ Facebook។']
-});
+/* ---------- chat with our team (same inbox as the website chat) ---------- */
+var CH={chat:null,msgs:[],offs:[],typing:false,on:false};
+function chP(){return 'chats/'+ACC.user.uid}function mP(){return 'messages/'+ACC.user.uid}
+function chStop(){CH.offs.forEach(function(f){try{f()}catch(e){}});CH.offs=[];CH.on=false;CH.chat=null;CH.msgs=[];drawBadge()}
+function chListen(){if(CH.on)return;CH.on=true;
+  CH.offs.push(FBX.d.onValue(R(chP()),function(s){CH.chat=s.val();if(!$('chat').hidden&&CH.chat&&CH.chat.unreadVisitor)FBX.d.update(R(chP()),{unreadVisitor:0}).catch(function(){});drawBadge();drawChat()},function(){}));
+  CH.offs.push(FBX.d.onValue(FBX.d.query(R(mP()),FBX.d.limitToLast(200)),function(s){var L=[];s.forEach(function(c){var v=c.val();if(v&&!v.staff)L.push(v)});CH.msgs=L;drawChat()},function(){}))}
+function chStart(){if(!FBX||!ACC.user)return;FBX.d.get(R(chP())).then(function(s){if(s.exists())chListen()}).catch(function(){})}
+function chEnsure(){if(CH.chat)return Promise.resolve();var u=ACC.user;
+  return FBX.d.get(R(chP())).then(function(s){if(s.exists())return;
+    return FBX.d.set(R(chP()),{visitorUid:u.uid,status:'bot',lang:C.lang,name:(myName()||'Customer')+' · Posting app',contact:u.email||'',page:'/post',createdAt:FBX.d.serverTimestamp(),updatedAt:FBX.d.serverTimestamp(),lastMsg:'',lastFrom:'',unreadAgent:0,unreadVisitor:0,ua:navigator.userAgent.slice(0,160)})})
+  .then(function(){chListen()})}
+function live(){return CH.chat&&(CH.chat.status==='waiting'||CH.chat.status==='assigned')}
+function drawBadge(){var n=CH.chat&&+CH.chat.unreadVisitor||0,b=$('chatBadge');b.hidden=!n||!$('chat').hidden;b.textContent=n>9?'9+':String(n)}
+function openChat(){$('chat').hidden=false;drawBadge();
+  chEnsure().then(function(){if(CH.chat&&CH.chat.unreadVisitor)FBX.d.update(R(chP()),{unreadVisitor:0}).catch(function(){});if(!CH.msgs.length)botSay(t('chHello'))}).catch(function(){});drawChat()}
+$('chatBtn').onclick=openChat;
+$('chat').addEventListener('click',function(e){if(e.target===$('chat')||e.target.closest('[data-close]')){$('chat').hidden=true;drawBadge();return}
+  var b=e.target.closest('[data-q]');if(b)quick(b.getAttribute('data-q'))});
+function push(m){return FBX.d.push(R(mP()),Object.assign({ts:FBX.d.serverTimestamp()},m))}
+function touch(o){return FBX.d.update(R(chP()),Object.assign({updatedAt:FBX.d.serverTimestamp()},o)).catch(function(){})}
+function botSay(text,ms){CH.typing=true;drawChat();return new Promise(function(r){setTimeout(r,ms||700)}).then(function(){CH.typing=false;return push({from:'bot',text:text})}).then(function(){if(!live())return touch({lastMsg:text.slice(0,120),lastFrom:'bot'})})}
+function say(text){var lv=live(),o={lastMsg:text.slice(0,120),lastFrom:'visitor'};if(lv)o.unreadAgent=FBX.d.increment(1);return push({from:'visitor',text:text}).then(function(){return touch(o)})}
+function plansText(){var L=PK.filter(function(k){return packOn(k)&&MON.some(function(m){return price(k,m)})});if(!L.length)return t('noPrices');
+  return t('chPlans')+'\n'+L.map(function(k){return '• '+pkName(k)+': '+MON.filter(function(m){return price(k,m)}).map(function(m){return nm(m)+' '+money(price(k,m))}).join(', ')}).join('\n')+'\n'+t('chPlans2',{n:freeTotal()})}
+function quick(q){chEnsure().then(function(){
+  var lab=t('q_'+q);
+  if(q==='live'){return say(lab).then(function(){return FBX.d.update(R(chP()),{status:'waiting',requestedAt:FBX.d.serverTimestamp(),updatedAt:FBX.d.serverTimestamp(),lastMsg:lab,lastFrom:'visitor',unreadAgent:FBX.d.increment(1),lang:C.lang,name:(myName()||'Customer')+' · Posting app'})}).then(function(){return botSay(t('chWait'),1200)})}
+  if(q==='end'){return say(lab).then(function(){return FBX.d.update(R(chP()),{status:'bot',updatedAt:FBX.d.serverTimestamp()})}).then(function(){return botSay(t('chEnded'))})}
+  return say(lab).then(function(){return botSay(q==='plans'?plansText():t('a_'+q),900)})}).catch(function(){toast(t('aeNet'))})}
+$('chatSend').onclick=function(){var x=$('chatIn'),v=x.value.trim();if(!v)return;x.value='';
+  chEnsure().then(function(){return say(v.slice(0,2000))}).then(function(){if(!live())return botSay(t('chBot'),900)}).catch(function(){toast(t('aeNet'))})};
+$('chatIn').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('chatSend').click()}});
+function drawChat(){if($('chat').hidden)return;var lv=live(),c=CH.chat||{};
+  $('chatSt').textContent=c.status==='assigned'?t('chWith',{n:c.agentName||t('ourTeam')}):c.status==='waiting'?t('chWaiting'):t('chBotSt');
+  var box=$('chatList'),near=box.scrollHeight-box.scrollTop-box.clientHeight<80;
+  box.innerHTML=CH.msgs.map(function(m){var me=m.from==='visitor',cls=me?'me':m.from==='agent'?'ag':m.from==='system'?'sys':'bot';
+    var tm=+m.ts?new Date(+m.ts):null,ts=tm?('0'+tm.getHours()).slice(-2)+':'+('0'+tm.getMinutes()).slice(-2):'';
+    return '<div class="bub '+cls+'">'+(m.from==='agent'?'<small>'+esc(m.agentName||t('ourTeam'))+'</small>':m.from==='bot'?'<small>'+esc(t('assistant'))+'</small>':'')+'<p>'+esc(m.text||'').replace(/\n/g,'<br>')+'</p><time>'+ts+'</time></div>'}).join('')+
+    (CH.typing?'<div class="bub bot typing"><p>…</p></div>':'');
+  if(near)box.scrollTop=box.scrollHeight;
+  var qs=lv?['end']:['live','pay','conn','plans','prob'];
+  $('chatQ').innerHTML=qs.map(function(q){return '<button type="button" class="chip" data-q="'+q+'">'+esc(t('q_'+q))+'</button>'}).join('')}
 
+document.addEventListener('click',function(e){if(e.target.closest('#footChat')&&ACC.st==='in'){e.preventDefault();openChat()}});
 function accCount(){if(ACC.st!=='in'||ACC.team||!FBX)return;FBX.d.runTransaction(R('postusers/'+ACC.user.uid+'/used'),function(v){return (+v||0)+1}).catch(function(){})}
 (function(){var go=$('post').onclick;$('post').onclick=function(){
   if(ACC.st!=='in'){window.scrollTo(0,0);return}
+  if(isLocked()){window.scrollTo(0,0);return}
   if(!canPost()){msg('m3','info',esc(t('outOf')));openPlans();return}
   if(!ACC.team&&C.fbLogin&&KS==='bad'){openSettings();return}
   return go.apply(this,arguments)}})();
+
+Object.assign(T.en,{
+  authTitle:'Welcome',authSub:'Sign in to post to your Facebook Page, and with a plan to Instagram and Telegram too.',signIn:'Sign in',signUp:'Create account',
+  aName:'Your name',aFb:'Your Facebook profile link',aFbNote:'We need this to give your Facebook account access to posting. Open your Facebook profile, tap the three dots, then Copy link.',
+  aEmail:'Email',aPass:'Password (at least 6 characters)',forgot:'Forgot password?',authFree:'New accounts get free Facebook posts to try it.',
+  aWait:'Please wait…',aeWrong:'The email or password is not correct.',aeEmail:'Please type a correct email.',aeUsed:'This email already has an account. Tap Sign in.',aeWeak:'The password needs at least 6 characters.',
+  aeMany:'Too many tries. Please wait a few minutes.',aeNet:'No internet. Please try again.',aeNeed:'Please type your name and your Facebook profile link.',aeNeedName:'Please type your name.',aeEmailFirst:'Type your email first, then tap Forgot password.',
+  aeRecent:'For your safety, please type your current password again.',
+  aReset:'We sent you an email to set a new password. Check your inbox and spam folder.',authLoadT:'Loading…',authErrT:'Could not connect. Check your internet.',retry:'Try again',
+  signOut:'Sign out',seePlans:'See plans',upgrade:'Upgrade',renew:'Renew or change plan',
+  pbFree:'Free Facebook posts left: {n} of {f}',pbPlan:'Plan: {p} · until {d}',pbMore:'Plans',
+  pk_fb:'Facebook',pk_fbig:'Facebook + Instagram',pk_all:'All',plansT:'Plans',nMonth1:'1 month',nMonths:'{n} months',save:'Save {n}%',payWith:'Pay {a} with KHQR',
+  noPrices:'Plans are not open yet. Please contact us in the chat.',noQr:'Please contact us in the chat to pay.',saveQr:'Save QR',
+  paySteps:['Save the QR, or scan it with another phone.','Open your bank app (ABA, ACLEDA, Wing or any KHQR app), tap Scan, then choose the QR picture.','Pay, then take a screenshot of the receipt.','Tap "Upload receipt" and choose the screenshot.'],
+  rcptBtn:'Upload receipt',rcptUp:'Uploading receipt…',rcptImg:'Please choose a picture (screenshot) of the receipt.',rcptFail:'The receipt could not be uploaded. Please try again.',
+  rcptNote:'Our system checks the receipt and turns on your plan, usually within 5 to 15 minutes.',
+  back:'Back',reqT:'Checking your payment',reqS:'We received your receipt. Your plan turns on automatically, usually within 5 to 15 minutes.',
+  reqRevT:'Our team is checking your receipt',reqRevS:'We could not confirm the receipt automatically. Our team will check it and turn on your plan soon.',reqCancel:'Cancel',
+  outOf:'You have used all free posts. Choose a plan to keep posting.',subsOnly:'Facebook Story, Instagram and Telegram are for plans.',
+  fbcSub:'Connect your Facebook Page with one tap.',fbConn:'Connect with Facebook',
+  fbcNoApp:'Connecting is not open yet. Please contact us in the chat.',fbcLoad:'Facebook could not load. Check your internet, or turn off an ad blocker.',fbcAgain:'Ready. Tap Connect with Facebook again.',
+  fbcCancel:'Facebook was not connected.',fbcNoPage:'No Facebook Page was found. Choose your Page when Facebook asks, and allow all permissions.',fbcPick:'Choose your Page:',
+  fbcFail:'Facebook did not allow this yet. Make sure you accepted our invite (see the steps), then try again.',fbcExpired:'Facebook needs you to connect again. Tap Connect with Facebook.',
+  fbcHelp:'How to connect',fbcSteps:['After you create your account, our team adds you to our Facebook app (usually within 1 day).','Open <b>developers.facebook.com/requests</b> while signed in to Facebook, and tap <b>Accept</b>. If Facebook asks, confirm your phone number.','Come back here, tap <b>Connect with Facebook</b>, choose your Page, and allow everything.','With a plan that includes Instagram: your Instagram must be a Professional account linked to your Facebook Page.'],
+  myAcct:'My account',ownerT:'Owner · Premium',ownerS:'Unlimited posting to every place',freePlan:'Free',freeAcct:'Free Facebook posts left: {n} of {f}',daysLeft:'{n} days left',canPostTo:'You can post to:',
+  postSettings:'Posting settings',editProfile:'Edit profile',changePw:'Change password',language:'Language',adminLink:'Admin: customers and payments',delAcct:'Delete account',
+  phone:'Phone number',curPw:'Current password',newPw:'New password (at least 6 characters)',saved:'Saved.',pwDone:'Your password was changed.',
+  delWarn:'This deletes your account, your plan and your free posts. It cannot be undone.',delForever:'Delete my account',delDone:'Your account was deleted.',
+  lockT:'Your account is paused',lockUntil:'You cannot post until {d}.',lockForever:'Posting is stopped for this account.',lockWhy:'Reason: {r}',lockShort:'Paused',lockS:'If you think this is a mistake, please chat with us.',
+  planOnToast:'Your plan {p} is on until {d}.',
+  chatT:'Chat with us',chBotSt:'Assistant · instant answers',chWaiting:'Waiting for our team…',chWith:'Chatting with {n}',ourTeam:'Our team',assistant:'Assistant',typeMsg:'Type a message…',
+  q_live:'Talk to our team',q_pay:'Payment help',q_conn:'Connect Facebook',q_plans:'Plans and prices',q_prob:'Something is not working',q_end:'End chat',
+  chHello:'Hello! How can we help you with the posting app? Choose a topic below, or type your question.',
+  chWait:'Thank you. Our team will reply here soon. You can close this window, and you will see a badge when we answer.',chEnded:'The chat has ended. Thank you! You can talk to us again anytime.',
+  chBot:'Thank you for your message. For a person to answer, tap "Talk to our team".',
+  chPlans:'Our plans:',chPlans2:'New accounts get {n} free Facebook posts. Tap Upgrade above the Post button to choose a plan.',
+  a_pay:'How to pay:\n1. Tap Upgrade, choose a plan, then Pay with KHQR.\n2. Pay with any bank app (ABA, ACLEDA, Wing…).\n3. Tap Upload receipt and choose your screenshot.\nYour plan turns on automatically, usually within 5 to 15 minutes. If it takes longer, tap "Talk to our team".',
+  a_conn:'How to connect Facebook:\n1. Our team adds you to our Facebook app (usually within 1 day after you sign up).\n2. Open developers.facebook.com/requests and tap Accept.\n3. Open Posting settings, tap Connect with Facebook, choose your Page and allow everything.',
+  a_prob:'Please try these first:\n1. Pull down to refresh the page.\n2. In Posting settings, tap Connect with Facebook again.\n3. Check your internet.\nStill not working? Tap "Talk to our team" and tell us what you see.',
+  helpChat:'Chat with us'
+});
+Object.assign(T.km,{
+  authTitle:'សូមស្វាគមន៍',authSub:'ចូលគណនី ដើម្បីបង្ហោះទៅទំព័រ Facebook របស់អ្នក ហើយជាមួយគម្រោង អាចបង្ហោះទៅ Instagram និង Telegram ផងដែរ។',signIn:'ចូលគណនី',signUp:'បង្កើតគណនី',
+  aName:'ឈ្មោះរបស់អ្នក',aFb:'តំណប្រូហ្វាល Facebook របស់អ្នក',aFbNote:'យើងត្រូវការវា ដើម្បីផ្តល់សិទ្ធិបង្ហោះដល់គណនី Facebook របស់អ្នក។ បើកប្រូហ្វាល Facebook ចុចចំណុចបី រួច Copy link។',
+  aEmail:'អ៊ីមែល',aPass:'ពាក្យសម្ងាត់ (យ៉ាងតិច ៦ តួ)',forgot:'ភ្លេចពាក្យសម្ងាត់?',authFree:'គណនីថ្មីទទួលបានការបង្ហោះ Facebook ឥតគិតថ្លៃ ដើម្បីសាកល្បង។',
+  aWait:'សូមរង់ចាំ…',aeWrong:'អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ។',aeEmail:'សូមវាយអ៊ីមែលឱ្យត្រឹមត្រូវ។',aeUsed:'អ៊ីមែលនេះមានគណនីរួចហើយ។ សូមចុច ចូលគណនី។',aeWeak:'ពាក្យសម្ងាត់ត្រូវមានយ៉ាងតិច ៦ តួ។',
+  aeMany:'ព្យាយាមច្រើនដងពេក។ សូមរង់ចាំប៉ុន្មាននាទី។',aeNet:'គ្មានអ៊ីនធឺណិត។ សូមព្យាយាមម្តងទៀត។',aeNeed:'សូមវាយឈ្មោះ និងតំណប្រូហ្វាល Facebook របស់អ្នក។',aeNeedName:'សូមវាយឈ្មោះរបស់អ្នក។',aeEmailFirst:'សូមវាយអ៊ីមែលជាមុនសិន រួចចុច ភ្លេចពាក្យសម្ងាត់។',
+  aeRecent:'ដើម្បីសុវត្ថិភាព សូមវាយពាក្យសម្ងាត់បច្ចុប្បន្នម្តងទៀត។',
+  aReset:'យើងបានផ្ញើអ៊ីមែលសម្រាប់កំណត់ពាក្យសម្ងាត់ថ្មី។ សូមពិនិត្យប្រអប់សំបុត្រ និង Spam។',authLoadT:'កំពុងផ្ទុក…',authErrT:'មិនអាចភ្ជាប់បាន។ សូមពិនិត្យអ៊ីនធឺណិត។',retry:'ព្យាយាមម្តងទៀត',
+  signOut:'ចាកចេញ',seePlans:'មើលគម្រោង',upgrade:'ដំឡើងគម្រោង',renew:'បន្ត ឬប្តូរគម្រោង',
+  pbFree:'ការបង្ហោះ Facebook ឥតគិតថ្លៃនៅសល់៖ {n} ក្នុងចំណោម {f}',pbPlan:'គម្រោង៖ {p} · ដល់ថ្ងៃ {d}',pbMore:'គម្រោង',
+  pk_fb:'Facebook',pk_fbig:'Facebook + Instagram',pk_all:'ទាំងអស់',plansT:'គម្រោង',nMonth1:'១ ខែ',nMonths:'{n} ខែ',save:'សន្សំ {n}%',payWith:'បង់ {a} តាម KHQR',
+  noPrices:'គម្រោងមិនទាន់បើកនៅឡើយទេ។ សូមទាក់ទងយើងតាមការជជែក។',noQr:'សូមទាក់ទងយើងតាមការជជែក ដើម្បីបង់ប្រាក់។',saveQr:'រក្សាទុក QR',
+  paySteps:['រក្សាទុក QR ឬស្កេនវាដោយទូរស័ព្ទមួយទៀត។','បើកកម្មវិធីធនាគាររបស់អ្នក (ABA, ACLEDA, Wing ឬកម្មវិធី KHQR ណាមួយ) ចុច ស្កេន រួចជ្រើសរូប QR។','បង់ប្រាក់ រួចថតអេក្រង់បង្កាន់ដៃ។','ចុច «ផ្ញើបង្កាន់ដៃ» ហើយជ្រើសរូបថតអេក្រង់។'],
+  rcptBtn:'ផ្ញើបង្កាន់ដៃ',rcptUp:'កំពុងផ្ញើបង្កាន់ដៃ…',rcptImg:'សូមជ្រើសរូបភាព (រូបថតអេក្រង់) នៃបង្កាន់ដៃ។',rcptFail:'មិនអាចផ្ញើបង្កាន់ដៃបានទេ។ សូមព្យាយាមម្តងទៀត។',
+  rcptNote:'ប្រព័ន្ធរបស់យើងពិនិត្យបង្កាន់ដៃ ហើយបើកគម្រោងឱ្យអ្នក ជាធម្មតាក្នុងរយៈពេល ៥ ទៅ ១៥ នាទី។',
+  back:'ត្រឡប់',reqT:'កំពុងពិនិត្យការបង់ប្រាក់',reqS:'យើងបានទទួលបង្កាន់ដៃរបស់អ្នក។ គម្រោងនឹងបើកដោយស្វ័យប្រវត្តិ ជាធម្មតាក្នុងរយៈពេល ៥ ទៅ ១៥ នាទី។',
+  reqRevT:'ក្រុមការងារកំពុងពិនិត្យបង្កាន់ដៃ',reqRevS:'យើងមិនអាចបញ្ជាក់បង្កាន់ដៃដោយស្វ័យប្រវត្តិបានទេ។ ក្រុមការងារនឹងពិនិត្យ ហើយបើកគម្រោងឱ្យអ្នកឆាប់ៗ។',reqCancel:'បោះបង់',
+  outOf:'អ្នកបានប្រើការបង្ហោះឥតគិតថ្លៃអស់ហើយ។ សូមជ្រើសគម្រោង ដើម្បីបន្តបង្ហោះ។',subsOnly:'Facebook Story, Instagram និង Telegram សម្រាប់អ្នកមានគម្រោង។',
+  fbcSub:'ភ្ជាប់ទំព័រ Facebook របស់អ្នក ដោយចុចតែម្តង។',fbConn:'ភ្ជាប់ជាមួយ Facebook',
+  fbcNoApp:'ការភ្ជាប់មិនទាន់បើកនៅឡើយទេ។ សូមទាក់ទងយើងតាមការជជែក។',fbcLoad:'Facebook មិនអាចផ្ទុកបាន។ សូមពិនិត្យអ៊ីនធឺណិត ឬបិទកម្មវិធីទប់ស្កាត់ពាណិជ្ជកម្ម។',fbcAgain:'រួចរាល់។ សូមចុច ភ្ជាប់ជាមួយ Facebook ម្តងទៀត។',
+  fbcCancel:'Facebook មិនត្រូវបានភ្ជាប់ទេ។',fbcNoPage:'រកមិនឃើញទំព័រ Facebook ទេ។ សូមជ្រើសទំព័ររបស់អ្នក នៅពេល Facebook សួរ ហើយអនុញ្ញាតគ្រប់សិទ្ធិ។',fbcPick:'ជ្រើសទំព័ររបស់អ្នក៖',
+  fbcFail:'Facebook មិនទាន់អនុញ្ញាតនៅឡើយទេ។ សូមប្រាកដថាអ្នកបានទទួលការអញ្ជើញរបស់យើង (មើលជំហាន) រួចព្យាយាមម្តងទៀត។',fbcExpired:'Facebook ត្រូវការឱ្យអ្នកភ្ជាប់ម្តងទៀត។ សូមចុច ភ្ជាប់ជាមួយ Facebook។',
+  fbcHelp:'របៀបភ្ជាប់',fbcSteps:['បន្ទាប់ពីអ្នកបង្កើតគណនី ក្រុមការងាររបស់យើងនឹងបន្ថែមអ្នកទៅក្នុងកម្មវិធី Facebook របស់យើង (ជាធម្មតាក្នុងរយៈពេល ១ ថ្ងៃ)។','បើក <b>developers.facebook.com/requests</b> ពេលកំពុងចូល Facebook ហើយចុច <b>Accept</b>។ ប្រសិនបើ Facebook សួរ សូមបញ្ជាក់លេខទូរស័ព្ទ។','ត្រឡប់មកទីនេះវិញ ចុច <b>ភ្ជាប់ជាមួយ Facebook</b> ជ្រើសទំព័ររបស់អ្នក ហើយអនុញ្ញាតទាំងអស់។','ជាមួយគម្រោងដែលមាន Instagram៖ Instagram របស់អ្នកត្រូវតែជាគណនី Professional ដែលភ្ជាប់ជាមួយទំព័រ Facebook។'],
+  myAcct:'គណនីរបស់ខ្ញុំ',ownerT:'ម្ចាស់ · Premium',ownerS:'បង្ហោះបានគ្មានដែនកំណត់ គ្រប់កន្លែង',freePlan:'ឥតគិតថ្លៃ',freeAcct:'ការបង្ហោះ Facebook ឥតគិតថ្លៃនៅសល់៖ {n} ក្នុងចំណោម {f}',daysLeft:'នៅសល់ {n} ថ្ងៃ',canPostTo:'អ្នកអាចបង្ហោះទៅ៖',
+  postSettings:'ការកំណត់ការបង្ហោះ',editProfile:'កែប្រូហ្វាល',changePw:'ប្តូរពាក្យសម្ងាត់',language:'ភាសា',adminLink:'Admin៖ អតិថិជន និងការបង់ប្រាក់',delAcct:'លុបគណនី',
+  phone:'លេខទូរស័ព្ទ',curPw:'ពាក្យសម្ងាត់បច្ចុប្បន្ន',newPw:'ពាក្យសម្ងាត់ថ្មី (យ៉ាងតិច ៦ តួ)',saved:'បានរក្សាទុក។',pwDone:'ពាក្យសម្ងាត់របស់អ្នកត្រូវបានប្តូរ។',
+  delWarn:'វានឹងលុបគណនី គម្រោង និងការបង្ហោះឥតគិតថ្លៃរបស់អ្នក។ មិនអាចត្រឡប់វិញបានទេ។',delForever:'លុបគណនីរបស់ខ្ញុំ',delDone:'គណនីរបស់អ្នកត្រូវបានលុប។',
+  lockT:'គណនីរបស់អ្នកត្រូវបានផ្អាក',lockUntil:'អ្នកមិនអាចបង្ហោះបានរហូតដល់ថ្ងៃ {d}។',lockForever:'ការបង្ហោះត្រូវបានបញ្ឈប់សម្រាប់គណនីនេះ។',lockWhy:'មូលហេតុ៖ {r}',lockShort:'បានផ្អាក',lockS:'ប្រសិនបើអ្នកគិតថានេះជាកំហុស សូមជជែកជាមួយយើង។',
+  planOnToast:'គម្រោង {p} របស់អ្នកបើកដល់ថ្ងៃ {d}។',
+  chatT:'ជជែកជាមួយយើង',chBotSt:'ជំនួយការ · ឆ្លើយភ្លាមៗ',chWaiting:'កំពុងរង់ចាំក្រុមការងារ…',chWith:'កំពុងជជែកជាមួយ {n}',ourTeam:'ក្រុមការងារ',assistant:'ជំនួយការ',typeMsg:'វាយសារ…',
+  q_live:'និយាយជាមួយក្រុមការងារ',q_pay:'ជំនួយការបង់ប្រាក់',q_conn:'ភ្ជាប់ Facebook',q_plans:'គម្រោង និងតម្លៃ',q_prob:'មានអ្វីមិនដំណើរការ',q_end:'បញ្ចប់ការជជែក',
+  chHello:'សួស្តី! តើយើងអាចជួយអ្វីបានខ្លះអំពីកម្មវិធីបង្ហោះ? សូមជ្រើសប្រធានបទខាងក្រោម ឬវាយសំណួររបស់អ្នក។',
+  chWait:'អរគុណ។ ក្រុមការងាររបស់យើងនឹងឆ្លើយនៅទីនេះឆាប់ៗ។ អ្នកអាចបិទផ្ទាំងនេះ ហើយនឹងឃើញសញ្ញាពេលយើងឆ្លើយ។',chEnded:'ការជជែកបានបញ្ចប់។ អរគុណ! អ្នកអាចនិយាយជាមួយយើងម្តងទៀតគ្រប់ពេល។',
+  chBot:'អរគុណសម្រាប់សាររបស់អ្នក។ ដើម្បីឱ្យមនុស្សឆ្លើយ សូមចុច «និយាយជាមួយក្រុមការងារ»។',
+  chPlans:'គម្រោងរបស់យើង៖',chPlans2:'គណនីថ្មីទទួលបានការបង្ហោះ Facebook ឥតគិតថ្លៃ {n} ដង។ ចុច ដំឡើងគម្រោង នៅលើប៊ូតុងបង្ហោះ ដើម្បីជ្រើសគម្រោង។',
+  a_pay:'របៀបបង់ប្រាក់៖\n១. ចុច ដំឡើងគម្រោង ជ្រើសគម្រោង រួចចុច បង់តាម KHQR។\n២. បង់តាមកម្មវិធីធនាគារណាមួយ (ABA, ACLEDA, Wing…)។\n៣. ចុច ផ្ញើបង្កាន់ដៃ ហើយជ្រើសរូបថតអេក្រង់។\nគម្រោងនឹងបើកដោយស្វ័យប្រវត្តិ ជាធម្មតាក្នុងរយៈពេល ៥ ទៅ ១៥ នាទី។ ប្រសិនបើយូរជាងនេះ សូមចុច «និយាយជាមួយក្រុមការងារ»។',
+  a_conn:'របៀបភ្ជាប់ Facebook៖\n១. ក្រុមការងារបន្ថែមអ្នកទៅក្នុងកម្មវិធី Facebook របស់យើង (ជាធម្មតាក្នុង ១ ថ្ងៃ បន្ទាប់ពីចុះឈ្មោះ)។\n២. បើក developers.facebook.com/requests ហើយចុច Accept។\n៣. បើក ការកំណត់ការបង្ហោះ ចុច ភ្ជាប់ជាមួយ Facebook ជ្រើសទំព័រ ហើយអនុញ្ញាតទាំងអស់។',
+  a_prob:'សូមសាកល្បងទាំងនេះជាមុន៖\n១. អូសចុះក្រោម ដើម្បីផ្ទុកទំព័រឡើងវិញ។\n២. ក្នុង ការកំណត់ការបង្ហោះ ចុច ភ្ជាប់ជាមួយ Facebook ម្តងទៀត។\n៣. ពិនិត្យអ៊ីនធឺណិត។\nនៅតែមិនដំណើរការ? សូមចុច «និយាយជាមួយក្រុមការងារ» ហើយប្រាប់យើងពីអ្វីដែលអ្នកឃើញ។',
+  helpChat:'ជជែកជាមួយយើង'
+});
 
 try{$('yr').textContent=new Date().getFullYear()}catch(e){}applyLang();checkKey();accStart();
 })();
