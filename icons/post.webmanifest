@@ -1,9 +1,9 @@
 {
-  "name": "Thean Post to Facebook",
+  "name": "Thean Post · Social media posting",
   "short_name": "Thean Post",
   "id": "/post.html",
-  "start_url": "/post.html",
-  "scope": "/post.html",
+  "start_url": "/post",
+  "scope": "/post",
   "display": "standalone",
   "background_color": "#102d4d",
   "theme_color": "#102d4d",
