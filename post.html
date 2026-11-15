@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#102d4d">
-<title>Thean · Post to Facebook</title>
+<title>Thean Post · Social media posting</title>
 <link rel="icon" type="image/png" sizes="48x48" href="/icons/post-favicon-48.png">
 <link rel="icon" type="image/png" sizes="96x96" href="/icons/post-favicon-96.png">
 <link rel="apple-touch-icon" href="/icons/post-apple-touch-icon.png">
@@ -137,9 +137,36 @@ body.out .top #chatBtn,body.out .top #meBtn{display:none}
 .meform{padding:4px 14px 14px;border-top:1px solid var(--line);background:var(--bg)}.btn.danger{background:var(--bad)!important;color:#fff}
 #lockCard h2{margin:0 0 6px;font-size:1.2rem}body.locked main>section:not(#lockCard):not(#authCard),body.locked main>p.note,body.locked #needSetup{display:none!important}
 .upsell{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--soft);font-size:.86rem;color:var(--muted)}
-#chat .sheet{display:flex;flex-direction:column;height:88vh;max-height:88vh;padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+.chatpill{position:relative;display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;padding:8px 13px 8px 10px;background:var(--grad);color:#fff;font:inherit;font-size:.84rem;font-weight:700;cursor:pointer;flex:none;box-shadow:0 2px 10px rgba(26,111,189,.35)}
+.chatpill svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+body.out .top #chatBtn{display:none}
+.sheet.chs{display:flex;flex-direction:column;height:calc(100dvh - 54px);max-height:none;padding:0;overflow:hidden}
+@media(min-width:700px){.sheet.chs{height:min(680px,90vh)}}
+.chhead{background:linear-gradient(135deg,#0f2a48,#1a5d97);color:#fff;padding:14px 14px 14px 16px;display:flex;align-items:center;gap:12px;flex:none}
+.chlogo{width:42px;height:42px;border-radius:50%;box-shadow:0 0 0 2px rgba(255,255,255,.4);flex:none}
+.chhead .who{flex:1;min-width:0}.chhead b{display:block;font-size:1.05rem}.chhead small{display:flex;align-items:center;gap:6px;font-size:.8rem;opacity:.92;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chdot{width:8px;height:8px;border-radius:50%;background:#5ab8f0;flex:none}.chdot.wait{background:#f0b429}.chdot.on{background:#3ccf76}
+.chx{border:0;background:rgba(255,255,255,.16);color:#fff;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;cursor:pointer;flex:none}
+.chx svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.chconf{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 14px;background:var(--soft);border-bottom:1px solid var(--line);font-size:.86rem}.chconf span{flex:1 1 100%}
+.chconf button{border:0;border-radius:10px;padding:7px 14px;font:inherit;font-weight:600;font-size:.85rem;cursor:pointer;background:var(--surface);color:var(--ink)}.chconf .yes{background:var(--bad);color:#fff}
+.chlist{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:8px;overscroll-behavior:contain;background:var(--bg)}
+.cm{max-width:84%;padding:9px 13px;border-radius:16px;font-size:.93rem;line-height:1.5;overflow-wrap:anywhere}
+.cm .tx{white-space:pre-line}.cm.in{align-self:flex-start;background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:4px}
+.cm.out{align-self:flex-end;background:#e9eef3;color:#0f2238;border-bottom-right-radius:4px}
+.cm .by{display:block;font-size:.74rem;font-weight:700;opacity:.65;margin-bottom:2px}.cm time{display:block;font-size:.68rem;opacity:.55;margin-top:3px;text-align:right}
+.cm-btns{display:grid;gap:6px;margin-top:10px}.cm-btns button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:10px 12px;font:inherit;font-weight:600;font-size:.88rem;cursor:pointer}
+.cm-btns button.old{opacity:.65}
+.cm-sys{align-self:center;text-align:center;font-size:.78rem;color:var(--muted);background:var(--soft);border-radius:14px;padding:6px 12px;max-width:92%}
+.cm-typing{align-self:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;display:flex;gap:4px}
+.cm-typing i{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:tcb 1s infinite}.cm-typing i:nth-child(2){animation-delay:.15s}.cm-typing i:nth-child(3){animation-delay:.3s}
+@keyframes tcb{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}
+.chfoot{display:flex;gap:8px;padding:10px 12px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);align-items:flex-end;background:var(--surface);flex:none}
+.chfoot textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:18px;padding:10px 14px;background:var(--bg);color:var(--ink);max-height:110px;min-height:44px;line-height:1.4;font:inherit;font-size:16px}
+.chsend{width:44px;height:44px;border-radius:50%;border:0;background:var(--grad);color:#fff;display:grid;place-items:center;cursor:pointer;flex:none}.chsend svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.tlist li{margin-bottom:6px}.tchk{display:flex;gap:10px;align-items:flex-start;margin:6px 0 12px;font-weight:600;cursor:pointer}.tchk input{width:20px;height:20px;margin-top:2px;flex:none}
+.flinks a{color:inherit}#terms{z-index:30}
 #chat .hd small{display:block;color:var(--muted);font-size:.8rem;font-weight:400}
-.chlist{flex:1;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:6px 2px}
 .bub{max-width:82%;padding:9px 12px;border-radius:16px;background:var(--soft);align-self:flex-start;font-size:.92rem;line-height:1.45}.bub p{margin:0}.bub small{display:block;font-size:.72rem;color:var(--muted);font-weight:600;margin-bottom:2px}
 .bub time{display:block;font-size:.68rem;color:var(--muted);text-align:right;margin-top:2px}.bub.me{align-self:flex-end;background:var(--grad);color:#fff}.bub.me time{color:rgba(255,255,255,.75)}
 .bub.ag{border:1px solid var(--accent)}.bub.sys{align-self:center;background:none;color:var(--muted);font-size:.8rem;text-align:center}
@@ -161,7 +188,7 @@ body.out .top #chatBtn,body.out .top #meBtn{display:none}
 <header class="top"><div class="in">
   <div class="brand"><img src="/icons/post-favicon-96.png" alt=""><b>THEAN</b></div>
   <button class="kst" id="kst" data-open-settings><i></i><span id="kstT"></span></button>
-  <button class="ib" id="chatBtn" aria-label="Chat"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4z"/></svg><span class="badge" id="chatBadge" hidden></span></button>
+  <button class="chatpill" id="chatBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01"/></svg><span data-t="chatShort"></span><span class="badge" id="chatBadge" hidden></span></button>
   <button class="av" id="meBtn" aria-label="My account">T</button>
   <button class="ib" hidden id="gear" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
 </div></header>
@@ -179,6 +206,7 @@ body.out .top #chatBtn,body.out .top #meBtn{display:none}
         <label class="f" for="aName" data-t="aName"></label><input type="text" id="aName" autocomplete="name">
         <label class="f" for="aFb" data-t="aFb"></label><input type="url" id="aFb" autocapitalize="off" spellcheck="false" placeholder="https://www.facebook.com/your.name">
         <p class="note" style="margin-top:6px" data-t="aFbNote"></p>
+        <p class="note"><span data-t="termsNote"></span> <a href="/terms" target="_blank" rel="noopener" data-t="termsLink"></a>.</p>
       </div>
       <label class="f" for="aEmail" data-t="aEmail"></label><input type="email" id="aEmail" autocomplete="email" autocapitalize="off" spellcheck="false">
       <label class="f" for="aPass" data-t="aPass"></label><input type="password" id="aPass" autocomplete="current-password">
@@ -246,6 +274,7 @@ body.out .top #chatBtn,body.out .top #meBtn{display:none}
   <footer class="foot">
     <div class="sup"><b data-t="helpT"></b><span data-t="helpS"></span>
       <div class="row" style="margin-top:10px;justify-content:center"><a class="btn soft sm" id="footChat" href="https://kongthean.com/" target="_blank" rel="noopener" data-t="helpChat"></a><a class="btn soft sm" href="mailto:info@kongthean.com" data-t="helpMail"></a></div></div>
+    <p class="flinks"><a href="/terms" data-terms data-t="termsLink"></a> · <a href="/privacy" target="_blank" rel="noopener" data-t="privacyLink"></a></p>
     <p>&copy; <span id="yr">2026</span> Thean · kongthean.com. <span data-t="allRights"></span></p>
   </footer>
 </main>
@@ -258,11 +287,24 @@ body.out .top #chatBtn,body.out .top #meBtn{display:none}
   </div>
 </div>
 <div class="modal" id="chat" hidden>
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="chatTitle">
-    <div class="hd"><h3 id="chatTitle"><span data-t="chatT"></span><small id="chatSt"></small></h3><button class="ib" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="sheet chs" role="dialog" aria-modal="true" aria-labelledby="chatTitle">
+    <div class="chhead"><img class="chlogo" src="/icons/post-favicon-96.png" alt=""><div class="who"><b id="chatTitle" data-t="chatT"></b><small><i class="chdot" id="chDot"></i><span id="chatSt"></span></small></div>
+      <button class="chx" id="chClr" aria-label="Clear chat"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button><button class="chx" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="chconf" id="chConf" hidden><span data-t="clrQ"></span><button class="yes" data-clr="yes" data-t="clr"></button><button data-clr="no" data-t="cancelB"></button></div>
     <div class="chlist" id="chatList"></div>
-    <div class="chq" id="chatQ"></div>
-    <div class="chin"><input type="text" id="chatIn" data-tph="typeMsg" maxlength="2000" autocomplete="off"><button class="btn" id="chatSend" aria-label="Send"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h15M13 6l6 6-6 6"/></svg></button></div>
+    <div class="chfoot"><textarea id="chatIn" rows="1" data-tph="typeMsg" maxlength="2000"></textarea><button class="chsend" id="chatSend" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+  </div>
+</div>
+<div class="modal" id="terms" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="termsTitle">
+    <div class="hd"><h3 id="termsTitle" data-t="termsT"></h3><button class="ib" id="termsClose" data-tclose aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <p class="note" style="margin-top:0" data-t="termsIntro"></p>
+    <ol class="steps tlist" id="termsList"></ol>
+    <p><a href="/terms" target="_blank" rel="noopener" class="link" data-t="termsFull"></a></p>
+    <div id="termsAgree">
+      <label class="tchk"><input type="checkbox" id="tChk"><span data-t="termsAgreeLbl"></span></label>
+      <button class="btn wide" id="tGo" disabled data-t="termsGo"></button>
+    </div>
   </div>
 </div>
 <input type="file" id="rcptFile" accept="image/*" hidden>
@@ -649,7 +691,7 @@ $('post').onclick=function(){
       .catch(function(e){if(r.x||e&&e.cancel)return undo(r);r.st=e&&e.skip?'skip':'fail';r.err=String(e&&e.message||e).slice(0,200)})
       .then(function(){fin++;prog(fin/R.length);drawRes(R)})}))
   .then(function(){var ok=R.filter(function(r){return r.st==='done'});
-    if(ok.length){accCount();var u=fbUrl||ok[0].url||'';C.hist.unshift({u:u,c:(cap.split('\n')[0]||ST.user||'').slice(0,80),at:Date.now(),s:sched||0,d:ok.map(function(r){return r.k})});C.hist=C.hist.slice(0,15);save();drawHist()}
+    if(ok.length){accCount();logPost(R,cap);var u=fbUrl||ok[0].url||'';C.hist.unshift({u:u,c:(cap.split('\n')[0]||ST.user||'').slice(0,80),at:Date.now(),s:sched||0,d:ok.map(function(r){return r.k})});C.hist=C.hist.slice(0,15);save();drawHist()}
     btn.disabled=false;btn.textContent=t('postBtn');setTimeout(function(){prog(null)},800)})};
 
 function drawHist(){var h=C.hist||[];$('histCard').hidden=!h.length;
@@ -830,7 +872,7 @@ $('authRetry').onclick=function(){ACC.st='load';drawAll();accStart()};
 function clearKeys(){['token','pageId','pageName','igId','igUser','fbLogin','fbPage','tgToken','tgChat','tgTitle'].forEach(function(k){delete C[k]});save();KS='none';drawKey()}
 function signOut(){if(!FBX)return;if(!ACC.team)clearKeys();chStop();FBX.A.signOut(FBX.auth);['me','settings','plans','chat'].forEach(function(id){$(id).hidden=true})}
 
-function accOff(){ACC.offs.forEach(function(f){try{f()}catch(e){}});ACC.offs=[];ACC.team=false;ACC.prof=null;ACC.used=0;ACC.plan=null;ACC.req=null;ACC.lock=null}
+function accOff(){ACC.loaded=false;ACC.offs.forEach(function(f){try{f()}catch(e){}});ACC.offs=[];ACC.team=false;ACC.prof=null;ACC.used=0;ACC.plan=null;ACC.req=null;ACC.lock=null}
 function accOn(u){accOff();
   FBX.d.get(R('agents/'+u.uid)).then(function(s){return s.exists()},function(){return false}).then(function(team){
     if(ACC.user!==u)return;ACC.team=team;ACC.st='in';
@@ -838,10 +880,10 @@ function accOn(u){accOff();
     else{
       if(C.token&&!C.fbLogin){['token','pageId','pageName'].forEach(function(k){delete C[k]});save();KS='none';drawKey()}
       if(C.tgChat==='@tg_thean'&&!C.tgToken){delete C.tgChat;save()}
-      ACC.offs.push(FBX.d.onValue(R('postusers/'+u.uid),function(s){var v=s.val()||{},had=planOn();ACC.prof=v.profile||null;ACC.used=+v.used||0;ACC.plan=v.plan||null;ACC.req=v.req||null;ACC.lock=v.lock||null;
+      ACC.offs.push(FBX.d.onValue(R('postusers/'+u.uid),function(s){var v=s.val()||{},had=planOn();ACC.prof=v.profile||null;ACC.loaded=true;ACC.used=+v.used||0;ACC.plan=v.plan||null;ACC.req=v.req||null;ACC.lock=v.lock||null;
         if(!v.profile)FBX.d.update(R('postusers/'+u.uid+'/profile'),{email:u.email||'',at:FBX.d.serverTimestamp()}).catch(function(){});
         if(!had&&planOn()&&ACC.seen)toast(t('planOnToast',{p:pkName(ACC.plan.pkg),d:fday(+ACC.plan.until)}));ACC.seen=true;
-        drawAll()},function(){}));
+        drawAll();checkTerms()},function(){}));
       fbSdk().then(fbSilent)}
     chStart();drawAll()})}
 function accStart(){drawAll();
@@ -889,7 +931,7 @@ function drawMe(){var p=ACC.prof||{},em=ACC.user&&ACC.user.email||'',h='';
       '<label class="f" for="meP">'+esc(t('phone'))+'</label><input type="text" id="meP" inputmode="tel" value="'+esc(p.phone||'')+'">'+
       '<label class="f" for="meF">'+esc(t('aFb'))+'</label><input type="url" id="meF" autocapitalize="off" value="'+esc(p.fb||'')+'">'+
       '<button class="btn sm" data-mea="saveEdit" style="margin-top:10px">'+esc(t('save'))+'</button></div>':'')+
-    row('pw','changePw')+
+    row('pw','changePw')+'<button class="merow" data-terms><span>'+esc(t('termsLink'))+'</span><i></i></button>'+
     (MEF==='pw'?'<div class="meform"><label class="f" for="meO">'+esc(t('curPw'))+'</label><input type="password" id="meO" autocomplete="current-password">'+
       '<label class="f" for="meNw">'+esc(t('newPw'))+'</label><input type="password" id="meNw" autocomplete="new-password">'+
       '<button class="btn sm" data-mea="savePw" style="margin-top:10px">'+esc(t('save'))+'</button></div>':'')+
@@ -972,55 +1014,113 @@ function drawFbBox(){if(!$('m8'))return;
   else if(!/data-pg/.test($('m8').innerHTML))msg('m8','','');
   var st=$('fbcSteps');if(st)st.innerHTML=t('fbcSteps').map(function(s){return '<li>'+s+'</li>'}).join('')}
 
-/* ---------- chat with our team (same inbox as the website chat) ---------- */
+/* ---------- chat with our team (same inbox as the website chat, same look and flow) ---------- */
 var CH={chat:null,msgs:[],offs:[],typing:false,on:false};
 function chP(){return 'chats/'+ACC.user.uid}function mP(){return 'messages/'+ACC.user.uid}
+function clrKey(){return 'thean_post_chatclr_'+(ACC.user?ACC.user.uid:'')}
+function clrAt(){try{return +localStorage.getItem(clrKey())||0}catch(e){return 0}}
 function chStop(){CH.offs.forEach(function(f){try{f()}catch(e){}});CH.offs=[];CH.on=false;CH.chat=null;CH.msgs=[];drawBadge()}
 function chListen(){if(CH.on)return;CH.on=true;
   CH.offs.push(FBX.d.onValue(R(chP()),function(s){CH.chat=s.val();if(!$('chat').hidden&&CH.chat&&CH.chat.unreadVisitor)FBX.d.update(R(chP()),{unreadVisitor:0}).catch(function(){});drawBadge();drawChat()},function(){}));
-  CH.offs.push(FBX.d.onValue(FBX.d.query(R(mP()),FBX.d.limitToLast(200)),function(s){var L=[];s.forEach(function(c){var v=c.val();if(v&&!v.staff)L.push(v)});CH.msgs=L;drawChat()},function(){}))}
+  CH.offs.push(FBX.d.onValue(FBX.d.query(R(mP()),FBX.d.limitToLast(200)),function(s){var L=[];s.forEach(function(c){var v=c.val();if(v&&!v.staff){v.id=c.key;L.push(v)}});CH.msgs=L;drawChat()},function(){}))}
 function chStart(){if(!FBX||!ACC.user)return;FBX.d.get(R(chP())).then(function(s){if(s.exists())chListen()}).catch(function(){})}
 function chEnsure(){if(CH.chat)return Promise.resolve();var u=ACC.user;
   return FBX.d.get(R(chP())).then(function(s){if(s.exists())return;
     return FBX.d.set(R(chP()),{visitorUid:u.uid,status:'bot',lang:C.lang,name:(myName()||'Customer')+' · Posting app',contact:u.email||'',page:'/post',createdAt:FBX.d.serverTimestamp(),updatedAt:FBX.d.serverTimestamp(),lastMsg:'',lastFrom:'',unreadAgent:0,unreadVisitor:0,ua:navigator.userAgent.slice(0,160)})})
-  .then(function(){chListen()})}
+  .then(function(){chListen();return new Promise(function(r){var n=0,tm=setInterval(function(){if(CH.chat||++n>60){clearInterval(tm);r()}},50)})})}
 function live(){return CH.chat&&(CH.chat.status==='waiting'||CH.chat.status==='assigned')}
+function shown(){var c=clrAt();return CH.msgs.filter(function(m){return !(+m.ts<=c)})}
 function drawBadge(){var n=CH.chat&&+CH.chat.unreadVisitor||0,b=$('chatBadge');b.hidden=!n||!$('chat').hidden;b.textContent=n>9?'9+':String(n)}
-function openChat(){$('chat').hidden=false;drawBadge();
-  chEnsure().then(function(){if(CH.chat&&CH.chat.unreadVisitor)FBX.d.update(R(chP()),{unreadVisitor:0}).catch(function(){});if(!CH.msgs.length)botSay(t('chHello'))}).catch(function(){});drawChat()}
+function openChat(){$('chat').hidden=false;$('chConf').hidden=true;drawBadge();drawChat();
+  chEnsure().then(function(){if(CH.chat&&CH.chat.unreadVisitor)FBX.d.update(R(chP()),{unreadVisitor:0}).catch(function(){});if(!shown().length&&!live())return welcome(C.lang)}).catch(function(){toast(t('aeNet'))})}
 $('chatBtn').onclick=openChat;
-$('chat').addEventListener('click',function(e){if(e.target===$('chat')||e.target.closest('[data-close]')){$('chat').hidden=true;drawBadge();return}
-  var b=e.target.closest('[data-q]');if(b)quick(b.getAttribute('data-q'))});
-function push(m){return FBX.d.push(R(mP()),Object.assign({ts:FBX.d.serverTimestamp()},m))}
+function L(k,lg){return (T[lg]&&T[lg][k])||T.en[k]||k}
+function menuBtns(lg){return [{l:L('q_live',lg),a:'live'},{l:L('q_pay',lg),a:'pay'},{l:L('q_conn',lg),a:'conn'},{l:L('q_plans',lg),a:'plans'},{l:L('q_prob',lg),a:'prob'},{l:L('q_terms',lg),a:'terms'}]}
+function moreBtn(lg){return {l:L('q_more',lg),a:'menu'}}
+function liveBtn(lg){return {l:L('q_live',lg),a:'live'}}
+function push(m){if(!m.btns)delete m.btns;return FBX.d.push(R(mP()),Object.assign({ts:FBX.d.serverTimestamp()},m))}
 function touch(o){return FBX.d.update(R(chP()),Object.assign({updatedAt:FBX.d.serverTimestamp()},o)).catch(function(){})}
-function botSay(text,ms){CH.typing=true;drawChat();return new Promise(function(r){setTimeout(r,ms||700)}).then(function(){CH.typing=false;return push({from:'bot',text:text})}).then(function(){if(!live())return touch({lastMsg:text.slice(0,120),lastFrom:'bot'})})}
-function say(text){var lv=live(),o={lastMsg:text.slice(0,120),lastFrom:'visitor'};if(lv)o.unreadAgent=FBX.d.increment(1);return push({from:'visitor',text:text}).then(function(){return touch(o)})}
-function plansText(){var L=PK.filter(function(k){return packOn(k)&&MON.some(function(m){return price(k,m)})});if(!L.length)return t('noPrices');
-  return t('chPlans')+'\n'+L.map(function(k){return '• '+pkName(k)+': '+MON.filter(function(m){return price(k,m)}).map(function(m){return nm(m)+' '+money(price(k,m))}).join(', ')}).join('\n')+'\n'+t('chPlans2',{n:freeTotal()})}
-function quick(q){chEnsure().then(function(){
-  var lab=t('q_'+q);
-  if(q==='live'){return say(lab).then(function(){return FBX.d.update(R(chP()),{status:'waiting',requestedAt:FBX.d.serverTimestamp(),updatedAt:FBX.d.serverTimestamp(),lastMsg:lab,lastFrom:'visitor',unreadAgent:FBX.d.increment(1),lang:C.lang,name:(myName()||'Customer')+' · Posting app'})}).then(function(){return botSay(t('chWait'),1200)})}
-  if(q==='end'){return say(lab).then(function(){return FBX.d.update(R(chP()),{status:'bot',updatedAt:FBX.d.serverTimestamp()})}).then(function(){return botSay(t('chEnded'))})}
-  return say(lab).then(function(){return botSay(q==='plans'?plansText():t('a_'+q),900)})}).catch(function(){toast(t('aeNet'))})}
-$('chatSend').onclick=function(){var x=$('chatIn'),v=x.value.trim();if(!v)return;x.value='';
-  chEnsure().then(function(){return say(v.slice(0,2000))}).then(function(){if(!live())return botSay(t('chBot'),900)}).catch(function(){toast(t('aeNet'))})};
+function botSay(text,btns,ms){CH.typing=true;drawChat();return new Promise(function(r){setTimeout(r,ms||800)}).then(function(){CH.typing=false;return push({from:'bot',text:text,btns:btns})})
+  .then(function(){if(!live())return touch({lastMsg:text.slice(0,120),lastFrom:'bot'})})}
+function say(text){var o={lastMsg:text.slice(0,120),lastFrom:'visitor'};if(live())o.unreadAgent=FBX.d.increment(1);return push({from:'visitor',text:text}).then(function(){return touch(o)})}
+function welcome(lg){return botSay(L('chHello',lg)).then(function(){return botSay(L('chCaps',lg),menuBtns(lg),1000)})}
+function plansText(lg){var P=PK.filter(function(k){return packOn(k)&&MON.some(function(m){return price(k,m)})});if(!P.length)return L('noPrices',lg);
+  var keep=C.lang;C.lang=lg;var s=L('chPlans',lg)+'\n'+P.map(function(k){return '• '+pkName(k)+': '+MON.filter(function(m){return price(k,m)}).map(function(m){return nm(m)+' '+money(price(k,m))}).join(', ')}).join('\n')+'\n'+L('chPlans2',lg).split('{n}').join(freeTotal());C.lang=keep;return s}
+function answer(a,lg){
+  if(a==='menu')return botSay(L('chCaps',lg),menuBtns(lg));
+  if(a==='pay')return botSay(L('a_pay',lg),[{l:L('q_openPlans',lg),a:'openplans'},liveBtn(lg),moreBtn(lg)],1000);
+  if(a==='conn')return botSay(L('a_conn',lg),[{l:L('q_openSet',lg),a:'openset'},liveBtn(lg),moreBtn(lg)],1000);
+  if(a==='plans')return botSay(plansText(lg),[{l:L('q_openPlans',lg),a:'openplans'},moreBtn(lg)],900);
+  if(a==='prob')return botSay(L('a_prob',lg),[liveBtn(lg),moreBtn(lg)],1000);
+  if(a==='terms')return botSay(L('a_terms',lg),[{l:L('q_readTerms',lg),a:'readterms'},moreBtn(lg)],900);
+  if(a==='hello')return botSay(L('chHello',lg)).then(function(){return botSay(L('chCaps',lg),menuBtns(lg),900)});
+  return botSay(L('chNo',lg),menuBtns(lg),900)}
+function goLive(lg){return say(L('q_live',lg)).then(function(){return FBX.d.update(R(chP()),{status:'waiting',requestedAt:FBX.d.serverTimestamp(),updatedAt:FBX.d.serverTimestamp(),lastMsg:L('q_live',lg),lastFrom:'visitor',unreadAgent:FBX.d.increment(1),lang:lg,name:(myName()||'Customer')+' · Posting app'})})
+  .then(function(){return botSay(L('hold1',lg),null,1400)}).then(function(){return botSay(L('hold2',lg),[{l:L('q_end',lg),a:'end'}],2000)})}
+function endLive(lg){return say(L('q_end',lg)).then(function(){return FBX.d.update(R(chP()),{status:'bot',updatedAt:FBX.d.serverTimestamp(),lastMsg:'Chat ended by the customer',lastFrom:'system'})})
+  .then(function(){return push({from:'system',text:'Chat ended by the customer',staff:true})}).then(function(){return botSay(L('chEnded',lg),[moreBtn(lg)],1000)})}
+function act(a,label){var lg=C.lang;chEnsure().then(function(){
+  if(a==='openplans'){$('chat').hidden=true;openPlans();return}
+  if(a==='openset'){$('chat').hidden=true;openSettings();return}
+  if(a==='readterms'){$('chat').hidden=true;openTerms(false);return}
+  if(a==='live'){if(live())return;return goLive(lg)}
+  if(a==='end'){if(!live())return;return endLive(lg)}
+  return say(label).then(function(){return answer(a,lg)})}).catch(function(){toast(t('aeNet'))})}
+/* understands simple questions in Khmer and English */
+var INTENTS=[['live',/(agent|person|human|staff|admin|talk to|call me|speak|មនុស្ស|ភ្នាក់ងារ|បុគ្គលិក|និយាយជាមួយ|ទាក់ទងក្រុម|ជជែកជាមួយ)/i],
+  ['pay',/(pay|paid|payment|khqr|qr|receipt|bank|aba|acleda|wing|money|transfer|បង់|ប្រាក់|លុយ|បង្កាន់ដៃ|ធនាគារ|ផ្ទេរ|វិក្កយបត្រ)/i],
+  ['plans',/(plan|price|cost|how much|subscri|month|upgrade|package|គម្រោង|តម្លៃ|ថ្លៃ|ប៉ុន្មាន|ខែ|កញ្ចប់|ជាវ|ដំឡើង)/i],
+  ['conn',/(connect|login|log in|facebook|instagram|telegram|page|token|tester|invite|accept|ភ្ជាប់|ចូល|ទំព័រ|ហ្វេសប៊ុក|អញ្ជើញ)/i],
+  ['prob',/(error|problem|not work|doesn.?t work|fail|bug|broken|stuck|can.?t|cannot|help|issue|បញ្ហា|មិនដំណើរការ|មិនអាច|ខូច|ជួយ|កំហុស|បរាជ័យ)/i],
+  ['terms',/(term|rule|policy|condition|allowed|copyright|ច្បាប់|លក្ខខណ្ឌ|គោលការណ៍|អនុញ្ញាត|រក្សាសិទ្ធិ)/i],
+  ['hello',/^(hi|hello|hey|good (morning|afternoon|evening)|សួស្តី|ជំរាបសួរ|សួស្ដី|hi there)\b|^(សួស្តី|ជំរាបសួរ|សួស្ដី)/i]];
+function intent(x){for(var i=0;i<INTENTS.length;i++)if(INTENTS[i][1].test(x))return INTENTS[i][0];return ''}
+$('chatSend').onclick=function(){var x=$('chatIn'),v=x.value.trim();if(!v)return;x.value='';x.style.height='';
+  var lg=/[ក-៿]/.test(v)?'km':(/[a-z]/i.test(v)?'en':C.lang);
+  chEnsure().then(function(){var wasLive=live();return say(v.slice(0,2000)).then(function(){if(wasLive)return;var it=intent(v);if(it==='live')return FBX.d.update(R(chP()),{status:'waiting',requestedAt:FBX.d.serverTimestamp(),updatedAt:FBX.d.serverTimestamp(),lastMsg:v.slice(0,120),lastFrom:'visitor',unreadAgent:FBX.d.increment(1),lang:lg}).then(function(){return botSay(L('hold1',lg),null,1400)}).then(function(){return botSay(L('hold2',lg),[{l:L('q_end',lg),a:'end'}],2000)});
+    return answer(it,lg)})}).catch(function(){toast(t('aeNet'))})};
 $('chatIn').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('chatSend').click()}});
-function drawChat(){if($('chat').hidden)return;var lv=live(),c=CH.chat||{};
-  $('chatSt').textContent=c.status==='assigned'?t('chWith',{n:c.agentName||t('ourTeam')}):c.status==='waiting'?t('chWaiting'):t('chBotSt');
-  var box=$('chatList'),near=box.scrollHeight-box.scrollTop-box.clientHeight<80;
-  box.innerHTML=CH.msgs.map(function(m){var me=m.from==='visitor',cls=me?'me':m.from==='agent'?'ag':m.from==='system'?'sys':'bot';
-    var tm=+m.ts?new Date(+m.ts):null,ts=tm?('0'+tm.getHours()).slice(-2)+':'+('0'+tm.getMinutes()).slice(-2):'';
-    return '<div class="bub '+cls+'">'+(m.from==='agent'?'<small>'+esc(m.agentName||t('ourTeam'))+'</small>':m.from==='bot'?'<small>'+esc(t('assistant'))+'</small>':'')+'<p>'+esc(m.text||'').replace(/\n/g,'<br>')+'</p><time>'+ts+'</time></div>'}).join('')+
-    (CH.typing?'<div class="bub bot typing"><p>…</p></div>':'');
-  if(near)box.scrollTop=box.scrollHeight;
-  var qs=lv?['end']:['live','pay','conn','plans','prob'];
-  $('chatQ').innerHTML=qs.map(function(q){return '<button type="button" class="chip" data-q="'+q+'">'+esc(t('q_'+q))+'</button>'}).join('')}
+$('chatIn').addEventListener('input',function(){this.style.height='';this.style.height=Math.min(this.scrollHeight,110)+'px'});
+$('chat').addEventListener('click',function(e){if(e.target===$('chat')||e.target.closest('[data-close]')){$('chat').hidden=true;drawBadge();return}
+  if(e.target.closest('#chClr')){$('chConf').hidden=false;return}
+  var c=e.target.closest('[data-clr]');if(c){$('chConf').hidden=true;if(c.getAttribute('data-clr')!=='yes')return;
+    var p=live()?endLive(C.lang):Promise.resolve();p.then(function(){try{localStorage.setItem(clrKey(),String(Date.now()+500))}catch(x){}drawChat();setTimeout(function(){welcome(C.lang)},600)});return}
+  var b=e.target.closest('[data-ca]');if(b)act(b.getAttribute('data-ca'),b.textContent)});
+function drawChat(){if($('chat').hidden)return;var c=CH.chat||{},st=c.status;
+  $('chatSt').textContent=st==='assigned'?t('chWith',{n:c.agentName||t('ourTeam')}):st==='waiting'?t('chWaiting'):t('chBotSt');
+  $('chDot').className='chdot'+(st==='assigned'?' on':st==='waiting'?' wait':'');
+  var box=$('chatList'),near=box.scrollHeight-box.scrollTop-box.clientHeight<120,M=shown(),last=-1;
+  M.forEach(function(m,i){if(m.btns)last=i});
+  box.innerHTML=M.map(function(m,i){var tm=+m.ts?new Date(+m.ts):null,ts=tm?('0'+tm.getHours()).slice(-2)+':'+('0'+tm.getMinutes()).slice(-2):'';
+    if(m.from==='system')return '<div class="cm-sys">'+esc(m.text||'')+'</div>';
+    var me=m.from==='visitor',by=m.from==='agent'?esc(m.agentName||t('ourTeam'))+' · '+esc(t('liveAgent')):m.from==='bot'?esc(t('assistant')):'';
+    return '<div class="cm '+(me?'out':'in')+'">'+(by?'<span class="by">'+by+'</span>':'')+'<div class="tx">'+esc(m.text||'')+'</div>'+
+      (m.btns&&m.btns.length?'<div class="cm-btns">'+m.btns.map(function(x){return '<button type="button" class="'+(i===last?'':'old')+'" data-ca="'+esc(x.a)+'">'+esc(x.l)+'</button>'}).join('')+'</div>':'')+
+      '<time>'+ts+'</time></div>'}).join('')+(CH.typing?'<div class="cm-typing"><i></i><i></i><i></i></div>':'');
+  if(near||CH.typing)box.scrollTop=box.scrollHeight}
+
+/* ---------- terms of use ---------- */
+var TERMS_V=1;
+function termsOk(){return ACC.team||!!(ACC.prof&&ACC.prof.terms&&+ACC.prof.terms.v>=TERMS_V)}
+function openTerms(must){$('terms').hidden=false;$('termsAgree').hidden=!must;$('termsClose').hidden=!!must;$('tChk').checked=false;$('tGo').disabled=true;
+  $('termsList').innerHTML=t('termsSum').map(function(s){return '<li>'+esc(s)+'</li>'}).join('')}
+$('tChk').onchange=function(){$('tGo').disabled=!this.checked};
+$('tGo').onclick=function(){var b=this;b.disabled=true;FBX.d.update(R('postusers/'+ACC.user.uid+'/profile'),{email:ACC.user.email||'',terms:{v:TERMS_V,at:Date.now()}}).then(function(){$('terms').hidden=true;toast(t('termsThanks'))}).catch(function(e){b.disabled=false;toast(String(e&&e.message||e))})};
+$('terms').addEventListener('click',function(e){if(e.target.closest('[data-tclose]'))$('terms').hidden=true});
+document.addEventListener('click',function(e){if(e.target.closest('[data-terms]')){e.preventDefault();['me','chat','settings'].forEach(function(id){$(id).hidden=true});openTerms(ACC.st==='in'&&!termsOk())}});
+function checkTerms(){if(ACC.st==='in'&&!ACC.team&&ACC.prof!==undefined&&ACC.loaded&&!termsOk()&&$('terms').hidden)openTerms(true)}
+
+/* ---------- posting history (kept for our records, see the Terms of use) ---------- */
+function logPost(R0,cap){if(ACC.st!=='in'||ACC.team||!FBX)return;
+  try{FBX.d.push(R('postlog/'+ACC.user.uid),{at:FBX.d.serverTimestamp(),d:R0.filter(function(r){return r.st==='done'}).map(function(r){return r.k}).join(','),src:String(ST.srcLink||$('link').value||'').slice(0,300),cap:String(cap||'').slice(0,500),
+    url:String((R0.filter(function(r){return r.st==='done'&&r.url})[0]||{}).url||'').slice(0,300),page:String(C.pageName||'').slice(0,100)}).catch(function(){})}catch(e){}}
 
 document.addEventListener('click',function(e){if(e.target.closest('#footChat')&&ACC.st==='in'){e.preventDefault();openChat()}});
 function accCount(){if(ACC.st!=='in'||ACC.team||!FBX)return;FBX.d.runTransaction(R('postusers/'+ACC.user.uid+'/used'),function(v){return (+v||0)+1}).catch(function(){})}
 (function(){var go=$('post').onclick;$('post').onclick=function(){
   if(ACC.st!=='in'){window.scrollTo(0,0);return}
   if(isLocked()){window.scrollTo(0,0);return}
+  if(!termsOk()){openTerms(true);return}
   if(!canPost()){msg('m3','info',esc(t('outOf')));openPlans();return}
   if(!ACC.team&&C.fbLogin&&KS==='bad'){openSettings();return}
   return go.apply(this,arguments)}})();
@@ -1104,6 +1204,38 @@ Object.assign(T.km,{
   a_conn:'របៀបភ្ជាប់ Facebook៖\n១. ក្រុមការងារបន្ថែមអ្នកទៅក្នុងកម្មវិធី Facebook របស់យើង (ជាធម្មតាក្នុង ១ ថ្ងៃ បន្ទាប់ពីចុះឈ្មោះ)។\n២. បើក developers.facebook.com/requests ហើយចុច Accept។\n៣. បើក ការកំណត់ការបង្ហោះ ចុច ភ្ជាប់ជាមួយ Facebook ជ្រើសទំព័រ ហើយអនុញ្ញាតទាំងអស់។',
   a_prob:'សូមសាកល្បងទាំងនេះជាមុន៖\n១. អូសចុះក្រោម ដើម្បីផ្ទុកទំព័រឡើងវិញ។\n២. ក្នុង ការកំណត់ការបង្ហោះ ចុច ភ្ជាប់ជាមួយ Facebook ម្តងទៀត។\n៣. ពិនិត្យអ៊ីនធឺណិត។\nនៅតែមិនដំណើរការ? សូមចុច «និយាយជាមួយក្រុមការងារ» ហើយប្រាប់យើងពីអ្វីដែលអ្នកឃើញ។',
   helpChat:'ជជែកជាមួយយើង'
+});
+
+
+Object.assign(T.en,{
+  chatShort:'Chat',liveAgent:'live agent',clrQ:'Clear this chat on this phone?',clr:'Clear',cancelB:'Cancel',
+  chHello:'Hello, and welcome to Thean Post! How can we help you today?',
+  chCaps:'I can assist you with:\n• Paying for a plan and sending your receipt\n• Connecting your Facebook Page, Instagram and Telegram\n• Plans and prices\n• Fixing problems when posting\n• Our terms of use\n\nJust type your question, or tap «Talk to Live Agent» to chat with our team.',
+  q_live:'Talk to Live Agent',q_pay:'Payment help',q_conn:'Connect Facebook',q_plans:'Plans and prices',q_prob:'Something is not working',q_terms:'Terms of use',q_end:'End Live Chat',q_more:'More help',
+  q_openPlans:'Open plans',q_openSet:'Open posting settings',q_readTerms:'Read the terms',
+  hold1:'Our next available agent will assist you shortly.',hold2:'Please hold on! Our system is connecting you to an available agent. Thank you!',
+  chEnded:'Your chat session has ended. Thank you for contacting us today.',chWaiting:'Connecting you to an agent…',
+  chNo:'Sorry, I did not understand that yet. Please choose a topic below, or tap «Talk to Live Agent» to chat with our team.',
+  a_terms:'In short: post only content you own or have permission to use, and never post sexual, violent, hateful or illegal content. If we find a violation, we can pause or close the account, and we may use the account information and activity history to handle it under the laws of Cambodia.',
+  termsT:'Terms of use',termsIntro:'Before you start, please read and agree to our terms. Here is a short summary:',
+  termsSum:['Post only videos and photos that you own, or that the owner allowed you to use. Giving credit is not permission.','Never post sexual or nude content, violence, hate, scams, gambling, drugs or anything illegal in Cambodia. Anything sexual involving children is strictly forbidden and will be reported.','Follow the rules of Facebook, Instagram and Telegram. They can remove posts or limit your Page.','You are responsible for everything you post with this app.','We keep your account details and activity history (posts made with the app, payments and chats).','If we find a violation or a fake payment, we can pause or close your account, and we may use this information and share it with the authorities to handle the matter under the laws of the Kingdom of Cambodia.'],
+  termsFull:'Read the full terms',termsAgreeLbl:'I have read and agree to the Terms of use',termsGo:'Agree and continue',termsThanks:'Thank you. You can read the terms again anytime in My account.',
+  termsNote:'By creating an account, you agree to our',termsLink:'Terms of use',privacyLink:'Privacy policy',close:'Close'
+});
+Object.assign(T.km,{
+  chatShort:'ជជែក',liveAgent:'ភ្នាក់ងារផ្ទាល់',clrQ:'លុបការជជែកនេះនៅលើទូរស័ព្ទនេះ?',clr:'លុប',cancelB:'បោះបង់',
+  chHello:'សួស្តី សូមស្វាគមន៍មកកាន់ Thean Post! តើយើងអាចជួយអ្វីបានខ្លះថ្ងៃនេះ?',
+  chCaps:'ខ្ញុំអាចជួយអ្នកអំពី៖\n• ការបង់ប្រាក់សម្រាប់គម្រោង និងការផ្ញើបង្កាន់ដៃ\n• ការភ្ជាប់ទំព័រ Facebook, Instagram និង Telegram\n• គម្រោង និងតម្លៃ\n• ការដោះស្រាយបញ្ហាពេលបង្ហោះ\n• លក្ខខណ្ឌប្រើប្រាស់របស់យើង\n\nសូមវាយសំណួររបស់អ្នក ឬចុច «និយាយជាមួយភ្នាក់ងារ» ដើម្បីជជែកជាមួយក្រុមការងារ។',
+  q_live:'និយាយជាមួយភ្នាក់ងារ',q_pay:'ជំនួយការបង់ប្រាក់',q_conn:'ភ្ជាប់ Facebook',q_plans:'គម្រោង និងតម្លៃ',q_prob:'មានអ្វីមិនដំណើរការ',q_terms:'លក្ខខណ្ឌប្រើប្រាស់',q_end:'បញ្ចប់ការជជែក',q_more:'ជំនួយផ្សេងទៀត',
+  q_openPlans:'បើកគម្រោង',q_openSet:'បើកការកំណត់ការបង្ហោះ',q_readTerms:'អានលក្ខខណ្ឌ',
+  hold1:'ភ្នាក់ងារដែលទំនេរបន្ទាប់ នឹងជួយអ្នកក្នុងពេលឆាប់ៗនេះ។',hold2:'សូមរង់ចាំបន្តិច! ប្រព័ន្ធរបស់យើងកំពុងភ្ជាប់អ្នកទៅភ្នាក់ងារដែលទំនេរ។ អរគុណ!',
+  chEnded:'ការជជែករបស់អ្នកបានបញ្ចប់។ អរគុណដែលបានទាក់ទងមកយើងថ្ងៃនេះ។',chWaiting:'កំពុងភ្ជាប់អ្នកទៅភ្នាក់ងារ…',
+  chNo:'សូមអភ័យទោស ខ្ញុំមិនទាន់យល់សារនេះទេ។ សូមជ្រើសប្រធានបទខាងក្រោម ឬចុច «និយាយជាមួយភ្នាក់ងារ» ដើម្បីជជែកជាមួយក្រុមការងារ។',
+  a_terms:'សរុបខ្លី៖ សូមបង្ហោះតែមាតិកាដែលជារបស់អ្នក ឬមានការអនុញ្ញាតពីម្ចាស់ ហើយកុំបង្ហោះមាតិកាផ្លូវភេទ ហិង្សា ការស្អប់ ឬខុសច្បាប់។ ប្រសិនបើយើងរកឃើញការរំលោភ យើងអាចផ្អាក ឬបិទគណនី ហើយអាចប្រើព័ត៌មានគណនី និងប្រវត្តិសកម្មភាព ដើម្បីដោះស្រាយតាមច្បាប់នៃព្រះរាជាណាចក្រកម្ពុជា។',
+  termsT:'លក្ខខណ្ឌប្រើប្រាស់',termsIntro:'មុននឹងចាប់ផ្តើម សូមអាន និងយល់ព្រមលើលក្ខខណ្ឌរបស់យើង។ នេះជាសេចក្តីសង្ខេប៖',
+  termsSum:['សូមបង្ហោះតែវីដេអូ និងរូបភាពដែលជារបស់អ្នក ឬដែលម្ចាស់បានអនុញ្ញាតឱ្យអ្នកប្រើ។ ការផ្តល់កិត្តិយសមិនមែនជាការអនុញ្ញាតទេ។','កុំបង្ហោះមាតិកាផ្លូវភេទ ឬអាក្រាត ហិង្សា ការស្អប់ ការបោកប្រាស់ ល្បែងស៊ីសង គ្រឿងញៀន ឬអ្វីដែលខុសច្បាប់នៅកម្ពុជា។ មាតិកាផ្លូវភេទពាក់ព័ន្ធនឹងកុមារ ត្រូវហាមឃាត់ដាច់ខាត ហើយនឹងត្រូវរាយការណ៍។','សូមគោរពច្បាប់របស់ Facebook, Instagram និង Telegram។ ពួកគេអាចលុបប៉ុស្តិ៍ ឬកំណត់ទំព័ររបស់អ្នក។','អ្នកទទួលខុសត្រូវចំពោះអ្វីៗទាំងអស់ដែលអ្នកបង្ហោះតាមកម្មវិធីនេះ។','យើងរក្សាទុកព័ត៌មានគណនី និងប្រវត្តិសកម្មភាពរបស់អ្នក (ប៉ុស្តិ៍ដែលបង្ហោះតាមកម្មវិធី ការបង់ប្រាក់ និងការជជែក)។','ប្រសិនបើយើងរកឃើញការរំលោភ ឬការបង់ប្រាក់ក្លែងក្លាយ យើងអាចផ្អាក ឬបិទគណនីរបស់អ្នក ហើយអាចប្រើព័ត៌មាននេះ និងចែករំលែកជាមួយអាជ្ញាធរ ដើម្បីដោះស្រាយតាមច្បាប់នៃព្រះរាជាណាចក្រកម្ពុជា។'],
+  termsFull:'អានលក្ខខណ្ឌពេញលេញ',termsAgreeLbl:'ខ្ញុំបានអាន និងយល់ព្រមលើលក្ខខណ្ឌប្រើប្រាស់',termsGo:'យល់ព្រម និងបន្ត',termsThanks:'អរគុណ។ អ្នកអាចអានលក្ខខណ្ឌម្តងទៀតគ្រប់ពេល ក្នុង គណនីរបស់ខ្ញុំ។',
+  termsNote:'ដោយបង្កើតគណនី អ្នកយល់ព្រមលើ',termsLink:'លក្ខខណ្ឌប្រើប្រាស់',privacyLink:'គោលការណ៍ឯកជនភាព',close:'បិទ'
 });
 
 try{$('yr').textContent=new Date().getFullYear()}catch(e){}applyLang();checkKey();accStart();

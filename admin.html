@@ -550,6 +550,7 @@ html[lang="km"] .mtab{letter-spacing:0}
 .pathumb{flex:none;width:64px;height:84px;border-radius:10px;overflow:hidden;border:1px solid var(--line);display:block}.pathumb img{width:100%;height:100%;object-fit:cover}
 .pachecks{display:flex;flex-wrap:wrap;gap:6px}.pachecks span{font-size:.78rem;padding:3px 8px;border-radius:999px;background:var(--mist1)}.pachecks .ok{background:rgba(31,122,77,.14);color:#1f7a4d}.pachecks .bad{background:rgba(168,52,31,.12);color:#a8341f}
 .past{font-weight:700}.past.review{color:#b7791f}.past.auto,.past.approved{color:#1f7a4d}.past.rejected,.past.undone{color:#a8341f}
+.pahist{display:flex;flex-direction:column;gap:8px;border-top:1px dashed var(--line);padding-top:8px;max-height:320px;overflow:auto}.pahist>div{display:flex;flex-direction:column;gap:2px;font-size:.86rem}.pahist small{color:var(--muted)}.pahist .lk a{font-weight:600}
 .pamsg{display:flex;flex-direction:column;gap:8px;border-top:1px dashed var(--line);padding-top:8px}.pamsg textarea,.pamsg input{width:100%}
 .dcard{position:relative}.pabadge{position:absolute;top:8px;right:10px;background:#d9381e;color:#fff;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:999px}
 .imgpick .pv{width:120px;aspect-ratio:4/3;border-radius:10px;overflow:hidden;background:var(--mist1)}
@@ -2546,7 +2547,7 @@ document.addEventListener('thean:admin-ready',paWatch);
 document.addEventListener('thean:render',function(){setTimeout(function(){paWatch();paBadge()},0)});
 (function(){var q=0;new MutationObserver(function(){if(q)return;q=requestAnimationFrame(function(){q=0;if(!PA_NEW)return;var c=document.querySelector('[data-act="postapp"]');if(c&&!c.querySelector('.pabadge'))paBadge()})}).observe(document.body,{childList:true,subtree:true})})();
 function postAppForm(){
-  var tab=PA_NEW?'pay':'cust',U={},PY={},CF={},offs=[],open={},m=modal('Posting app','<div class="seg2" data-patabs><button type="button" data-pat="pay">Payments</button><button type="button" data-pat="cust">Customers</button><button type="button" data-pat="plans">Plans and prices</button></div><div data-pabody><small style="color:var(--muted)">Loading…</small></div>');
+  var tab=PA_NEW?'pay':'cust',U={},PY={},CF={},HL={},offs=[],open={},m=modal('Posting app','<div class="seg2" data-patabs><button type="button" data-pat="pay">Payments</button><button type="button" data-pat="cust">Customers</button><button type="button" data-pat="plans">Plans and prices</button></div><div data-pabody><small style="color:var(--muted)">Loading…</small></div>');
   var body=m.querySelector('[data-pabody]');
   function permErr(e){return /permission/i.test(String(e&&(e.code||e.message)))?'No permission yet: add the new database rules in Firebase (setup step).':'Problem: '+(e&&(e.code||e.message))}
   function pkn(k){var r=PA_PK.filter(function(z){return z[0]===k})[0];return (((CF.packs||{})[k]||{}).name||{}).en||(r?r[1]:k)}
@@ -2590,8 +2591,14 @@ function postAppForm(){
         (on?'<button class="btn sm del" type="button" data-pastop="'+esc(x.uid)+'">Stop plan</button>':'')+
         (q?'<button class="btn sm soft" type="button" data-panoreq="'+esc(x.uid)+'">Not paid</button>':'')+'</div>'+
         '<div class="paact">'+(lk?'<button class="btn sm soft" type="button" data-paunlock="'+esc(x.uid)+'">Unpause</button>':'<button class="btn sm soft" type="button" data-patog="lock:'+esc(x.uid)+'">Pause account</button>')+
-        '<button class="btn sm soft" type="button" data-patog="msg:'+esc(x.uid)+'">'+I('chat')+' Message</button></div>'+lockBox(x.uid)+msgBox(x.uid)+'</div>'}).join('');
+        '<button class="btn sm soft" type="button" data-patog="msg:'+esc(x.uid)+'">'+I('chat')+' Message</button><button class="btn sm soft" type="button" data-pahist="'+esc(x.uid)+'">'+(open['hist:'+x.uid]?'Hide history':'Posting history')+'</button></div>'+lockBox(x.uid)+msgBox(x.uid)+histBox(x.uid)+'</div>'}).join('');
     body.innerHTML=h}
+  function histBox(uid){if(!open['hist:'+uid])return '';var v=HL[uid];if(v===undefined)return '<small style="color:var(--muted)">Loading…</small>';
+    var L=v?Object.keys(v).map(function(k){return v[k]}).sort(function(a,b){return (+b.at||0)-(+a.at||0)}).slice(0,40):[];
+    if(!L.length)return '<small style="color:var(--muted)">No posts yet.</small>';
+    var nm={fb:'Facebook',fbs:'Facebook Story',ig:'Instagram',igs:'Instagram Story',tg:'Telegram'};
+    return '<div class="pahist">'+L.map(function(x){return '<div><small>'+esc(paTime(x.at))+' · '+esc(String(x.d||'').split(',').map(function(k){return nm[k]||k}).join(', '))+(x.page?' · '+esc(x.page):'')+'</small>'+
+      (x.cap?'<span>'+esc(String(x.cap).slice(0,160))+'</span>':'')+'<span class="lk">'+(x.src?'<a href="'+esc(x.src)+'" target="_blank" rel="noopener">Source</a>':'')+(x.url?' <a href="'+esc(x.url)+'" target="_blank" rel="noopener">Post</a>':'')+'</span></div>'}).join('')+'</div>'}
   function drawPlans(){var c=CF,pk=c.packs||{};
     body.innerHTML='<div class="two"><label class="f">Free Facebook posts for new accounts<input data-pc="free" inputmode="numeric" value="'+esc(c.free==null?5:c.free)+'"></label>'+
       '<label class="f">Currency<select data-pc="cur"><option value="USD"'+(c.cur!=='KHR'?' selected':'')+'>USD $</option><option value="KHR"'+(c.cur==='KHR'?' selected':'')+'>KHR ៛</option></select></label></div>'+
@@ -2622,6 +2629,7 @@ function postAppForm(){
   m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var d=b.dataset;
     if(d.pat){tab=d.pat;draw();return}
     if(d.patog){open[d.patog]=!open[d.patog];draw();return}
+    if(d.pahist){var hk='hist:'+d.pahist;open[hk]=!open[hk];if(open[hk]&&HL[d.pahist]===undefined){window.TheanAdmin.postLog(d.pahist).then(function(v){HL[d.pahist]=v||null;draw()}).catch(function(err){HL[d.pahist]=null;toast(permErr(err));draw()})}draw();return}
     if(d.paon){var id=d.paon,pkg=m.querySelector('[data-papk="'+id+'"]').value,mo=+m.querySelector('[data-pam="'+id+'"]').value;
       b.disabled=true;grant(id,pkg,mo).then(function(u){toast('Plan turned on until '+paDay(u));window.TheanAdmin.postMsg(id,'Your plan '+pkn(pkg)+' is on until '+paDay(u)+'. Thank you!').catch(function(){})}).catch(function(err){b.disabled=false;toast(permErr(err))});return}
     if(d.pastop){if(!confirm('Stop this plan now?'))return;window.TheanAdmin.postUser(d.pastop,{plan:null}).then(function(){toast('Plan stopped')}).catch(function(err){toast(permErr(err))});return}
@@ -4125,6 +4133,7 @@ if(ADMIN_PAGE){
     async postUser(uid,patch){await loadFb();await fb.update('postusers/'+uid,patch)},
     onPays(cb,err){let off=null,dead=false;loadFb().then(()=>{if(!dead)off=fb.on('pays',cb,err)}).catch(e=>err&&err(e));return()=>{dead=true;try{off&&off()}catch(e){}}},
     async setPay(id,patch){await loadFb();await fb.update('pays/'+id,patch)},
+    async postLog(uid){await loadFb();return await fb.get('postlog/'+uid)},
     async postMsg(uid,text){await loadFb();const u=await authUser();const a=await fb.get('agents/'+u.uid);const name=(a&&a.name)||'Thean';
       const ch=await fb.get('chats/'+uid);
       if(!ch){const p=(await fb.get('postusers/'+uid+'/profile'))||{};await fb.set('chats/'+uid,{visitorUid:uid,status:'bot',lang:'en',name:(p.name||p.email||'Customer')+' · Posting app',contact:p.email||'',page:'/post',createdAt:TS,updatedAt:TS,lastMsg:'',lastFrom:'',unreadAgent:0,unreadVisitor:0})}
