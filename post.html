@@ -17,13 +17,17 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kantumruy+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#eef0f1;--surface:#fff;--ink:#1d2328;--muted:#68737c;--line:#dfe3e6;--char:#1f2428;--char-ink:#fff;--soft:#e7eaec;--ok:#1f7a4d;--okbg:#e5f3ec;--bad:#a8341f;--badbg:#fbeae6;--accent:#2f5f7a;--r:18px}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121518;--surface:#1b1f23;--ink:#eef1f3;--muted:#9aa5ae;--line:#2c3237;--char:#eef1f3;--char-ink:#121518;--soft:#262c31;--ok:#5fd09a;--okbg:#14291f;--bad:#ff9a85;--badbg:#2e1a16;--accent:#8cc3e3}}
+:root{--bg:#edf2f7;--surface:#fff;--ink:#0f2238;--muted:#5b6d80;--line:#d8e1ea;--char:#1a6fbd;--char-ink:#fff;--soft:#e4ecf4;--ok:#1f7a4d;--okbg:#e5f3ec;--bad:#a8341f;--badbg:#fbeae6;--accent:#1a6fbd;--brand:#102d4d;--grad:linear-gradient(135deg,#36a8dc,#1a6fbd);--r:18px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#081727;--surface:#0f2339;--ink:#eaf2fa;--muted:#94a9bf;--line:#1d3753;--char:#2f96ca;--char-ink:#fff;--soft:#17304c;--ok:#5fd09a;--okbg:#10291f;--bad:#ff9a85;--badbg:#2e1a16;--accent:#4fb3e3}}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Kantumruy Pro",system-ui,-apple-system,sans-serif;-webkit-text-size-adjust:100%}
 body.km{font-family:"Kantumruy Pro",Inter,system-ui,sans-serif}
-.top{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--line);padding:calc(10px + env(safe-area-inset-top)) 16px 10px}
+.top{position:sticky;top:0;z-index:5;background:var(--brand);color:#fff;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;box-shadow:0 2px 10px rgba(5,20,40,.25)}
+.top .brand{display:flex;align-items:center;gap:10px}.top .brand img{width:34px;height:34px;border-radius:9px;box-shadow:0 0 0 1px rgba(255,255,255,.18);flex:none}
+.top .brand{overflow:hidden;padding:2px}.top .brand b{white-space:nowrap}@media (max-width:430px){.top .brand b{display:none}}
+.top .kst{background:rgba(255,255,255,.1);color:#fff}.top .kst i{background:#9fb3c8}.top .kst.ok{background:rgba(95,208,154,.14);color:#8ee6bb}.top .kst.ok i{background:#5fd09a}.top .kst.bad{background:rgba(255,154,133,.16);color:#ffb7a6}.top .kst.bad i{background:#ff9a85}
+.top .lang{background:rgba(255,255,255,.1)}.top .lang button{color:#d9e6f2}.top .lang button.on{background:#fff;color:var(--brand)}.top .ib{background:rgba(255,255,255,.1);color:#fff}
 .top .in{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:10px}
 .brand{flex:1;min-width:0}
 .brand b{display:block;font-size:1.05rem;letter-spacing:.06em}
@@ -53,6 +57,7 @@ textarea{min-height:170px;resize:vertical;line-height:1.5}
 .btn.soft{background:var(--soft);color:var(--ink)}
 .btn.sm{padding:8px 13px;font-size:.84rem}
 .btn.wide{width:100%;padding:15px}
+.btn:not(.soft){background:var(--grad);color:#fff}.btn:not(.soft):disabled{opacity:.6}
 .btn:disabled{opacity:.5;cursor:default}
 .link{background:none;border:0;padding:0;color:var(--accent);font:inherit;font-size:.88rem;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .msg{border-radius:12px;padding:11px 13px;font-size:.9rem;line-height:1.45;margin-top:12px}
@@ -92,13 +97,15 @@ textarea{min-height:170px;resize:vertical;line-height:1.5}
 .sw input:checked+span:after{transform:translateX(18px)}
 .seg{display:flex;background:var(--soft);border-radius:999px;padding:4px;margin-bottom:10px}
 .seg button{flex:1;border:0;background:none;font:inherit;font-weight:600;font-size:.9rem;padding:9px;border-radius:999px;color:var(--ink);cursor:pointer}
-.seg button.on{background:var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.seg button.on{background:var(--grad);color:#fff;box-shadow:0 2px 8px rgba(26,111,189,.3)}
 .cnt{color:var(--muted);font-size:.84rem}
 .hist a{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line);color:var(--ink);text-decoration:none;font-size:.9rem}
 .hist a:first-child{border-top:0}
 .hist a span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hist a small{color:var(--muted);flex:none}
 .note{font-size:.82rem;color:var(--muted);line-height:1.5;margin-top:10px}
+.foot{margin:22px 0 calc(20px + env(safe-area-inset-bottom));text-align:center;color:var(--muted);font-size:.82rem}
+.foot .sup{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}.foot .sup b{display:block;color:var(--ink);font-size:.95rem;margin-bottom:2px}.foot p{margin:14px 0 0}
 .modal{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center}
 .sheet{background:var(--surface);width:100%;max-width:640px;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:18px 16px calc(24px + env(safe-area-inset-bottom))}
 @media(min-width:700px){.modal{align-items:center}.sheet{border-radius:22px}}
@@ -111,24 +118,56 @@ details{border-top:1px solid var(--line);margin-top:14px;padding-top:10px}
 summary{cursor:pointer;font-weight:600;font-size:.92rem}
 .bar{height:6px;background:var(--soft);border-radius:3px;overflow:hidden;margin-top:10px}
 .bar i{display:block;height:100%;width:0;background:var(--ok);transition:width .3s}
+input[type=email]{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px 13px;outline:none}
+body.out main>section:not(#authCard),body.out #needSetup,body.out .top .kst,body.out .top #gear,body.out main>p.note{display:none!important}
+body.cust [data-owner]{display:none!important}body:not(.cust) [data-cust]{display:none!important}
+#authCard h2{margin:0 0 4px;font-size:1.25rem}#authCard .seg{margin:14px 0 4px}
+.acc{display:flex;flex-direction:column;gap:2px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:.9rem}.acc span{color:var(--muted)}
+#planBar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--soft);border-radius:12px;padding:9px 12px;margin-top:10px;color:var(--ink)}#planBar .bad{color:var(--bad);font-weight:600}
+.pk{border:1.5px solid var(--line);border-radius:16px;padding:12px;margin-top:10px;cursor:pointer}.pk.on{border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,111,189,.15)}
+.pkh b{display:block;font-size:1rem}.pkh small{color:var(--muted);font-size:.8rem}
+.pkm{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin-top:10px}
+.pkm button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:8px 6px;font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px}
+.pkm button span{font-size:.78rem;color:var(--muted)}.pkm button b{font-size:.98rem}.pkm button em{font-style:normal;font-size:.72rem;font-weight:700;color:var(--ok)}
+.pkm button.on{background:var(--grad);border-color:transparent;color:#fff}.pkm button.on span,.pkm button.on em{color:#fff}
+.paybox{text-align:center}.paybox canvas{width:100%;max-width:300px;height:auto;border-radius:14px;border:1px solid var(--line);display:block;margin:6px auto 10px}
+.pick{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 </style>
 </head>
 <body>
 <header class="top"><div class="in">
-  <div class="brand"><b>THEAN</b><small data-t="appSub"></small></div>
+  <div class="brand"><img src="/icons/post-favicon-96.png" alt=""><b>THEAN</b></div>
   <button class="kst" id="kst" data-open-settings><i></i><span id="kstT"></span></button>
   <div class="lang" role="group" aria-label="Language"><button data-lang="km">ខ្មែរ</button><button data-lang="en">EN</button></div>
   <button class="ib" id="gear" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
 </div></header>
 
 <main>
+  <section class="card" id="authCard" hidden>
+    <h2 data-t="authTitle"></h2>
+    <p class="sub" data-t="authSub"></p>
+    <p class="note" id="authLoad" data-t="authLoadT"></p>
+    <div id="authErr" hidden><div class="msg bad" data-t="authErrT"></div><button class="btn soft sm" id="authRetry" style="margin-top:10px" data-t="retry"></button></div>
+    <div id="authForm" hidden>
+      <div class="seg"><button type="button" data-am="in" class="on" data-t="signIn"></button><button type="button" data-am="up" data-t="signUp"></button></div>
+      <div id="upOnly" hidden>
+        <label class="f" for="aName" data-t="aName"></label><input type="text" id="aName" autocomplete="name">
+        <label class="f" for="aFb" data-t="aFb"></label><input type="url" id="aFb" autocapitalize="off" spellcheck="false" placeholder="https://www.facebook.com/your.name">
+        <p class="note" style="margin-top:6px" data-t="aFbNote"></p>
+      </div>
+      <label class="f" for="aEmail" data-t="aEmail"></label><input type="email" id="aEmail" autocomplete="email" autocapitalize="off" spellcheck="false">
+      <label class="f" for="aPass" data-t="aPass"></label><input type="password" id="aPass" autocomplete="current-password">
+      <button class="btn wide" id="aGo" style="margin-top:14px"></button>
+      <div class="row" style="margin-top:10px;justify-content:center"><button class="link" id="aForgot" data-t="forgot"></button></div>
+      <div id="m7"></div>
+      <p class="note" data-t="authFree"></p>
+    </div>
+  </section>
   <div class="msg info" id="needSetup" hidden><span data-t="needSetup"></span> <button class="link" data-open-settings data-t="openSettings"></button></div>
 
   <section class="card">
-    <h2 data-t="step1"></h2>
-    <p class="sub" data-t="step1Sub"></p>
     <div class="row">
-      <input type="url" id="link" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://vt.tiktok.com/...">
+      <input type="url" id="link" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" data-tph="linkPh" placeholder="Paste a TikTok link">
       <button class="btn soft" id="paste" data-t="paste"></button>
     </div>
     <div class="row" style="margin-top:10px">
@@ -142,11 +181,11 @@ summary{cursor:pointer;font-weight:600;font-size:.92rem}
   </section>
 
   <section class="card" id="capCard" hidden>
-    <h2 data-t="step2"></h2>
     <textarea id="cap" aria-label="Caption" data-tph="capPh"></textarea>
     <div class="row" style="margin-top:8px;justify-content:space-between"><button class="btn soft sm" id="copyCap" data-t="copyCap"></button><button class="link" data-open-settings data-t="capOpts"></button></div>
     <p class="note" id="destSum" style="margin-top:10px"></p>
     <p class="note" id="schedNote" hidden data-t="schedOnlyFb"></p>
+    <div class="note" id="planBar" hidden></div>
     <div class="seg" style="margin-top:12px"><button data-when="now" class="on" data-t="now"></button><button data-when="later" data-t="later"></button></div>
     <div id="laterBox" hidden>
       <label class="f" for="at" data-t="whenLabel"></label>
@@ -173,18 +212,40 @@ summary{cursor:pointer;font-weight:600;font-size:.92rem}
   </section>
 
   <p class="note" data-t="rights"></p>
+  <footer class="foot">
+    <div class="sup"><b data-t="helpT"></b><span data-t="helpS"></span>
+      <div class="row" style="margin-top:10px;justify-content:center"><a class="btn soft sm" href="https://kongthean.com/" target="_blank" rel="noopener" data-t="helpChat"></a><a class="btn soft sm" href="mailto:info@kongthean.com" data-t="helpMail"></a></div></div>
+    <p>&copy; <span id="yr">2026</span> Thean · kongthean.com. <span data-t="allRights"></span></p>
+  </footer>
 </main>
+
+<div class="modal" id="plans" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="plansTitle">
+    <div class="hd"><h3 id="plansTitle" data-t="plansT"></h3><button class="ib" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div id="plansBody"></div>
+  </div>
+</div>
 
 <div class="modal" id="settings" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="setTitle">
     <div class="hd"><h3 id="setTitle" data-t="settings"></h3><button class="ib" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-    <h4 class="sh4" style="margin-top:6px" data-t="postTo"></h4>
+    <h4 class="sh4" style="margin-top:6px" data-t="acct"></h4>
+    <div id="accInfo"></div>
+    <div class="row" style="margin-top:10px"><button class="btn sm" data-plans data-cust data-t="seePlans"></button><button class="btn soft sm" id="signOut" data-t="signOut"></button></div>
+    <h4 class="sh4" data-t="postTo"></h4>
     <div class="dests" id="dests" style="margin-top:6px"></div>
-    <p class="sub" style="color:var(--muted);font-size:.86rem;margin-top:16px" data-t="setSub"></p>
-    <label class="f" for="tok" data-t="tokLabel"></label>
-    <div class="row"><input type="password" id="tok" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="EAA..."><button class="btn soft sm" id="tokShow" data-t="show"></button></div>
-    <div class="row" style="margin-top:10px"><button class="btn sm" id="tokCheck" data-t="checkSave"></button><button class="btn soft sm" id="tokForget" data-t="forget"></button></div>
-    <div id="m4"></div>
+    <div data-cust>
+      <h4 class="sh4">Facebook</h4>
+      <p class="note" style="margin-top:0" data-t="fbcSub"></p>
+      <div class="row"><button class="btn sm" id="fbConn" data-t="fbConn"></button><button class="btn soft sm" id="fbDisc" data-t="forget"></button></div>
+      <div id="m8"></div>
+      <details><summary data-t="fbcHelp"></summary><ol class="steps" id="fbcSteps"></ol></details>
+    </div>
+    <p class="sub" data-owner style="color:var(--muted);font-size:.86rem;margin-top:16px" data-t="setSub"></p>
+    <label class="f" data-owner for="tok" data-t="tokLabel"></label>
+    <div class="row" data-owner><input type="password" id="tok" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="EAA..."><button class="btn soft sm" id="tokShow" data-t="show"></button></div>
+    <div class="row" data-owner style="margin-top:10px"><button class="btn sm" id="tokCheck" data-t="checkSave"></button><button class="btn soft sm" id="tokForget" data-t="forget"></button></div>
+    <div id="m4" data-owner></div>
     <h4 class="sh4">Instagram</h4>
     <p class="note" style="margin-top:0" data-t="igSub"></p>
     <div class="row"><button class="btn sm" id="igCheck" data-t="igConnect"></button><button class="btn soft sm" id="igForget" data-t="forget"></button></div>
@@ -208,13 +269,13 @@ summary{cursor:pointer;font-weight:600;font-size:.92rem}
     <label class="f" for="creditTpl" data-t="creditLabel"></label>
     <input type="text" id="creditTpl">
     <p class="note" data-t="creditNote"></p>
-    <details>
+    <details data-owner>
       <summary data-t="cldTitle"></summary>
       <p class="note" data-t="cldNote"></p>
       <label class="f" for="cld">Cloud name</label><input type="text" id="cld" autocapitalize="off" spellcheck="false">
       <label class="f" for="pre">Upload preset (unsigned)</label><input type="text" id="pre" autocapitalize="off" spellcheck="false">
     </details>
-    <details>
+    <details data-owner>
       <summary data-t="guideTitle"></summary>
       <ol class="steps" id="guide"></ol>
     </details>
@@ -230,7 +291,7 @@ summary{cursor:pointer;font-weight:600;font-size:.92rem}
 (function(){
 'use strict';
 var T={
- en:{appSub:'Post to Facebook',needSetup:'First, connect your Facebook Page (one time on this phone).',openSettings:'Open settings',
+ en:{appSub:'Post to Facebook',helpT:'Need help?',helpS:'Our team is happy to help.',helpChat:'Chat with us',helpMail:'Email us',allRights:'All rights reserved.',linkPh:'Paste a TikTok link',needSetup:'First, connect your Facebook Page (one time on this phone).',openSettings:'Open settings',
   step1:'1. Paste a TikTok link',step1Sub:'In TikTok tap Share, then Copy link. Videos and photo posts (many photos) both work.',paste:'Paste',get:'Get video or photos',
   orFiles:'Or choose a video or photos from this phone',loading:'Getting the post…',gotVideo:'Video ready.',gotPhotos:'{n} photos ready. Tap a photo to leave it out.',
   badLink:'Paste a TikTok link first.',fetchFail:'Could not get this post. Check the link is public, then try again in a minute.',captionOnly:'Could not get the video file, but the caption was copied. You can choose the video from this phone.',
@@ -238,7 +299,7 @@ var T={
   step2:'2. Caption and post',capPh:'Write a caption…',capOpts:'Settings',postTo:'Post to',postingTo:'Posting to: {d}',capSet:'Caption',capSetSub:'Choose what goes into the caption automatically.',keepText:'Owner’s caption',keepTags:'Owner’s hashtags',credit:'Credit the owner (@username)',myTags:'Add my hashtags',
   captionLabel:'Caption that will be posted',copyCap:'Copy caption',copied:'Copied',
   step3:'3. Post to your Page',now:'Post now',later:'Schedule',whenLabel:'Date and time',whenNote:'Facebook allows 15 minutes to 30 days ahead. Time is your phone’s time.',
-  postBtn:'Post',dFbPost:'Facebook',dFbStory:'Facebook Story',dIgPost:'Instagram',dIgStory:'Instagram Story',dTg:'Telegram',setupNeeded:'set up in Settings',schedOnlyFb:'Scheduling works only for Facebook posts. Stories, Instagram and Telegram are sent when you tap Post now.',noDest:'Choose at least one place to post.',stDone:'Done',stFail:'Failed',stSkip:'Skipped',stWait:'Waiting…',stWork:'Working…',open:'Open',schedSkip:'cannot be scheduled',needCld:'needs the Cloudinary backup (Settings) for files from this phone',igSub:'Your Instagram must be a Professional account linked to your Facebook Page, and your Page key must include the Instagram permissions (see the guide).',igConnect:'Connect Instagram',igOk:'Connected to Instagram: @{u}',igNone:'No Instagram account is linked to this Page yet, or the key is missing the Instagram permissions.',tgSub:'Posts go to your Telegram channel through your own bot.',tgTokLabel:'Telegram bot key (from @BotFather)',tgChatLabel:'Channel (e.g. @tg_thean)',tgOk:'Connected to {c}. The bot can post there.',tgNotAdmin:'The bot is not an admin of {c} yet. Add it as an admin with permission to post.',tgBad:'This did not work: {e}',cancel:'Cancel',stCancel:'Cancelled, not posted',stStopping:'Cancelling…',tooLate:'already posted, could not cancel',storyLong:'the video is {s} seconds. Stories allow up to 60 seconds.',storyShort:'the video is shorter than 3 seconds.',fbsVidNet:'Facebook did not accept the video upload from this page. Photo Stories work. For a video Story, share the post to your Story in the Facebook app.',igFileBad:'Instagram could not use this file',igSlow:'Instagram is taking too long to process the video. Try again later.',tgNet:'Could not reach Telegram. Check your internet, or turn off VPN or ad blocker, then try again.',tgKeyBad:'The bot key is wrong. Copy it again from @BotFather.',tgChatBad:'Channel not found. Check the channel name, and that the bot is added to it.',tgGuideTitle:'How to set up Telegram',igProc:'Instagram is processing the video…',posting:'Posting…',upPhoto:'Uploading photo {i} of {n}…',upVideo:'Sending video to Facebook…',retryCld:'Facebook could not fetch it directly. Trying through Cloudinary…',
+  postBtn:'Post',dFbPost:'Facebook',dFbStory:'Facebook Story',dIgPost:'Instagram',dIgStory:'Instagram Story',dTg:'Telegram',setupNeeded:'set up in Settings',schedOnlyFb:'Scheduling works only for Facebook posts. Stories, Instagram and Telegram are sent when you tap Post now.',noDest:'Choose at least one place to post.',stDone:'Done',stFail:'Failed',stSkip:'Skipped',stWait:'Waiting…',stWork:'Working…',open:'Open',schedSkip:'cannot be scheduled',needCld:'needs the Cloudinary backup (Settings) for files from this phone',igSub:'Your Instagram must be a Professional account linked to your Facebook Page, and your Page key must include the Instagram permissions (see the guide).',igConnect:'Connect Instagram',igOk:'Connected to Instagram: @{u}',igNone:'No Instagram account is linked to this Page yet, or the key is missing the Instagram permissions.',tgSub:'Posts go to your Telegram channel through your own bot.',tgTokLabel:'Telegram bot key (from @BotFather)',tgChatLabel:'Channel (e.g. @tg_thean)',tgOk:'Connected to {c}. The bot can post there.',tgNotAdmin:'The bot is not an admin of {c} yet. Add it as an admin with permission to post.',tgBad:'This did not work: {e}',igItem:'Photo {i}',cancel:'Cancel',stCancel:'Cancelled, not posted',stStopping:'Cancelling…',tooLate:'already posted, could not cancel',storyLong:'the video is {s} seconds. Stories allow up to 60 seconds.',storyShort:'the video is shorter than 3 seconds.',fbsVidNet:'Facebook did not accept the video upload from this page. Photo Stories work. For a video Story, share the post to your Story in the Facebook app.',igFileBad:'Instagram could not use this file',igSlow:'Instagram is taking too long to process the video. Try again later.',tgNet:'Could not reach Telegram. Check your internet, or turn off VPN or ad blocker, then try again.',tgKeyBad:'The bot key is wrong. Copy it again from @BotFather.',tgChatBad:'Channel not found. Check the channel name, and that the bot is added to it.',tgGuideTitle:'How to set up Telegram',igProc:'Instagram is processing the video…',posting:'Posting…',upPhoto:'Uploading photo {i} of {n}…',upVideo:'Sending video to Facebook…',retryCld:'Facebook could not fetch it directly. Trying through Cloudinary…',
   posted:'Posted to {p}.',scheduled:'Scheduled on {p} for {d}.',openPost:'Open on Facebook',videoNote:'Facebook needs a few minutes to process a video before it appears.',
   noSel:'Select at least one photo.',noMedia:'Get a post or choose files first.',badTime:'Choose a time between 15 minutes and 30 days from now.',
   history:'Recent posts (this phone)',settings:'Settings',setSub:'Saved only on this phone. Never share the Page key or show it in a screenshot.',
@@ -251,7 +312,7 @@ var T={
    'Tap the small i next to the token, then Open in Access Token Tool, then Extend Access Token. Copy the new token.',
    'Back in the Explorer, paste it in the token box, type <code>me/accounts</code> and tap Submit.',
    'Under Thean, copy the <code>access_token</code> value (starts with EAA). Paste it above and tap Check and save. This key does not expire.']},
- km:{appSub:'បង្ហោះទៅ Facebook',needSetup:'ជាដំបូង សូមភ្ជាប់ទំព័រ Facebook របស់អ្នក (ម្តងគត់នៅលើទូរស័ព្ទនេះ)។',openSettings:'បើកការកំណត់',
+ km:{appSub:'បង្ហោះទៅ Facebook',helpT:'ត្រូវការជំនួយ?',helpS:'ក្រុមការងាររបស់យើងរីករាយជួយអ្នក។',helpChat:'ជជែកជាមួយយើង',helpMail:'ផ្ញើអ៊ីមែល',allRights:'រក្សាសិទ្ធិគ្រប់យ៉ាង។',linkPh:'បិទភ្ជាប់តំណ TikTok',needSetup:'ជាដំបូង សូមភ្ជាប់ទំព័រ Facebook របស់អ្នក (ម្តងគត់នៅលើទូរស័ព្ទនេះ)។',openSettings:'បើកការកំណត់',
   step1:'១. បិទភ្ជាប់តំណ TikTok',step1Sub:'ក្នុង TikTok ចុច Share រួច Copy link។ អាចប្រើបានទាំងវីដេអូ និងប៉ុស្តិ៍រូបភាព (រូបច្រើន)។',paste:'បិទភ្ជាប់',get:'យកវីដេអូ ឬរូបភាព',
   orFiles:'ឬជ្រើសវីដេអូ ឬរូបភាពពីទូរស័ព្ទនេះ',loading:'កំពុងយកប៉ុស្តិ៍…',gotVideo:'វីដេអូរួចរាល់។',gotPhotos:'រូបភាព {n} រួចរាល់។ ចុចលើរូបដើម្បីដកចេញ។',
   badLink:'សូមបិទភ្ជាប់តំណ TikTok ជាមុនសិន។',fetchFail:'មិនអាចយកប៉ុស្តិ៍នេះបានទេ។ សូមពិនិត្យថាតំណជាសាធារណៈ រួចព្យាយាមម្តងទៀតក្នុងមួយនាទី។',captionOnly:'មិនអាចយកឯកសារវីដេអូបាន ប៉ុន្តែបានចម្លងចំណងជើងហើយ។ អ្នកអាចជ្រើសវីដេអូពីទូរស័ព្ទនេះ។',
@@ -259,7 +320,7 @@ var T={
   step2:'២. ចំណងជើង និងបង្ហោះ',capPh:'សរសេរចំណងជើង…',capOpts:'ការកំណត់',postTo:'បង្ហោះទៅ',postingTo:'នឹងបង្ហោះទៅ៖ {d}',capSet:'ចំណងជើង',capSetSub:'ជ្រើសរើសអ្វីដែលនឹងដាក់ក្នុងចំណងជើងដោយស្វ័យប្រវត្តិ។',step2Sub:'បំពេញពីប៉ុស្តិ៍របស់ម្ចាស់។ ការបិទ/បើកកុងតាក់នឹងបង្កើតចំណងជើងឡើងវិញ។',keepText:'ចំណងជើងរបស់ម្ចាស់',keepTags:'ហាស់ថាក់របស់ម្ចាស់',credit:'ផ្តល់កិត្តិយសដល់ម្ចាស់ (@username)',myTags:'បន្ថែមហាស់ថាក់របស់ខ្ញុំ',
   captionLabel:'ចំណងជើងដែលនឹងបង្ហោះ',copyCap:'ចម្លងចំណងជើង',copied:'បានចម្លង',
   step3:'៣. បង្ហោះទៅទំព័ររបស់អ្នក',now:'បង្ហោះឥឡូវ',later:'កំណត់ពេល',whenLabel:'កាលបរិច្ឆេទ និងម៉ោង',whenNote:'Facebook អនុញ្ញាតពី ១៥ នាទី ដល់ ៣០ ថ្ងៃខាងមុខ។ ម៉ោងតាមទូរស័ព្ទរបស់អ្នក។',
-  postBtn:'បង្ហោះ',dFbPost:'Facebook',dFbStory:'Facebook Story',dIgPost:'Instagram',dIgStory:'Instagram Story',dTg:'Telegram',setupNeeded:'កំណត់នៅក្នុងការកំណត់',schedOnlyFb:'ការកំណត់ពេលអាចប្រើបានតែសម្រាប់ប៉ុស្តិ៍ Facebook ប៉ុណ្ណោះ។ Story, Instagram និង Telegram នឹងផ្ញើនៅពេលអ្នកចុច បង្ហោះឥឡូវ។',noDest:'សូមជ្រើសកន្លែងបង្ហោះយ៉ាងហោចណាស់មួយ។',stDone:'រួចរាល់',stFail:'បរាជ័យ',stSkip:'រំលង',stWait:'កំពុងរង់ចាំ…',stWork:'កំពុងដំណើរការ…',open:'បើក',schedSkip:'មិនអាចកំណត់ពេលបានទេ',needCld:'ត្រូវការការផ្ទុកបម្រុង Cloudinary (ការកំណត់) សម្រាប់ឯកសារពីទូរស័ព្ទនេះ',igSub:'Instagram របស់អ្នកត្រូវតែជាគណនី Professional ដែលភ្ជាប់ជាមួយទំព័រ Facebook ហើយកូនសោទំព័រត្រូវមានការអនុញ្ញាត Instagram (មើលការណែនាំ)។',igConnect:'ភ្ជាប់ Instagram',igOk:'បានភ្ជាប់ទៅ Instagram៖ @{u}',igNone:'មិនទាន់មានគណនី Instagram ភ្ជាប់ជាមួយទំព័រនេះ ឬកូនសោខ្វះការអនុញ្ញាត Instagram។',tgSub:'ប៉ុស្តិ៍នឹងទៅកាន់ឆានែល Telegram របស់អ្នក តាមរយៈ bot ផ្ទាល់ខ្លួន។',tgTokLabel:'កូនសោ bot Telegram (ពី @BotFather)',tgChatLabel:'ឆានែល (ឧ. @tg_thean)',tgOk:'បានភ្ជាប់ទៅ {c}។ bot អាចបង្ហោះនៅទីនោះបាន។',tgNotAdmin:'bot មិនទាន់ជាអ្នកគ្រប់គ្រងរបស់ {c} នៅឡើយទេ។ សូមបន្ថែមវាជាអ្នកគ្រប់គ្រង ដែលមានសិទ្ធិបង្ហោះ។',tgBad:'មិនដំណើរការ៖ {e}',cancel:'បោះបង់',stCancel:'បានបោះបង់ មិនបានបង្ហោះ',stStopping:'កំពុងបោះបង់…',tooLate:'បានបង្ហោះរួចហើយ មិនអាចបោះបង់បានទេ',storyLong:'វីដេអូមានរយៈពេល {s} វិនាទី។ Story អនុញ្ញាតត្រឹម ៦០ វិនាទីប៉ុណ្ណោះ។',storyShort:'វីដេអូខ្លីជាង ៣ វិនាទី។',fbsVidNet:'Facebook មិនទទួលការផ្ទុកវីដេអូពីទំព័រនេះទេ។ Story រូបភាពដំណើរការបាន។ សម្រាប់ Story វីដេអូ សូមចែករំលែកប៉ុស្តិ៍ទៅ Story របស់អ្នកក្នុងកម្មវិធី Facebook។',igFileBad:'Instagram មិនអាចប្រើឯកសារនេះបានទេ',igSlow:'Instagram ចំណាយពេលយូរពេកក្នុងការដំណើរការវីដេអូ។ សូមព្យាយាមម្តងទៀតពេលក្រោយ។',tgNet:'មិនអាចភ្ជាប់ទៅ Telegram បានទេ។ សូមពិនិត្យអ៊ីនធឺណិត ឬបិទ VPN ឬកម្មវិធីទប់ស្កាត់ពាណិជ្ជកម្ម រួចព្យាយាមម្តងទៀត។',tgKeyBad:'កូនសោ bot មិនត្រឹមត្រូវ។ សូមចម្លងវាម្តងទៀតពី @BotFather។',tgChatBad:'រកមិនឃើញឆានែល។ សូមពិនិត្យឈ្មោះឆានែល និងថា bot ត្រូវបានបន្ថែមទៅក្នុងវា។',tgGuideTitle:'របៀបរៀបចំ Telegram',igProc:'Instagram កំពុងដំណើរការវីដេអូ…',posting:'កំពុងបង្ហោះ…',upPhoto:'កំពុងផ្ទុករូបទី {i} ក្នុងចំណោម {n}…',upVideo:'កំពុងផ្ញើវីដេអូទៅ Facebook…',retryCld:'Facebook មិនអាចយកដោយផ្ទាល់បានទេ។ កំពុងព្យាយាមតាម Cloudinary…',
+  postBtn:'បង្ហោះ',dFbPost:'Facebook',dFbStory:'Facebook Story',dIgPost:'Instagram',dIgStory:'Instagram Story',dTg:'Telegram',setupNeeded:'កំណត់នៅក្នុងការកំណត់',schedOnlyFb:'ការកំណត់ពេលអាចប្រើបានតែសម្រាប់ប៉ុស្តិ៍ Facebook ប៉ុណ្ណោះ។ Story, Instagram និង Telegram នឹងផ្ញើនៅពេលអ្នកចុច បង្ហោះឥឡូវ។',noDest:'សូមជ្រើសកន្លែងបង្ហោះយ៉ាងហោចណាស់មួយ។',stDone:'រួចរាល់',stFail:'បរាជ័យ',stSkip:'រំលង',stWait:'កំពុងរង់ចាំ…',stWork:'កំពុងដំណើរការ…',open:'បើក',schedSkip:'មិនអាចកំណត់ពេលបានទេ',needCld:'ត្រូវការការផ្ទុកបម្រុង Cloudinary (ការកំណត់) សម្រាប់ឯកសារពីទូរស័ព្ទនេះ',igSub:'Instagram របស់អ្នកត្រូវតែជាគណនី Professional ដែលភ្ជាប់ជាមួយទំព័រ Facebook ហើយកូនសោទំព័រត្រូវមានការអនុញ្ញាត Instagram (មើលការណែនាំ)។',igConnect:'ភ្ជាប់ Instagram',igOk:'បានភ្ជាប់ទៅ Instagram៖ @{u}',igNone:'មិនទាន់មានគណនី Instagram ភ្ជាប់ជាមួយទំព័រនេះ ឬកូនសោខ្វះការអនុញ្ញាត Instagram។',tgSub:'ប៉ុស្តិ៍នឹងទៅកាន់ឆានែល Telegram របស់អ្នក តាមរយៈ bot ផ្ទាល់ខ្លួន។',tgTokLabel:'កូនសោ bot Telegram (ពី @BotFather)',tgChatLabel:'ឆានែល (ឧ. @tg_thean)',tgOk:'បានភ្ជាប់ទៅ {c}។ bot អាចបង្ហោះនៅទីនោះបាន។',tgNotAdmin:'bot មិនទាន់ជាអ្នកគ្រប់គ្រងរបស់ {c} នៅឡើយទេ។ សូមបន្ថែមវាជាអ្នកគ្រប់គ្រង ដែលមានសិទ្ធិបង្ហោះ។',tgBad:'មិនដំណើរការ៖ {e}',igItem:'រូបទី {i}',cancel:'បោះបង់',stCancel:'បានបោះបង់ មិនបានបង្ហោះ',stStopping:'កំពុងបោះបង់…',tooLate:'បានបង្ហោះរួចហើយ មិនអាចបោះបង់បានទេ',storyLong:'វីដេអូមានរយៈពេល {s} វិនាទី។ Story អនុញ្ញាតត្រឹម ៦០ វិនាទីប៉ុណ្ណោះ។',storyShort:'វីដេអូខ្លីជាង ៣ វិនាទី។',fbsVidNet:'Facebook មិនទទួលការផ្ទុកវីដេអូពីទំព័រនេះទេ។ Story រូបភាពដំណើរការបាន។ សម្រាប់ Story វីដេអូ សូមចែករំលែកប៉ុស្តិ៍ទៅ Story របស់អ្នកក្នុងកម្មវិធី Facebook។',igFileBad:'Instagram មិនអាចប្រើឯកសារនេះបានទេ',igSlow:'Instagram ចំណាយពេលយូរពេកក្នុងការដំណើរការវីដេអូ។ សូមព្យាយាមម្តងទៀតពេលក្រោយ។',tgNet:'មិនអាចភ្ជាប់ទៅ Telegram បានទេ។ សូមពិនិត្យអ៊ីនធឺណិត ឬបិទ VPN ឬកម្មវិធីទប់ស្កាត់ពាណិជ្ជកម្ម រួចព្យាយាមម្តងទៀត។',tgKeyBad:'កូនសោ bot មិនត្រឹមត្រូវ។ សូមចម្លងវាម្តងទៀតពី @BotFather។',tgChatBad:'រកមិនឃើញឆានែល។ សូមពិនិត្យឈ្មោះឆានែល និងថា bot ត្រូវបានបន្ថែមទៅក្នុងវា។',tgGuideTitle:'របៀបរៀបចំ Telegram',igProc:'Instagram កំពុងដំណើរការវីដេអូ…',posting:'កំពុងបង្ហោះ…',upPhoto:'កំពុងផ្ទុករូបទី {i} ក្នុងចំណោម {n}…',upVideo:'កំពុងផ្ញើវីដេអូទៅ Facebook…',retryCld:'Facebook មិនអាចយកដោយផ្ទាល់បានទេ។ កំពុងព្យាយាមតាម Cloudinary…',
   posted:'បានបង្ហោះទៅ {p}។',scheduled:'បានកំណត់ពេលនៅ {p} សម្រាប់ {d}។',openPost:'បើកនៅលើ Facebook',videoNote:'Facebook ត្រូវការពីរបីនាទីដើម្បីដំណើរការវីដេអូ មុនពេលវាបង្ហាញ។',
   noSel:'សូមជ្រើសរូបភាពយ៉ាងហោចណាស់មួយ។',noMedia:'សូមយកប៉ុស្តិ៍ ឬជ្រើសឯកសារជាមុនសិន។',badTime:'សូមជ្រើសម៉ោងចន្លោះ ១៥ នាទី ដល់ ៣០ ថ្ងៃពីឥឡូវ។',
   history:'ប៉ុស្តិ៍ថ្មីៗ (ទូរស័ព្ទនេះ)',settings:'ការកំណត់',setSub:'រក្សាទុកតែនៅលើទូរស័ព្ទនេះប៉ុណ្ណោះ។ កុំចែករំលែកកូនសោទំព័រ ឬបង្ហាញវាក្នុងរូបថតអេក្រង់។',
@@ -417,12 +478,12 @@ function prog(f){$('bar').hidden=f==null;$('bar').firstChild.style.width=Math.ro
 /* ---------- where to post ---------- */
 C.dest=C.dest||{fb:true};
 var DESTS=[['fb','dFbPost'],['fbs','dFbStory'],['ig','dIgPost'],['igs','dIgStory'],['tg','dTg']];
-function destReady(k){if(k==='ig'||k==='igs')return !!C.igId;if(k==='tg')return !!(C.tgToken&&C.tgChat);return !!C.token}
+function destReady(k){if(destLocked(k))return false;if(k==='ig'||k==='igs')return !!C.igId;if(k==='tg')return !!(C.tgToken&&C.tgChat);return !!C.token}
 function drawDests(){var box=$('dests');if(!box)return;box.innerHTML=DESTS.map(function(d){var on=!!C.dest[d[0]],ready=destReady(d[0]),sk=WHEN==='later'&&d[0]!=='fb';
-  return '<button type="button" class="dest'+(on?' on':'')+(sk||!ready?' off':'')+'" data-dest="'+d[0]+'"><i></i>'+esc(t(d[1]))+(ready?'':' <small>· '+esc(t('setupNeeded'))+'</small>')+'</button>'}).join('');
+  return '<button type="button" class="dest'+(on?' on':'')+(sk||!ready?' off':'')+'" data-dest="'+d[0]+'"><i></i>'+esc(t(d[1]))+(destLocked(d[0])?' <small>· '+esc(t('lockedPlan'))+'</small>':ready?'':' <small>· '+esc(t('setupNeeded'))+'</small>')+'</button>'}).join('');
   var on=DESTS.filter(function(d){return C.dest[d[0]]&&destReady(d[0])&&!(WHEN==='later'&&d[0]!=='fb')}).map(function(d){return t(d[1])});$('destSum').textContent=on.length?t('postingTo',{d:on.join(', ')}):t('noDest');
   $('schedNote').hidden=!(WHEN==='later'&&DESTS.some(function(d){return d[0]!=='fb'&&C.dest[d[0]]}))}
-document.addEventListener('click',function(e){var b=e.target.closest('[data-dest]');if(!b)return;var k=b.getAttribute('data-dest');if(!destReady(k)){openSettings();return}C.dest[k]=!C.dest[k];save();drawDests()});
+document.addEventListener('click',function(e){var b=e.target.closest('[data-dest]');if(!b)return;var k=b.getAttribute('data-dest');if(destLocked(k)){$('settings').hidden=true;openPlans();return}if(!destReady(k)){openSettings();return}C.dest[k]=!C.dest[k];save();drawDests()});
 
 /* ---------- media helpers ---------- */
 function mediaList(){var out=[];
@@ -469,10 +530,15 @@ function igWait(id,onMsg,r){var tries=0;return (function loop(){cx(r);return gge
   if(++tries>90)throw new Error(t('igSlow'));if(onMsg&&tries===2)onMsg();return wait(4000).then(loop)})})()}
 function igMake(params,onMsg,r){cx(r);return gcall(C.igId+'/media',params).then(function(j){return igWait(j.id,onMsg,r).then(function(){return j.id})})}
 function igPublish(id,r){cx(r);return gcall(C.igId+'/media_publish',{creation_id:id}).then(function(j){return gget(j.id+'?fields=permalink').then(function(x){return x.permalink||''}).catch(function(){return ''})})}
+/* Instagram feed photos must be between 4:5 (tall) and 1.91:1 (wide). Taller or wider photos get soft side bands, nothing is cut off. */
+function igFit(u,x){if(!x||x.type!=='photo'||!/res\.cloudinary\.com\/[^/]+\/image\/upload\//.test(u))return Promise.resolve(u);
+  return new Promise(function(res){var im=new Image(),done=false;function end(t){if(done)return;done=true;res(t?u.replace('/image/upload/','/image/upload/'+t+'/'):u)}
+    im.onload=function(){var w=im.naturalWidth,h=im.naturalHeight,r=w/h;if(!w||!h)return end('');if(r<0.8)end('w_1080,h_1350,c_pad,b_auto');else if(r>1.91)end('w_1080,h_565,c_pad,b_auto');else end('')};
+    im.onerror=function(){end('')};setTimeout(function(){end('')},10000);im.src=u})}
 function igCap(cap){var tags=0;cap=cap.replace(/#[^\s#]+/g,function(m){tags++;return tags>30?'':m});return cap.slice(0,2200)}
 function igPost(cap,it,onMsg,r){cap=igCap(cap);var list=it.slice(0,10);
-  if(list.length===1){var x=list[0];return pubUrl(x,true).then(function(u){return igMake(x.type==='video'?{media_type:'REELS',video_url:u,caption:cap,share_to_feed:'true'}:{image_url:u,caption:cap},onMsg,r)}).then(function(id){return igPublish(id,r)}).then(function(u){return {url:u}})}
-  var kids=[];return list.reduce(function(p,x){return p.then(function(){return pubUrl(x,true).then(function(u){return igMake(x.type==='video'?{media_type:'VIDEO',video_url:u,is_carousel_item:'true'}:{image_url:u,is_carousel_item:'true'},onMsg,r)}).then(function(id){kids.push(id)})})},Promise.resolve())
+  if(list.length===1){var x=list[0];return pubUrl(x,true).then(function(u){return igFit(u,x)}).then(function(u){return igMake(x.type==='video'?{media_type:'REELS',video_url:u,caption:cap,share_to_feed:'true'}:{image_url:u,caption:cap},onMsg,r)}).then(function(id){return igPublish(id,r)}).then(function(u){return {url:u}})}
+  var kids=[];return list.reduce(function(p,x){return p.then(function(){var i=kids.length;return pubUrl(x,true).then(function(u){return igFit(u,x)}).then(function(u){return igMake(x.type==='video'?{media_type:'VIDEO',video_url:u,is_carousel_item:'true'}:{image_url:u,is_carousel_item:'true'},onMsg,r)}).then(function(id){kids.push(id)},function(e){if(e&&e.cancel)throw e;throw new Error(t('igItem',{i:i+1})+': '+(e&&e.message||e))})})},Promise.resolve())
     .then(function(){return igMake({media_type:'CAROUSEL',children:kids.join(','),caption:cap},null,r)}).then(function(id){return igPublish(id,r)}).then(function(u){return {url:u}})}
 function igStory(it,onMsg,r){return it.slice(0,10).reduce(function(p,x){return p.then(function(){return pubUrl(x,true).then(function(u){return igMake(x.type==='video'?{media_type:'STORIES',video_url:u}:{media_type:'STORIES',image_url:u},onMsg,r)}).then(function(id){return igPublish(id,r)})})},Promise.resolve())
   .then(function(){return {url:C.igUser?'https://www.instagram.com/stories/'+C.igUser+'/':''}})}
@@ -533,7 +599,7 @@ $('post').onclick=function(){
       .catch(function(e){if(r.x||e&&e.cancel)return undo(r);r.st=e&&e.skip?'skip':'fail';r.err=String(e&&e.message||e).slice(0,200)})
       .then(function(){fin++;prog(fin/R.length);drawRes(R)})}))
   .then(function(){var ok=R.filter(function(r){return r.st==='done'});
-    if(ok.length){var u=fbUrl||ok[0].url||'';C.hist.unshift({u:u,c:(cap.split('\n')[0]||ST.user||'').slice(0,80),at:Date.now(),s:sched||0,d:ok.map(function(r){return r.k})});C.hist=C.hist.slice(0,15);save();drawHist()}
+    if(ok.length){accCount();var u=fbUrl||ok[0].url||'';C.hist.unshift({u:u,c:(cap.split('\n')[0]||ST.user||'').slice(0,80),at:Date.now(),s:sched||0,d:ok.map(function(r){return r.k})});C.hist=C.hist.slice(0,15);save();drawHist()}
     btn.disabled=false;btn.textContent=t('postBtn');setTimeout(function(){prog(null)},800)})};
 
 function drawHist(){var h=C.hist||[];$('histCard').hidden=!h.length;
@@ -541,7 +607,7 @@ function drawHist(){var h=C.hist||[];$('histCard').hidden=!h.length;
 
 /* ---------- settings ---------- */
 function openSettings(){$('tgTok').value=C.tgToken||'';$('tgChat').value=C.tgChat||'@tg_thean';msg('m5',C.igId?'ok':'',C.igId?esc(t('igOk',{u:C.igUser||''})):'');msg('m6',C.tgToken?'ok':'',C.tgToken?esc(t('tgOk',{c:C.tgTitle||C.tgChat||''})):'');$('tok').value=C.token||'';$('mine').value=C.mine||'';$('creditTpl').value=C.creditTpl||'';$('cld').value=C.cld||'';$('pre').value=C.pre||'';
-  keyMsg();$('settings').hidden=false}
+  keyMsg();drawAccBox();drawFbBox();$('settings').hidden=false}
 function closeSettings(){C.mine=$('mine').value.trim();C.creditTpl=$('creditTpl').value.trim()||'Credit: @{user}';C.cld=$('cld').value.trim();C.pre=$('pre').value.trim();save();$('settings').hidden=true;if(!$('capCard').hidden)buildCaption()}
 $('gear').onclick=openSettings;
 document.addEventListener('click',function(e){if(e.target.closest('[data-open-settings]'))openSettings()});
@@ -568,7 +634,287 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('setting
 
 /* share target: ?url=... or #link */
 try{var q=new URLSearchParams(location.search).get('url')||new URLSearchParams(location.search).get('text')||'';var mm=q.match(/https?:\/\/\S+/);if(mm)$('link').value=mm[0]}catch(e){}
-applyLang();checkKey();
+/* ---------- KHQR ---------- */
+var QR=(function(){
+  var EXP=new Array(512),LOG=new Array(256);(function(){var x=1;for(var i=0;i<255;i++){EXP[i]=x;LOG[x]=i;x<<=1;if(x&256)x^=0x11d}for(i=255;i<512;i++)EXP[i]=EXP[i-255]})();
+  function gmul(a,b){return a&&b?EXP[LOG[a]+LOG[b]]:0}
+  function rsGen(n){var g=[1];for(var i=0;i<n;i++){var r=new Array(g.length+1).fill(0);for(var j=0;j<g.length;j++){r[j]^=g[j];r[j+1]^=gmul(g[j],EXP[i])}g=r}return g}
+  function rsEnc(data,n){var g=rsGen(n),res=data.concat(new Array(n).fill(0));for(var i=0;i<data.length;i++){var c=res[i];if(c)for(var j=0;j<g.length;j++)res[i+j]^=gmul(g[j],c)}return res.slice(data.length)}
+  /* level M: [ecc per block, g1 blocks, g1 data, g2 blocks, g2 data] */
+  var BL=[null,[10,1,16,0,0],[16,1,28,0,0],[26,1,44,0,0],[18,2,32,0,0],[24,2,43,0,0],[16,4,27,0,0],[18,4,31,0,0],[22,2,38,2,39],[22,3,36,2,37],[26,4,43,1,44],[30,1,50,4,51],[22,6,36,2,37],[22,8,37,1,38],[24,4,40,5,41],[24,5,41,5,42]];
+  var AL=[null,[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70]];
+  function utf8(s){var o=[];s=unescape(encodeURIComponent(s));for(var i=0;i<s.length;i++)o.push(s.charCodeAt(i));return o}
+  function bch(v,poly,bits){var msb=function(x){var n=0;while(x){n++;x>>>=1}return n};var d=v<<(msb(poly)-1);while(msb(d)>=msb(poly))d^=poly<<(msb(d)-msb(poly));return (v<<(msb(poly)-1))|d}
+  function make(text){
+    var bytes=utf8(text),ver=0,b;
+    for(var v=1;v<=15;v++){b=BL[v];var cap=b[1]*b[2]+b[3]*b[4],need=4+(v<10?8:16)+bytes.length*8;if(need<=cap*8){ver=v;break}}
+    if(!ver)throw new Error('Text too long for QR');
+    var cap=b[1]*b[2]+b[3]*b[4],bits=[];
+    function put(val,n){for(var i=n-1;i>=0;i--)bits.push((val>>>i)&1)}
+    put(4,4);put(bytes.length,ver<10?8:16);bytes.forEach(function(x){put(x,8)});
+    put(0,Math.min(4,cap*8-bits.length));while(bits.length%8)bits.push(0);
+    var cw=[];for(var i=0;i<bits.length;i+=8){var x=0;for(var j=0;j<8;j++)x=(x<<1)|bits[i+j];cw.push(x)}
+    for(var pad=0;cw.length<cap;pad++)cw.push(pad%2?0x11:0xEC);
+    var blocks=[],eccs=[],k=0;
+    for(var g=0;g<2;g++){var nb=b[1+g*2],nd=b[2+g*2];for(var bi=0;bi<nb;bi++){var blk=cw.slice(k,k+nd);k+=nd;blocks.push(blk);eccs.push(rsEnc(blk,b[0]))}}
+    var out=[],mx=Math.max.apply(null,blocks.map(function(x){return x.length}));
+    for(i=0;i<mx;i++)blocks.forEach(function(x){if(i<x.length)out.push(x[i])});
+    for(i=0;i<b[0];i++)eccs.forEach(function(x){out.push(x[i])});
+    var N=ver*4+17,M=[],F=[];for(i=0;i<N;i++){M.push(new Array(N).fill(false));F.push(new Array(N).fill(false))}
+    function set(r,c,d){M[r][c]=d;F[r][c]=true}
+    function finder(r,c){for(var y=-1;y<=7;y++)for(var x=-1;x<=7;x++){var rr=r+y,cc=c+x;if(rr<0||cc<0||rr>=N||cc>=N)continue;var d=(y>=0&&y<=6&&(x===0||x===6))||(x>=0&&x<=6&&(y===0||y===6))||(y>=2&&y<=4&&x>=2&&x<=4);set(rr,cc,d)}}
+    finder(0,0);finder(0,N-7);finder(N-7,0);
+    for(i=8;i<N-8;i++){if(!F[6][i])set(6,i,i%2===0);if(!F[i][6])set(i,6,i%2===0)}
+    var al=AL[ver],L=al.length-1;al.forEach(function(r,ri){al.forEach(function(c,ci){if((ri===0&&ci===0)||(ri===0&&ci===L)||(ri===L&&ci===0))return;for(var y=-2;y<=2;y++)for(var x=-2;x<=2;x++)set(r+y,c+x,Math.max(Math.abs(x),Math.abs(y))!==1)})});
+    set(N-8,8,true);
+    /* reserve format + version areas */
+    for(i=0;i<9;i++){if(!F[8][i])set(8,i,false);if(!F[i][8])set(i,8,false)}
+    for(i=0;i<8;i++){if(!F[8][N-1-i])set(8,N-1-i,false);if(!F[N-1-i][8])set(N-1-i,8,false)}
+    if(ver>=7)for(i=0;i<6;i++)for(j=0;j<3;j++){set(i,N-11+j,false);set(N-11+j,i,false)}
+    /* data */
+    var dbits=[];out.forEach(function(x){for(var q=7;q>=0;q--)dbits.push((x>>>q)&1)});
+    var idx=0,up=true;
+    for(var col=N-1;col>0;col-=2){if(col===6)col--;
+      for(var t=0;t<N;t++){var r=up?N-1-t:t;for(var cc=0;cc<2;cc++){var c=col-cc;if(F[r][c])continue;M[r][c]=idx<dbits.length?!!dbits[idx]:false;idx++}}
+      up=!up}
+    var MASKS=[function(r,c){return (r+c)%2===0},function(r){return r%2===0},function(r,c){return c%3===0},function(r,c){return (r+c)%3===0},function(r,c){return (Math.floor(r/2)+Math.floor(c/3))%2===0},function(r,c){return (r*c)%2+(r*c)%3===0},function(r,c){return ((r*c)%2+(r*c)%3)%2===0},function(r,c){return ((r+c)%2+(r*c)%3)%2===0}];
+    function withMask(m){var A=M.map(function(row){return row.slice()});
+      for(var r=0;r<N;r++)for(var c=0;c<N;c++)if(!F[r][c]&&MASKS[m](r,c))A[r][c]=!A[r][c];
+      var fmt=bch((0<<3)|m,0x537)^0x5412,fb=function(i){return ((fmt>>>i)&1)===1};
+      for(var i=0;i<=5;i++)A[i][8]=fb(i);A[7][8]=fb(6);A[8][8]=fb(7);A[8][7]=fb(8);for(i=9;i<15;i++)A[8][14-i]=fb(i);
+      for(i=0;i<8;i++)A[8][N-1-i]=fb(i);for(i=8;i<15;i++)A[N-15+i][8]=fb(i);A[N-8][8]=true;
+      if(ver>=7){var vi=bch(ver,0x1f25);for(i=0;i<18;i++){var bit=((vi>>>i)&1)===1,a=Math.floor(i/3),bb=i%3+N-11;A[a][bb]=bit;A[bb][a]=bit}}
+      return A}
+    function penalty(A){var p=0,r,c;
+      for(r=0;r<N;r++){var run=1;for(c=1;c<N;c++){if(A[r][c]===A[r][c-1]){run++;if(run===5)p+=3;else if(run>5)p++}else run=1}}
+      for(c=0;c<N;c++){run=1;for(r=1;r<N;r++){if(A[r][c]===A[r-1][c]){run++;if(run===5)p+=3;else if(run>5)p++}else run=1}}
+      for(r=0;r<N-1;r++)for(c=0;c<N-1;c++){var v=A[r][c];if(v===A[r][c+1]&&v===A[r+1][c]&&v===A[r+1][c+1])p+=3}
+      var pat=[true,false,true,true,true,false,true,false,false,false,false],pat2=pat.slice().reverse();
+      for(r=0;r<N;r++)for(c=0;c<=N-11;c++){var h1=true,h2=true,v1=true,v2=true;for(var k=0;k<11;k++){if(A[r][c+k]!==pat[k])h1=false;if(A[r][c+k]!==pat2[k])h2=false;if(A[c+k][r]!==pat[k])v1=false;if(A[c+k][r]!==pat2[k])v2=false}p+=40*((h1?1:0)+(h2?1:0)+(v1?1:0)+(v2?1:0))}
+      var dark=0;for(r=0;r<N;r++)for(c=0;c<N;c++)if(A[r][c])dark++;p+=Math.floor(Math.abs(dark*100/(N*N)-50)/5)*10;return p}
+    var best=null,bp=1e9;for(var m=0;m<8;m++){var A=withMask(m),pp=penalty(A);if(pp<bp){bp=pp;best=A}}
+    return best;
+  }
+  return {make:make};
+})();
+
+function khTlv(id,v){v=String(v);return id+(v.length<10?'0':'')+v.length+v}
+function khCrc(str){var c=0xFFFF;for(var i=0;i<str.length;i++){c^=str.charCodeAt(i)<<8;for(var j=0;j<8;j++)c=(c&0x8000)?((c<<1)^0x1021)&0xFFFF:(c<<1)&0xFFFF}return ('0000'+c.toString(16).toUpperCase()).slice(-4)}
+function khAscii(x,n){return String(x||'').normalize('NFD').replace(/[^\x20-\x7E]/g,'').trim().slice(0,n)}
+function khqrString(D,amt,cur){
+  var now=Date.now(),a=cur==='KHR'?String(Math.round(amt)):String(Math.round(amt*100)/100);
+  var s=khTlv('00','01')+khTlv('01',amt>0?'12':'11')+khTlv('29',khTlv('00',String(D.bakongId).trim()))+khTlv('52','5999')+khTlv('58','KH')+khTlv('59',khAscii(D.khName||'THEAN'||'THEAN',25)||'THEAN')+khTlv('60',khAscii(D.khCity||'Phnom Penh',15)||'Phnom Penh');
+  if(amt>0)s+=khTlv('99',khTlv('00',String(now))+khTlv('01',String(now+(+D.khExp>0?+D.khExp*1000:86400000))));
+  s+=khTlv('53',cur==='KHR'?'116':'840');if(amt>0)s+=khTlv('54',a);
+  s+='6304';return s+khCrc(s)}
+var KH={cur:null,amt:''};
+function khFmt(a,cur){return cur==='KHR'?Math.round(a).toLocaleString('en-US')+' ៛':'$'+(Math.round(a*100)/100).toFixed(2)}
+function khDraw(cv,D,amt,cur){
+  var str=khqrString(D,amt,cur),M=QR.make(str),N=M.length,W=600,pad=60,cell=Math.floor((W-pad*2)/N),qs=cell*N,H=300+qs+90;
+  cv.width=W;cv.height=H;var g=cv.getContext('2d');
+  g.fillStyle='#ffffff';g.fillRect(0,0,W,H);
+  g.fillStyle='#E1232E';g.beginPath();g.moveTo(0,0);g.lineTo(W,0);g.lineTo(W,90);g.lineTo(W-60,130);g.lineTo(0,130);g.closePath();g.fill();
+  g.fillStyle='#fff';g.font='bold 44px Arial,Helvetica,sans-serif';g.textAlign='center';g.fillText('KHQR',W/2,82);
+  g.textAlign='left';g.fillStyle='#222';g.font='600 28px Arial,Helvetica,sans-serif';g.fillText(khAscii(D.khName||'THEAN',25),pad,180);
+  g.font='bold 48px Arial,Helvetica,sans-serif';g.fillText(amt>0?khFmt(amt,cur).replace(' ៛',''):'',pad,240);if(amt>0&&cur==='KHR'){g.font='600 26px Arial';g.fillText('KHR',pad+g.measureText(Math.round(amt).toLocaleString('en-US')).width+150,240)}
+  g.strokeStyle='#cfcfcf';g.setLineDash([10,8]);g.lineWidth=2;g.beginPath();g.moveTo(0,270);g.lineTo(W,270);g.stroke();g.setLineDash([]);
+  var x0=(W-qs)/2,y0=300;g.fillStyle='#000';for(var r=0;r<N;r++)for(var c=0;c<N;c++)if(M[r][c])g.fillRect(x0+c*cell,y0+r*cell,cell,cell);
+  var lw=Math.round(cell*7);g.fillStyle='#fff';g.fillRect(W/2-lw/2-4,y0+qs/2-lw/2-4,lw+8,lw+8);g.fillStyle='#E1232E';g.beginPath();g.arc(W/2,y0+qs/2,lw/2,0,Math.PI*2);g.fill();g.fillStyle='#fff';g.font='bold '+Math.round(lw*.42)+'px Arial';g.textAlign='center';g.font='bold '+Math.round(lw*(cur==='KHR'?.62:.58))+'px Arial,"Khmer OS","Noto Sans Khmer",sans-serif';g.fillText(cur==='KHR'?'៛':'$',W/2,y0+qs/2+lw*.2);
+  g.fillStyle='#888';g.font='20px Arial';g.fillText('Scan with any Bakong / KHQR banking app',W/2,H-36);
+  return str}
+
+
+/* ---------- accounts, free posts and plans ---------- */
+var FBC={apiKey:'AIzaSyD9hhjSe53uha7jADGUOiWK-MLHOGoz6Pk',authDomain:'thean-12952.firebaseapp.com',projectId:'thean-12952',appId:'1:1082546170540:web:71e42aaada4df363588d09',databaseURL:'https://thean-12952-default-rtdb.asia-southeast1.firebasedatabase.app'};
+var FBV='https://www.gstatic.com/firebasejs/10.12.2/';
+var ACC={st:'load',user:null,team:false,prof:null,used:0,plan:null,req:null,cfg:null,don:null,offs:[]},FBX=null;
+var PK=['fb','fbig','all'],MON=[1,2,3,6,12],PKD={fb:['fb','fbs'],fbig:['fb','fbs','ig','igs'],all:['fb','fbs','ig','igs','tg']};
+var FB_SCOPES='pages_show_list,pages_read_engagement,pages_manage_posts,pages_read_user_content,instagram_basic,instagram_content_publish,business_management';
+function cfg(){return ACC.cfg||{}}
+function packOn(k){var p=(cfg().packs||{})[k];return !p||p.on!==false}
+function pkName(k){var n=(((cfg().packs||{})[k]||{}).name)||{};return n[C.lang]||n.en||t('pk_'+k)}
+function price(k,m){var p=((cfg().packs||{})[k]||{}).p||{};var v=+p[m];return v>0?v:0}
+function cur(){return cfg().cur==='KHR'?'KHR':'USD'}
+function money(v){return cur()==='KHR'?Math.round(v).toLocaleString('en-US')+' ៛':'$'+(Math.round(v*100)/100).toFixed(2).replace(/\.00$/,'')}
+function fday(ms){var d=new Date(ms);return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear()}
+function planOn(){return !!(ACC.plan&&+ACC.plan.until>Date.now())}
+function freeTotal(){var f=cfg().free;f=f==null||f===''?5:+f;return f>=0?f:5}
+function freeLeft(){return Math.max(0,freeTotal()-(+ACC.used||0))}
+function destLocked(k){if(ACC.team||ACC.st!=='in'||!planOn())return false;return (PKD[ACC.plan.pkg]||PKD.all).indexOf(k)<0}
+function canPost(){return ACC.team||planOn()||freeLeft()>0}
+function R(p){return FBX.d.ref(FBX.db,p)}
+function fbLoad(){if(FBX)return Promise.resolve(FBX);
+  return Promise.all([import(FBV+'firebase-app.js'),import(FBV+'firebase-auth.js'),import(FBV+'firebase-database.js')]).then(function(m){
+    var app=m[0].initializeApp(FBC,'post');FBX={A:m[1],auth:m[1].getAuth(app),d:m[2],db:m[2].getDatabase(app,FBC.databaseURL)};return FBX})}
+
+/* the page needs an account; our team (admin login) posts free with no limit */
+var AM='in';
+function drawAuth(){var out=ACC.st!=='in';document.body.classList.toggle('out',out);document.body.classList.toggle('cust',ACC.st==='in'&&!ACC.team);
+  $('authCard').hidden=!out;$('authLoad').hidden=ACC.st!=='load';$('authForm').hidden=ACC.st==='load'||ACC.st==='err';$('authErr').hidden=ACC.st!=='err';
+  document.querySelectorAll('[data-am]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-am')===AM)});
+  $('upOnly').hidden=AM!=='up';$('aGo').textContent=t(AM==='up'?'signUp':'signIn');$('aPass').autocomplete=AM==='up'?'new-password':'current-password';$('aForgot').hidden=AM==='up';
+  drawPlanBar();drawAccBox();drawDests()}
+function authErr(e){var c=String(e&&e.code||''),m={'auth/invalid-credential':'aeWrong','auth/wrong-password':'aeWrong','auth/user-not-found':'aeWrong','auth/invalid-email':'aeEmail','auth/email-already-in-use':'aeUsed','auth/weak-password':'aeWeak','auth/too-many-requests':'aeMany','auth/network-request-failed':'aeNet','auth/missing-password':'aeWeak'}[c];
+  return m?t(m):String(e&&e.message||e||'')}
+document.addEventListener('click',function(e){var b=e.target.closest('[data-am]');if(!b)return;AM=b.getAttribute('data-am');msg('m7','','');drawAuth()});
+$('aGo').onclick=function(){var em=$('aEmail').value.trim(),pw=$('aPass').value,nm=$('aName').value.trim(),fl=$('aFb').value.trim();
+  if(!/^\S+@\S+\.\S+$/.test(em)){msg('m7','bad',esc(t('aeEmail')));return}
+  if(pw.length<6){msg('m7','bad',esc(t('aeWeak')));return}
+  if(AM==='up'&&(!nm||!/facebook\.com|fb\.com|^\d{5,}$/i.test(fl))){msg('m7','bad',esc(t('aeNeed')));return}
+  var btn=this;btn.disabled=true;msg('m7','info',esc(t('aWait')));
+  fbLoad().then(function(X){
+    if(AM==='in')return X.A.signInWithEmailAndPassword(X.auth,em,pw);
+    return X.A.createUserWithEmailAndPassword(X.auth,em,pw).then(function(c){return X.d.set(R('postusers/'+c.user.uid+'/profile'),{email:em,name:nm.slice(0,90),fb:fl.slice(0,290),at:X.d.serverTimestamp()})})})
+  .then(function(){msg('m7','','');$('aPass').value=''}).catch(function(e){msg('m7','bad',esc(authErr(e)))}).then(function(){btn.disabled=false})};
+$('aForgot').onclick=function(){var em=$('aEmail').value.trim();if(!/^\S+@\S+\.\S+$/.test(em)){msg('m7','bad',esc(t('aeEmailFirst')));return}
+  fbLoad().then(function(X){return X.A.sendPasswordResetEmail(X.auth,em)}).then(function(){msg('m7','ok',esc(t('aReset')))}).catch(function(e){msg('m7','bad',esc(authErr(e)))})};
+$('authRetry').onclick=function(){ACC.st='load';drawAuth();accStart()};
+$('signOut').onclick=function(){if(!FBX)return;if(!ACC.team){['token','pageId','pageName','igId','igUser','fbLogin','fbPage','tgToken','tgChat','tgTitle'].forEach(function(k){delete C[k]});save();KS='none';drawKey()}
+  FBX.A.signOut(FBX.auth);$('settings').hidden=true};
+
+function accOff(){ACC.offs.forEach(function(f){try{f()}catch(e){}});ACC.offs=[];ACC.team=false;ACC.prof=null;ACC.used=0;ACC.plan=null;ACC.req=null}
+function accOn(u){accOff();
+  FBX.d.get(R('agents/'+u.uid)).then(function(s){return s.exists()},function(){return false}).then(function(team){
+    if(ACC.user!==u)return;ACC.team=team;ACC.st='in';
+    if(!team){
+      if(C.token&&!C.fbLogin){['token','pageId','pageName'].forEach(function(k){delete C[k]});save();KS='none';drawKey()}
+      ACC.offs.push(FBX.d.onValue(R('postusers/'+u.uid),function(s){var v=s.val()||{};ACC.prof=v.profile||null;ACC.used=+v.used||0;ACC.plan=v.plan||null;ACC.req=v.req||null;
+        if(!v.profile)FBX.d.update(R('postusers/'+u.uid+'/profile'),{email:u.email||'',at:FBX.d.serverTimestamp()}).catch(function(){});
+        drawPlanBar();drawAccBox();drawDests();if(!$('plans').hidden)drawPlans()},function(){}));
+      fbSdk().then(fbSilent)}
+    drawAuth()})}
+function accStart(){drawAuth();
+  fbLoad().then(function(X){
+    ACC.offs0=FBX.d.onValue(R('settings/public/postPlans'),function(s){ACC.cfg=s.val()||{};drawPlanBar();drawAccBox();drawFbBox();if(!$('plans').hidden)drawPlans()},function(){ACC.cfg=ACC.cfg||{}});
+    X.A.onAuthStateChanged(X.auth,function(u){ACC.user=u;if(!u){accOff();ACC.st='out';drawAuth();return}accOn(u)})})
+  .catch(function(){ACC.st='err';drawAuth()})}
+
+/* little status line above the Post button, and the account box in Settings */
+function drawPlanBar(){var el=$('planBar');if(!el)return;
+  if(ACC.st!=='in'||ACC.team){el.hidden=true;return}el.hidden=false;
+  el.innerHTML=planOn()?esc(t('pbPlan',{p:pkName(ACC.plan.pkg),d:fday(+ACC.plan.until)}))+' <button class="link" data-plans>'+esc(t('pbMore'))+'</button>'
+    :'<span class="'+(freeLeft()?'':'bad')+'">'+esc(t('pbFree',{n:freeLeft(),f:freeTotal()}))+'</span> <button class="link" data-plans>'+esc(t('seePlans'))+'</button>'}
+function drawAccBox(){var el=$('accInfo');if(!el)return;if(ACC.st!=='in'){el.innerHTML='';return}
+  var em=esc(ACC.user&&ACC.user.email||''),s;
+  if(ACC.team)s=t('accTeam');else if(planOn())s=t('pbPlan',{p:pkName(ACC.plan.pkg),d:fday(+ACC.plan.until)});else s=t('pbFree',{n:freeLeft(),f:freeTotal()});
+  el.innerHTML='<div class="acc"><b>'+em+'</b><span>'+esc(s)+'</span></div>'}
+document.addEventListener('click',function(e){if(e.target.closest('[data-plans]')){$('settings').hidden=true;openPlans()}});
+
+/* ---------- plans and KHQR payment ---------- */
+var PS={k:null,m:1,pay:false};
+function openPlans(){PS.pay=false;$('plans').hidden=false;drawPlans();
+  if(!ACC.don)FBX&&FBX.d.get(R('site/content/donate')).then(function(s){ACC.don=s.val()||{};if(PS.pay)drawPlans()}).catch(function(){ACC.don={}})}
+$('plans').addEventListener('click',function(e){if(e.target===$('plans')||e.target.closest('[data-close]')){$('plans').hidden=true;return}
+  var b=e.target.closest('[data-pm]');if(b){PS.k=b.getAttribute('data-pmk');PS.m=+b.getAttribute('data-pm');PS.pay=false;drawPlans();return}
+  b=e.target.closest('[data-pk]');if(b){PS.k=b.getAttribute('data-pk');var ms=MON.filter(function(m){return price(PS.k,m)});if(ms.indexOf(PS.m)<0)PS.m=ms[0]||1;PS.pay=false;drawPlans();return}
+  b=e.target.closest('[data-pay]');if(b){PS.pay=true;drawPlans();return}
+  b=e.target.closest('[data-back]');if(b){PS.pay=false;drawPlans();return}
+  b=e.target.closest('[data-saveqr]');if(b){saveQr();return}
+  b=e.target.closest('[data-paid]');if(b){b.disabled=true;FBX.d.set(R('postusers/'+ACC.user.uid+'/req'),{pkg:PS.k,m:PS.m,amt:price(PS.k,PS.m),cur:cur(),at:Date.now()}).then(function(){PS.pay=false;drawPlans()}).catch(function(err){b.disabled=false;msg('m9','bad',esc(err&&err.message||''))});return}
+  b=e.target.closest('[data-unreq]');if(b){FBX.d.remove(R('postusers/'+ACC.user.uid+'/req')).catch(function(){})}});
+function nm(n){n=+n;return t(n===1?'nMonth1':'nMonths',{n:n})}
+function incl(k){return PKD[k].map(function(d){return t({fb:'dFbPost',fbs:'dFbStory',ig:'dIgPost',igs:'dIgStory',tg:'dTg'}[d])}).join(' · ')}
+function drawPlans(){var box=$('plansBody'),h='';
+  var st=ACC.team?t('accTeam'):planOn()?t('pbPlan',{p:pkName(ACC.plan.pkg),d:fday(+ACC.plan.until)}):t('pbFree',{n:freeLeft(),f:freeTotal()});
+  h+='<p class="note" style="margin-top:0">'+esc(st)+'</p>';
+  if(ACC.req){var q=ACC.req;h+='<div class="msg info"><b>'+esc(t('reqT'))+'</b><br>'+esc(pkName(q.pkg)+' · '+nm(q.m)+' · '+money(+q.amt))+'<br>'+esc(t('reqS'))+
+    '<div class="row" style="margin-top:10px"><a class="btn sm" href="https://kongthean.com/" target="_blank" rel="noopener">'+esc(t('helpChat'))+'</a><button class="btn soft sm" data-unreq>'+esc(t('reqCancel'))+'</button></div></div>'}
+  var packs=PK.filter(function(k){return packOn(k)&&MON.some(function(m){return price(k,m)})});
+  if(!packs.length){h+='<div class="msg info">'+esc(t('noPrices'))+'</div>';box.innerHTML=h;return}
+  if(!PS.k||packs.indexOf(PS.k)<0){PS.k=packs[packs.length-1];var ms0=MON.filter(function(m){return price(PS.k,m)});PS.m=ms0[0]}
+  if(PS.pay){var amt=price(PS.k,PS.m),D=ACC.don;
+    h+='<div class="paybox"><p><b>'+esc(pkName(PS.k))+'</b> · '+esc(nm(PS.m))+' · <b>'+esc(money(amt))+'</b></p>';
+    if(!D)h+='<p class="note">'+esc(t('aWait'))+'</p>';
+    else if(!D.bakongId)h+='<div class="msg info">'+esc(t('noQr'))+'</div>';
+    else h+='<canvas id="payqr"></canvas><button class="btn soft sm" data-saveqr>'+esc(t('saveQr'))+'</button><ol class="steps" style="text-align:left">'+t('paySteps').map(function(s){return '<li>'+esc(s)+'</li>'}).join('')+'</ol>';
+    h+='<div id="m9"></div><div class="row" style="margin-top:12px"><button class="btn" data-paid style="flex:1">'+esc(t('paid'))+'</button><button class="btn soft" data-back>'+esc(t('back'))+'</button></div></div>';
+    box.innerHTML=h;if(D&&D.bakongId){try{khDraw($('payqr'),D,amt,cur())}catch(e){}}return}
+  h+=packs.map(function(k){var on=k===PS.k,p1=price(k,1);
+    return '<div class="pk'+(on?' on':'')+'" data-pk="'+k+'"><div class="pkh"><b>'+esc(pkName(k))+'</b><small>'+esc(incl(k))+'</small></div>'+
+      '<div class="pkm">'+MON.filter(function(m){return price(k,m)}).map(function(m){var v=price(k,m),sv=p1&&m>1?Math.round((1-v/(p1*m))*100):0;
+        return '<button type="button" class="'+(on&&PS.m===m?'on':'')+'" data-pm="'+m+'" data-pmk="'+k+'"><span>'+esc(nm(m))+'</span><b>'+esc(money(v))+'</b>'+(sv>=5?'<em>'+esc(t('save',{n:sv}))+'</em>':'')+'</button>'}).join('')+'</div></div>'}).join('');
+  h+='<button class="btn wide" data-pay style="margin-top:12px">'+esc(t('payWith',{a:money(price(PS.k,PS.m))}))+'</button>';
+  box.innerHTML=h}
+function saveQr(){var cv=$('payqr');if(!cv)return;cv.toBlob(function(bl){var f;try{f=new File([bl],'thean-khqr.png',{type:'image/png'})}catch(e){}
+  if(f&&navigator.canShare&&navigator.canShare({files:[f]}))navigator.share({files:[f],title:'KHQR'}).catch(function(){});
+  else{var u=URL.createObjectURL(bl),l=document.createElement('a');l.href=u;l.download='thean-khqr.png';document.body.appendChild(l);l.click();setTimeout(function(){URL.revokeObjectURL(u);l.remove()},1500)}},'image/png')}
+
+/* ---------- Connect with Facebook (customers) ---------- */
+var FBSDK=null;
+function fbSdk(){var id=cfg().fbAppId;if(!id||ACC.team)return Promise.resolve(null);if(FBSDK)return FBSDK;
+  FBSDK=new Promise(function(res){window.fbAsyncInit=function(){FB.init({appId:String(id),cookie:true,xfbml:false,version:'v26.0'});res(window.FB);drawFbBox()};
+    var s=document.createElement('script');s.src='https://connect.facebook.net/en_US/sdk.js';s.async=true;s.crossOrigin='anonymous';s.onerror=function(){FBSDK=null;res(null)};document.head.appendChild(s)});return FBSDK}
+function fbPages(tok){return fetch(G+'me/accounts?fields=id,name,access_token,instagram_business_account%7Bid,username%7D&limit=100&access_token='+encodeURIComponent(tok)).then(function(r){return r.json()}).then(function(j){if(j.error){var e=new Error(j.error.message||'Facebook error');e.code=j.error.code;throw e}return j.data||[]})}
+function usePage(p){C.token=p.access_token;C.pageId=p.id;C.pageName=p.name;C.fbLogin=true;C.fbPage=p.id;
+  var ig=p.instagram_business_account;if(ig&&ig.id){C.igId=ig.id;C.igUser=ig.username||''}else{delete C.igId;delete C.igUser}
+  C.dest=C.dest||{};C.dest.fb=true;save();KS='ok';KERR='';drawKey();drawDests();drawFbBox()}
+function fbSilent(F){if(!F||!C.fbLogin||!C.fbPage)return;try{F.getLoginStatus(function(r){if(r&&r.status==='connected'&&r.authResponse)fbPages(r.authResponse.accessToken).then(function(L){var p=L.filter(function(x){return x.id===C.fbPage})[0];if(p)usePage(p)}).catch(function(){})})}catch(e){}}
+$('fbConn').onclick=function(){if(!cfg().fbAppId){msg('m8','info',esc(t('fbcNoApp')));return}
+  if(!window.FB){msg('m8','info',esc(t('aWait')));fbSdk().then(function(F){msg('m8',F?'info':'bad',esc(t(F?'fbcAgain':'fbcLoad')))});return}
+  var o=cfg().fbConfigId?{config_id:String(cfg().fbConfigId)}:{scope:FB_SCOPES,return_scopes:true};
+  FB.login(function(r){if(!r||!r.authResponse){msg('m8','bad',esc(t('fbcCancel')));return}msg('m8','info',esc(t('aWait')));
+    fbPages(r.authResponse.accessToken).then(function(L){
+      if(!L.length){msg('m8','bad',esc(t('fbcNoPage')));return}
+      if(L.length===1){usePage(L[0]);return}
+      FBL=L;msg('m8','info',esc(t('fbcPick'))+'<div class="pick">'+L.map(function(p,i){return '<button class="btn soft sm" data-pg="'+i+'">'+esc(p.name)+'</button>'}).join('')+'</div>')})
+    .catch(function(e){msg('m8','bad',esc(t('fbcFail'))+'<br><small>'+esc(e&&e.message||'')+'</small>')})},o)};
+var FBL=[];
+document.addEventListener('click',function(e){var b=e.target.closest('[data-pg]');if(b&&FBL[+b.getAttribute('data-pg')])usePage(FBL[+b.getAttribute('data-pg')])});
+$('fbDisc').onclick=function(){['token','pageId','pageName','igId','igUser','fbLogin','fbPage'].forEach(function(k){delete C[k]});save();KS='none';drawKey();drawDests();drawFbBox();try{window.FB&&FB.logout(function(){})}catch(e){}};
+function drawFbBox(){if(!$('m8'))return;
+  if(C.fbLogin&&C.token){if(KS==='bad')msg('m8','bad',esc(t('fbcExpired')));else msg('m8','ok',esc(t('tokOk',{p:C.pageName||''}))+(C.igId?'<br>'+esc(t('igOk',{u:C.igUser||''})):''))}
+  else if(!/data-pg/.test($('m8').innerHTML))msg('m8','','');
+  var st=$('fbcSteps');if(st)st.innerHTML=t('fbcSteps').map(function(s){return '<li>'+s+'</li>'}).join('')}
+
+Object.assign(T.en,{
+  authTitle:'Welcome',authSub:'Sign in to post to Facebook, Instagram and Telegram at once.',signIn:'Sign in',signUp:'Create account',
+  aName:'Your name',aFb:'Your Facebook profile link',aFbNote:'We need this to give your Facebook account access to posting. Open your Facebook profile, tap the three dots, then Copy link.',
+  aEmail:'Email',aPass:'Password (at least 6 characters)',forgot:'Forgot password?',authFree:'New accounts get free posts to try everything.',
+  aWait:'Please wait…',aeWrong:'The email or password is not correct.',aeEmail:'Please type a correct email.',aeUsed:'This email already has an account. Tap Sign in.',aeWeak:'The password needs at least 6 characters.',
+  aeMany:'Too many tries. Please wait a few minutes.',aeNet:'No internet. Please try again.',aeNeed:'Please type your name and your Facebook profile link.',aeEmailFirst:'Type your email first, then tap Forgot password.',
+  aReset:'We sent you an email to set a new password. Check your inbox and spam folder.',authLoadT:'Loading…',authErrT:'Could not connect. Check your internet.',retry:'Try again',
+  acct:'Account',accTeam:'Our team: unlimited posting',signOut:'Sign out',seePlans:'See plans',
+  pbFree:'Free posts left: {n} of {f}',pbPlan:'Plan: {p} · until {d}',pbMore:'Plans',
+  pk_fb:'Facebook',pk_fbig:'Facebook + Instagram',pk_all:'All',plansT:'Plans',nMonth1:'1 month',nMonths:'{n} months',save:'Save {n}%',payWith:'Pay {a} with KHQR',
+  noPrices:'Plans are not open yet. Please contact us in the chat.',noQr:'Please contact us in the chat to pay.',saveQr:'Save QR',
+  paySteps:['Save the QR, or scan it with another phone.','Open your bank app (ABA, ACLEDA, Wing or any KHQR app), tap Scan, then choose the QR picture.','Pay, then take a screenshot of the receipt.','Tap "I have paid", then send the receipt with your email in our chat.'],
+  paid:'I have paid',back:'Back',reqT:'Waiting for confirmation',reqS:'Send your receipt and your email in our chat. We will turn on your plan soon.',reqCancel:'Cancel request',
+  outOf:'You have used all free posts. Choose a plan to keep posting.',lockedPlan:'not in your plan',
+  fbcSub:'Connect your Facebook Page. Your Instagram connects at the same time if it is linked to the Page.',fbConn:'Connect with Facebook',
+  fbcNoApp:'Connecting is not open yet. Please contact us in the chat.',fbcLoad:'Facebook could not load. Check your internet, or turn off an ad blocker.',fbcAgain:'Ready. Tap Connect with Facebook again.',
+  fbcCancel:'Facebook was not connected.',fbcNoPage:'No Facebook Page was found. Choose your Page when Facebook asks, and allow all permissions.',fbcPick:'Choose your Page:',
+  fbcFail:'Facebook did not allow this yet. Make sure you accepted our invite (see the steps), then try again.',fbcExpired:'Facebook needs you to connect again. Tap Connect with Facebook.',
+  fbcHelp:'How to connect',fbcSteps:['After you create your account, our team adds you to our Facebook app (usually within 1 day).','Open <b>developers.facebook.com/requests</b> while signed in to Facebook, and tap <b>Accept</b>. If Facebook asks, confirm your phone number.','Come back here, tap <b>Connect with Facebook</b>, choose your Page, and allow everything.','For Instagram: your Instagram must be a Professional account linked to your Facebook Page.']
+});
+Object.assign(T.km,{
+  authTitle:'សូមស្វាគមន៍',authSub:'ចូលគណនី ដើម្បីបង្ហោះទៅ Facebook, Instagram និង Telegram ក្នុងពេលតែមួយ។',signIn:'ចូលគណនី',signUp:'បង្កើតគណនី',
+  aName:'ឈ្មោះរបស់អ្នក',aFb:'តំណប្រូហ្វាល Facebook របស់អ្នក',aFbNote:'យើងត្រូវការវា ដើម្បីផ្តល់សិទ្ធិបង្ហោះដល់គណនី Facebook របស់អ្នក។ បើកប្រូហ្វាល Facebook ចុចចំណុចបី រួច Copy link។',
+  aEmail:'អ៊ីមែល',aPass:'ពាក្យសម្ងាត់ (យ៉ាងតិច ៦ តួ)',forgot:'ភ្លេចពាក្យសម្ងាត់?',authFree:'គណនីថ្មីទទួលបានការបង្ហោះឥតគិតថ្លៃ ដើម្បីសាកល្បងគ្រប់យ៉ាង។',
+  aWait:'សូមរង់ចាំ…',aeWrong:'អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ។',aeEmail:'សូមវាយអ៊ីមែលឱ្យត្រឹមត្រូវ។',aeUsed:'អ៊ីមែលនេះមានគណនីរួចហើយ។ សូមចុច ចូលគណនី។',aeWeak:'ពាក្យសម្ងាត់ត្រូវមានយ៉ាងតិច ៦ តួ។',
+  aeMany:'ព្យាយាមច្រើនដងពេក។ សូមរង់ចាំប៉ុន្មាននាទី។',aeNet:'គ្មានអ៊ីនធឺណិត។ សូមព្យាយាមម្តងទៀត។',aeNeed:'សូមវាយឈ្មោះ និងតំណប្រូហ្វាល Facebook របស់អ្នក។',aeEmailFirst:'សូមវាយអ៊ីមែលជាមុនសិន រួចចុច ភ្លេចពាក្យសម្ងាត់។',
+  aReset:'យើងបានផ្ញើអ៊ីមែលសម្រាប់កំណត់ពាក្យសម្ងាត់ថ្មី។ សូមពិនិត្យប្រអប់សំបុត្រ និង Spam។',authLoadT:'កំពុងផ្ទុក…',authErrT:'មិនអាចភ្ជាប់បាន។ សូមពិនិត្យអ៊ីនធឺណិត។',retry:'ព្យាយាមម្តងទៀត',
+  acct:'គណនី',accTeam:'ក្រុមការងាររបស់យើង៖ បង្ហោះបានគ្មានដែនកំណត់',signOut:'ចាកចេញ',seePlans:'មើលគម្រោង',
+  pbFree:'ការបង្ហោះឥតគិតថ្លៃនៅសល់៖ {n} ក្នុងចំណោម {f}',pbPlan:'គម្រោង៖ {p} · ដល់ថ្ងៃ {d}',pbMore:'គម្រោង',
+  pk_fb:'Facebook',pk_fbig:'Facebook + Instagram',pk_all:'ទាំងអស់',plansT:'គម្រោង',nMonth1:'១ ខែ',nMonths:'{n} ខែ',save:'សន្សំ {n}%',payWith:'បង់ {a} តាម KHQR',
+  noPrices:'គម្រោងមិនទាន់បើកនៅឡើយទេ។ សូមទាក់ទងយើងតាមការជជែក។',noQr:'សូមទាក់ទងយើងតាមការជជែក ដើម្បីបង់ប្រាក់។',saveQr:'រក្សាទុក QR',
+  paySteps:['រក្សាទុក QR ឬស្កេនវាដោយទូរស័ព្ទមួយទៀត។','បើកកម្មវិធីធនាគាររបស់អ្នក (ABA, ACLEDA, Wing ឬកម្មវិធី KHQR ណាមួយ) ចុច ស្កេន រួចជ្រើសរូប QR។','បង់ប្រាក់ រួចថតអេក្រង់បង្កាន់ដៃ។','ចុច «ខ្ញុំបានបង់ហើយ» រួចផ្ញើបង្កាន់ដៃ និងអ៊ីមែលរបស់អ្នកក្នុងការជជែករបស់យើង។'],
+  paid:'ខ្ញុំបានបង់ហើយ',back:'ត្រឡប់',reqT:'កំពុងរង់ចាំការបញ្ជាក់',reqS:'សូមផ្ញើបង្កាន់ដៃ និងអ៊ីមែលរបស់អ្នកក្នុងការជជែករបស់យើង។ យើងនឹងបើកគម្រោងរបស់អ្នកឆាប់ៗ។',reqCancel:'បោះបង់សំណើ',
+  outOf:'អ្នកបានប្រើការបង្ហោះឥតគិតថ្លៃអស់ហើយ។ សូមជ្រើសគម្រោង ដើម្បីបន្តបង្ហោះ។',lockedPlan:'មិនមានក្នុងគម្រោងរបស់អ្នក',
+  fbcSub:'ភ្ជាប់ទំព័រ Facebook របស់អ្នក។ Instagram នឹងភ្ជាប់ក្នុងពេលតែមួយ ប្រសិនបើវាភ្ជាប់ជាមួយទំព័រ។',fbConn:'ភ្ជាប់ជាមួយ Facebook',
+  fbcNoApp:'ការភ្ជាប់មិនទាន់បើកនៅឡើយទេ។ សូមទាក់ទងយើងតាមការជជែក។',fbcLoad:'Facebook មិនអាចផ្ទុកបាន។ សូមពិនិត្យអ៊ីនធឺណិត ឬបិទកម្មវិធីទប់ស្កាត់ពាណិជ្ជកម្ម។',fbcAgain:'រួចរាល់។ សូមចុច ភ្ជាប់ជាមួយ Facebook ម្តងទៀត។',
+  fbcCancel:'Facebook មិនត្រូវបានភ្ជាប់ទេ។',fbcNoPage:'រកមិនឃើញទំព័រ Facebook ទេ។ សូមជ្រើសទំព័ររបស់អ្នក នៅពេល Facebook សួរ ហើយអនុញ្ញាតគ្រប់សិទ្ធិ។',fbcPick:'ជ្រើសទំព័ររបស់អ្នក៖',
+  fbcFail:'Facebook មិនទាន់អនុញ្ញាតនៅឡើយទេ។ សូមប្រាកដថាអ្នកបានទទួលការអញ្ជើញរបស់យើង (មើលជំហាន) រួចព្យាយាមម្តងទៀត។',fbcExpired:'Facebook ត្រូវការឱ្យអ្នកភ្ជាប់ម្តងទៀត។ សូមចុច ភ្ជាប់ជាមួយ Facebook។',
+  fbcHelp:'របៀបភ្ជាប់',fbcSteps:['បន្ទាប់ពីអ្នកបង្កើតគណនី ក្រុមការងាររបស់យើងនឹងបន្ថែមអ្នកទៅក្នុងកម្មវិធី Facebook របស់យើង (ជាធម្មតាក្នុងរយៈពេល ១ ថ្ងៃ)។','បើក <b>developers.facebook.com/requests</b> ពេលកំពុងចូល Facebook ហើយចុច <b>Accept</b>។ ប្រសិនបើ Facebook សួរ សូមបញ្ជាក់លេខទូរស័ព្ទ។','ត្រឡប់មកទីនេះវិញ ចុច <b>ភ្ជាប់ជាមួយ Facebook</b> ជ្រើសទំព័ររបស់អ្នក ហើយអនុញ្ញាតទាំងអស់។','សម្រាប់ Instagram៖ Instagram របស់អ្នកត្រូវតែជាគណនី Professional ដែលភ្ជាប់ជាមួយទំព័រ Facebook។']
+});
+
+function accCount(){if(ACC.st!=='in'||ACC.team||!FBX)return;FBX.d.runTransaction(R('postusers/'+ACC.user.uid+'/used'),function(v){return (+v||0)+1}).catch(function(){})}
+(function(){var go=$('post').onclick;$('post').onclick=function(){
+  if(ACC.st!=='in'){window.scrollTo(0,0);return}
+  if(!canPost()){msg('m3','info',esc(t('outOf')));openPlans();return}
+  if(!ACC.team&&C.fbLogin&&KS==='bad'){openSettings();return}
+  return go.apply(this,arguments)}})();
+
+try{$('yr').textContent=new Date().getFullYear()}catch(e){}applyLang();checkKey();accStart();
 })();
 </script>
 </body>

@@ -540,6 +540,13 @@ html[lang="km"] .mtab{letter-spacing:0}
 .sheet .hd h3{margin:0;flex:1;font-size:1.15rem}
 .sheet .bd{padding:18px;display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
 .imgpick{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:center}
+.seg2{display:flex;background:var(--mist1);border-radius:999px;padding:4px;gap:4px}.seg2 button{flex:1;border:0;background:none;font:inherit;font-weight:600;padding:9px;border-radius:999px;color:inherit;cursor:pointer}.seg2 button.on{background:var(--card,#fff);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.pacard{border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px}.pacard.req{border-color:#d99a1a;box-shadow:0 0 0 3px rgba(217,154,26,.18)}
+.pahd{display:flex;justify-content:space-between;gap:10px;align-items:center}.pahd span{display:flex;flex-direction:column;min-width:0}.pahd small{color:var(--muted);overflow:hidden;text-overflow:ellipsis}
+.pameta{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.88rem;color:var(--muted)}.pameta b{color:inherit}.pachk{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.pareq{background:rgba(217,154,26,.14);border-radius:10px;padding:8px 10px;font-size:.88rem}
+.paact{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.paact select{width:auto;flex:1;min-width:120px}
+.paprices{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px}
 .imgpick .pv{width:120px;aspect-ratio:4/3;border-radius:10px;overflow:hidden;background:var(--mist1)}
 .imgpick .pv img{width:100%;height:100%;object-fit:cover;display:block}
 .slr{display:grid;grid-template-columns:110px 1fr;gap:12px;border:1px solid var(--line);border-radius:14px;padding:10px}
@@ -2521,6 +2528,58 @@ function pushForm(){
       if(!te&&!tk){toast('Type a title first');return}if(url&&!/^(\/|https:\/\/)/.test(url)){toast('The web address must start with https://');return}
       b.disabled=true;window.TheanAdmin.pushQueue({title:{en:te||tk,km:tk||te},body:{en:be||bk,km:bk||be},url:url||'/',img:img}).then(function(){toast('Queued. It will be sent within a few minutes.');['te','tk','be','bk'].forEach(function(k){m.querySelector('[data-pn="'+k+'"]').value=''});img='';m.querySelector('[data-ppv]').innerHTML='';b.disabled=false})
       .catch(function(e){b.disabled=false;toast(/permission/i.test(String(e&&(e.code||e.message)))?'No permission: add the notification rules in Firebase (setup step).':'Not sent: '+(e&&(e.code||e.message)))})}})}
+/* ---------- Posting app: customers, plans and prices ---------- */
+var PA_PK=[['fb','Facebook','Facebook post and Story'],['fbig','Facebook + Instagram','Facebook and Instagram, posts and Stories'],['all','All','Facebook, Instagram and Telegram']],PA_M=[1,2,3,6,12];
+function paDay(ms){var d=new Date(+ms);return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear()}
+function paMoney(v,c){return c==='KHR'?Math.round(+v).toLocaleString('en-US')+' ៛':'$'+(+v).toFixed(2).replace(/\.00$/,'')}
+function postAppForm(){
+  var tab='cust',U={},CF={},off=null,m=modal('Posting app','<div class="seg2" data-patabs><button type="button" class="on" data-pat="cust">Customers</button><button type="button" data-pat="plans">Plans and prices</button></div><div data-pabody><small style="color:var(--muted)">Loading…</small></div>');
+  var body=m.querySelector('[data-pabody]');
+  function permErr(e){return /permission/i.test(String(e&&(e.code||e.message)))?'No permission yet: add the new database rules in Firebase (setup step).':'Problem: '+(e&&(e.code||e.message))}
+  function drawCust(){var L=Object.keys(U).map(function(k){return Object.assign({uid:k},U[k])}),now=Date.now(),cur=CF.cur==='KHR'?'KHR':'USD';
+    L.sort(function(a,b){return (b.req?1:0)-(a.req?1:0)||((b.profile||{}).at||0)-((a.profile||{}).at||0)});
+    var nReq=L.filter(function(x){return x.req}).length,nNew=L.filter(function(x){return !x.tester}).length;
+    var h='<p style="margin:0;color:var(--muted)"><b>'+L.length+'</b> customers · <b>'+nReq+'</b> waiting for payment check · <b>'+nNew+'</b> not yet added as Tester</p>'+
+      '<details style="margin:6px 0"><summary style="cursor:pointer;font-weight:600">How to add a new customer as a Tester</summary><ol style="margin:6px 0;padding-left:20px;line-height:1.6"><li>Tap <b>Open App roles</b> (opens your Facebook app).</li><li>Tap <b>Add People</b>, choose <b>Tester</b>, and paste the customer\'s Facebook link or name.</li><li>Come back here and tick <b>Added as Tester</b>.</li><li>Tell the customer to open <b>developers.facebook.com/requests</b> and tap <b>Accept</b>.</li></ol>'+
+      (CF.fbAppId?'<a class="btn sm" target="_blank" rel="noopener" href="https://developers.facebook.com/apps/'+esc(CF.fbAppId)+'/roles/roles/">'+I('ext')+' Open App roles</a>':'<small style="color:var(--muted)">Add your Facebook App ID in Plans and prices first.</small>')+'</details>';
+    if(!L.length){body.innerHTML=h+'<small style="color:var(--muted)">No customers yet.</small>';return}
+    h+=L.map(function(x){var p=x.profile||{},pl=x.plan,on=pl&&+pl.until>now,q=x.req,pkn=function(k){var r=PA_PK.filter(function(z){return z[0]===k})[0];return (((CF.packs||{})[k]||{}).name||{}).en||(r?r[1]:k)};
+      return '<div class="pacard'+(q?' req':'')+'"><div class="pahd"><span><b>'+esc(p.name||p.email||'(no name)')+'</b><small>'+esc(p.email||'')+(p.at?' · joined '+paDay(p.at):'')+'</small></span>'+
+        (p.fb?'<a class="btn sm soft" target="_blank" rel="noopener" href="'+esc(/^https?:/.test(p.fb)?p.fb:'https://www.facebook.com/'+p.fb)+'">'+I('facebook')+' Profile</a>':'')+'</div>'+
+        '<div class="pameta"><span>Posts made: <b>'+(+x.used||0)+'</b></span><span>'+(on?'Plan: <b>'+esc(pkn(pl.pkg))+'</b> until <b>'+paDay(pl.until)+'</b>':pl?'Plan ended '+paDay(pl.until):'Free posts')+'</span>'+
+        '<label class="pachk"><input type="checkbox" data-patest="'+esc(x.uid)+'"'+(x.tester?' checked':'')+'> Added as Tester</label></div>'+
+        (q?'<div class="pareq">Says paid: <b>'+esc(pkn(q.pkg))+' · '+q.m+' month'+(q.m>1?'s':'')+' · '+esc(paMoney(q.amt,q.cur||cur))+'</b> on '+paDay(q.at)+'. Check the money arrived in your bank, then tap Turn on.</div>':'')+
+        '<div class="paact"><select data-papk="'+esc(x.uid)+'">'+PA_PK.map(function(k){return '<option value="'+k[0]+'"'+((q?q.pkg:(pl&&pl.pkg)||'all')===k[0]?' selected':'')+'>'+esc(pkn(k[0]))+'</option>'}).join('')+'</select>'+
+        '<select data-pam="'+esc(x.uid)+'">'+PA_M.map(function(n){return '<option value="'+n+'"'+((q?+q.m:1)===n?' selected':'')+'>'+n+' month'+(n>1?'s':'')+'</option>'}).join('')+'</select>'+
+        '<button class="btn sm" type="button" data-paon="'+esc(x.uid)+'">'+I('check')+' Turn on</button>'+
+        (on?'<button class="btn sm del" type="button" data-pastop="'+esc(x.uid)+'">Stop plan</button>':'')+
+        (q?'<button class="btn sm soft" type="button" data-panoreq="'+esc(x.uid)+'">Not paid</button>':'')+'</div></div>'}).join('');
+    body.innerHTML=h}
+  function drawPlans(){var c=CF,pk=c.packs||{};
+    body.innerHTML='<div class="two"><label class="f">Free posts for new accounts<input data-pc="free" inputmode="numeric" value="'+esc(c.free==null?5:c.free)+'"></label>'+
+      '<label class="f">Currency<select data-pc="cur"><option value="USD"'+(c.cur!=='KHR'?' selected':'')+'>USD $</option><option value="KHR"'+(c.cur==='KHR'?' selected':'')+'>KHR ៛</option></select></label></div>'+
+      '<div class="two"><label class="f">Facebook App ID<input data-pc="fbAppId" inputmode="numeric" placeholder="e.g. 1234567890123456" value="'+esc(c.fbAppId||'')+'"></label>'+
+      '<label class="f">Login configuration ID (only if Facebook gave you one)<input data-pc="fbConfigId" inputmode="numeric" value="'+esc(c.fbConfigId||'')+'"></label></div>'+
+      PA_PK.map(function(k){var p=pk[k[0]]||{},n=p.name||{},pr=p.p||{};
+        return '<div class="pacard"><label class="pachk" style="font-weight:700"><input type="checkbox" data-pon="'+k[0]+'"'+(p.on===false?'':' checked')+'> '+esc(k[1])+'</label><small style="color:var(--muted)">'+esc(k[2])+'</small>'+
+          '<div class="two"><label class="f">Name (English)<input data-pne="'+k[0]+'" value="'+esc(n.en||'')+'" placeholder="'+esc(k[1])+'"></label><label class="f">Name (Khmer)<input data-pnk="'+k[0]+'" value="'+esc(n.km||'')+'" placeholder="'+esc(k[1])+'"></label></div>'+
+          '<div class="paprices">'+PA_M.map(function(mo){return '<label class="f">'+mo+' month'+(mo>1?'s':'')+'<input data-pp="'+k[0]+':'+mo+'" inputmode="decimal" value="'+esc(pr[mo]||'')+'" placeholder="no"></label>'}).join('')+'</div></div>'}).join('')+
+      '<small style="color:var(--muted)">Leave a price empty to hide that length. Customers pay with the same KHQR as your Donate page.</small>'+
+      '<div style="display:flex;justify-content:flex-end"><button class="btn" type="button" data-pasave>'+I('check')+' Save</button></div>'}
+  function draw(){m.querySelectorAll('[data-pat]').forEach(function(b){b.classList.toggle('on',b.dataset.pat===tab)});if(tab==='cust')drawCust();else drawPlans()}
+  off=window.TheanAdmin.onPostUsers(function(v){U=v||{};if(tab==='cust')drawCust()},function(e){body.innerHTML='<div class="msg bad" style="padding:10px">'+esc(permErr(e))+'</div>'});
+  window.TheanAdmin.postPlans().then(function(v){CF=v||{};draw()}).catch(function(){CF={};draw()});
+  var obs=new MutationObserver(function(){if(!document.body.contains(m)){try{off&&off()}catch(e){}obs.disconnect()}});obs.observe(document.body,{childList:true});
+  m.addEventListener('change',function(e){var x=e.target;if(x.dataset.patest)window.TheanAdmin.postUser(x.dataset.patest,{tester:x.checked||null}).catch(function(err){toast(permErr(err))})});
+  m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+    if(b.dataset.pat){tab=b.dataset.pat;draw();return}
+    if(b.dataset.paon){var id=b.dataset.paon,pkg=m.querySelector('[data-papk="'+id+'"]').value,mo=+m.querySelector('[data-pam="'+id+'"]').value,old=(U[id]||{}).plan,base=old&&+old.until>Date.now()&&old.pkg===pkg?+old.until:Date.now(),d=new Date(base);d.setMonth(d.getMonth()+mo);
+      b.disabled=true;window.TheanAdmin.postUser(id,{plan:{pkg:pkg,until:d.getTime(),m:mo,at:Date.now()},req:null}).then(function(){toast('Plan turned on until '+paDay(d.getTime()))}).catch(function(err){b.disabled=false;toast(permErr(err))});return}
+    if(b.dataset.pastop){if(!confirm('Stop this plan now?'))return;window.TheanAdmin.postUser(b.dataset.pastop,{plan:null}).then(function(){toast('Plan stopped')}).catch(function(err){toast(permErr(err))});return}
+    if(b.dataset.panoreq){window.TheanAdmin.postUser(b.dataset.panoreq,{req:null}).then(function(){toast('Request removed')}).catch(function(err){toast(permErr(err))});return}
+    if(b.hasAttribute('data-pasave')){var q=function(s){var x=m.querySelector(s);return x?x.value.trim():''},o={free:Math.max(0,parseInt(q('[data-pc="free"]'),10)||0),cur:q('[data-pc="cur"]')||'USD',fbAppId:q('[data-pc="fbAppId"]').replace(/\D/g,''),fbConfigId:q('[data-pc="fbConfigId"]').replace(/\D/g,''),packs:{}};
+      PA_PK.forEach(function(k){var p={on:m.querySelector('[data-pon="'+k[0]+'"]').checked,name:{en:q('[data-pne="'+k[0]+'"]'),km:q('[data-pnk="'+k[0]+'"]')},p:{}};PA_M.forEach(function(mo){var v=parseFloat(q('[data-pp="'+k[0]+':'+mo+'"]'));if(v>0)p.p[mo]=v});o.packs[k[0]]=p});
+      b.disabled=true;window.TheanAdmin.setPostPlans(o).then(function(){CF=o;b.disabled=false;toast('Saved. Customers see the new prices right away.')}).catch(function(err){b.disabled=false;toast(permErr(err))})}})}
 var tPause=0,tTimer=null;
 function tStep(row){return row.querySelector('.tile')?row.querySelector('.tile').getBoundingClientRect().width+6:120}
 function tMove(row,d){var max=row.scrollWidth-row.clientWidth;if(max<=4)return;var x=row.scrollLeft+d*tStep(row);if(d>0&&row.scrollLeft>=max-4)x=0;else if(d<0&&row.scrollLeft<=4)x=max;row.scrollTo({left:x,behavior:'smooth'})}
@@ -2724,6 +2783,7 @@ app.addEventListener('click',function(e){
     case 'skinform':skinForm();return;
     case 'push':pushToggle();return;
     case 'pushform':pushForm();return;
+    case 'postapp':postAppForm();return;
     case 'tstyle':tstyleForm();return;
     case 'skins':skinPicker();return;
     case 'maint':maintToggle();return;
@@ -2992,7 +3052,7 @@ function dashSection(){
     h+='<div class="dwelcome"><h2>Hello'+(adminUser&&adminUser.agent&&adminUser.agent.name?', '+esc(adminUser.agent.name):'')+'</h2><p>Everything you change here <b>saves and goes live automatically</b> within a few seconds. Watch the status at the top: <b>Live on the website</b> means visitors can see it.</p></div>';
     var need=photoTargets().length;
     h+='<div class="autobox"><span style="font-size:1.8rem;color:var(--accent)">'+I('image')+'</span><div><b>HD photos & videos</b><small style="color:var(--muted)">'+(need?need+' places, slides or videos have no photo yet. Add free HD photos from Wikimedia Commons in one tap.':'Every place has a photo. You can change any photo with <b>Online photo</b>.')+'</small></div>'+(need?'<button class="btn" data-act="autophotos">'+I('image')+' Add HD photos</button>':'')+'</div>';
-    h+='<h3 class="dsub">Quick actions</h3><div class="dcards">'+maintCard()+awayCard()+dCard('bell','Send notification','A message that pops up on visitors\' phones','data-act="pushform"')+dCard('calendar','Add news','Title, photo, short caption, full story, photos & video','data-add="news:"')+dCard('video','Add a video','Upload from your phone or paste a link','data-add="videos:"')+dCard('pin','Add a place','Destination, temple or culture story','data-add="places:destination"')+dCard('star','Home page','Slideshow, announcement, message of gratitude','data-dash="home"')+dCard('bell','Edit announcement','The red/dark bar under the slideshow','data-dash="texts"')+dCard('image','Pop-up notice',popReady(true)?(S.popup.on===false?'Hidden. Tap to edit or show it.':'Showing once to each visitor. Tap to edit.'):'A picture and message that opens once on the home page','data-act="popedit"')+dCard('menu','Add a menu page','New icon in the menu with its own posts','data-add="pages:custom"')+'</div>';
+    h+='<h3 class="dsub">Quick actions</h3><div class="dcards">'+maintCard()+awayCard()+dCard('bell','Send notification','A message that pops up on visitors\' phones','data-act="pushform"')+dCard('users','Posting app','Customers, payments, plans and prices','data-act="postapp"')+dCard('calendar','Add news','Title, photo, short caption, full story, photos & video','data-add="news:"')+dCard('video','Add a video','Upload from your phone or paste a link','data-add="videos:"')+dCard('pin','Add a place','Destination, temple or culture story','data-add="places:destination"')+dCard('star','Home page','Slideshow, announcement, message of gratitude','data-dash="home"')+dCard('bell','Edit announcement','The red/dark bar under the slideshow','data-dash="texts"')+dCard('image','Pop-up notice',popReady(true)?(S.popup.on===false?'Hidden. Tap to edit or show it.':'Showing once to each visitor. Tap to edit.'):'A picture and message that opens once on the home page','data-act="popedit"')+dCard('menu','Add a menu page','New icon in the menu with its own posts','data-add="pages:custom"')+'</div>';
     h+='<h3 class="dsub">Your website</h3><div class="dstats">'+[['Posts',(S.news||[]).length+(S.social||[]).length+S.pages.reduce(function(a,p){return a+(p.custom&&S[p.list]?S[p.list].length:0)},0),'posts'],['Videos',(S.videos||[]).length,'videos'],['Places',S.places.length,'places'],['Menu pages',S.pages.length,'pages'],['Slides',S.slides.length,'home']].map(function(r){return '<button class="dstat" data-dash="'+r[2]+'"><b>'+r[1]+'</b><span>'+r[0]+'</span></button>'}).join('')+'</div>';
     h+='<div class="dnote">'+(mediaOK()?'Photo & video storage is connected (Cloudinary).':'⚠️ Photo & video storage is not connected yet. <button class="btn sm" data-act="media">Set up now</button>')+'<br>Website data size: <b>'+mb.toFixed(1)+' MB</b>'+(mb>8?' — large. New photos go to Cloudinary once it is connected, which keeps the site fast.':' — good.')+'</div>';
   }
@@ -3999,6 +4059,10 @@ if(ADMIN_PAGE){
     onPushQueue(cb){let off=null,dead=false;loadFb().then(()=>{if(!dead)off=fb.onRecent('push/queue','at',15,cb)}).catch(()=>{});return()=>{dead=true;try{off&&off()}catch(e){}}},
     async pushCount(){await loadFb();const v=await fb.get('push/subs');return v?Object.keys(v).length:0},
     async pushDel(id){await loadFb();await fb.set('push/queue/'+id,null)},
+    onPostUsers(cb,err){let off=null,dead=false;loadFb().then(()=>{if(!dead)off=fb.on('postusers',cb,err)}).catch(e=>err&&err(e));return()=>{dead=true;try{off&&off()}catch(e){}}},
+    async postPlans(){await loadFb();return await fb.get('settings/public/postPlans')},
+    async setPostPlans(v){await loadFb();await fb.set('settings/public/postPlans',v)},
+    async postUser(uid,patch){await loadFb();await fb.update('postusers/'+uid,patch)},
     onCallAway(cb){loadFb().then(()=>fb.on('settings/public/callAway',cb)).catch(()=>{})},
     async publish(S){await loadFb();
       const to=new Promise((_,rej)=>setTimeout(()=>rej(new Error('network: the server did not answer in 40 seconds')),40000));
