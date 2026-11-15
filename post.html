@@ -70,6 +70,7 @@ textarea{min-height:170px;resize:vertical;line-height:1.5}
 .ph .n{position:absolute;top:6px;right:6px;min-width:24px;height:24px;border-radius:12px;background:var(--char);color:var(--char-ink);font-size:.75rem;font-weight:700;display:grid;place-items:center;padding:0 6px;border:2px solid #fff}
 .ph.off img{opacity:.28}
 .ph.off .n{background:rgba(255,255,255,.85);color:#1d2328}
+.sh4{margin:18px 0 4px;font-size:1rem}
 .tg{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:.92rem}
 .tg:first-of-type{border-top:0}
 .sw{position:relative;width:46px;height:28px;flex:none}
@@ -129,30 +130,11 @@ summary{cursor:pointer;font-weight:600;font-size:.92rem}
     <div id="m1"></div>
   </section>
 
-  <section class="card" id="mediaCard" hidden>
-    <div class="owner" id="owner"></div>
-    <div id="media"></div>
-    <div class="row" id="photoTools" style="margin-top:10px;justify-content:space-between" hidden>
-      <span class="cnt" id="selCount"></span>
-      <span class="row"><button class="btn soft sm" id="selAll" data-t="selAll"></button><button class="btn soft sm" id="selNone" data-t="selNone"></button></span>
-    </div>
-  </section>
-
   <section class="card" id="capCard" hidden>
     <h2 data-t="step2"></h2>
-    <p class="sub" data-t="step2Sub"></p>
-    <div class="tg"><span data-t="keepText"></span><label class="sw"><input type="checkbox" id="oText" checked><span></span></label></div>
-    <div class="tg"><span data-t="keepTags"></span><label class="sw"><input type="checkbox" id="oTags" checked><span></span></label></div>
-    <div class="tg"><span data-t="credit"></span><label class="sw"><input type="checkbox" id="oCredit" checked><span></span></label></div>
-    <div class="tg"><span data-t="myTags"></span><label class="sw"><input type="checkbox" id="oMine"><span></span></label></div>
-    <label class="f" for="cap" data-t="captionLabel"></label>
-    <textarea id="cap"></textarea>
-    <div class="row" style="margin-top:8px"><button class="btn soft sm" id="copyCap" data-t="copyCap"></button></div>
-  </section>
-
-  <section class="card" id="postCard" hidden>
-    <h2 data-t="step3"></h2>
-    <div class="seg"><button data-when="now" class="on" data-t="now"></button><button data-when="later" data-t="later"></button></div>
+    <textarea id="cap" aria-label="Caption" data-tph="capPh"></textarea>
+    <div class="row" style="margin-top:8px;justify-content:space-between"><button class="btn soft sm" id="copyCap" data-t="copyCap"></button><button class="link" data-open-settings data-t="capOpts"></button></div>
+    <div class="seg" style="margin-top:14px"><button data-when="now" class="on" data-t="now"></button><button data-when="later" data-t="later"></button></div>
     <div id="laterBox" hidden>
       <label class="f" for="at" data-t="whenLabel"></label>
       <input type="datetime-local" id="at">
@@ -161,6 +143,15 @@ summary{cursor:pointer;font-weight:600;font-size:.92rem}
     <button class="btn wide" id="post" data-t="postBtn"></button>
     <div class="bar" id="bar" hidden><i></i></div>
     <div id="m3"></div>
+  </section>
+
+  <section class="card" id="mediaCard" hidden>
+    <div class="owner" id="owner"></div>
+    <div id="media"></div>
+    <div class="row" id="photoTools" style="margin-top:10px;justify-content:space-between" hidden>
+      <span class="cnt" id="selCount"></span>
+      <span class="row"><button class="btn soft sm" id="selAll" data-t="selAll"></button><button class="btn soft sm" id="selNone" data-t="selNone"></button></span>
+    </div>
   </section>
 
   <section class="card" id="histCard" hidden>
@@ -179,6 +170,12 @@ summary{cursor:pointer;font-weight:600;font-size:.92rem}
     <div class="row"><input type="password" id="tok" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="EAA..."><button class="btn soft sm" id="tokShow" data-t="show"></button></div>
     <div class="row" style="margin-top:10px"><button class="btn sm" id="tokCheck" data-t="checkSave"></button><button class="btn soft sm" id="tokForget" data-t="forget"></button></div>
     <div id="m4"></div>
+    <h4 class="sh4" data-t="capSet"></h4>
+    <p class="note" style="margin-top:0" data-t="capSetSub"></p>
+    <div class="tg"><span data-t="keepText"></span><label class="sw"><input type="checkbox" id="oText" checked><span></span></label></div>
+    <div class="tg"><span data-t="keepTags"></span><label class="sw"><input type="checkbox" id="oTags" checked><span></span></label></div>
+    <div class="tg"><span data-t="credit"></span><label class="sw"><input type="checkbox" id="oCredit" checked><span></span></label></div>
+    <div class="tg"><span data-t="myTags"></span><label class="sw"><input type="checkbox" id="oMine"><span></span></label></div>
     <label class="f" for="mine" data-t="myTagsLabel"></label>
     <input type="text" id="mine" placeholder="#Thean #Cambodia #KhmerTravel">
     <label class="f" for="creditTpl" data-t="creditLabel"></label>
@@ -207,7 +204,7 @@ var T={
   orFiles:'Or choose a video or photos from this phone',loading:'Getting the post…',gotVideo:'Video ready.',gotPhotos:'{n} photos ready. Tap a photo to leave it out.',
   badLink:'Paste a TikTok link first.',fetchFail:'Could not get this post. Check the link is public, then try again in a minute.',captionOnly:'Could not get the video file, but the caption was copied. You can choose the video from this phone.',
   selAll:'Select all',selNone:'Clear',selCount:'{a} of {b} photos selected',
-  step2:'2. Caption',step2Sub:'Filled in from the owner’s post. Turning a switch rebuilds the caption.',keepText:'Owner’s caption',keepTags:'Owner’s hashtags',credit:'Credit the owner (@username)',myTags:'Add my hashtags',
+  step2:'2. Caption and post',capPh:'Write a caption…',capOpts:'Caption settings',capSet:'Caption',capSetSub:'Choose what goes into the caption automatically.',keepText:'Owner’s caption',keepTags:'Owner’s hashtags',credit:'Credit the owner (@username)',myTags:'Add my hashtags',
   captionLabel:'Caption that will be posted',copyCap:'Copy caption',copied:'Copied',
   step3:'3. Post to your Page',now:'Post now',later:'Schedule',whenLabel:'Date and time',whenNote:'Facebook allows 15 minutes to 30 days ahead. Time is your phone’s time.',
   postBtn:'Post to Facebook',posting:'Posting…',upPhoto:'Uploading photo {i} of {n}…',upVideo:'Sending video to Facebook…',retryCld:'Facebook could not fetch it directly. Trying through Cloudinary…',
@@ -228,7 +225,7 @@ var T={
   orFiles:'ឬជ្រើសវីដេអូ ឬរូបភាពពីទូរស័ព្ទនេះ',loading:'កំពុងយកប៉ុស្តិ៍…',gotVideo:'វីដេអូរួចរាល់។',gotPhotos:'រូបភាព {n} រួចរាល់។ ចុចលើរូបដើម្បីដកចេញ។',
   badLink:'សូមបិទភ្ជាប់តំណ TikTok ជាមុនសិន។',fetchFail:'មិនអាចយកប៉ុស្តិ៍នេះបានទេ។ សូមពិនិត្យថាតំណជាសាធារណៈ រួចព្យាយាមម្តងទៀតក្នុងមួយនាទី។',captionOnly:'មិនអាចយកឯកសារវីដេអូបាន ប៉ុន្តែបានចម្លងចំណងជើងហើយ។ អ្នកអាចជ្រើសវីដេអូពីទូរស័ព្ទនេះ។',
   selAll:'ជ្រើសទាំងអស់',selNone:'សម្អាត',selCount:'បានជ្រើស {a} ក្នុងចំណោម {b} រូប',
-  step2:'២. ចំណងជើង',step2Sub:'បំពេញពីប៉ុស្តិ៍របស់ម្ចាស់។ ការបិទ/បើកកុងតាក់នឹងបង្កើតចំណងជើងឡើងវិញ។',keepText:'ចំណងជើងរបស់ម្ចាស់',keepTags:'ហាស់ថាក់របស់ម្ចាស់',credit:'ផ្តល់កិត្តិយសដល់ម្ចាស់ (@username)',myTags:'បន្ថែមហាស់ថាក់របស់ខ្ញុំ',
+  step2:'២. ចំណងជើង និងបង្ហោះ',capPh:'សរសេរចំណងជើង…',capOpts:'ការកំណត់ចំណងជើង',capSet:'ចំណងជើង',capSetSub:'ជ្រើសរើសអ្វីដែលនឹងដាក់ក្នុងចំណងជើងដោយស្វ័យប្រវត្តិ។',step2Sub:'បំពេញពីប៉ុស្តិ៍របស់ម្ចាស់។ ការបិទ/បើកកុងតាក់នឹងបង្កើតចំណងជើងឡើងវិញ។',keepText:'ចំណងជើងរបស់ម្ចាស់',keepTags:'ហាស់ថាក់របស់ម្ចាស់',credit:'ផ្តល់កិត្តិយសដល់ម្ចាស់ (@username)',myTags:'បន្ថែមហាស់ថាក់របស់ខ្ញុំ',
   captionLabel:'ចំណងជើងដែលនឹងបង្ហោះ',copyCap:'ចម្លងចំណងជើង',copied:'បានចម្លង',
   step3:'៣. បង្ហោះទៅទំព័ររបស់អ្នក',now:'បង្ហោះឥឡូវ',later:'កំណត់ពេល',whenLabel:'កាលបរិច្ឆេទ និងម៉ោង',whenNote:'Facebook អនុញ្ញាតពី ១៥ នាទី ដល់ ៣០ ថ្ងៃខាងមុខ។ ម៉ោងតាមទូរស័ព្ទរបស់អ្នក។',
   postBtn:'បង្ហោះទៅ Facebook',posting:'កំពុងបង្ហោះ…',upPhoto:'កំពុងផ្ទុករូបទី {i} ក្នុងចំណោម {n}…',upVideo:'កំពុងផ្ញើវីដេអូទៅ Facebook…',retryCld:'Facebook មិនអាចយកដោយផ្ទាល់បានទេ។ កំពុងព្យាយាមតាម Cloudinary…',
@@ -277,7 +274,7 @@ function keyMsg(){if(!C.token){msg('m4','','');return}
 window.addEventListener('online',checkKey);
 document.addEventListener('visibilitychange',function(){if(!document.hidden&&C.token&&KS!=='chk')checkKey()});
 function applyLang(){drawKey();document.documentElement.lang=C.lang;document.body.classList.toggle('km',C.lang==='km');
-  document.querySelectorAll('[data-t]').forEach(function(el){el.textContent=t(el.getAttribute('data-t'))});
+  document.querySelectorAll('[data-t]').forEach(function(el){el.textContent=t(el.getAttribute('data-t'))});document.querySelectorAll('[data-tph]').forEach(function(el){el.placeholder=t(el.getAttribute('data-tph'))});
   document.querySelectorAll('[data-lang]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-lang')===C.lang)});
   $('guide').innerHTML=t('guide').map(function(s){return '<li>'+s+'</li>'}).join('');
   if(ST.kind==='photos')countSel();
@@ -336,7 +333,7 @@ $('files').onchange=function(){var fs=[].slice.call(this.files||[]);if(!fs.lengt
   msg('m1','ok',esc(vid?t('gotVideo'):t('gotPhotos',{n:ST.files.length})));show();this.value=''};
 
 function reset(){ST={full:'',kind:'',video:'',images:[],sel:[],files:[],text:'',tags:[],user:'',name:'',avatar:'',srcLink:''};
-  ['mediaCard','capCard','postCard'].forEach(function(id){$(id).hidden=true});msg('m3','','')}
+  ['mediaCard','capCard'].forEach(function(id){$(id).hidden=true});msg('m3','','')}
 
 function show(){
   $('owner').innerHTML=ST.user||ST.name?(ST.avatar?'<img alt="" src="'+esc(ST.avatar)+'">':'')+'<span><b>'+esc(ST.name||ST.user)+'</b><small>@'+esc(ST.user)+'</small></span>':'';
@@ -347,7 +344,7 @@ function show(){
   $('mediaCard').hidden=!h&&!ST.user;
   $('photoTools').hidden=!(ST.kind==='photos'||ST.kind==='fphotos');
   if(!$('photoTools').hidden)countSel();
-  $('capCard').hidden=false;$('postCard').hidden=false;buildCaption()}
+  $('capCard').hidden=false;buildCaption()}
 
 $('media').addEventListener('click',function(e){var b=e.target.closest('.ph');if(!b)return;var i=+b.getAttribute('data-i');ST.sel[i]=!ST.sel[i];countSel()});
 $('selAll').onclick=function(){ST.sel=ST.sel.map(function(){return true});countSel()};
