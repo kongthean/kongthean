@@ -64,6 +64,25 @@ a{color:inherit}
 button,input,textarea,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+svg.i.iu-all{stroke:none;background:currentColor;-webkit-mask:var(--iu-all) center/contain no-repeat;mask:var(--iu-all) center/contain no-repeat}
+html[data-skin="classic"] svg.i.iu-classic{stroke:none;background:currentColor;-webkit-mask:var(--iu-classic) center/contain no-repeat;mask:var(--iu-classic) center/contain no-repeat}
+html[data-skin="thean"] svg.i.iu-thean{stroke:none;background:currentColor;-webkit-mask:var(--iu-thean) center/contain no-repeat;mask:var(--iu-thean) center/contain no-repeat}
+html[data-skin="heritage"] svg.i.iu-heritage{stroke:none;background:currentColor;-webkit-mask:var(--iu-heritage) center/contain no-repeat;mask:var(--iu-heritage) center/contain no-repeat}
+html[data-skin="apsara"] svg.i.iu-apsara{stroke:none;background:currentColor;-webkit-mask:var(--iu-apsara) center/contain no-repeat;mask:var(--iu-apsara) center/contain no-repeat}
+html[data-skin="kbach"] svg.i.iu-kbach{stroke:none;background:currentColor;-webkit-mask:var(--iu-kbach) center/contain no-repeat;mask:var(--iu-kbach) center/contain no-repeat}
+html[data-skin="water"] svg.i.iu-water{stroke:none;background:currentColor;-webkit-mask:var(--iu-water) center/contain no-repeat;mask:var(--iu-water) center/contain no-repeat}
+html[data-skin="pchum"] svg.i.iu-pchum{stroke:none;background:currentColor;-webkit-mask:var(--iu-pchum) center/contain no-repeat;mask:var(--iu-pchum) center/contain no-repeat}
+html[data-skin="ocean"] svg.i.iu-ocean{stroke:none;background:currentColor;-webkit-mask:var(--iu-ocean) center/contain no-repeat;mask:var(--iu-ocean) center/contain no-repeat}
+.icrow{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.icrow .icpv{width:44px;height:44px;border-radius:12px;background:var(--bg2);display:grid;place-items:center;font-size:26px;color:var(--accent,var(--brand))}
+.icrow .icpv i{display:block;width:26px;height:26px;background:currentColor;-webkit-mask:var(--m) center/contain no-repeat;mask:var(--m) center/contain no-repeat}
+.icrow span{display:grid;line-height:1.3}.icrow small{color:var(--muted);font-size:.78rem}.icrow .row{display:flex;gap:6px}
+.icgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px}
+.iccell{border:1px solid var(--line);border-radius:14px;padding:12px 8px 10px;display:grid;justify-items:center;gap:6px;text-align:center;background:var(--surface)}
+.iccell .icp{font-size:34px;color:var(--accent,var(--brand));display:grid;place-items:center;width:56px;height:56px;border-radius:14px;background:var(--bg2)}
+.iccell b{font-size:.82rem;line-height:1.25}.iccell small{font-size:.72rem;color:var(--muted)}
+.iccell .row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}.iccell.cus{border-color:var(--accent,var(--brand))}
+.ictip{font-size:.9rem;line-height:1.6;color:var(--muted);margin:0 0 12px}.ictip b{color:var(--ink)}
 .wrap{max-width:1080px;margin:0 auto;padding-inline:16px}
 .emb{font-family:var(--display);font-weight:400;letter-spacing:.04em;line-height:1.1}
 
@@ -1753,7 +1772,11 @@ P.palette='<path d="M12 3a9 9 0 1 0 0 18c1.2 0 1.8-.8 1.8-1.7 0-.5-.2-.9-.5-1.2-
 P.trash='<path d="M4 7h16M10 11v6M14 11v6"/><path d="M6 7l1 12.5a1.5 1.5 0 0 0 1.5 1.5h7a1.5 1.5 0 0 0 1.5-1.5L18 7"/><path d="M9 7V4.5h6V7"/>';
 P.share='<circle cx="18" cy="5.5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="18.5" r="2.5"/><path d="M8.2 10.8l7.6-4.1M8.2 13.2l7.6 4.1"/>';
 P.bowl='<path d="M3 11.5h18a9 9 0 0 1-18 0z"/><path d="M8 20.5h8M9 3.5c-.8 1 .8 2-.1 3.2M12.5 3.5c-.8 1 .8 2-.1 3.2M16 3.5c-.8 1 .8 2-.1 3.2"/>';
-function I(n){return '<svg class="i" viewBox="0 0 24 24" aria-hidden="true">'+(P[n]||P.info)+'</svg>'}
+var ICON_SKINS=['all','classic','thean','heritage','apsara','kbach','water','pchum','ocean'];
+function iconOk(u){return typeof u==='string'&&/^https:\/\/res\.cloudinary\.com\/[^"'()\s\\]+$/.test(u)}
+function iconCustom(n){try{var v=typeof S!=='undefined'&&S&&S.icons&&S.icons[n];if(!v)return null;if(typeof v==='string')v={all:v};var o={},any=false;ICON_SKINS.forEach(function(k){if(iconOk(v[k])){o[k]=v[k];any=true}});return any?o:null}catch(e){return null}}
+function I(n){var o=iconCustom(n),cl='',st='';if(o)Object.keys(o).forEach(function(k){cl+=' iu-'+k;st+='--iu-'+k+':url('+o[k]+');'});
+  return '<svg class="i'+cl+'" viewBox="0 0 24 24" aria-hidden="true"'+(st?' style="'+st+'"':'')+'>'+(P[n]||P.info)+'</svg>'}
 
 /* ---------- Misty illustration for places without a photo ---------- */
 function art(kind,seed){
@@ -2863,6 +2886,7 @@ app.addEventListener('click',function(e){
     case 'slides':slidesForm();return;
     case 'back':e.preventDefault();goBack();return;
     case 'tilestyle':tileStyleForm();return;
+    case 'icons':iconsForm();return;
     case 'skinform':skinForm();return;
     case 'push':pushToggle();return;
     case 'pushform':pushForm();return;
@@ -2979,6 +3003,41 @@ function storeCanvas(c,cb){
 }
 function pickImage(maxW,cb){var i=document.createElement('input');i.type='file';i.accept='image/*';
   i.onchange=function(){var f=i.files[0];if(!f)return;toast('Uploading photo…');resizeFile(f,Math.max(maxW,1600),function(c){if(!c){toast('That file is not a photo this browser can read');return}storeCanvas(c,function(u,w,h){toast('Photo added');cb(u,w,h)})})};i.click()}
+var ICNAME={users:'Team / people',money:'Money',home:'Home',pin:'Place / map pin',temple:'Temple',lotus:'Lotus / arts',bed:'Hotel / stay',compass:'Explore',play:'Play',video:'Video',social:'Social',donate:'Donate',bell:'Notifications',mail:'Mail',thumb:'Like',user:'Person / about',info:'Info',facebook:'Facebook',messenger:'Messenger',telegram:'Telegram',tiktok:'TikTok',youtube:'YouTube',search:'Search',instagram:'Instagram',phone:'Phone',address:'Address',website:'Website',email:'Email',chat:'Chat',upload:'Upload',sound:'Sound',trash:'Delete',dots:'More',ext:'Open link',mic:'Microphone',grid:'Grid',phoneoff:'Hang up',close:'Close',menu:'Menu',left:'Back / left',right:'Next / right',arrow:'Arrow',edit:'Edit',plus:'Add',image:'Photo',up:'Up',down:'Down',link:'Link',sun:'Sun / weather',car:'Transport',clock:'Time / dates',bulb:'Tips',check:'Check',star:'Star / holidays',calendar:'Calendar / festivals',download:'Download',globe:'Language / world',wave:'Water / beach',hills:'Mountains / nature',gear:'Settings',palette:'Theme',share:'Share',bowl:'Food / restaurants'};
+function iconMakePng(file){return new Promise(function(res,rej){var url=URL.createObjectURL(file),im=new Image();
+  im.onload=function(){try{var Z=512,c=document.createElement('canvas');c.width=c.height=Z;var x=c.getContext('2d'),w=im.naturalWidth||Z,h=im.naturalHeight||Z,k=Math.min(Z/w,Z/h);
+    x.drawImage(im,(Z-w*k)/2,(Z-h*k)/2,w*k,h*k);var d=x.getImageData(0,0,Z,Z),p=d.data,N=Z*Z,tr=0,i;
+    for(i=0;i<N;i++)if(p[i*4+3]<200)tr++;
+    var useAlpha=tr>N*0.02,edge=0,en=0;
+    if(!useAlpha){for(i=0;i<Z;i++){[[i,0],[i,Z-1],[0,i],[Z-1,i]].forEach(function(q){var o=(q[1]*Z+q[0])*4;edge+=0.299*p[o]+0.587*p[o+1]+0.114*p[o+2];en++})}}
+    var dark=!useAlpha&&edge/en<110;
+    for(i=0;i<N;i++){var o=i*4,a;if(useAlpha)a=p[o+3];else{var L=0.299*p[o]+0.587*p[o+1]+0.114*p[o+2];if(dark)L=255-L;a=Math.max(0,Math.min(255,Math.round((225-L)*255/175)))}p[o]=p[o+1]=p[o+2]=0;p[o+3]=a}
+    var x0=Z,y0=Z,x1=-1,y1=-1;for(var y=0;y<Z;y++)for(var xx=0;xx<Z;xx++)if(p[(y*Z+xx)*4+3]>24){if(xx<x0)x0=xx;if(xx>x1)x1=xx;if(y<y0)y0=y;if(y>y1)y1=y}
+    if(x1<0){rej('No icon shape found. Use a dark icon on a white background, or a transparent PNG.');return}
+    x.putImageData(d,0,0);var bw=x1-x0+1,bh=y1-y0+1,s2=Math.max(bw,bh),pad=Math.round(s2*0.06),o2=document.createElement('canvas');o2.width=o2.height=256;
+    var y2=o2.getContext('2d'),sc=256/(s2+pad*2);y2.drawImage(c,x0,y0,bw,bh,(256-bw*sc)/2,(256-bh*sc)/2,bw*sc,bh*sc);
+    o2.toBlob(function(b){URL.revokeObjectURL(url);b?res(b):rej('Could not prepare the icon')},'image/png')}catch(e){rej(e.message||String(e))}};
+  im.onerror=function(){URL.revokeObjectURL(url);rej('This file is not a picture we can read. Use PNG, JPG or SVG.')};im.src=url})}
+function iconSkinName(k){if(k==='all')return 'All themes';var x=(typeof SKINS!=='undefined'?SKINS:[]).filter(function(r){return r[0]===k})[0];return x?((UI.en&&UI.en[x[1]])||x[0]):k}
+function iconsForm(){S.icons=S.icons||{};var keys=Object.keys(P);
+  var m=modal('Icons','<p class="ictip">Design an icon in <b>Canva</b> as <b>one solid colour</b> (a simple line or solid shape). Download it as a <b>PNG with transparent background</b> or <b>SVG</b>, or on free Canva as a <b>black icon on a white background</b>. We remove the background and the icon takes the colour of the theme. You can upload one design for <b>all themes</b>, or a <b>different design for each theme</b>. Themes without their own design use the "All themes" icon, or the built-in icon.</p><input type="file" accept="image/png,image/jpeg,image/svg+xml,image/webp" data-icf hidden><div class="icgrid" data-icg></div>');
+  var g=m.querySelector('[data-icg]'),fi=m.querySelector('[data-icf]'),cur=null,sub=null;
+  function setOf(k){var v=S.icons[k];if(!v)return {};if(typeof v==='string')v=S.icons[k]={all:v};return v}
+  function info(k){var v=setOf(k),n=Object.keys(v).length;return n?(v.all&&n===1?'Your icon · all themes':(v.all?'All themes + ':'')+(Object.keys(v).filter(function(x){return x!=='all'}).length?Object.keys(v).filter(function(x){return x!=='all'}).length+' theme'+(Object.keys(v).filter(function(x){return x!=='all'}).length>1?'s':''):'')):'Built-in'}
+  function draw(){g.innerHTML=keys.map(function(k){var c=Object.keys(setOf(k)).length>0;return '<div class="iccell'+(c?' cus':'')+'"><span class="icp">'+I(k)+'</span><b>'+esc(ICNAME[k]||k)+'</b><small>'+esc(info(k))+'</small><div class="row"><button class="btn sm" type="button" data-ice="'+k+'">'+(c?'Edit':'Upload')+'</button></div></div>'}).join('')}
+  function subDraw(){if(!sub)return;var k=sub.k,v=setOf(k);
+    sub.m.querySelector('[data-icl]').innerHTML=ICON_SKINS.map(function(t){var u=v[t],pu=u||(t!=='all'&&v.all);return '<div class="icrow"><span class="icpv">'+(pu?'<i style="--m:url('+pu+')"></i>':'<svg class="i" viewBox="0 0 24 24" aria-hidden="true">'+(P[k]||P.info)+'</svg>')+'</span><span><b>'+esc(iconSkinName(t))+'</b><small>'+(u?'Your icon':(t==='all'?'Built-in icon':'Uses the "All themes" icon'+(v.all?'':' (built-in)')))+'</small></span><span class="row"><button class="btn sm" type="button" data-icu="'+t+'">'+(u?'Change':'Upload')+'</button>'+(u?'<button class="btn sm soft" type="button" data-icr="'+t+'">Reset</button>':'')+'</span></div>'}).join('')}
+  draw();
+  g.addEventListener('click',function(e){var b=e.target.closest('[data-ice]');if(!b)return;var k=b.dataset.ice;
+    var sm=modal('Icon: '+(ICNAME[k]||k),'<p class="ictip">Upload a design for all themes, or a different one for a single theme. A theme without its own design uses the "All themes" icon.</p><div data-icl></div>');
+    sub={k:k,m:sm};subDraw();
+    sm.addEventListener('click',function(ev){var x=ev.target.closest('[data-icu],[data-icr]');if(!x)return;
+      if(x.dataset.icr){var v=setOf(k);delete v[x.dataset.icr];if(!Object.keys(v).length)delete S.icons[k];changed();subDraw();draw();toast('Removed. '+iconSkinName(x.dataset.icr)+' now uses the '+(x.dataset.icr==='all'?'built-in':'"All themes"')+' icon.');return}
+      var M=S.media||{};if(!M.cloud||!M.preset){toast('Set up photo uploads first (Media, then Video upload settings).');return}
+      cur={k:k,t:x.dataset.icu};fi.value='';fi.click()})});
+  fi.addEventListener('change',function(){var f=fi.files&&fi.files[0];if(!f||!cur)return;var c=cur,btn=sub&&sub.m.querySelector('[data-icu="'+c.t+'"]');if(btn){btn.disabled=true;btn.textContent='Uploading…'}
+    iconMakePng(f).then(function(b){return uploadFile(b,'image',null,'icon-'+c.k+'-'+c.t+'.png')}).then(function(j){var v=setOf(c.k);v[c.t]=j.secure_url;S.icons[c.k]=v;changed();subDraw();draw();toast('Icon saved for '+iconSkinName(c.t)+'.')})
+      .catch(function(err){subDraw();toast('Not saved: '+(err&&err.message||err))})})}
 function modal(title,inner){var m=document.createElement('div');m.className='modal';m.innerHTML='<div class="sheet" role="dialog" aria-modal="true"><div class="hd"><h3>'+esc(title)+'</h3><button class="ib" data-close aria-label="Close">'+I('close')+'</button></div><div class="bd">'+inner+'</div></div>';
   m.addEventListener('click',function(e){if(e.target===m||e.target.closest('[data-close]'))m.remove()});document.body.appendChild(m);return m}
 
@@ -3194,7 +3253,7 @@ function dashSection(){
   }
   else if(sec==='settings'){
     h+=dHead('Contact & settings','Links, logo, storage and your team.');
-    h+='<div class="dcards">'+dCard('menu','Menu icon style','Colour, photo, outline or classic grey','data-act="tilestyle"')+maintCard()+dCard('star','Website theme','Default for visitors: '+({thean:'Thean Green & Gold',water:'Water Festival',heritage:'Khmer Heritage',apsara:'Apsara Night',kbach:'Kbach Gold',pchum:'Pchum Ben'}[S.ui&&S.ui.skin]||'Classic')+'. Visitors can switch at the bottom of the page.','data-act="skinform"')+dCard('palette','Theme style','Button shape, menu icon shape and decorations for each theme','data-act="tstyle"')+dCard('link','Contact links & numbers','Facebook, Telegram, phone, email, follower count…','data-act="links"')+callCard()+ivrCard()+awayCard()+dCard('image','Logo','The round logo at the top','data-act="logo"')+dCard('pin','Map image','Picture on the Cambodia map section','data-act="mapimg"')+dCard('video','Photo & video storage',mediaOK()?'Connected ('+esc(S.media.cloud)+')':'Not connected: tap to set up','data-act="media"')+dCard('users','Team & chat inbox','Invite staff, answer customers','onclick="location.href=\'agent\'"')+dCard('download','Backup copy','Download a copy of the website','data-act="export"')+'</div>';
+    h+='<div class="dcards">'+dCard('menu','Menu icon style','Colour, photo, outline or classic grey','data-act="tilestyle"')+dCard('image','Icons','Replace any icon with your own design from Canva. It takes the theme colour.','data-act="icons"')+maintCard()+dCard('star','Website theme','Default for visitors: '+({thean:'Thean Green & Gold',water:'Water Festival',heritage:'Khmer Heritage',apsara:'Apsara Night',kbach:'Kbach Gold',pchum:'Pchum Ben'}[S.ui&&S.ui.skin]||'Classic')+'. Visitors can switch at the bottom of the page.','data-act="skinform"')+dCard('palette','Theme style','Button shape, menu icon shape and decorations for each theme','data-act="tstyle"')+dCard('link','Contact links & numbers','Facebook, Telegram, phone, email, follower count…','data-act="links"')+callCard()+ivrCard()+awayCard()+dCard('image','Logo','The round logo at the top','data-act="logo"')+dCard('pin','Map image','Picture on the Cambodia map section','data-act="mapimg"')+dCard('video','Photo & video storage',mediaOK()?'Connected ('+esc(S.media.cloud)+')':'Not connected: tap to set up','data-act="media"')+dCard('users','Team & chat inbox','Invite staff, answer customers','onclick="location.href=\'agent\'"')+dCard('download','Backup copy','Download a copy of the website','data-act="export"')+'</div>';
   }
   return h;
 }
