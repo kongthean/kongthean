@@ -3116,6 +3116,8 @@ app.addEventListener('click',function(e){
     case 'callaway':awayToggle();return;
     case 'maintedit':maintEdit();return;
     case 'pmaint':maintEdit('post');return;
+    case 'pmoff':pmaintSet(Object.assign({},PMAINT||{},{on:false,at:Date.now()}),'Posting app maintenance is OFF. The team link no longer works.');return;
+    case 'pmlink':pmTeamLink();return;
     case 'msghide':S.message.show=false;changed();toast('Hidden. Visitors no longer see this section.');return;
     case 'msgshow':S.message.show=true;changed();toast(String(S.message.km||S.message.en||'').trim()||S.message.video?'Shown on the website':'Shown. Add the message text so visitors can see it.');return;
     case 'links':linksForm();return;
@@ -3446,7 +3448,8 @@ function textRows(q){q=String(q||'').toLowerCase();var keys=Object.keys(UI.en).f
 function renderDash(){
   return '<div class="dash"><header class="dtop"><img class="dlogo" alt="" src="/icons/admin-favicon-96.png"><div class="dttl"><b>Website editor</b><small>'+esc((adminUser&&adminUser.agent&&adminUser.agent.name)||'')+'</small></div><span class="dpub" data-pubst>'+pubHtml()+'</span>'+
     '<div class="dtools"><a class="btn sm soft" target="_blank" href="./'+(MAINT&&MAINT.on?'?preview=1':'')+'">'+I('globe')+(MAINT&&MAINT.on?' Preview website':' View website')+'</a><a class="btn sm soft" target="_blank" href="./#check">'+I('info')+' Check website</a><button class="btn sm soft" data-act="pagemode">'+I('edit')+' Edit on page</button><a class="btn sm soft" href="agent">'+I('chat')+' Inbox</a><button class="btn sm soft" data-act="exit">Sign out</button></div></header>'+
-    '<div class="derr" data-puberr hidden></div>'+(MAINT&&MAINT.on?'<div class="dmaint">'+I('gear')+'<span><b>Maintenance mode is ON.</b> Visitors see the maintenance screen and can only use the chat.</span><button class="btn sm soft" data-act="maintedit">Edit message</button><button class="btn sm" data-act="maint">Turn off</button></div>':'')+
+    '<div class="derr" data-puberr hidden></div>'+(MAINT&&MAINT.on?'<div class="dmaint">'+I('gear')+'<span><b>Website maintenance is ON.</b> Visitors see the maintenance screen'+(MAINT.chat===false?' and cannot chat.':' and can only use the chat.')+'</span><button class="btn sm soft" data-act="maintedit">Edit message</button><button class="btn sm" data-act="maint">Turn off</button></div>':'')+
+    (PMAINT&&PMAINT.on?'<div class="dmaint">'+I('gear')+'<span><b>Posting app maintenance is ON.</b> Customers see the maintenance screen and cannot post'+(PMAINT.chat===false?'.':', but can still chat with us.')+'</span><button class="btn sm soft" data-act="pmlink">Team link</button><button class="btn sm soft" data-act="pmaint">Edit message</button><button class="btn sm" data-act="pmoff">Turn off</button></div>':'')+
     '<div class="dbody"><nav class="dnav">'+DSECS.map(function(x){return '<button class="'+(dashSec===x[0]?'on':'')+'" data-dash="'+x[0]+'">'+I(x[1])+'<span>'+esc(x[2])+'</span></button>'}).join('')+'</nav><main class="dmain">'+dashSection()+'</main></div></div>';
 }
 app.addEventListener('input',function(e){if(e.target.id==='dsq'){dashFilter.q=e.target.value;var r=document.getElementById('dsr');if(r)r.innerHTML=textRows(e.target.value)}});
@@ -3699,8 +3702,20 @@ function maintEdit(which){var post=which==='post',c=(post?PMAINT:MAINT)||{};
     var name=post?'Posting app':'Website';
     (post?pmaintSet:maintSet)(v,v.on?'Saved. '+name+' maintenance is ON.':'Saved. '+name+' maintenance is OFF.')}}
 var PMAINT=null;
+function pmHash(k){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(String(k))).then(function(h){return [].map.call(new Uint8Array(h),function(x){return ('0'+x.toString(16)).slice(-2)}).join('')})}
+function pmNewKey(){var a=new Uint8Array(15);crypto.getRandomValues(a);return [].map.call(a,function(x){return 'abcdefghjkmnpqrstuvwxyz23456789'[x%31]}).join('')}
+function pmTeamLink(){if(!window.TheanAdmin||!window.TheanAdmin.getPMKey)return;var T=window.TheanAdmin;T.getPMKey().then(function(k){
+  if(!(PMAINT&&PMAINT.on)){toast('The team link exists only while Posting app maintenance is ON.');return null}
+  if(k&&PMAINT.keyHash)return k;k=pmNewKey();return T.setPMKey(k).then(function(){return pmHash(k)}).then(function(h){var v=Object.assign({},PMAINT,{keyHash:h});return T.setPostMaint(v).then(function(){PMAINT=v;return k})})}).then(function(k){
+  if(!k)return;
+  var url=location.origin.replace(/\/$/,'')+'/post?team='+k;
+  var m=modal('Team link for the Posting app','<p style="margin:0 0 8px;color:var(--muted)">Send this link only to your team. It opens the sign-in screen during maintenance, so a team member can sign in and use the app. It stops working as soon as you turn maintenance off. Customers who sign in with it still see the maintenance screen.</p>'+
+    '<input readonly data-pml value="'+esc(url)+'" style="width:100%;font-size:.9rem" onclick="this.select()"><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px"><button class="btn soft" type="button" data-close>Close</button><button class="btn" type="button" data-pmcopy>Copy link</button></div>');
+  m.querySelector('[data-pmcopy]').onclick=function(){var i=m.querySelector('[data-pml]');i.select();try{navigator.clipboard.writeText(url).then(function(){toast('Team link copied')},function(){document.execCommand('copy');toast('Team link copied')})}catch(e){try{document.execCommand('copy');toast('Team link copied')}catch(x){}}}}).catch(function(e){toast(/permission/i.test(String(e&&(e.code||e.message)))?'No permission yet: publish the new database rules in Firebase.':'Problem: '+(e&&(e.code||e.message)))})}
 function pmaintSet(v,msg){if(!window.TheanAdmin||!window.TheanAdmin.setPostMaint){toast('Not connected yet, try again in a moment');return}
-  window.TheanAdmin.setPostMaint(v).then(function(){PMAINT=v;toast(msg);if(admin&&adminView==='dash')render()}).catch(function(e){toast(/permission/i.test(String(e&&(e.code||e.message)))?'Only the owner can change maintenance mode':'Not saved: '+(e&&(e.code||e.message)))})}
+  var wasOn=!!(PMAINT&&PMAINT.on&&PMAINT.keyHash),T=window.TheanAdmin;
+  var keyP=v.on?(wasOn?Promise.resolve(PMAINT.keyHash):(function(){var k=pmNewKey();return T.setPMKey(k).then(function(){return pmHash(k)})})()):T.setPMKey(null).then(function(){return null},function(){return null});
+  keyP.then(function(h){v.keyHash=h||null;return T.setPostMaint(v)}).then(function(){PMAINT=v;toast(msg+(v.on&&!wasOn?' Tap "Team link" in the red bar to let your team sign in.':''));if(admin&&adminView==='dash')render()}).catch(function(e){toast(/permission/i.test(String(e&&(e.code||e.message)))?'Only the owner can change maintenance mode':'Not saved: '+(e&&(e.code||e.message)))})}
 function pmaintCard(){var on=PMAINT&&PMAINT.on;return dCard('gear','Posting app maintenance',on?'ON: customers see the maintenance screen in the app. Tap to edit or turn off.':'Off. Tap to show customers of the posting app a maintenance screen.','data-act="pmaint"')}
 function skinForm(){var k=(S.ui&&S.ui.skin)||'thean';
   var m=modal('Website theme','<p style="margin:0 0 12px;color:var(--muted)">Choose the look new visitors see first. Each visitor can still change it with the Theme switch at the very bottom of the website.</p><div style="display:grid;gap:10px">'+[['thean','Thean Green & Gold','Deep green and gold taken from the new Thean logo'],['classic','Classic','Misty stone greys, the original look'],['heritage','Khmer Heritage','Sandstone, gold and lacquer red with Khmer ornament'],['apsara','Apsara Night','Jade, lotus and night-sky indigo with gold kbach, floating lanterns and twinkling stars'],['kbach','Kbach Gold','Black lacquer tiles with moving gold kbach patterns and gold Khmer cultural icons'],['water','Water Festival','Cream and river blue by day, maroon and gold at night, with dragon boats, paddles and waves'],['pchum','Pchum Ben','Pagoda scenes and festival icons; visitors choose light, dark or automatic']].map(function(o){return '<button type="button" class="skpick'+(k===o[0]?' on':'')+'" data-sk="'+o[0]+'"><i class="sw sw-'+o[0]+'"></i><span><b>'+o[1]+'</b><small>'+o[2]+'</small></span></button>'}).join('')+'</div>');
@@ -4422,6 +4437,8 @@ if(ADMIN_PAGE){
     async setMaint(v){await loadFb();await fb.set('settings/public/maintenance',v)},
     onMaint(cb){loadFb().then(()=>fb.on('settings/public/maintenance',cb)).catch(()=>{})},
     async setPostMaint(v){await loadFb();await fb.set('settings/public/postMaint',v)},
+    async setPMKey(k){await loadFb();await fb.set('settings/private/postMaintKey',k)},
+    async getPMKey(){await loadFb();return await fb.get('settings/private/postMaintKey')},
     onPostMaint(cb){loadFb().then(()=>fb.on('settings/public/postMaint',cb)).catch(()=>{})},
     async setCallAway(v){await loadFb();await fb.set('settings/public/callAway',v)},
     async pushQueue(v){await loadFb();const u=await authUser();v.at=TS;v.status='queued';v.by=(u&&u.email)||'';return fb.push('push/queue',v)},

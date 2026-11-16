@@ -896,7 +896,10 @@ function myName(){return (ACC.prof&&ACC.prof.name)||(ACC.user&&ACC.user.email||'
 var AM='in';
 /* ---------- maintenance for customers (set in Admin) ---------- */
 var PM=null,PMLINKS=null;
-function pmBypass(){try{return sessionStorage.getItem('pm-signin')==='1'}catch(e){return false}}
+var PMKH=null;
+(function(){try{var q=new URLSearchParams(location.search),k=q.get('team');if(k){sessionStorage.setItem('pm-key',k.slice(0,64));q.delete('team');history.replaceState(null,'',location.pathname+(q.toString()?'?'+q:'')+location.hash)}
+  k=sessionStorage.getItem('pm-key');if(k&&window.crypto&&crypto.subtle)crypto.subtle.digest('SHA-256',new TextEncoder().encode(k)).then(function(h){PMKH=[].map.call(new Uint8Array(h),function(x){return ('0'+x.toString(16)).slice(-2)}).join('');try{pmDraw()}catch(e){}})}catch(e){}})();
+function pmBypass(){return !!(PMKH&&PM&&PM.keyHash&&PMKH===PM.keyHash)}
 function pmLink(k,v){v=String(v||'').trim();if(k==='email')return 'mailto:'+v;if(k==='phone')return 'tel:'+v.replace(/[^\d+]/g,'');
   var pre={telegram:'t.me/',messenger:'m.me/'};if(pre[k]&&!/^https?:/i.test(v)&&v.indexOf('/')<0)v=pre[k]+v.replace(/^@/,'');return /^https?:/i.test(v)?v:'https://'+v}
 function pmDraw(){var m=PM,inn=ACC.st==='in',team=inn&&ACC.team,on=!!(m&&m.on)&&!team&&!(pmBypass()&&!inn),el=$('pmaint');
@@ -911,10 +914,10 @@ function pmDraw(){var m=PM,inn=ACC.st==='in',team=inn&&ACC.team,on=!!(m&&m.on)&&
     (m.backEn||m.backKm?'<div class="pmb">'+esc(m.backKm||'')+(m.backKm&&m.backEn?' · ':'')+esc(m.backEn||'')+'</div>':'')+
     (chat?'<button type="button" class="pmchat" data-pmchat><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12z"/></svg><span>អ្នកនៅតែអាចជជែកជាមួយក្រុមការងាររបស់យើងបាន។<small>You can still chat with our team.</small></span></button>':'')+
     (m.contacts!==false&&R.length?'<div class="pmcon"><b>ទាក់ទងយើង · Contact us</b>'+R.map(function(r){var v=String(Lk[r[0]]);return '<a target="_blank" rel="noopener" href="'+esc(pmLink(r[0],v))+'">'+esc(r[1])+'<small>'+esc(v.replace(/^https?:\/\/(www\.)?/,''))+'</small></a>'}).join('')+'</div>':'')+
-    (inn?'<button type="button" class="pmlink" data-pmout>Sign out · ចាកចេញ</button>':'<button type="button" class="pmlink" data-pmteam>Team sign in · ចូលសម្រាប់ក្រុមការងារ</button>')+'</div>';
+    (inn?'<button type="button" class="pmlink" data-pmout>Sign out · ចាកចេញ</button>':'')+'</div>';
   var b=el.querySelector('[data-pmchat]');if(b)b.onclick=function(){openChat()};
   b=el.querySelector('[data-pmout]');if(b)b.onclick=function(){signOut()};
-  b=el.querySelector('[data-pmteam]');if(b)b.onclick=function(){try{sessionStorage.setItem('pm-signin','1')}catch(e){}pmDraw()}}
+}
 function drawAll(){var inn=ACC.st==='in',lk=inn&&isLocked();try{pmDraw()}catch(e){}
   document.body.classList.toggle('out',!inn);document.body.classList.toggle('cust',inn&&!ACC.team);document.body.classList.toggle('team',inn&&ACC.team);document.body.classList.toggle('locked',lk);
   $('authCard').hidden=inn;$('authLoad').hidden=ACC.st!=='load';$('authForm').hidden=ACC.st==='load'||ACC.st==='err';$('authErr').hidden=ACC.st!=='err';
