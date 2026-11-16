@@ -2743,8 +2743,8 @@ function postAppForm(){
     L.sort(function(a,b){return (b.req?1:0)-(a.req?1:0)||((b.profile||{}).at||0)-((a.profile||{}).at||0)});
     var h='<details class="pahow"><summary>How to add a new customer as a Tester</summary><ol><li>Tap <b>Open App roles</b> (opens your Facebook app).</li><li>Tap <b>Add People</b>, choose <b>Tester</b>, and paste the customer\'s Facebook link or name.</li><li>Come back here and tick <b>Added as Tester</b>.</li><li>Tell the customer to open <b>developers.facebook.com/requests</b> and tap <b>Accept</b>.</li></ol>'+
       (CF.fbAppId?'<a class="btn sm" target="_blank" rel="noopener" href="https://developers.facebook.com/apps/'+esc(CF.fbAppId)+'/roles/roles/">'+I('ext')+' Open App roles</a>':'<small style="color:var(--muted)">Add your Facebook App ID in Plans and prices first.</small>')+'</details>';
-    if(!L.length){body.innerHTML='<div class="pasplit"><div>'+h+'<small style="color:var(--muted)">No customers found.</small></div><div class="paside'+(SIDE?'':' none')+'" data-paside-box>'+sideHtml()+'</div></div>';return}
-    h+='<p class="panote">'+L.length+' shown</p><div class="palist">'+L.map(function(x){var p=x.profile||{},pl=x.plan,on=pl&&+pl.until>now,q=x.req,lk=locked(x),nd=Object.keys(x.devices||{}).length;
+    if(!L.length){body.innerHTML=h+'<div class="pasplit"><div><small style="color:var(--muted)">No customers found.</small></div><div class="paside'+(SIDE?'':' none')+'" data-paside-box>'+sideHtml()+'</div></div>';return}
+    var hd=h+'<p class="panote">'+L.length+' shown</p>';h='<div class="palist">'+L.map(function(x){var p=x.profile||{},pl=x.plan,on=pl&&+pl.until>now,q=x.req,lk=locked(x),nd=Object.keys(x.devices||{}).length;
       if(x.deleted)return goneCard(x);
       return '<div class="pacard'+(q?' req':'')+(SIDE&&SIDE.uid===x.uid?' sel':'')+'"><div class="pahd"><span><b>'+esc(p.name||p.email||'(no name)')+'</b><small>'+esc(p.email||'')+(p.phone?' · '+esc(p.phone):'')+(p.at?' · joined '+paDay(p.at):'')+'</small></span>'+
         (p.fb?'<a class="btn sm soft" target="_blank" rel="noopener" href="'+esc(/^https?:/.test(p.fb)?p.fb:'https://www.facebook.com/'+p.fb)+'">'+I('facebook')+' Profile</a>':'')+'</div>'+
@@ -2759,14 +2759,14 @@ function postAppForm(){
         (on?'<button class="btn sm del" type="button" data-pastop="'+esc(x.uid)+'">Stop plan</button>':'')+
         (q?'<button class="btn sm soft" type="button" data-panoreq="'+esc(x.uid)+'">Not paid</button>':'')+'</div>'+
         '<div class="paact">'+(lk?'<button class="btn sm soft" type="button" data-paunlock="'+esc(x.uid)+'">Unpause</button>':'<button class="btn sm soft" type="button" data-patog="lock:'+esc(x.uid)+'">Pause account</button>')+
-        '<button class="btn sm soft" type="button" data-patog="msg:'+esc(x.uid)+'">'+I('chat')+' Message</button>'+sideBtns(x.uid)+'</div>'+
+        '<button class="btn sm soft" type="button" data-patog="msg:'+esc(x.uid)+'">'+I('chat')+' Message</button>'+sideBtns(x.uid)+(open['mdel:'+x.uid]?'<button class="btn sm del" type="button" data-pamdel="'+esc(x.uid)+'">Tap again to mark as deleted</button>':'<button class="btn sm soft" type="button" data-patog="mdel:'+esc(x.uid)+'">Mark as deleted</button>')+'</div>'+
         lockBox(x.uid)+msgBox(x.uid)+'</div>'}).join('')+'</div>';
-    body.innerHTML='<div class="pasplit"><div>'+h+'</div><div class="paside'+(SIDE?'':' none')+'" data-paside-box>'+sideHtml()+'</div></div>'}
+    body.innerHTML=hd+'<div class="pasplit"><div>'+h+'</div><div class="paside'+(SIDE?'':' none')+'" data-paside-box>'+sideHtml()+'</div></div>'}
   function sideFit(sb){if(innerWidth<900){sb.style.top='';sb.style.maxHeight='';return}var pt=m.querySelector('.patop'),bd=sb.closest('.bd'),st=pt&&getComputedStyle(pt).position==='sticky'?pt.offsetHeight-6:0;
     sb.style.top=st+'px';if(bd)sb.style.maxHeight=Math.max(260,bd.clientHeight-st-28)+'px'}
   function sideBtns(uid){return '<button class="btn sm soft'+(SIDE&&SIDE.uid===uid&&SIDE.k==='dev'?' on':'')+'" type="button" data-paside="dev:'+esc(uid)+'">Devices</button><button class="btn sm soft'+(SIDE&&SIDE.uid===uid&&SIDE.k==='hist'?' on':'')+'" type="button" data-paside="hist:'+esc(uid)+'">Posting history</button>'}
   function goneCard(x){var p=x.profile||{},dl=x.deleted||{};
-    return '<div class="pacard'+(SIDE&&SIDE.uid===x.uid?' sel':'')+'"><div class="pagone"><span><b>Deleted account</b> · deleted by the customer'+(dl.at?' on '+paDay(dl.at):'')+(x.hidden?' · removed from the list':'')+'</span></div>'+
+    return '<div class="pacard'+(SIDE&&SIDE.uid===x.uid?' sel':'')+'"><div class="pagone"><span><b>Deleted account</b> · deleted by '+(dl.by==='admin'?'our team':'the customer')+(dl.at?' on '+paDay(dl.at):'')+(x.hidden?' · removed from the list':'')+'</span></div>'+
       '<div class="pahd"><span><b>'+esc(p.name||p.email||dl.email||'(no name)')+'</b><small>'+esc(p.email||dl.email||'')+(p.phone?' · '+esc(p.phone):'')+(p.at?' · joined '+paDay(p.at):'')+'</small></span></div>'+
       (p.cid?'<div class="pacid"><span>Customer ID</span><b>'+esc(p.cid)+'</b><button class="btn sm soft" type="button" data-pacopy="'+esc(p.cid)+'">Copy</button></div>':'')+
       '<div class="pameta"><span>Posts made: <b>'+(+x.used||0)+'</b></span>'+(x.plan?'<span>Last plan: <b>'+esc(pkn(x.plan.pkg))+'</b> until '+paDay(x.plan.until)+'</span>':'<span>Free</span>')+'</div>'+
@@ -2818,6 +2818,7 @@ function postAppForm(){
       draw();var sb=m.querySelector('[data-paside-box]');if(sb)sb.scrollTop=0;return}
     if(d.pahf){HF=d.pahf;draw();return}
     if(d.pahide){window.TheanAdmin.postUser(d.pahide,{hidden:true}).then(function(){open['hide:'+d.pahide]=false;if(SIDE&&SIDE.uid===d.pahide)SIDE=null;toast('Removed from the list. Find it again under "Removed from list".')}).catch(function(err){toast(permErr(err))});return}
+    if(d.pamdel){var mu=U[d.pamdel]||{};window.TheanAdmin.postUser(d.pamdel,{deleted:{at:Date.now(),email:((mu.profile||{}).email||''),by:'admin'},plan:null,req:null}).then(function(){open['mdel:'+d.pamdel]=false;toast('Marked as deleted. The records are kept.')}).catch(function(err){toast(permErr(err))});return}
     if(d.paunhide){window.TheanAdmin.postUser(d.paunhide,{hidden:null}).then(function(){toast('Back in the list')}).catch(function(err){toast(permErr(err))});return}
     if(d.pahist){var hk='hist:'+d.pahist;open[hk]=!open[hk];if(open[hk]&&HL[d.pahist]===undefined){window.TheanAdmin.postLog(d.pahist).then(function(v){HL[d.pahist]=v||null;draw()}).catch(function(err){HL[d.pahist]=null;toast(permErr(err));draw()})}draw();return}
     if(d.padevdel){if(!confirm('Remove this device? That phone is signed out of the posting app the next time it opens.'))return;window.TheanAdmin.postUser(d.padevdel,{['devices/'+d.dev]:null}).then(function(){toast('Device removed')}).catch(function(err){toast(permErr(err))});return}
