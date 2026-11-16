@@ -906,7 +906,7 @@ $('authRetry').onclick=function(){ACC.st='load';drawAll();accStart()};
 function clearKeys(){['token','pageId','pageName','igId','igUser','fbLogin','fbPage','tgToken','tgChat','tgTitle'].forEach(function(k){delete C[k]});save();KS='none';drawKey()}
 function signOut(){if(!FBX)return;if(!ACC.team)clearKeys();chStop();FBX.A.signOut(FBX.auth);['me','settings','plans','chat'].forEach(function(id){$(id).hidden=true})}
 
-function accOff(){ACC.loaded=false;ACC.devBlock=false;ACC.devTouched=false;ACC.devAdding=false;ACC.devices=null;ACC.devx=null;ACC.cidBusy=false;ACC.offs.forEach(function(f){try{f()}catch(e){}});ACC.offs=[];ACC.team=false;ACC.prof=null;ACC.used=0;ACC.plan=null;ACC.req=null;ACC.lock=null}
+function accOff(){ACC.loaded=false;ACC.seen=false;ACC.devBlock=false;ACC.devTouched=false;ACC.devAdding=false;ACC.devices=null;ACC.devx=null;ACC.cidBusy=false;ACC.offs.forEach(function(f){try{f()}catch(e){}});ACC.offs=[];ACC.team=false;ACC.prof=null;ACC.used=0;ACC.plan=null;ACC.req=null;ACC.lock=null}
 function accOn(u){accOff();
   FBX.d.get(R('agents/'+u.uid)).then(function(s){return s.exists()},function(){return false}).then(function(team){
     if(ACC.user!==u)return;ACC.team=team;ACC.st='in';
@@ -946,7 +946,7 @@ $('me').addEventListener('click',function(e){if(e.target===$('me')||e.target.clo
   if(a==='chat'){$('me').hidden=true;openChat();return}
   if(a==='out'){signOut();return}
   if(a==='copyid'){try{navigator.clipboard.writeText(myCid());toast(t('copied'))}catch(x){}return}
-  if(a==='edit'||a==='pw'||a==='del'){MEF=MEF===a?'':a;msg('m10','','');drawMe();return}
+  if(a==='edit'||a==='pw'||a==='del'||a==='devs'){MEF=MEF===a?'':a;msg('m10','','');drawMe();return}
   if(a==='saveEdit'){var nm=$('meN').value.trim(),ph=$('meP').value.trim(),fl=$('meF').value.trim();if(!nm){msg('m10','bad',esc(t('aeNeedName')));return}
     b.disabled=true;FBX.d.update(R('postusers/'+ACC.user.uid+'/profile'),{email:ACC.user.email||'',name:nm.slice(0,90),phone:ph.slice(0,40),fb:fl.slice(0,290)}).then(function(){MEF='';msg('m10','ok',esc(t('saved')));drawMe()}).catch(function(err){b.disabled=false;msg('m10','bad',esc(authErr(err)))});return}
   if(a==='savePw'){var o=$('meO').value,n=$('meNw').value;if(n.length<6){msg('m10','bad',esc(t('aeWeak')));return}b.disabled=true;
@@ -957,16 +957,15 @@ $('me').addEventListener('click',function(e){if(e.target===$('me')||e.target.clo
     .then(function(){clearKeys();return FBX.A.deleteUser(u)}).then(function(){$('me').hidden=true;toast(t('delDone'))}).catch(function(err){b.disabled=false;msg('m10','bad',esc(authErr(err)))})}});
 function drawMe(){var p=ACC.prof||{},em=ACC.user&&ACC.user.email||'',h='';
   h+='<div class="mehd"><div class="av big'+(ACC.team?' own':'')+'">'+esc((myName().charAt(0)||'T').toUpperCase())+'</div><div><b>'+esc(myName())+'</b><small>'+esc(em)+'</small></div></div>';
-  if(myCid())h+='<div class="cidbox"><span>'+esc(t('cidL'))+'</span><b>'+esc(myCid())+'</b><button class="btn sm soft" data-mea="copyid">'+esc(t('copy'))+'</button><small>'+esc(t('cidNote'))+'</small></div>';
+  if(myCid())h+='<div class="cidbox"><span>'+esc(t('cidL'))+'</span><b>'+esc(myCid())+'</b><button class="btn sm soft" data-mea="copyid">'+esc(t('copy'))+'</button></div>';
   if(ACC.team)h+='<div class="mecard prem"><b>'+esc(t('ownerT'))+'</b><span>'+esc(t('ownerS'))+'</span></div>';
   else{var st=isLocked()?t('lockShort'):planOn()?t('pbPlan',{p:pkName(ACC.plan.pkg),d:fday(+ACC.plan.until)}):t('freeAcct',{n:freeLeft(),f:freeTotal()});
     var left=planOn()?Math.ceil((+ACC.plan.until-Date.now())/864e5):0;
     h+='<div class="mecard'+(planOn()?' prem':'')+'"><b>'+esc(planOn()?pkName(ACC.plan.pkg):t('freePlan'))+'</b><span>'+esc(st)+(planOn()?' · '+esc(t('daysLeft',{n:left})):'')+'</span>'+
       '<span class="inc">'+esc(t('canPostTo'))+' '+esc(allowed().map(function(d){return t({fb:'dFbPost',fbs:'dFbStory',ig:'dIgPost',igs:'dIgStory',tg:'dTg'}[d])}).join(', '))+'</span>'+
-      '<button class="btn sm" data-plans>'+esc(t(planOn()?'renew':'seePlans'))+'</button></div>'+
-      '<div class="mecard" style="margin-top:10px"><b>'+esc(t('myDevs',{a:Object.keys(ACC.devices||{}).length,b:devLimit()}))+'</b><ul class="devul">'+devList()+'</ul><span>'+esc(t('devNote'))+'</span></div>'}
+      '<button class="btn sm" data-plans>'+esc(t(planOn()?'renew':'seePlans'))+'</button></div>'}
   var row=function(a,k,cls){return '<button class="merow'+(cls||'')+'" data-mea="'+a+'"><span>'+esc(t(k))+'</span><i></i></button>'};
-  h+='<div class="melist">'+row('set','postSettings')+row('chat','helpChat')+row('edit','editProfile')+
+  h+='<div class="melist">'+(ACC.team?'':'<button class="merow" data-mea="devs"><span>'+esc(t('myDevs',{a:Object.keys(ACC.devices||{}).length,b:devLimit()}))+'</span><i></i></button>'+(MEF==='devs'?'<div class="meform"><ul class="devul">'+devList()+'</ul><p class="note" style="margin:4px 0 0">'+esc(t('devNote'))+'</p></div>':''))+row('set','postSettings')+row('chat','helpChat')+row('edit','editProfile')+
     (MEF==='edit'?'<div class="meform"><label class="f" for="meN">'+esc(t('aName'))+'</label><input type="text" id="meN" value="'+esc(p.name||'')+'">'+
       '<label class="f" for="meP">'+esc(t('phone'))+'</label><input type="text" id="meP" inputmode="tel" value="'+esc(p.phone||'')+'">'+
       '<label class="f" for="meF">'+esc(t('aFb'))+'</label><input type="url" id="meF" autocapitalize="off" value="'+esc(p.fb||'')+'">'+
