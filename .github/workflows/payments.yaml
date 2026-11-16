@@ -167,8 +167,8 @@ jobs:
               ch = db('chats/' + uid)
               ts = {'.sv': 'timestamp'}
               if not ch:
-                  db('chats/' + uid, 'PUT', {'visitorUid': uid, 'status': 'bot', 'lang': 'en', 'name': (prof.get('name') or prof.get('email') or 'Customer') + ' · Posting app',
-                                             'contact': prof.get('email', ''), 'page': '/post', 'createdAt': ts, 'updatedAt': ts, 'lastMsg': '', 'lastFrom': '',
+                  db('chats/' + uid, 'PUT', {'visitorUid': uid, 'status': 'bot', 'lang': 'en', 'name': (prof.get('name') or prof.get('email') or 'Customer') + ' · Thean Studio',
+                                             'contact': prof.get('email', ''), 'page': '/publish', 'createdAt': ts, 'updatedAt': ts, 'lastMsg': '', 'lastFrom': '',
                                              'unreadAgent': 0, 'unreadVisitor': 0})
               db('messages/' + uid, 'POST', {'from': 'bot', 'text': customer_text[:2000], 'ts': ts})
               db('messages/' + uid, 'POST', {'from': 'system', 'text': staff_text[:2000], 'ts': ts, 'staff': True})
