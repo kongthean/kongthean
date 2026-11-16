@@ -1,5 +1,5 @@
 name: Send notifications
-# Every 5 minutes: sends the notifications you queued in admin to every phone that turned them on.
+# Every 5 minutes: sends the notifications you queued in admin to visitors, and alerts our team's phones about new live chats, customer messages and payments.
 on:
   schedule:
     - cron: '*/5 * * * *'
@@ -134,14 +134,14 @@ jobs:
               return str(o or '').strip()
 
 
-          def main():
+          def send_queue():
               if not KEY or not VAPID:
                   raise RuntimeError('A secret is missing in GitHub: FIREBASE_KEY and VAPID_PRIVATE_KEY are both needed.')
               queue = db('push/queue') or {}
               todo = sorted([(k, v) for k, v in queue.items() if isinstance(v, dict) and v.get('status') == 'queued'],
                             key=lambda kv: kv[1].get('at', 0))
               if not todo:
-                  print('Nothing to send.')
+                  print('Nothing to send to visitors.')
                   return
               subs = db('push/subs') or {}
               priv, pub = vapid_keys()
@@ -178,6 +178,75 @@ jobs:
               if gone:
                   print('Removed %d phones that turned notifications off.' % len(gone))
 
+
+
+          # ---------- alerts for our team's phones (new live chats, customer messages, payments) ----------
+          def q(path, **params):
+              global AUTH
+              AUTH = AUTH or db_auth()
+              qs = '&'.join('%s=%s' % (k, urllib.parse.quote(json.dumps(v))) for k, v in params.items())
+              st, body = http(DB + '/' + path + '.json?' + AUTH + '&' + qs)
+              if st >= 300:
+                  raise RuntimeError('Database error %s: %s' % (st, body))
+              return body or {}
+
+
+          def staff_alerts():
+              staff = db('push/staff') or {}
+              subs = [(uid, k, v) for uid, d in staff.items() if isinstance(d, dict) for k, v in d.items() if isinstance(v, dict)]
+              last = db('push/staffLast')
+              db('push/staffLast', 'PUT', NOW)
+              if not subs:
+                  print('No team phones have alerts turned on.')
+                  return
+              if not isinstance(last, (int, float)) or last < NOW - 3 * 3600 * 1000:
+                  last = NOW - 15 * 60 * 1000
+              alerts = []
+              for cid, c in (q('chats', orderBy='updatedAt', startAt=last + 1) or {}).items():
+                  if not isinstance(c, dict):
+                      continue
+                  name = (c.get('name') or 'Customer')[:60]
+                  req = c.get('requestedAt') or 0
+                  if c.get('status') == 'waiting' and isinstance(req, (int, float)) and req > last:
+                      alerts.append(('Live chat request', name + ': ' + str(c.get('lastMsg') or 'wants to talk to an agent')[:120], '/agent', 'req-' + cid))
+                  elif c.get('lastFrom') == 'visitor' and c.get('status') in ('waiting', 'assigned'):
+                      alerts.append(('New message from ' + name, str(c.get('lastMsg') or '')[:150], '/agent', 'msg-' + cid))
+              for pid, p in (q('pays', orderBy='at', startAt=last + 1) or {}).items():
+                  if not isinstance(p, dict):
+                      continue
+                  res = {'auto': 'Turned on automatically, please check your bank', 'review': 'Needs your check'}.get(p.get('result'), p.get('result') or '')
+                  amt = p.get('amt') or 0
+                  money = ('{:,.0f} KHR'.format(amt)) if p.get('cur') == 'KHR' else ('$%.2f' % amt).replace('.00', '')
+                  alerts.append(('Payment: ' + money, (p.get('name') or p.get('email') or 'Customer') + ' · ' + res, '/admin', 'pay-' + pid))
+              if not alerts:
+                  print('No new team alerts.')
+                  return
+              if len(alerts) > 4:
+                  alerts = alerts[:3] + [('%d more updates' % (len(alerts) - 3), 'Open the inbox and admin to see everything.', '/agent', 'more')]
+              priv, pub = vapid_keys()
+              gone = []
+              for title, body, url, tag in alerts:
+                  data = json.dumps({'title': title[:80], 'body': body[:300], 'url': SITE + url, 'tag': tag}, ensure_ascii=False).encode('utf-8')
+                  for uid, k, sub in subs:
+                      try:
+                          st = send_one(sub, data, priv, pub)
+                      except Exception as e:
+                          print('  error for one team phone:', str(e)[:120])
+                          st = 0
+                      if st in (404, 410):
+                          gone.append((uid, k))
+              for uid, k in set(gone):
+                  db('push/staff/%s/%s' % (uid, k), 'DELETE')
+              print('Sent %d team alert(s) to %d phone(s).' % (len(alerts), len(subs)))
+
+
+          def main():
+              if not KEY or not VAPID:
+                  raise RuntimeError('A secret is missing in GitHub: FIREBASE_KEY and VAPID_PRIVATE_KEY are both needed.')
+              try:
+                  send_queue()
+              finally:
+                  staff_alerts()
 
           try:
               main()
