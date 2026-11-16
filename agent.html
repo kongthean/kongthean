@@ -267,7 +267,7 @@ const SITE={S:{}};let BOTLANG='en';
 const BOT=(function(T,L){
 /* ---------------- smart bot ---------------- */
 function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')}
-const CAPS={en:'I can assist you with:\n• Planning your trip day by day\n• Destinations, temples and the best time to visit\n• Hotels and restaurants\n• Khmer culture, festivals, dances and food\n• Travel tips and how to contact us\n\nJust type your question, or tap «Talk to Live Agent» to chat with our team.',km:'ខ្ញុំអាចជួយអ្នកអំពី៖\n• រៀបចំកាលវិភាគដំណើរតាមថ្ងៃនីមួយៗ\n• គោលដៅទេសចរណ៍ ប្រាសាទ និងពេលល្អសម្រាប់ទស្សនា\n• សណ្ឋាគារ និងភោជនីយដ្ឋាន\n• វប្បធម៌ ពិធីបុណ្យ របាំ និងម្ហូបខ្មែរ\n• គន្លឹះធ្វើដំណើរ និងរបៀបទាក់ទងយើង\n\nសូមសរសេរសំណួររបស់អ្នក ឬចុច «និយាយជាមួយភ្នាក់ងារផ្ទាល់» ដើម្បីជជែកជាមួយក្រុមការងាររបស់យើង។'};
+const CAPS={en:'I can assist you with:\n• Planning your trip day by day\n• Destinations, temples and the best time to visit\n• Hotels and restaurants\n• Khmer culture, festivals, dances and food\n• Travel tips and how to contact us\n\nJust type your question, or tap «Talk to Live Agent» to chat with our team.',km:'ខ្ញុំអាចជួយអ្នកអំពី៖\n• រៀបចំកាលវិភាគដំណើរតាមថ្ងៃនីមួយៗ\n• គោលដៅទេសចរណ៍ ប្រាសាទ និងពេលល្អសម្រាប់ទស្សនា\n• សណ្ឋាគារ និងភោជនីយដ្ឋាន\n• វប្បធម៌ ពិធីបុណ្យ របាំ និងម្ហូបខ្មែរ\n• គន្លឹះធ្វើដំណើរ និងរបៀបទាក់ទងយើង\n\nសូមសរសេរសំណួររបស់អ្នក ឬចុច «ជជែកជាមួយភ្នាក់ងារ» ដើម្បីជជែកជាមួយក្រុមការងាររបស់យើង។'};
 function hello(lg){const h=new Date().getHours();if(lg==='km')return (h<12?'អរុណសួស្ដី':h<18?'ទិវាសួស្ដី':'សាយណ្ហសួស្ដី')+'! ខ្ញុំជាជំនួយការនិម្មិតរបស់អ្នកថ្ងៃនេះ។ តើខ្ញុំអាចជួយអ្វីអ្នកបានខ្លះ?';return (h<12?'Good morning':h<18?'Good afternoon':'Good evening')+"! I'm your virtual assistant today. How can I help you?"}
 const hasKm=s=>/[ក-៿]/.test(s);
 function tr(o,lg){if(!o)return '';if(typeof o==='string')return o;return o[lg]||o.en||o.km||''}
@@ -279,7 +279,7 @@ const KW={
  bye:['bye','goodbye','see you','លាហើយ','លាសិនហើយ'],
  greet:['hello','hi ','hey','good morning','good afternoon','sus dey','សួស្ដី','ជម្រាបសួរ','សួស្តី'],
  thanks:['thank','thx','អរគុណ'],
- agent:['agent','human','real person','talk to someone','speak to someone','talk to a person','speak to a person','talk to agent','live agent','live chat','staff member','representative','customer service','support team','contact agent','talk to your team','speak with your team','ភ្នាក់ងារផ្ទាល់','បុគ្គលិក','និយាយផ្ទាល់','call me','ភ្នាក់ងារ','និយាយជាមួយមនុស្ស','និយាយជាមួយភ្នាក់ងារ','និយាយជាមួយបុគ្គលិក'],
+ agent:['agent','human','real person','talk to someone','speak to someone','talk to a person','speak to a person','talk to agent','live agent','live chat','staff member','representative','customer service','support team','contact agent','talk to your team','speak with your team','ភ្នាក់ងារផ្ទាល់','បុគ្គលិក','និយាយផ្ទាល់','call me','ភ្នាក់ងារ','និយាយជាមួយមនុស្ស','ជជែកជាមួយភ្នាក់ងារ','និយាយជាមួយបុគ្គលិក'],
  t1:['best time','when to','season','weather','rain','month','hot','cold','climate','រដូវ','ពេលល្អ','ពេលណា','អាកាសធាតុ','ភ្លៀង'],
  t2:['visa','passport','evisa','ទិដ្ឋាការ','លិខិតឆ្លងដែន'],
  t3:['money','dollar','riel','atm','currency','cash','pay','khqr','លុយ','ប្រាក់','ដុល្លារ','រៀល'],
@@ -308,7 +308,7 @@ function placeAnswer(p,lg){const km=lg==='km';let s=''+tr(p.title,lg)+' · '+tr(
 function listAnswer(arr,lg,head,link){return {text:head+'\n'+arr.map(p=>'• '+tr(p.title,lg)+' ('+tr(p.region,lg)+')').join('\n'),links:[link].concat(arr.slice(0,3).map(p=>[tr(p.title,lg),'#/place/'+p.id]))}}
 function bot0(text){
   const lg=hasKm(text)?'km':L(),km=lg==='km',t=' '+norm(text)+' ',S=T.S,Lk=S.links||{};
-  if(has(t,KW.agent))return {text:km?'ប្រាកដណាស់! ចុចប៊ូតុង «និយាយជាមួយភ្នាក់ងារផ្ទាល់» ខាងក្រោម ហើយយើងនឹងភ្ជាប់អ្នកទៅភ្នាក់ងារ។':'Of course! Tap «Talk to Live Agent» below and we will connect you with an agent.',live:true};
+  if(has(t,KW.agent))return {text:km?'ប្រាកដណាស់! ចុចប៊ូតុង «ជជែកជាមួយភ្នាក់ងារ» ខាងក្រោម ហើយយើងនឹងភ្ជាប់អ្នកទៅភ្នាក់ងារ។':'Of course! Tap «Talk to Live Agent» below and we will connect you with an agent.',live:true};
   if(has(t,KW.hotel)){const st=(S.stays||[]);const m=st.find(s=>t.includes(norm(tr(s.region,'en')))||t.includes(norm(tr(s.region,'km'))));
     if(m)return {text:''+tr(m.title,lg)+'\n'+tr(m.text,lg),links:[[km?'កន្លែងស្នាក់នៅទាំងអស់':'All areas to stay','#/p/stay']]};
     return {text:(km?'កន្លែងស្នាក់នៅតាមតំបន់៖\n':'Where we suggest staying:\n')+st.map(s=>'• '+tr(s.title,lg)).join('\n')+(km?'\n\nប្រាប់យើងពីខេត្តដែលអ្នកនឹងទៅ យើងនឹងណែនាំបន្ថែម។':'\n\nTell us which province you are going to and we can say more.'),links:[[km?'មើលទំព័រសណ្ឋាគារ':'See the hotel page','#/p/stay']]}}
@@ -429,7 +429,7 @@ function buildPlan(n,I,mon,lg){
     const fs=(T.S.festivals||[]).filter(f=>norm(tr(f.when,'en')).includes(MON[mon][0])||tr(f.when,'km').includes(MON[mon][1]));
     if(fs.length)txt+='\n'+(km?'ពិធីបុណ្យខែនេះ៖ ':'Festival that month: ')+fs.map(f=>tr(f.title,lg)).join(', ')}
   if(n>=14)txt+='\n\n'+(km?'សម្រាប់ដំណើរវែងជាងនេះ ក្រុមការងាររបស់យើងអាចរៀបចំជូនបាន។':'For a longer trip, our team can design it with you.');
-  txt+='\n\n'+(km?'ចង់ឱ្យក្រុមការងាររបស់យើងកែសម្រួល កក់សណ្ឋាគារ ឬរកអ្នកបើកបរ? ចុច «និយាយជាមួយភ្នាក់ងារផ្ទាល់»។':'Want our team to adjust it, book hotels or find a driver? Tap «Talk to Live Agent».');
+  txt+='\n\n'+(km?'ចង់ឱ្យក្រុមការងាររបស់យើងកែសម្រួល កក់សណ្ឋាគារ ឬរកអ្នកបើកបរ? ចុច «ជជែកជាមួយភ្នាក់ងារ»។':'Want our team to adjust it, book hotels or find a driver? Tap «Talk to Live Agent».');
   const P=T.S.places||[],links=[];[...new Set(ids)].forEach(id=>{const p=P.find(x=>x.id===id);if(p&&links.length<4)links.push([tr(p.title,lg),'#/place/'+id])});
   return {text:txt.slice(0,1990),links,live:true,plan:true}}
 let PLAN=null;
@@ -516,7 +516,7 @@ const CLOSE_DEF=[
 const TRANSFER={en:'Please hold on a moment. We are transferring you to another agent who can help you further.',km:'សូមរង់ចាំបន្តិច។ យើងកំពុងផ្ទេរអ្នកទៅភ្នាក់ងារម្នាក់ទៀត ដែលអាចជួយអ្នកបន្ថែម។'};
 const JOIN_DEF={en:'{name} has joined the chat.',km:'{name} បានចូលរួមការជជែក។'};
 const BUSY={en:'Sorry, all our agents are busy right now. Please try again later. You can keep chatting with me in the meantime.',km:'សូមអភ័យទោស ភ្នាក់ងាររបស់យើងទាំងអស់កំពុងរវល់នៅពេលនេះ។ សូមព្យាយាមម្ដងទៀតនៅពេលក្រោយ។ អ្នកអាចបន្តជជែកជាមួយខ្ញុំក្នុងពេលនេះ។'};
-const BTN={en:{live:'Talk to Live Agent',more:'More Options'},km:{live:'និយាយជាមួយភ្នាក់ងារផ្ទាល់',more:'ជម្រើសផ្សេងៗ'}};
+const BTN={en:{live:'Talk to Live Agent',more:'More Options'},km:{live:'ជជែកជាមួយភ្នាក់ងារ',more:'ជម្រើសផ្សេងៗ'}};
 const ekey=e=>String(e||'').toLowerCase().split('.').join(',');
 const isOwner=()=>!!agent&&(agent.role==='owner'||!agent.role);
 const ENDED={en:'Your chat session has ended. Thank you for contacting us today.',km:'វគ្គជជែករបស់អ្នកបានបញ្ចប់។ អរគុណសម្រាប់ការទាក់ទងមកយើងនៅថ្ងៃនេះ។'};
