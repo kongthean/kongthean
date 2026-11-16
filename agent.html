@@ -199,6 +199,8 @@ label.f input,label.f textarea{border:1px solid var(--line);border-radius:12px;p
 .callrow .crec{display:inline-flex;gap:4px;align-items:center;font-size:.82rem;margin:4px 10px 0 0;color:var(--accent)}
 .callrow .crec .i{width:14px;height:14px}
 .qmode{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}.qmode button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:10px 12px;text-align:left;cursor:pointer;font:inherit;font-weight:600}.qmode button small{display:block;font-weight:400;color:var(--muted);font-size:.78rem;margin-top:2px}.qmode button.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.mfile{display:block;margin-top:6px;max-width:260px}.mfile.img img{width:100%;max-height:280px;object-fit:cover;border-radius:12px;border:1px solid var(--line);display:block}.mfile.vid{width:100%;max-height:280px;border-radius:12px;background:#000}
+.mfile.doc{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface,#fff);color:inherit;text-decoration:none;font-size:.86rem;overflow-wrap:anywhere}.mfile.doc small{opacity:.65}#att.busy{opacity:.5}
 </style>
 </head>
 <body>
@@ -685,13 +687,15 @@ function cur(){return chats.find(x=>x.id===sel)}
 function drawConv(){
   const v=root.querySelector('#conv');if(!v)return;const c=cur();
   if(!c){v.innerHTML='<div class="blank"><div><div class="big">'+I('chat')+'</div><p>Pick a chat on the left.<br>New requests make a sound and show an alert.</p></div></div>';return}
-  v.innerHTML='<div class="ch" id="chh"></div><div class="info" id="inf"></div><div class="msgs" id="msgs"></div><div id="acc"></div><div class="qr" id="qr"></div><button type="button" class="aib" id="aib" hidden>'+I('spark')+' Help me reply</button><form class="comp" id="comp" hidden><button class="ib'+(showQuick?' on':'')+'" type="button" id="qt" title="Quick replies" aria-label="Quick replies">'+I('bolt')+'</button><textarea rows="1" id="ta" placeholder="Reply to the visitor…" aria-label="Reply"></textarea><button class="ib pri" type="submit" aria-label="Send">'+I('send')+'</button></form>';
+  v.innerHTML='<div class="ch" id="chh"></div><div class="info" id="inf"></div><div class="msgs" id="msgs"></div><div id="acc"></div><div class="qr" id="qr"></div><button type="button" class="aib" id="aib" hidden>'+I('spark')+' Help me reply</button><form class="comp" id="comp" hidden><button class="ib'+(showQuick?' on':'')+'" type="button" id="qt" title="Quick replies" aria-label="Quick replies">'+I('bolt')+'</button><button class="ib" type="button" id="att" title="Send a photo or file" aria-label="Send a photo or file"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5l-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l8.6-8.6a3.7 3.7 0 0 1 5.2 5.2l-8.6 8.6a1.8 1.8 0 0 1-2.6-2.6l7.9-7.9"/></svg></button><input type="file" id="fin" hidden accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip"><textarea rows="1" id="ta" placeholder="Reply to the visitor…" aria-label="Reply"></textarea><button class="ib pri" type="submit" aria-label="Send">'+I('send')+'</button></form>';
   const ta=v.querySelector('#ta');
-  v.querySelector('#comp').onsubmit=e=>{e.preventDefault();sendMsg(ta.value)};
-  ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&window.innerWidth>820){e.preventDefault();sendMsg(ta.value)}});
+  const fx=()=>ta.dataset.form?{form:ta.dataset.form}:undefined;
+  v.querySelector('#comp').onsubmit=e=>{e.preventDefault();sendMsg(ta.value,fx())};
+  ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&window.innerWidth>820){e.preventDefault();sendMsg(ta.value,fx())}});
   ta.addEventListener('input',()=>{ta.style.height='';ta.style.height=Math.min(140,ta.scrollHeight)+'px'});
   v.querySelector('#qt').onclick=()=>{showQuick=!showQuick;setPref('qr',showQuick);v.querySelector('#qt').classList.toggle('on',showQuick);drawQuick()};
   v.querySelector('#aib').onclick=aiDraft;
+  {const att=v.querySelector('#att'),fin=v.querySelector('#fin');att.onclick=()=>fin.click();fin.onchange=()=>{const x=fin.files&&fin.files[0];fin.value='';if(x)sendFile(x)}}
   drawConvHead();drawMsgs();drawQuick();
 }
 function drawConvHead(){
@@ -718,7 +722,7 @@ function drawConvHead(){
 function tm(ts){const d=new Date(ms(ts));return d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}
 function drawMsgs(){
   const box=root.querySelector('#msgs');if(!box)return;const atEnd=box.scrollHeight-box.scrollTop-box.clientHeight<80;
-  box.innerHTML=msgs.map(m=>m.from==='system'?'<div class="sys">'+esc(m.text)+'</div>':'<div class="m '+(m.from==='visitor'?'vis':m.from)+(m.formReply?' freply':'')+'"><span class="by">'+(m.from==='visitor'?esc(vName(cur()||{id:'????'}))+(m.formReply?' · form answer':''):m.from==='bot'?'Bot':esc(m.agentName||'Agent'))+'</span>'+esc(m.text)+(m.form&&m.from!=='visitor'?'<span class="ftag">'+I('form')+(m.form==='report'?'Content report form sent':'Customer details form sent')+(msgs.some(x=>x.formReply===m.id)?' · answered':' · waiting for the customer')+'</span>':'')+(Array.isArray(m.imgs)&&m.imgs.length?'<span class="mimgs">'+m.imgs.map(u=>/^https:\/\//.test(u)?'<a href="'+esc(u)+'" target="_blank" rel="noopener"><img alt="Screenshot" src="'+esc(u)+'"></a>':'').join('')+'</span>':'')+(m.btns&&m.btns.length?'<span style="display:block;margin-top:6px;font-size:.75rem;opacity:.75">Buttons: '+m.btns.map(b=>esc(b.l)).join(' · ')+'</span>':'')+'<time>'+tm(m.ts)+'</time></div>').join('')+'<div class="typing" id="typ" hidden>Visitor is typing…</div>';
+  box.innerHTML=msgs.map(m=>m.from==='system'?'<div class="sys">'+esc(m.text)+'</div>':'<div class="m '+(m.from==='visitor'?'vis':m.from)+(m.formReply?' freply':'')+'"><span class="by">'+(m.from==='visitor'?esc(vName(cur()||{id:'????'}))+(m.formReply?' · form answer':''):m.from==='bot'?'Bot':esc(m.agentName||'Agent'))+'</span>'+esc(m.text)+(m.form&&m.from!=='visitor'?'<span class="ftag">'+I('form')+(m.form==='report'?'Content report form sent':'Customer details form sent')+(msgs.some(x=>x.formReply===m.id)?' · answered':' · waiting for the customer')+'</span>':'')+fileHtml(m.file)+(Array.isArray(m.imgs)&&m.imgs.length?'<span class="mimgs">'+m.imgs.map(u=>/^https:\/\//.test(u)?'<a href="'+esc(u)+'" target="_blank" rel="noopener"><img alt="Screenshot" src="'+esc(u)+'"></a>':'').join('')+'</span>':'')+(m.btns&&m.btns.length?'<span style="display:block;margin-top:6px;font-size:.75rem;opacity:.75">Buttons: '+m.btns.map(b=>esc(b.l)).join(' · ')+'</span>':'')+'<time>'+tm(m.ts)+'</time></div>').join('')+'<div class="typing" id="typ" hidden>Visitor is typing…</div>';
   if(atEnd||msgs.length<30)box.scrollTop=box.scrollHeight;drawConvHead();
 }
 function drawQuick(){
@@ -730,10 +734,11 @@ function drawQuick(){
   q.querySelectorAll('[data-ql]').forEach(b=>b.onclick=()=>{qLang=b.dataset.ql;drawQuick()});
   q.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{const x=quick[+b.dataset.q],c=cur();const want=qLang==='auto'?((c&&c.lang==='km')?'km':'en'):qLang;let t=want==='km'?(x.km||''):(x.en||'');
     if(!t){t=x.en||x.km||'';toast('This reply has no '+(want==='km'?'Khmer':'English')+' text yet. Tap Edit to add it. Sent in the other language for now.')}
-    if(x.act==='ticket'){if(c.ticket&&c.ticketStatus!=='closed'){sendMsg(t.split('{ticket}').join(fmtTicket(c.ticketCur||c.ticket)));return}
-      b.disabled=true;nextTicket().then(async tk=>{await DB.set('tickets/'+tk,{n:Number(tk),chatId:c.id,status:'open',kind:'chat',createdAt:TS,by:(agent&&agent.name)||'Agent'});await DB.update('chats/'+c.id,{ticket:tk,ticketCur:tk,ticketStatus:'open'});sendMsg(t.split('{ticket}').join(fmtTicket(tk)))}).catch(e=>toast('Could not create a ticket: '+(e.code||e.message))).finally(()=>{b.disabled=false});return}
-    if(x.act&&x.act.indexOf('form:')===0){sendMsg(t,{form:x.act.slice(5)});return}
-    if(x.send)sendMsg(t);else{const ta=root.querySelector('#ta');ta.value=t;ta.focus()}});
+    const put=(txt,form)=>{const ta=root.querySelector('#ta');if(!ta)return;ta.value=txt;if(form)ta.dataset.form=form;else delete ta.dataset.form;ta.dispatchEvent(new Event('input'));ta.focus();try{ta.setSelectionRange(ta.value.length,ta.value.length)}catch(e){}};
+    if(x.act==='ticket'){if(c.ticket&&c.ticketStatus!=='closed'){put(t.split('{ticket}').join(fmtTicket(c.ticketCur||c.ticket)));return}
+      b.disabled=true;nextTicket().then(async tk=>{await DB.set('tickets/'+tk,{n:Number(tk),chatId:c.id,status:'open',kind:'chat',createdAt:TS,by:(agent&&agent.name)||'Agent'});await DB.update('chats/'+c.id,{ticket:tk,ticketCur:tk,ticketStatus:'open'});put(t.split('{ticket}').join(fmtTicket(tk)))}).catch(e=>toast('Could not create a ticket: '+(e.code||e.message))).finally(()=>{b.disabled=false});return}
+    if(x.act&&x.act.indexOf('form:')===0){put(t,x.act.slice(5));return}
+    put(t)});
 }
 
 /* ---------- actions ---------- */
@@ -750,13 +755,29 @@ async function accept(id){
     toast('You opened the chat. The customer can see you joined.');
   }catch(e){toast('Could not open the chat: '+(e.code||e.message))}
 }
+function fileHtml(f){if(!f||!/^https:\/\/res\.cloudinary\.com\//.test(String(f.url||'')))return '';const u=esc(f.url),n=esc(f.name||'file');
+  if(f.kind==='image')return '<a class="mfile img" href="'+u+'" target="_blank" rel="noopener"><img alt="'+n+'" src="'+u+'" loading="lazy"></a>';
+  if(f.kind==='video')return '<video class="mfile vid" src="'+u+'" controls playsinline preload="metadata"></video>';
+  return '<a class="mfile doc" href="'+u+'" target="_blank" rel="noopener"><b>'+n+'</b>'+(f.size?'<small>'+(f.size>1048576?(f.size/1048576).toFixed(1)+' MB':Math.max(1,Math.round(f.size/1024))+' KB')+'</small>':'')+'</a>'}
+async function sendFile(file){const c=cur();if(!c)return;
+  if(c.status!=='assigned'||c.agentUid!==me.uid){toast('Tap “Open chat” first');return}
+  if(file.size>25*1048576){toast('This file is too big (25 MB max).');return}
+  await loadSite();const M=(SITE.S&&SITE.S.media)||{};if(!M.cloud||!M.preset){toast('Add your Cloudinary details in the website settings first.');return}
+  const att=root.querySelector('#att');if(att){att.disabled=true;att.classList.add('busy')}toast('Sending the file…');
+  try{const fd=new FormData();fd.append('file',file);fd.append('upload_preset',M.preset);fd.append('folder','thean/chat');
+    const j=await (await fetch('https://api.cloudinary.com/v1_1/'+encodeURIComponent(M.cloud)+'/auto/upload',{method:'POST',body:fd})).json();if(!j.secure_url)throw new Error((j.error&&j.error.message)||'upload failed');
+    const kind=/^image\//.test(file.type)?'image':/^video\//.test(file.type)?'video':'file',ta=root.querySelector('#ta');
+    await sendMsg(ta?ta.value:'',{file:{url:j.secure_url,name:String(file.name||'file').slice(0,120),kind:kind,size:file.size}})}
+  catch(e){toast('The file could not be sent: '+(e.message||e))}
+  finally{if(att){att.disabled=false;att.classList.remove('busy')}}}
 async function sendMsg(text,extra){
-  text=String(text||'').trim();const c=cur();if(!text||!c)return;
-  const ta=root.querySelector('#ta');if(ta){ta.value='';ta.style.height=''}
+  text=String(text||'').trim();const c=cur();if((!text&&!(extra&&extra.file))||!c)return;
+  const ta=root.querySelector('#ta');if(ta){ta.value='';ta.style.height='';delete ta.dataset.form}
   try{
     if(c.status!=='assigned'||c.agentUid!==me.uid){toast('Tap “Open chat” first');if(ta)ta.value=text;return}
     await DB.push('messages/'+c.id,Object.assign({from:'agent',text:text.slice(0,2000),agentName:(agent&&agent.name)||'Agent',agentUid:me.uid,ts:TS},extra||{}));
-    await DB.update('chats/'+c.id,{lastMsg:text.slice(0,120),lastFrom:'agent',updatedAt:TS,unreadVisitor:INC(1),unreadAgent:0});
+    const lm=extra&&extra.file?((extra.file.kind==='image'?'[Photo]':extra.file.kind==='video'?'[Video]':'[File] '+extra.file.name)+(text?' '+text:'')):text;
+    await DB.update('chats/'+c.id,{lastMsg:lm.slice(0,120),lastFrom:'agent',updatedAt:TS,unreadVisitor:INC(1),unreadAgent:0});
   }catch(e){toast('Not sent: '+(e.code||e.message));if(ta)ta.value=text}
 }
 /* ---------- end chat with a goodbye message ---------- */

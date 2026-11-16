@@ -665,6 +665,9 @@ body.admin #tc{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 .tc-chips button:hover{border-color:var(--stone)}
 .tc-foot{display:flex;gap:8px;padding:10px 12px 12px;border-top:1px solid var(--line);flex:none;align-items:flex-end}
 .tc-foot textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:18px;padding:10px 14px;background:var(--bg);color:var(--ink);max-height:110px;min-height:42px;line-height:1.4;font:inherit;font-size:.95rem}
+.tc-att{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:grid;place-items:center;cursor:pointer;flex:none}.tc-att.busy{opacity:.5;animation:tcpulse 1s infinite}@keyframes tcpulse{50%{opacity:.25}}
+.tc-file{display:block;margin-top:6px;max-width:240px}.tc-file.img img{width:100%;max-height:260px;object-fit:cover;border-radius:12px;border:1px solid var(--line);display:block}.tc-file.vid{width:100%;max-height:260px;border-radius:12px;background:#000}
+.tc-file.doc{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none;font-size:.86rem;overflow-wrap:anywhere}.tc-file.doc small{opacity:.65}
 .tc-send{width:42px;height:42px;border-radius:50%;border:0;background:var(--char);color:var(--char-ink);display:grid;place-items:center;font-size:1.15rem;cursor:pointer;flex:none}
 .tc-send:disabled{opacity:.4}
 .tc-alt{display:grid;gap:6px;margin-top:8px}
@@ -3539,6 +3542,25 @@ function listen(){
     msgsLoaded=true;draw(true);
   }));
 }
+function chatFileHtml(f){if(!f||!/^https:\/\/res\.cloudinary\.com\//.test(String(f.url||'')))return '';const u=esc(f.url),n=esc(f.name||'file');
+  if(f.kind==='image')return '<a class="tc-file img" href="'+u+'" target="_blank" rel="noopener"><img alt="'+n+'" src="'+u+'" loading="lazy"></a>';
+  if(f.kind==='video')return '<video class="tc-file vid" src="'+u+'" controls playsinline preload="metadata"></video>';
+  return '<a class="tc-file doc" href="'+u+'" target="_blank" rel="noopener"><b>'+n+'</b>'+(f.size?'<small>'+(f.size>1048576?(f.size/1048576).toFixed(1)+' MB':Math.max(1,Math.round(f.size/1024))+' KB')+'</small>':'')+'</a>'}
+async function sendFile(file){const M=T.S.media||{},km=L()==='km',ta=root.querySelector('.tc-foot textarea'),att=root.querySelector('.tc-att');
+  const note=t=>{if(!ta)return;const ph=ta.placeholder;ta.placeholder=t;setTimeout(()=>{ta.placeholder=ph},4500)};
+  if(!M.cloud||!M.preset){note(km?'មិនអាចផ្ញើឯកសារបានទេពេលនេះ។':'Files cannot be sent right now.');return}
+  if(file.size>25*1048576){note(km?'ឯកសារធំពេក (អតិបរមា 25 MB)។':'This file is too big (25 MB max).');return}
+  if(att){att.disabled=true;att.classList.add('busy')}if(ta)ta.placeholder=km?'កំពុងផ្ញើឯកសារ…':'Sending your file…';
+  try{const fd=new FormData();fd.append('file',file);fd.append('upload_preset',M.preset);fd.append('folder','thean/chat');
+    const j=await (await fetch('https://api.cloudinary.com/v1_1/'+encodeURIComponent(M.cloud)+'/auto/upload',{method:'POST',body:fd})).json();if(!j.secure_url)throw new Error('upload');
+    const kind=/^image\//.test(file.type)?'image':/^video\//.test(file.type)?'video':'file',cap=(ta&&ta.value.trim()||'').slice(0,1500);if(ta){ta.value='';ta.style.height='';ta.placeholder=w('ph')}
+    try{await ensureChat()}catch(e){offline=true}
+    await say({from:'visitor',text:cap,file:{url:j.secure_url,name:String(file.name||'file').slice(0,120),kind:kind,size:file.size}});
+    const live=chat&&(chat.status==='waiting'||chat.status==='assigned'),lm=(kind==='image'?'[Photo]':kind==='video'?'[Video]':'[File] '+file.name)+(cap?' '+cap:'');
+    if(!offline){const up={lastMsg:lm.slice(0,120),lastFrom:'visitor'};if(live)up.unreadAgent=INC(1);if(chat&&chat.status==='closed')up.status='bot';await touch(up)}
+    if(!live)await typeThen(800,{from:'bot',text:km?'អរគុណ យើងបានទទួលឯកសាររបស់អ្នក។ ដើម្បីឱ្យក្រុមការងារមើល សូមចុច «និយាយជាមួយភ្នាក់ងារ»។':'Thank you, we received your file. For our team to look at it, tap «Talk to Live Agent».',btns:btnLive(L())});
+  }catch(e){if(ta)ta.placeholder=w('ph');note(km?'មិនអាចផ្ញើឯកសារបានទេ។ សូមព្យាយាមម្តងទៀត។':'The file could not be sent. Please try again.')}
+  finally{if(att){att.disabled=false;att.classList.remove('busy')}}}
 async function say(m){
   if(!m.btns)delete m.btns; /* push a message from this visitor's browser */
   if(offline||!fb||!user||!chat){local.push(Object.assign({ts:Date.now(),id:'l'+Math.random()},m));draw(true);return}
@@ -3867,6 +3889,7 @@ function msgHtml(m,isLast){
   let h='<div class="tc-m '+(out?'out':'in')+'">'+(by?'<span class="by">'+esc(by)+(m.from==='agent'?' · '+esc(w('live')):'')+'</span>':'')+esc(m.text)+
     (m.links&&m.links.length?'<span class="lk">'+m.links.map(x=>'<a href="'+esc(safeHref(x.h))+'"'+(/^https/.test(x.h)?' target="_blank" rel="noopener"':' data-nav')+'>'+esc(x.l)+'</a>').join('')+'</span>':'');
   if(m.form&&FORMS[m.form]&&m.from!=='visitor')h+=formHtml(m);
+  if(m.file)h+=chatFileHtml(m.file);
   if(Array.isArray(m.imgs)&&m.imgs.length)h+='<span class="tc-imgs">'+m.imgs.filter(u=>/^https:\/\//.test(u)).map(u=>'<a href="'+esc(u)+'" target="_blank" rel="noopener"><img alt="" src="'+esc(u)+'"></a>').join('')+'</span>';
   if(m.btns&&m.btns.length)h+='<span class="tc-btns">'+m.btns.map(b=>'<button type="button" data-act="'+esc(b.a)+'"'+(isLast?'':' class="old"')+'>'+esc(b.l)+'</button>').join('')+'</span>';
   return h+'<time>'+tm(m.ts)+'</time></div>';
@@ -3922,7 +3945,7 @@ function draw(scroll){
   if(!open){wrap.innerHTML=peek?'<div class="tc-peek" role="status"><b>'+esc(w('peek'))+'</b>'+esc(String(peek.text).slice(0,120))+'</div>':'';const pk=wrap.querySelector('.tc-peek');if(pk)pk.onclick=()=>toggle(true);lastBody='';return}
   let panel=wrap.querySelector('.tc-panel');
   if(!panel){
-    wrap.innerHTML='<div class="tc-panel" role="dialog" aria-label="'+esc(w('title'))+'"><div class="tc-head"><span class="logo">'+(logo?'<img alt="" src="'+logo+'">':'')+'</span><div class="who"><b></b><small></small></div><button class="tc-clr" type="button">'+I('trash')+'</button><button class="tc-x" type="button" aria-label="Close">'+I('close')+'</button></div><div class="tc-confirm" hidden><span></span><button type="button" class="tc-cyes"></button><button type="button" class="tc-cno"></button></div><div class="tc-body" aria-live="polite"></div><form class="tc-foot"><textarea rows="1" aria-label="Message"></textarea><button class="tc-send" type="submit" aria-label="Send">'+I('arrow')+'</button></form></div>';
+    wrap.innerHTML='<div class="tc-panel" role="dialog" aria-label="'+esc(w('title'))+'"><div class="tc-head"><span class="logo">'+(logo?'<img alt="" src="'+logo+'">':'')+'</span><div class="who"><b></b><small></small></div><button class="tc-clr" type="button">'+I('trash')+'</button><button class="tc-x" type="button" aria-label="Close">'+I('close')+'</button></div><div class="tc-confirm" hidden><span></span><button type="button" class="tc-cyes"></button><button type="button" class="tc-cno"></button></div><div class="tc-body" aria-live="polite"></div><form class="tc-foot"><button class="tc-att" type="button" aria-label="Send a photo or file"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5l-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l8.6-8.6a3.7 3.7 0 0 1 5.2 5.2l-8.6 8.6a1.8 1.8 0 0 1-2.6-2.6l7.9-7.9"/></svg></button><input class="tc-fin" type="file" hidden accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip"><textarea rows="1" aria-label="Message"></textarea><button class="tc-send" type="submit" aria-label="Send">'+I('arrow')+'</button></form></div>';
     panel=wrap.querySelector('.tc-panel');
     panel.querySelector('.tc-x').onclick=()=>toggle(false);
     const cf=panel.querySelector('.tc-confirm');
@@ -3930,6 +3953,7 @@ function draw(scroll){
     cf.querySelector('.tc-cno').onclick=()=>{cf.hidden=true};
     cf.querySelector('.tc-cyes').onclick=async()=>{cf.hidden=true;await clearChat()};
     const f=panel.querySelector('form'),ta=f.querySelector('textarea');
+    {const att=panel.querySelector('.tc-att'),fin=panel.querySelector('.tc-fin');att.onclick=()=>fin.click();fin.onchange=()=>{const x=fin.files&&fin.files[0];fin.value='';if(x)sendFile(x)}}
     f.onsubmit=e=>{e.preventDefault();send(ta.value)};
     ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&window.innerWidth>520){e.preventDefault();send(ta.value)}});
     ta.addEventListener('input',()=>{ta.style.height='';ta.style.height=Math.min(110,ta.scrollHeight)+'px';typingPing()});

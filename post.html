@@ -165,6 +165,8 @@ body.out .top #chatBtn{display:none}
 @keyframes tcb{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}
 .chfoot{display:flex;gap:8px;padding:10px 12px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);align-items:flex-end;background:var(--surface);flex:none}
 .chfoot textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:18px;padding:10px 14px;background:var(--bg);color:var(--ink);max-height:110px;min-height:44px;line-height:1.4;font:inherit;font-size:16px}
+.chatt{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--bg);color:var(--ink);display:grid;place-items:center;cursor:pointer;flex:none}.chatt svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.chatt.busy{opacity:.5}
+.cfile{display:block;margin-top:6px;max-width:240px}.cfile.img img{width:100%;max-height:260px;object-fit:cover;border-radius:12px;border:1px solid var(--line);display:block}.cfile.vid{width:100%;max-height:260px;border-radius:12px;background:#000}.cfile.doc{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:inherit;text-decoration:none;font-size:.86rem;overflow-wrap:anywhere}.cfile.doc small{opacity:.65}
 .chsend{width:44px;height:44px;border-radius:50%;border:0;background:var(--grad);color:#fff;display:grid;place-items:center;cursor:pointer;flex:none}.chsend svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .tlist li{margin-bottom:6px}.tchk{display:flex;gap:10px;align-items:flex-start;margin:6px 0 12px;font-weight:600;cursor:pointer}.tchk input{width:20px;height:20px;margin-top:2px;flex:none}
 .flinks a{color:inherit}#terms{z-index:30}#doc{z-index:36}
@@ -304,7 +306,7 @@ body.out .top #chatBtn{display:none}
       <button class="chx" id="chClr" aria-label="Clear chat"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button><button class="chx" data-close aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
     <div class="chconf" id="chConf" hidden><span data-t="clrQ"></span><button class="yes" data-clr="yes" data-t="clr"></button><button data-clr="no" data-t="cancelB"></button></div>
     <div class="chlist" id="chatList"></div>
-    <div class="chfoot"><textarea id="chatIn" rows="1" data-tph="typeMsg" maxlength="2000"></textarea><button class="chsend" id="chatSend" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+    <div class="chfoot"><button class="chatt" id="chatAtt" aria-label="Send a photo or file"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5l-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l8.6-8.6a3.7 3.7 0 0 1 5.2 5.2l-8.6 8.6a1.8 1.8 0 0 1-2.6-2.6l7.9-7.9"/></svg></button><input type="file" id="chatFile" hidden accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip"><textarea id="chatIn" rows="1" data-tph="typeMsg" maxlength="2000"></textarea><button class="chsend" id="chatSend" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
   </div>
 </div>
 <div class="modal" id="terms" hidden>
@@ -1083,7 +1085,9 @@ function touch(o){return FBX.d.update(R(chP()),Object.assign({updatedAt:FBX.d.se
 function botSay(text,btns,ms){CH.typing=true;drawChat();return new Promise(function(r){setTimeout(r,ms||800)}).then(function(){CH.typing=false;return push({from:'bot',text:text,btns:btns})})
   .then(function(){if(!live())return touch({lastMsg:text.slice(0,120),lastFrom:'bot'})})}
 function say(text){var o={lastMsg:text.slice(0,120),lastFrom:'visitor'};if(live())o.unreadAgent=FBX.d.increment(1);return push({from:'visitor',text:text}).then(function(){return touch(o)})}
-function welcome(lg){return botSay(L('chHello',lg)).then(function(){return botSay(L('chCaps',lg),menuBtns(lg),1000)})}
+function greetBoth(){var h=new Date().getHours();
+  return (h<12?'អរុណសួស្ដី':h<18?'ទិវាសួស្ដី':'សាយណ្ហសួស្ដី')+'! ខ្ញុំជាជំនួយការនិម្មិតរបស់អ្នកថ្ងៃនេះ។ តើខ្ញុំអាចជួយអ្វីអ្នកបានខ្លះ?\n'+(h<12?'Good morning':h<18?'Good afternoon':'Good evening')+"! I'm your virtual assistant today. How can I help you?"}
+function welcome(lg){return botSay(greetBoth()).then(function(){return botSay(L('chCaps',lg),menuBtns(lg),1000)})}
 function plansText(lg){var P=PK.filter(function(k){return packOn(k)&&MON.some(function(m){return price(k,m)})});if(!P.length)return L('noPrices',lg);
   var keep=C.lang;C.lang=lg;var s=L('chPlans',lg)+'\n'+P.map(function(k){return '• '+pkName(k)+': '+MON.filter(function(m){return price(k,m)}).map(function(m){return nm(m)+' '+money(price(k,m))}).join(', ')}).join('\n')+'\n'+L('chPlans2',lg).split('{n}').join(freeTotal());C.lang=keep;return s}
 function answer(a,lg){
@@ -1093,7 +1097,7 @@ function answer(a,lg){
   if(a==='plans')return botSay(plansText(lg),[{l:L('q_openPlans',lg),a:'openplans'},moreBtn(lg)],900);
   if(a==='prob')return botSay(L('a_prob',lg),[liveBtn(lg),moreBtn(lg)],1000);
   if(a==='terms')return botSay(L('a_terms',lg),[{l:L('q_readTerms',lg),a:'readterms'},moreBtn(lg)],900);
-  if(a==='hello')return botSay(L('chHello',lg)).then(function(){return botSay(L('chCaps',lg),menuBtns(lg),900)});
+  if(a==='hello')return botSay(greetBoth()).then(function(){return botSay(L('chCaps',lg),menuBtns(lg),900)});
   return botSay(L('chNo',lg),menuBtns(lg),900)}
 function goLive(lg){return say(L('q_live',lg)).then(function(){return FBX.d.update(R(chP()),{status:'waiting',requestedAt:FBX.d.serverTimestamp(),updatedAt:FBX.d.serverTimestamp(),lastMsg:L('q_live',lg),lastFrom:'visitor',unreadAgent:FBX.d.increment(1),lang:lg,name:(myName()||'Customer')+' · Posting app'})})
   .then(function(){return botSay(L('hold1',lg),null,1400)}).then(function(){return botSay(L('hold2',lg),[{l:L('q_end',lg),a:'end'}],2000)})}
@@ -1119,6 +1123,18 @@ $('chatSend').onclick=function(){var x=$('chatIn'),v=x.value.trim();if(!v)return
   var lg=/[ក-៿]/.test(v)?'km':(/[a-z]/i.test(v)?'en':C.lang);
   chEnsure().then(function(){var wasLive=live();return say(v.slice(0,2000)).then(function(){if(wasLive)return;var it=intent(v);if(it==='live')return FBX.d.update(R(chP()),{status:'waiting',requestedAt:FBX.d.serverTimestamp(),updatedAt:FBX.d.serverTimestamp(),lastMsg:v.slice(0,120),lastFrom:'visitor',unreadAgent:FBX.d.increment(1),lang:lg}).then(function(){return botSay(L('hold1',lg),null,1400)}).then(function(){return botSay(L('hold2',lg),[{l:L('q_end',lg),a:'end'}],2000)});
     return answer(it,lg)})}).catch(function(){toast(t('aeNet'))})};
+function fileHtml(f){if(!f||!/^https:\/\/res\.cloudinary\.com\//.test(String(f.url||'')))return '';var u=esc(f.url),n=esc(f.name||'file');
+  if(f.kind==='image')return '<a class="cfile img" href="'+u+'" target="_blank" rel="noopener"><img alt="'+n+'" src="'+u+'" loading="lazy"></a>';
+  if(f.kind==='video')return '<video class="cfile vid" src="'+u+'" controls playsinline preload="metadata"></video>';
+  return '<a class="cfile doc" href="'+u+'" target="_blank" rel="noopener"><b>'+n+'</b>'+(f.size?'<small>'+(f.size>1048576?(f.size/1048576).toFixed(1)+' MB':Math.max(1,Math.round(f.size/1024))+' KB')+'</small>':'')+'</a>'}
+$('chatAtt').onclick=function(){$('chatFile').click()};
+$('chatFile').onchange=function(){var file=this.files&&this.files[0];this.value='';if(!file)return;var lg=C.lang,b=$('chatAtt'),ta=$('chatIn');
+  if(file.size>25*1048576){toast(L('fileBig',lg));return}
+  b.disabled=true;b.classList.add('busy');toast(L('fileUp',lg));
+  chEnsure().then(function(){return cldUp(file)}).then(function(u){var kind=/^image\//.test(file.type)?'image':/^video\//.test(file.type)?'video':'file',cap=ta.value.trim().slice(0,1500),wasLive=live();ta.value='';ta.style.height='';
+    var lm=(kind==='image'?'[Photo]':kind==='video'?'[Video]':'[File] '+file.name)+(cap?' '+cap:''),o={lastMsg:lm.slice(0,120),lastFrom:'visitor'};if(wasLive)o.unreadAgent=FBX.d.increment(1);
+    return push({from:'visitor',text:cap,file:{url:u,name:String(file.name||'file').slice(0,120),kind:kind,size:file.size}}).then(function(){return touch(o)}).then(function(){if(!wasLive)return botSay(L('fileGot',lg),[liveBtn(lg),moreBtn(lg)],900)})})
+  .catch(function(){toast(L('fileFail',lg))}).then(function(){b.disabled=false;b.classList.remove('busy')})};
 $('chatIn').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('chatSend').click()}});
 $('chatIn').addEventListener('input',function(){this.style.height='';this.style.height=Math.min(this.scrollHeight,110)+'px'});
 $('chat').addEventListener('click',function(e){if(e.target===$('chat')||e.target.closest('[data-close]')){$('chat').hidden=true;drawBadge();return}
@@ -1134,7 +1150,7 @@ function drawChat(){if($('chat').hidden)return;var c=CH.chat||{},st=c.status;
   box.innerHTML=M.map(function(m,i){var tm=+m.ts?new Date(+m.ts):null,ts=tm?('0'+tm.getHours()).slice(-2)+':'+('0'+tm.getMinutes()).slice(-2):'';
     if(m.from==='system')return '<div class="cm-sys">'+esc(m.text||'')+'</div>';
     var me=m.from==='visitor',by=m.from==='agent'?esc(m.agentName||t('ourTeam'))+' · '+esc(t('liveAgent')):m.from==='bot'?esc(t('assistant')):'';
-    return '<div class="cm '+(me?'out':'in')+'">'+(by?'<span class="by">'+by+'</span>':'')+'<div class="tx">'+esc(m.text||'')+'</div>'+
+    return '<div class="cm '+(me?'out':'in')+'">'+(by?'<span class="by">'+by+'</span>':'')+(m.text?'<div class="tx">'+esc(m.text)+'</div>':'')+fileHtml(m.file)+
       (m.btns&&m.btns.length?'<div class="cm-btns">'+m.btns.map(function(x){return '<button type="button" class="'+(i===last?'':'old')+'" data-ca="'+esc(x.a)+'">'+esc(x.l)+'</button>'}).join('')+'</div>':'')+
       '<time>'+ts+'</time></div>'}).join('')+(CH.typing?'<div class="cm-typing"><i></i><i></i><i></i></div>':'');
   if(near||CH.typing)box.scrollTop=box.scrollHeight}
@@ -1295,6 +1311,8 @@ Object.assign(T.en,{cidL:'Customer ID',copy:'Copy',copied:'Copied',cidNote:'Give
 Object.assign(T.km,{cidL:'លេខសម្គាល់អតិថិជន',copy:'ចម្លង',copied:'បានចម្លង',cidNote:'សូមផ្តល់លេខនេះដល់ក្រុមការងារ ពេលអ្នកត្រូវការជំនួយអំពីគណនី ឬការបង់ប្រាក់។',
   devT:'ឧបករណ៍ច្រើនពេក',devS:'គណនីរបស់អ្នកអាចប្រើបានលើឧបករណ៍ {n} ហើយកំពុងប្រើរួចហើយលើ៖',devMore:'ត្រូវការឧបករណ៍បន្ថែម? ឧបករណ៍បន្ថែមមួយ តម្លៃ {m} ក្នុងមួយខែ ឬ {y} ក្នុងមួយឆ្នាំ។ សូមជជែកជាមួយយើង ដើម្បីបន្ថែម។',devMore2:'ត្រូវការឧបករណ៍បន្ថែម? សូមជជែកជាមួយយើង ដើម្បីស្នើសិទ្ធិពិសេស។',
   myDevs:'ឧបករណ៍របស់ខ្ញុំ · {a} ក្នុងចំណោម {b}',thisDev:'ឧបករណ៍នេះ',devNote:'ដើម្បីប្រើឧបករណ៍បន្ថែម ឬប្តូរឧបករណ៍ សូមជជែកជាមួយយើង។',lastUsed:'ប្រើចុងក្រោយ {d}',pbSoon:'គម្រោងរបស់អ្នកនឹងផុតក្នុង {n} ថ្ងៃ',renewShort:'បន្តគម្រោង'});
+Object.assign(T.en,{fileBig:'This file is too big (25 MB max).',fileUp:'Sending your file…',fileFail:'The file could not be sent. Please try again.',fileGot:'Thank you, we received your file. For our team to look at it, tap «Talk to Live Agent».'});
+Object.assign(T.km,{fileBig:'ឯកសារធំពេក (អតិបរមា 25 MB)។',fileUp:'កំពុងផ្ញើឯកសារ…',fileFail:'មិនអាចផ្ញើឯកសារបានទេ។ សូមព្យាយាមម្តងទៀត។',fileGot:'អរគុណ យើងបានទទួលឯកសាររបស់អ្នក។ ដើម្បីឱ្យក្រុមការងារមើល សូមចុច «និយាយជាមួយភ្នាក់ងារ»។'});
 try{$('yr').textContent=new Date().getFullYear()}catch(e){}applyLang();checkKey();accStart();
 })();
 </script>
