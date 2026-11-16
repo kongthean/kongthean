@@ -3,7 +3,12 @@
 <head>
 <meta charset="utf-8">
 <base href="/">
-<script id="ga">(function(){var h=location.hostname;if(h!=="kongthean.com"&&h!=="www.kongthean.com")return;if(/^\/(admin|agent|post)(\/|\.html|$)/.test(location.pathname))return;window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());var s=document.createElement("script");s.async=true;s.setAttribute("data-ga","1");s.src="https://www.googletagmanager.com/gtag/js?id=GTM-WRN9PHXW";document.head.appendChild(s)})()</script>
+<script id="ga">window.thTrack=function(){};(function(){var h=location.hostname;if(h!=="kongthean.com"&&h!=="www.kongthean.com")return;if(/^\/(admin|agent|post)(\/|\.html|$)/.test(location.pathname))return;window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag("js",new Date());var s=document.createElement("script");s.async=true;s.setAttribute("data-ga","1");s.src="https://www.googletagmanager.com/gtag/js?id=GTM-WRN9PHXW";document.head.appendChild(s);
+window.thTrack=function(n,p){try{gtag("event",n,Object.assign({page_path:location.pathname},p||{}))}catch(e){}};
+var A={chat:"open_chat",donate:"donate_open",webcall:"web_call",links:"contact_links",push:"notifications_click"};
+document.addEventListener("click",function(e){try{var t=e.target;if(!t||!t.closest)return;var b=t.closest("[data-act],[data-lang],[data-skin],[data-share],a[href^='tel:'],a[href^='mailto:']");if(!b)return;var d=b.dataset||{};
+if(d.act&&A[d.act])thTrack(A[d.act]);else if(d.lang)thTrack("change_language",{language:d.lang});else if(d.skin)thTrack("change_theme",{theme:d.skin});else if(d.share!=null)thTrack("share",{content:d.share||location.pathname});
+else if(b.tagName==="A"){var u=b.getAttribute("href")||"";thTrack("contact_click",{method:u.indexOf("tel:")===0?"phone":"email"})}}catch(x){}},true)})()</script>
 <script>try{(function(){var k=localStorage.getItem("thean-skin");if(k==="water"||k==="thean"||k==="heritage"||k==="classic"||k==="apsara"||k==="kbach"||k==="pchum"){document.documentElement.setAttribute("data-skin",k);var m=localStorage.getItem("thean-pmode");if(k==="pchum"&&(m==="light"||m==="dark"))document.documentElement.setAttribute("data-theme",m)}})()}catch(e){}</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Thean · Cambodia Traveler</title>
@@ -3658,6 +3663,7 @@ async function goLive(){
   await say({from:'visitor',text:w('bLive',lg)});
   if(offline){local.push({from:'system',text:w('noLive',lg),alt:true,ts:Date.now()});draw(true);return}
   await fb.update(CP(),{status:'waiting',requestedAt:TS,updatedAt:TS,lastMsg:''+w('bLive',lg),lastFrom:'visitor',unreadAgent:INC(1),lang:lg});
+  try{window.thTrack&&window.thTrack('live_agent_request',{language:lg})}catch(e){}
   await typeThen(1800,{from:'bot',text:w('hold1',lg)});
   await typeThen(2600,{from:'bot',text:w('hold2',lg),btns:[{l:w('bEnd',lg),a:'end'}]});
 }

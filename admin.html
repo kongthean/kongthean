@@ -3909,6 +3909,7 @@ async function goLive(){
   await say({from:'visitor',text:w('bLive',lg)});
   if(offline){local.push({from:'system',text:w('noLive',lg),alt:true,ts:Date.now()});draw(true);return}
   await fb.update(CP(),{status:'waiting',requestedAt:TS,updatedAt:TS,lastMsg:''+w('bLive',lg),lastFrom:'visitor',unreadAgent:INC(1),lang:lg});
+  try{window.thTrack&&window.thTrack('live_agent_request',{language:lg})}catch(e){}
   await typeThen(1800,{from:'bot',text:w('hold1',lg)});
   await typeThen(2600,{from:'bot',text:w('hold2',lg),btns:[{l:w('bEnd',lg),a:'end'}]});
 }
