@@ -1038,6 +1038,12 @@ body.maint-on #tc{z-index:90}
 #maint .mback{display:inline-flex;gap:6px;align-items:center;background:var(--bg2);border-radius:99px;padding:6px 14px;font-size:.88rem;font-weight:600;margin-top:4px}
 #maint .mchat{margin-top:12px;justify-content:center;text-align:left;padding:12px 20px}
 #maint .mchat span{display:grid;line-height:1.3}#maint .mchat small{font-weight:500;opacity:.8;font-size:.8rem}
+body.maint-nochat #tc{display:none!important}
+#maint .mcon{display:grid;gap:8px;width:min(360px,100%);margin-top:12px}
+#maint .mcon b{font-size:.86rem;color:var(--muted);font-weight:600}
+#maint .mcon a{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:var(--bg2);color:var(--ink);text-decoration:none;font-weight:600;font-size:.92rem;text-align:left}
+#maint .mcon a span{display:grid;line-height:1.25}#maint .mcon a small{font-weight:500;color:var(--muted);font-size:.8rem;overflow-wrap:anywhere}
+#maint .mcon a svg{font-size:1.2rem;flex:none}
 #maint .msoc{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;justify-content:center}
 #maint .msoc a{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--bg2);color:var(--ink);font-size:1.1rem;text-decoration:none}
 @media (prefers-reduced-motion:reduce){#maint .mico{animation:none}}
@@ -1798,17 +1804,21 @@ var MAINT=null,CALLAWAY=null;
 function maintPreview(){return /[?&]preview\b/.test(location.search||'')}
 var MT={en:{t:'Our website is under maintenance',p:'We are improving our website and will be back very soon. Thank you for your patience.',c:'You can still chat with our team.'},km:{t:'គេហទំព័ររបស់យើងកំពុងធ្វើការថែទាំ',p:'យើងកំពុងកែលម្អគេហទំព័រ ហើយនឹងត្រឡប់មកវិញក្នុងពេលឆាប់ៗនេះ។ សូមអរគុណចំពោះការអត់ធ្មត់របស់អ្នក។',c:'អ្នកនៅតែអាចជជែកជាមួយក្រុមការងាររបស់យើងបាន។'}};
 function showMaint(){var el=document.getElementById('maint'),on=!!(MAINT&&MAINT.on)&&!ADMIN_PAGE&&!maintPreview();
-  document.body.classList.toggle('maint-on',on);try{app.inert=on}catch(e){}
+  document.body.classList.toggle('maint-on',on);document.body.classList.toggle('maint-nochat',on&&MAINT.chat===false);try{app.inert=on}catch(e){}
   if(!on){if(el)el.remove();return}
   if(!el){el=document.createElement('div');el.id='maint';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-label',MT.en.t);document.body.appendChild(el)}
   var L=S.links||{},m=MAINT,soc=['facebook','telegram','tiktok','youtube','instagram'].filter(function(k){return L[k]});
   el.innerHTML='<div class="mcard">'+(S.brand.logo?'<span class="logo"><img alt="" src="'+S.brand.logo+'"></span>':'')+''+
-    '<h1 lang="km">'+esc(MT.km.t)+'</h1><p lang="km">'+esc(String(m.km||'').trim()||MT.km.p)+'</p><div class="mdiv"></div>'+
-    '<h2 lang="en">'+esc(MT.en.t)+'</h2><p lang="en">'+esc(String(m.en||'').trim()||MT.en.p)+'</p>'+
+    '<h1 lang="km">'+esc(String(m.titleKm||'').trim()||MT.km.t)+'</h1><p lang="km">'+esc(String(m.km||'').trim()||MT.km.p)+'</p><div class="mdiv"></div>'+
+    '<h2 lang="en">'+esc(String(m.titleEn||'').trim()||MT.en.t)+'</h2><p lang="en">'+esc(String(m.en||'').trim()||MT.en.p)+'</p>'+
     (m.backEn||m.backKm?'<div class="mback">'+I('clock')+'<span>'+esc(m.backKm||'')+(m.backKm&&m.backEn?' · ':'')+esc(m.backEn||'')+'</span></div>':'')+
-    '<button type="button" class="btn mchat" data-mchat>'+I('chat')+'<span>'+esc(MT.km.c)+'<small>'+esc(MT.en.c)+'</small></span></button>'+
+    (m.chat!==false?'<button type="button" class="btn mchat" data-mchat>'+I('chat')+'<span>'+esc(MT.km.c)+'<small>'+esc(MT.en.c)+'</small></span></button>':'')+
+    (m.contacts!==false?maintContacts(L):'')+
     (soc.length?'<div class="msoc">'+soc.map(function(k){return '<a class="'+k+'" target="_blank" rel="noopener" aria-label="'+k+'" href="'+esc(linkOf(k,L[k]))+'">'+I(k)+'</a>'}).join('')+'</div>':'')+'</div>';
-  el.querySelector('[data-mchat]').onclick=function(){if(window.TheanChat)window.TheanChat.open()}}
+  var mc=el.querySelector('[data-mchat]');if(mc)mc.onclick=function(){if(window.TheanChat)window.TheanChat.open()}}
+function maintContacts(L){var R=[['phone','ទូរស័ព្ទ · Phone'],['telegram','Telegram'],['messenger','Messenger'],['email','អ៊ីមែល · Email']].filter(function(r){return L[r[0]]});
+  if(!R.length)return '';
+  return '<div class="mcon"><b>ទាក់ទងយើង · Contact us</b>'+R.map(function(r){var v=String(L[r[0]]);return '<a target="_blank" rel="noopener" href="'+esc(linkOf(r[0],v))+'">'+I(r[0])+'<span>'+esc(r[1])+'<small>'+esc(v.replace(/^https?:\/\/(www\.)?/,''))+'</small></span></a>'}).join('')+'</div>'}
 window.TheanSite.setMaint=function(v){MAINT=v||null;showMaint();if(admin&&adminView==='dash')render()};
 
 /* ---------- routing ---------- */
@@ -2860,6 +2870,7 @@ app.addEventListener('click',function(e){
     case 'maint':maintToggle();return;
     case 'callaway':awayToggle();return;
     case 'maintedit':maintEdit();return;
+    case 'pmaint':maintEdit('post');return;
     case 'msghide':S.message.show=false;changed();toast('Hidden. Visitors no longer see this section.');return;
     case 'msgshow':S.message.show=true;changed();toast(String(S.message.km||S.message.en||'').trim()||S.message.video?'Shown on the website':'Shown. Add the message text so visitors can see it.');return;
     case 'links':linksForm();return;
@@ -2899,7 +2910,7 @@ function composeText(f){var k=f.dataset.form,n=(f.querySelector('#c-name-'+k)||{
 /* =================== OWNER EDITOR =================== */
 function enterAdmin(u){
   adminUser=u;admin=true;adminView='dash';editing=false;
-  try{if(window.TheanAdmin&&window.TheanAdmin.onMaint&&!window.__mSub){window.__mSub=1;window.TheanAdmin.onMaint(function(v){MAINT=v||null;if(admin&&adminView==='dash')render()})}}catch(e){}
+  try{if(window.TheanAdmin&&window.TheanAdmin.onMaint&&!window.__mSub){window.__mSub=1;window.TheanAdmin.onMaint(function(v){MAINT=v||null;if(admin&&adminView==='dash')render()});if(window.TheanAdmin.onPostMaint)window.TheanAdmin.onPostMaint(function(v){PMAINT=v||null;if(admin&&adminView==='dash')render()})}}catch(e){}
   try{if(window.TheanAdmin&&window.TheanAdmin.onCallAway&&!window.__aSub){window.__aSub=1;window.TheanAdmin.onCallAway(function(v){CALLAWAY=v||null;if(admin&&adminView==='dash')render()})}}catch(e){}
   try{var d=localStorage.getItem(DRAFT_KEY);if(d){S=mediaName(Object.assign({},EMBED,upgrade(JSON.parse(d))));dirty=true}}catch(e){}
   render();
@@ -3421,15 +3432,30 @@ function awayCard(){var a=CALLAWAY||{},now=awayIsNow(a);return dCard('phone','Ph
 function awaySet(v,msg){if(!window.TheanAdmin||!window.TheanAdmin.setCallAway){toast('Not connected yet, try again in a moment');return}
   window.TheanAdmin.setCallAway(v).then(function(){CALLAWAY=v;if(msg)toast(msg);render()}).catch(function(e){toast(/permission/i.test(String(e&&(e.code||e.message)))?'Only the owner can change the phone line':'Not saved: '+(e&&(e.code||e.message)))})}
 function awayToggle(){var a=Object.assign({},CALLAWAY||{});a.on=!a.on;a.at=Date.now();awaySet(a,a.on?'Away is ON. Callers hear the closed message.':'Away is OFF. Calls ring normally'+(a.sched?' during your opening hours.':'.'))}
-function maintCard(){var on=MAINT&&MAINT.on;return dCard('gear','Maintenance mode',on?'ON: visitors see the maintenance screen. Tap to turn off.':'Off. Tap once to show visitors a maintenance screen (chat still works).','data-act="maint"')}
+function maintCard(){var on=MAINT&&MAINT.on;return dCard('gear','Website maintenance',on?'ON: visitors see the maintenance screen. Tap to edit or turn off.':'Off. Tap to show visitors a maintenance screen.','data-act="maintedit"')+pmaintCard()}
 function maintSet(v,msg){if(!window.TheanAdmin||!window.TheanAdmin.setMaint){toast('Not connected yet, try again in a moment');return}
   window.TheanAdmin.setMaint(v).then(function(){toast(msg)}).catch(function(e){toast(/permission/i.test(String(e&&(e.code||e.message)))?'Only the owner can change maintenance mode':'Not saved: '+(e&&(e.code||e.message)))})}
 function maintToggle(){var cur=Object.assign({},MAINT||{});cur.on=!cur.on;cur.at=Date.now();maintSet(cur,cur.on?'Maintenance mode is ON. Visitors now see the maintenance screen.':'Maintenance mode is OFF. The website is open again.')}
-function maintEdit(){var c=MAINT||{};var m=modal('Maintenance message','<p style="margin:0 0 6px;color:var(--muted)">Leave empty to use the standard message. Both languages are shown to visitors.</p>'+
-  fieldHtml(['msg','Message','biarea'],{en:c.en||'',km:c.km||''})+fieldHtml(['back','Expected back (optional, e.g. "Back at 6 PM")','bi'],{en:c.backEn||'',km:c.backKm||''})+
-  '<label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" data-mon style="width:auto"'+(c.on?' checked':'')+'> Maintenance mode is ON</label><div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-mok>Save</button></div>');
-  m.querySelector('[data-mok]').onclick=function(){var g=function(k,l){return m.querySelector('[data-k="'+k+'"][data-l="'+l+'"]').value.trim()};
-    var v={on:m.querySelector('[data-mon]').checked,en:g('msg','en'),km:g('msg','km'),backEn:g('back','en'),backKm:g('back','km'),at:Date.now()};m.remove();maintSet(v,v.on?'Saved. Maintenance mode is ON.':'Saved. Maintenance mode is OFF.')}}
+function maintEdit(which){var post=which==='post',c=(post?PMAINT:MAINT)||{};
+  var chk=function(k,on,lbl){return '<label class="f" style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="checkbox" data-'+k+' style="width:auto"'+(on?' checked':'')+'> '+lbl+'</label>'};
+  var m=modal(post?'Posting app maintenance':'Website maintenance','<p style="margin:0 0 6px;color:var(--muted)">'+(post?'Customers of the posting app see this screen and cannot post. You and your team can still use the app.':'Visitors see this screen instead of the website. You and your team can still use Admin and the Inbox.')+' Leave a box empty to use the standard text. Both languages are shown.</p>'+
+    chk('mon',c.on,'<span style="color:#b3362f">Maintenance mode is ON</span>')+
+    fieldHtml(['ttl','Big title','bi'],{en:c.titleEn||'',km:c.titleKm||''})+
+    fieldHtml(['msg','Small text below the title','biarea'],{en:c.en||'',km:c.km||''})+
+    fieldHtml(['back','Expected back (optional, e.g. "Back at 6 PM")','bi'],{en:c.backEn||'',km:c.backKm||''})+
+    chk('mchatok',c.chat!==false,'Let customers chat with us during maintenance')+
+    '<small style="display:block;color:var(--muted);margin:-4px 0 8px">When this is off, the chat button is hidden'+(post?' in the app':' on the website')+'.</small>'+
+    chk('mcontacts',c.contacts!==false,'Show our contact details (phone, Telegram, Messenger, email)')+
+    '<small style="display:block;color:var(--muted);margin:-4px 0 8px">They come from Contact &amp; settings. Only the ones you filled in are shown.</small>'+
+    '<div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-mok>Save</button></div>');
+  m.querySelector('[data-mok]').onclick=function(){var g=function(k,l){return m.querySelector('[data-k="'+k+'"][data-l="'+l+'"]').value.trim()},q=function(k){return m.querySelector('[data-'+k+']').checked};
+    var v={on:q('mon'),titleEn:g('ttl','en'),titleKm:g('ttl','km'),en:g('msg','en'),km:g('msg','km'),backEn:g('back','en'),backKm:g('back','km'),chat:q('mchatok'),contacts:q('mcontacts'),at:Date.now()};m.remove();
+    var name=post?'Posting app':'Website';
+    (post?pmaintSet:maintSet)(v,v.on?'Saved. '+name+' maintenance is ON.':'Saved. '+name+' maintenance is OFF.')}}
+var PMAINT=null;
+function pmaintSet(v,msg){if(!window.TheanAdmin||!window.TheanAdmin.setPostMaint){toast('Not connected yet, try again in a moment');return}
+  window.TheanAdmin.setPostMaint(v).then(function(){PMAINT=v;toast(msg);if(admin&&adminView==='dash')render()}).catch(function(e){toast(/permission/i.test(String(e&&(e.code||e.message)))?'Only the owner can change maintenance mode':'Not saved: '+(e&&(e.code||e.message)))})}
+function pmaintCard(){var on=PMAINT&&PMAINT.on;return dCard('gear','Posting app maintenance',on?'ON: customers see the maintenance screen in the app. Tap to edit or turn off.':'Off. Tap to show customers of the posting app a maintenance screen.','data-act="pmaint"')}
 function skinForm(){var k=(S.ui&&S.ui.skin)||'thean';
   var m=modal('Website theme','<p style="margin:0 0 12px;color:var(--muted)">Choose the look new visitors see first. Each visitor can still change it with the Theme switch at the very bottom of the website.</p><div style="display:grid;gap:10px">'+[['thean','Thean Green & Gold','Deep green and gold taken from the new Thean logo'],['classic','Classic','Misty stone greys, the original look'],['heritage','Khmer Heritage','Sandstone, gold and lacquer red with Khmer ornament'],['apsara','Apsara Night','Jade, lotus and night-sky indigo with gold kbach, floating lanterns and twinkling stars'],['kbach','Kbach Gold','Black lacquer tiles with moving gold kbach patterns and gold Khmer cultural icons'],['water','Water Festival','Cream and river blue by day, maroon and gold at night, with dragon boats, paddles and waves'],['pchum','Pchum Ben','Pagoda scenes and festival icons; visitors choose light, dark or automatic']].map(function(o){return '<button type="button" class="skpick'+(k===o[0]?' on':'')+'" data-sk="'+o[0]+'"><i class="sw sw-'+o[0]+'"></i><span><b>'+o[1]+'</b><small>'+o[2]+'</small></span></button>'}).join('')+'</div>');
   m.addEventListener('click',function(e){var b=e.target.closest('[data-sk]');if(!b)return;S.ui=S.ui||{};S.ui.skin=b.dataset.sk;try{localStorage.removeItem('thean-skin')}catch(x){}m.remove();changed();toast('Theme set to '+({water:'Water Festival',thean:'Thean Green & Gold',heritage:'Khmer Heritage',apsara:'Apsara Night',kbach:'Kbach Gold',pchum:'Pchum Ben'}[b.dataset.sk]||'Classic'))})}
@@ -4149,6 +4175,8 @@ if(ADMIN_PAGE){
     async logout(){await loadFb();await fb.A.signOut(fb.auth)},
     async setMaint(v){await loadFb();await fb.set('settings/public/maintenance',v)},
     onMaint(cb){loadFb().then(()=>fb.on('settings/public/maintenance',cb)).catch(()=>{})},
+    async setPostMaint(v){await loadFb();await fb.set('settings/public/postMaint',v)},
+    onPostMaint(cb){loadFb().then(()=>fb.on('settings/public/postMaint',cb)).catch(()=>{})},
     async setCallAway(v){await loadFb();await fb.set('settings/public/callAway',v)},
     async pushQueue(v){await loadFb();const u=await authUser();v.at=TS;v.status='queued';v.by=(u&&u.email)||'';return fb.push('push/queue',v)},
     onPushQueue(cb){let off=null,dead=false;loadFb().then(()=>{if(!dead)off=fb.onRecent('push/queue','at',15,cb)}).catch(()=>{});return()=>{dead=true;try{off&&off()}catch(e){}}},
