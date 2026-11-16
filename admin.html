@@ -3782,9 +3782,9 @@ async function reopenCase(base){const lg=L();
   await typeThen(900,{from:'bot',text:w('tReopened',lg).split('{t}').join(fmtT(cur))});await typeThen(1600,{from:'bot',text:w('hold1',lg),btns:[{l:w('bEnd',lg),a:'end'}]})}
 const FORMS={contact:['name','phone','email','other'],report:['name','phone','email','ours','orig','details','want','files']};
 const REPORT_RE=/(copyright|without (my |our )?permission|stole|stolen|steal|my (own )?(photo|picture|video|content|post)s?|take ?down|remove my|give (me )?credit|ច្បាប់ចម្លង|រក្សាសិទ្ធិ|គ្មានការអនុញ្ញាត|មិនបានអនុញ្ញាត|លួច)/i;
-function loadFb(){if(fb)return Promise.resolve(fb);if(!fbP)fbP=makeDB(FB_CONFIG,'thean').then(x=>(fb=x));return fbP}
+function loadFb(){if(fb)return Promise.resolve(fb);if(!fbP)fbP=makeDB(FB_CONFIG,'thean-admin').then(x=>(fb=x));return fbP}
 function authUser(){return loadFb().then(f=>new Promise(res=>{const off=f.A.onAuthStateChanged(f.auth,u=>{off();res(u)})}))}
-async function ensureUser(){await loadFb();if(user&&user.isAnonymous)return user;let u=await authUser();if(!u||!u.isAnonymous){const c=await fb.A.signInAnonymously(fb.auth);u=c.user}user=u;return user}
+async function ensureUser(){await loadFb();if(user&&user.isAnonymous)return user;let u=await authUser();if(u&&!u.isAnonymous){user=u;return user}if(!u||!u.isAnonymous){const c=await fb.A.signInAnonymously(fb.auth);u=c.user}user=u;return user}
 const CP=()=>'chats/'+user.uid, MP=()=>'messages/'+user.uid;
 async function ensureChat(lang){
   await ensureUser();
