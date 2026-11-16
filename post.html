@@ -908,7 +908,7 @@ $('authRetry').onclick=function(){ACC.st='load';drawAll();accStart()};
 function clearKeys(){['token','pageId','pageName','igId','igUser','fbLogin','fbPage','tgToken','tgChat','tgTitle'].forEach(function(k){delete C[k]});save();KS='none';drawKey()}
 function signOut(){if(!FBX)return;if(!ACC.team)clearKeys();chStop();FBX.A.signOut(FBX.auth);['me','settings','plans','chat'].forEach(function(id){$(id).hidden=true})}
 
-function accOff(){ACC.loaded=false;ACC.seen=false;ACC.devBlock=false;ACC.devTouched=false;ACC.devAdding=false;ACC.devices=null;ACC.devx=null;ACC.cidBusy=false;ACC.offs.forEach(function(f){try{f()}catch(e){}});ACC.offs=[];ACC.team=false;ACC.prof=null;ACC.used=0;ACC.plan=null;ACC.req=null;ACC.lock=null}
+function accOff(){ACC.dying=false;ACC.loaded=false;ACC.seen=false;ACC.devBlock=false;ACC.devTouched=false;ACC.devAdding=false;ACC.devices=null;ACC.devx=null;ACC.cidBusy=false;ACC.offs.forEach(function(f){try{f()}catch(e){}});ACC.offs=[];ACC.team=false;ACC.prof=null;ACC.used=0;ACC.plan=null;ACC.req=null;ACC.lock=null}
 function accOn(u){accOff();
   FBX.d.get(R('agents/'+u.uid)).then(function(s){return s.exists()},function(){return false}).then(function(team){
     if(ACC.user!==u)return;ACC.team=team;ACC.st='in';
@@ -916,7 +916,8 @@ function accOn(u){accOff();
     else{
       if(C.token&&!C.fbLogin){['token','pageId','pageName'].forEach(function(k){delete C[k]});save();KS='none';drawKey()}
       if(C.tgChat==='@tg_thean'&&!C.tgToken){delete C.tgChat;save()}
-      ACC.offs.push(FBX.d.onValue(R('postusers/'+u.uid),function(s){var v=s.val()||{},had=planOn();ACC.prof=v.profile||null;ACC.loaded=true;ACC.used=+v.used||0;ACC.plan=v.plan||null;ACC.req=v.req||null;ACC.lock=v.lock||null;
+      ACC.offs.push(FBX.d.onValue(R('postusers/'+u.uid),function(s){var v=s.val()||{},had=planOn();if(ACC.dying)return;
+        if(v.deleted){ACC.offs.forEach(function(f){try{f()}catch(e){}});ACC.offs=[];clearKeys();FBX.A.signOut(FBX.auth).catch(function(){});toast(t('delGone'));return}ACC.prof=v.profile||null;ACC.loaded=true;ACC.used=+v.used||0;ACC.plan=v.plan||null;ACC.req=v.req||null;ACC.lock=v.lock||null;
         if(!v.profile)FBX.d.update(R('postusers/'+u.uid+'/profile'),{email:u.email||'',at:FBX.d.serverTimestamp()}).catch(function(){});
         else if(!v.profile.cid)ensureCid(u);
         ACC.devices=v.devices||{};ACC.devx=v.devx||null;devCheck(u);
@@ -955,8 +956,9 @@ $('me').addEventListener('click',function(e){if(e.target===$('me')||e.target.clo
     FBX.A.reauthenticateWithCredential(ACC.user,FBX.A.EmailAuthProvider.credential(ACC.user.email,o)).then(function(){return FBX.A.updatePassword(ACC.user,n)})
     .then(function(){MEF='';msg('m10','ok',esc(t('pwDone')));drawMe()}).catch(function(err){b.disabled=false;msg('m10','bad',esc(authErr(err)))});return}
   if(a==='doDel'){var p=$('meD').value;if(!p){msg('m10','bad',esc(t('aeWeak')));return}b.disabled=true;var u=ACC.user;
-    FBX.A.reauthenticateWithCredential(u,FBX.A.EmailAuthProvider.credential(u.email,p)).then(function(){return ACC.team?null:FBX.d.remove(R('postusers/'+u.uid))})
-    .then(function(){clearKeys();return FBX.A.deleteUser(u)}).then(function(){$('me').hidden=true;toast(t('delDone'))}).catch(function(err){b.disabled=false;msg('m10','bad',esc(authErr(err)))})}});
+    FBX.A.reauthenticateWithCredential(u,FBX.A.EmailAuthProvider.credential(u.email,p)).then(function(){var team=ACC.team;ACC.dying=true;ACC.offs.forEach(function(f){try{f()}catch(e){}});ACC.offs=[];
+      return team?null:FBX.d.update(R('postusers/'+u.uid),{deleted:{at:FBX.d.serverTimestamp(),email:String(u.email||'').slice(0,190)},req:null})})
+    .then(function(){clearKeys();return FBX.A.deleteUser(u)}).then(function(){$('me').hidden=true;toast(t('delDone'))}).catch(function(err){ACC.dying=false;b.disabled=false;msg('m10','bad',esc(authErr(err)));if(ACC.user)accOn(ACC.user)})}});
 function drawMe(){var p=ACC.prof||{},em=ACC.user&&ACC.user.email||'',h='';
   h+='<div class="mehd"><div class="av big'+(ACC.team?' own':'')+'">'+esc((myName().charAt(0)||'T').toUpperCase())+'</div><div><b>'+esc(myName())+'</b><small>'+esc(em)+'</small></div></div>';
   if(myCid())h+='<div class="cidbox"><span>'+esc(t('cidL'))+'</span><b>'+esc(myCid())+'</b><button class="btn sm soft" data-mea="copyid">'+esc(t('copy'))+'</button></div>';
@@ -1207,7 +1209,7 @@ Object.assign(T.en,{
   myAcct:'My account',ownerT:'Owner · Premium',ownerS:'Unlimited use',freePlan:'Free',freeAcct:'Free Facebook posts left: {n} of {f}',daysLeft:'{n} days left',canPostTo:'You can post to:',
   postSettings:'Posting settings',editProfile:'Edit profile',changePw:'Change password',language:'Language',adminLink:'Admin: customers and payments',delAcct:'Delete account',
   phone:'Phone number',curPw:'Current password',newPw:'New password (at least 6 characters)',saved:'Saved.',pwDone:'Your password was changed.',
-  delWarn:'This deletes your account, your plan and your free posts. It cannot be undone.',delForever:'Delete my account',delDone:'Your account was deleted.',
+  delWarn:'This closes your account for good. Your plan and free posts end, and you can no longer sign in. As our Privacy Policy explains, we keep a record of your account, payments and posting history for a limited time. It cannot be undone.',delForever:'Delete my account',delDone:'Your account was deleted.',delGone:'This account was deleted and can no longer be used.',
   lockT:'Your account is paused',lockUntil:'You cannot post until {d}.',lockForever:'Posting is stopped for this account.',lockWhy:'Reason: {r}',lockShort:'Paused',lockS:'If you think this is a mistake, please chat with us.',
   planOnToast:'Your plan {p} is on until {d}.',
   chatT:'Chat with us',chBotSt:'Assistant · instant answers',chWaiting:'Waiting for our team…',chWith:'Chatting with {n}',ourTeam:'Our team',assistant:'Assistant',typeMsg:'Type a message…',
@@ -1247,7 +1249,7 @@ Object.assign(T.km,{
   myAcct:'គណនីរបស់ខ្ញុំ',ownerT:'ម្ចាស់ · Premium',ownerS:'ប្រើប្រាស់គ្មានដែនកំណត់',freePlan:'ឥតគិតថ្លៃ',freeAcct:'ការបង្ហោះ Facebook ឥតគិតថ្លៃនៅសល់៖ {n} ក្នុងចំណោម {f}',daysLeft:'នៅសល់ {n} ថ្ងៃ',canPostTo:'អ្នកអាចបង្ហោះទៅ៖',
   postSettings:'ការកំណត់ការបង្ហោះ',editProfile:'កែប្រូហ្វាល',changePw:'ប្តូរពាក្យសម្ងាត់',language:'ភាសា',adminLink:'Admin៖ អតិថិជន និងការបង់ប្រាក់',delAcct:'លុបគណនី',
   phone:'លេខទូរស័ព្ទ',curPw:'ពាក្យសម្ងាត់បច្ចុប្បន្ន',newPw:'ពាក្យសម្ងាត់ថ្មី (យ៉ាងតិច ៦ តួ)',saved:'បានរក្សាទុក។',pwDone:'ពាក្យសម្ងាត់របស់អ្នកត្រូវបានប្តូរ។',
-  delWarn:'វានឹងលុបគណនី គម្រោង និងការបង្ហោះឥតគិតថ្លៃរបស់អ្នក។ មិនអាចត្រឡប់វិញបានទេ។',delForever:'លុបគណនីរបស់ខ្ញុំ',delDone:'គណនីរបស់អ្នកត្រូវបានលុប។',
+  delWarn:'វានឹងបិទគណនីរបស់អ្នកជាអចិន្ត្រៃយ៍។ គម្រោង និងការបង្ហោះឥតគិតថ្លៃនឹងបញ្ចប់ ហើយអ្នកមិនអាចចូលបានទៀតទេ។ ដូចដែលបានពន្យល់ក្នុងគោលការណ៍ឯកជនភាព យើងរក្សាកំណត់ត្រាគណនី ការបង់ប្រាក់ និងប្រវត្តិបង្ហោះរបស់អ្នកក្នុងរយៈពេលកំណត់មួយ។ មិនអាចត្រឡប់វិញបានទេ។',delForever:'លុបគណនីរបស់ខ្ញុំ',delDone:'គណនីរបស់អ្នកត្រូវបានលុប។',delGone:'គណនីនេះត្រូវបានលុប ហើយមិនអាចប្រើបានទៀតទេ។',
   lockT:'គណនីរបស់អ្នកត្រូវបានផ្អាក',lockUntil:'អ្នកមិនអាចបង្ហោះបានរហូតដល់ថ្ងៃ {d}។',lockForever:'ការបង្ហោះត្រូវបានបញ្ឈប់សម្រាប់គណនីនេះ។',lockWhy:'មូលហេតុ៖ {r}',lockShort:'បានផ្អាក',lockS:'ប្រសិនបើអ្នកគិតថានេះជាកំហុស សូមជជែកជាមួយយើង។',
   planOnToast:'គម្រោង {p} របស់អ្នកបើកដល់ថ្ងៃ {d}។',
   chatT:'ជជែកជាមួយយើង',chBotSt:'ជំនួយការ · ឆ្លើយភ្លាមៗ',chWaiting:'កំពុងរង់ចាំក្រុមការងារ…',chWith:'កំពុងជជែកជាមួយ {n}',ourTeam:'ក្រុមការងារ',assistant:'ជំនួយការ',typeMsg:'វាយសារ…',

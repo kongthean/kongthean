@@ -561,6 +561,20 @@ html[lang="km"] .mtab{letter-spacing:0}
 .palist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,380px),1fr));gap:12px;align-items:start}
 .panote{margin:0;color:var(--muted);font-size:.86rem}.pahow summary{cursor:pointer;font-weight:600}.pahow ol{margin:6px 0;padding-left:20px;line-height:1.6}
 .pacid{display:flex;align-items:center;gap:8px;background:var(--mist1);border-radius:10px;padding:6px 10px;font-size:.86rem}.pacid span{color:var(--muted)}.pacid b{letter-spacing:.06em;flex:1}
+.pasplit{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:16px;align-items:start}.pasplit .palist{grid-template-columns:minmax(0,1fr)}
+.paside{position:sticky;top:0;border:1px solid var(--line);border-radius:16px;padding:14px;max-height:calc(96vh - 250px);overflow:auto;display:flex;flex-direction:column;gap:12px;background:var(--surface)}
+.paempty{color:var(--muted);text-align:center;padding:48px 16px;font-size:.92rem;line-height:1.6}
+.pasidehd{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.pasidehd span{display:flex;flex-direction:column;min-width:0}.pasidehd small{color:var(--muted);overflow-wrap:anywhere}.pasidehd .x{flex:none}
+.paseg{display:flex;gap:6px;flex-wrap:wrap}.paseg button.on{background:var(--accent);color:#fff}
+.pasum{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}.pasum div{border:1px solid var(--line);border-radius:12px;padding:8px 10px}.pasum b{display:block;font-size:1.1rem}.pasum small{color:var(--muted);font-size:.78rem}
+.pahrow{border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;font-size:.88rem}
+.pahtop{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}.pahtop b{font-size:.9rem}
+.pachips{display:flex;flex-wrap:wrap;gap:4px}.pachips span{background:var(--accent-soft);border-radius:999px;padding:2px 9px;font-size:.76rem;font-weight:700}
+.pahrow dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 12px;margin:0}.pahrow dt{color:var(--muted)}.pahrow dd{margin:0;overflow-wrap:anywhere;white-space:pre-line}.pahrow dd a{font-weight:600}
+.pacard.sel{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}.paact button.on{background:var(--accent);color:#fff}
+.pagone{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(200,50,50,.12);color:var(--danger);border-radius:10px;padding:8px 10px;font-size:.88rem}.pagone b{color:inherit}
+@media(min-width:900px){.pawide .sheet{max-width:1500px}}
+@media(max-width:899px){.pasplit{grid-template-columns:minmax(0,1fr)}.paside{position:fixed;inset:0;z-index:80;max-height:none;border-radius:0;border:0;background:var(--bg);padding:16px}.paside.none{display:none}}
 .padev{display:flex;justify-content:space-between;align-items:center;gap:8px}.padev span{display:flex;flex-direction:column;font-size:.88rem}.padev small{color:var(--muted)}
 @media(max-width:700px){.pastats{display:flex;overflow-x:auto;scrollbar-width:none}.pastats div{flex:none;min-width:112px;padding:6px 10px}.pastats b{font-size:1rem}.patop{position:static}}
 .paplans{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr));gap:12px}.pasave{position:sticky;bottom:-18px;background:var(--surface);padding:10px 0;display:flex;justify-content:flex-end;border-top:1px solid var(--line)}.pabadge{position:absolute;top:8px;right:10px;background:#d9381e;color:#fff;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:999px}
@@ -2653,7 +2667,7 @@ document.addEventListener('thean:admin-ready',paWatch);
 document.addEventListener('thean:render',function(){setTimeout(function(){paWatch();paBadge()},0)});
 (function(){var q=0;new MutationObserver(function(){if(q)return;q=requestAnimationFrame(function(){q=0;if(!PA_NEW)return;var c=document.querySelector('[data-act="postapp"]');if(c&&!c.querySelector('.pabadge'))paBadge()})}).observe(document.body,{childList:true,subtree:true})})();
 function postAppForm(){
-  var tab=PA_NEW?'pay':'cust',U={},PY={},CF={},HL={},offs=[],open={},SQ='',FL='all',PF='all';
+  var tab=PA_NEW?'pay':'cust',U={},PY={},CF={},HL={},offs=[],open={},SQ='',FL='all',PF='all',SIDE=null,HF='all';
   var m=modal('Posting app','<div class="patop"><div class="pastats" data-pastats></div><div class="seg2" data-patabs><button type="button" data-pat="pay">Payments</button><button type="button" data-pat="cust">Customers</button><button type="button" data-pat="plans">Plans and prices</button></div>'+
     '<div class="pafind" data-pafind><input type="search" data-pasearch placeholder="Search customer ID, email, name or phone" autocomplete="off"><select data-pafilter></select></div></div><div data-pabody><small style="color:var(--muted)">Loading…</small></div>');
   m.classList.add('pawide');
@@ -2668,19 +2682,40 @@ function postAppForm(){
     return [p.cid,p.email,p.name,p.phone,uid].some(function(v){return v&&String(v).toLowerCase().replace(/\s+/g,'').indexOf(q)>=0})}
   function msgBox(uid){return open['msg:'+uid]?'<div class="pamsg"><textarea rows="3" data-pamsgt="'+esc(uid)+'" placeholder="Write a message to '+esc(who(uid))+'"></textarea><div class="paact"><button class="btn sm" type="button" data-pasend="'+esc(uid)+'">Send</button><button class="btn sm soft" type="button" data-patog="msg:'+esc(uid)+'">Cancel</button></div><small style="color:var(--muted)">It appears in the chat inside their posting app, and in your Inbox.</small></div>':''}
   function lockBox(uid){return open['lock:'+uid]?'<div class="pamsg"><div class="paact"><select data-palen="'+esc(uid)+'"><option value="1">1 day</option><option value="7">7 days</option><option value="30">30 days</option><option value="0" selected>Until I unpause</option></select></div><input data-pawhy="'+esc(uid)+'" placeholder="Reason the customer sees (optional)" value="Payment not received"><div class="paact"><button class="btn sm del" type="button" data-palock="'+esc(uid)+'">Pause account</button><button class="btn sm soft" type="button" data-patog="lock:'+esc(uid)+'">Cancel</button></div></div>':''}
-  function devBox(uid,x){if(!open['dev:'+uid])return '';var D=x.devices||{},ks=Object.keys(D),e=x.devx,eon=e&&(!(+e.until)||+e.until>Date.now());
-    return '<div class="pamsg"><b>Devices: '+ks.length+' of '+devLimit(x)+'</b>'+(ks.length?ks.map(function(k){var d=D[k]||{};return '<div class="padev"><span>'+esc(d.name||'Device')+'<small>First used '+(d.at?paDay(d.at):'-')+' · last used '+(d.last?paTime(d.last):'-')+'</small></span><button class="btn sm soft" type="button" data-padevdel="'+esc(uid)+'" data-dev="'+esc(k)+'">Remove</button></div>'}).join(''):'<small style="color:var(--muted)">No devices yet.</small>')+
+  function devBox(uid,x){return ''}
+  function devHtml(uid,x){var D=x.devices||{},ks=Object.keys(D),e=x.devx,eon=e&&(!(+e.until)||+e.until>Date.now());
+    return '<div class="pamsg" style="border:0;padding:0"><b>Devices: '+ks.length+' of '+devLimit(x)+'</b>'+(ks.length?ks.map(function(k){var d=D[k]||{};return '<div class="padev"><span>'+esc(d.name||'Device')+'<small>First used '+(d.at?paDay(d.at):'-')+' · last used '+(d.last?paTime(d.last):'-')+'</small></span><button class="btn sm soft" type="button" data-padevdel="'+esc(uid)+'" data-dev="'+esc(k)+'">Remove</button></div>'}).join(''):'<small style="color:var(--muted)">No devices yet.</small>')+
       '<small style="color:var(--muted)">Removing a device frees a place. That phone can sign in again only if a place is free.</small>'+
       '<div class="paact"><b style="font-size:.86rem">Extra devices'+(eon?': +'+e.n+(+e.until?' until '+paDay(e.until):' (no end)'):'')+'</b></div>'+
       '<div class="paact"><select data-padxn="'+esc(uid)+'"><option value="1">+1 device</option><option value="2">+2 devices</option><option value="3">+3 devices</option><option value="5">+5 devices</option></select><select data-padxm="'+esc(uid)+'"><option value="1">1 month</option><option value="3">3 months</option><option value="6">6 months</option><option value="12">1 year</option><option value="0">No end</option></select>'+
       '<button class="btn sm" type="button" data-padx="'+esc(uid)+'">Give extra devices</button>'+(eon?'<button class="btn sm soft" type="button" data-padxoff="'+esc(uid)+'">Remove extra</button>':'')+'</div></div>'}
+  var PNM={fb:'Facebook',fbs:'Facebook Story',ig:'Instagram',igs:'Instagram Story',tg:'Telegram'};
+  function host(u){try{return new URL(u).hostname.replace(/^www\./,'')}catch(e){return ''}}
+  function sideHtml(){if(!SIDE||!U[SIDE.uid])return '<div class="paempty">Tap <b>Devices</b> or <b>Posting history</b> on a customer to see the details here.</div>';
+    var uid=SIDE.uid,x=U[uid],p=x.profile||{};
+    var h='<div class="pasidehd"><span><b>'+esc(p.name||p.email||'(no name)')+'</b><small>'+(p.cid?'ID '+esc(p.cid)+' · ':'')+esc(p.email||'')+'</small></span><button class="btn sm soft x" type="button" data-paside="close">Close</button></div>'+
+      '<div class="paseg"><button class="btn sm soft'+(SIDE.k==='hist'?' on':'')+'" type="button" data-paside="hist:'+esc(uid)+'">Posting history</button><button class="btn sm soft'+(SIDE.k==='dev'?' on':'')+'" type="button" data-paside="dev:'+esc(uid)+'">Devices</button></div>';
+    if(SIDE.k==='dev')return h+devHtml(uid,x);
+    var v=HL[uid];if(v===undefined)return h+'<small style="color:var(--muted)">Loading…</small>';
+    var A=v?Object.keys(v).map(function(k){return v[k]||{}}).sort(function(a,b){return (+b.at||0)-(+a.at||0)}):[];
+    if(!A.length)return h+'<div class="paempty">No posts yet.</div>';
+    var cnt={};A.forEach(function(r){String(r.d||'').split(',').filter(Boolean).forEach(function(k){cnt[k]=(cnt[k]||0)+1})});
+    h+='<div class="pasum"><div><b>'+A.length+'</b><small>Posts in total</small></div>'+Object.keys(PNM).filter(function(k){return cnt[k]}).map(function(k){return '<div><b>'+cnt[k]+'</b><small>'+esc(PNM[k])+'</small></div>'}).join('')+'<div><b style="font-size:.92rem">'+esc(paTime(A[0].at))+'</b><small>Last post</small></div></div>';
+    h+='<div class="paseg"><button class="btn sm soft'+(HF==='all'?' on':'')+'" type="button" data-pahf="all">All</button>'+Object.keys(PNM).filter(function(k){return cnt[k]}).map(function(k){return '<button class="btn sm soft'+(HF===k?' on':'')+'" type="button" data-pahf="'+k+'">'+esc(PNM[k])+'</button>'}).join('')+'</div>';
+    var L=A.filter(function(r){return HF==='all'||String(r.d||'').split(',').indexOf(HF)>=0});
+    return h+L.slice(0,200).map(function(r){var ds=String(r.d||'').split(',').filter(Boolean);
+      return '<div class="pahrow"><div class="pahtop"><b>'+esc(paTime(r.at))+'</b><div class="pachips">'+(ds.length?ds.map(function(k){return '<span>'+esc(PNM[k]||k)+'</span>'}).join(''):'<span>Not posted</span>')+'</div></div><dl>'+
+        (r.page?'<dt>Page</dt><dd>'+esc(r.page)+'</dd>':'')+
+        '<dt>Content from</dt><dd>'+(r.src?'<a href="'+esc(r.src)+'" target="_blank" rel="noopener">'+esc(host(r.src)||'Open link')+'</a><br><small style="color:var(--muted)">'+esc(r.src)+'</small>':'Uploaded from the phone (no link)')+'</dd>'+
+        (r.url?'<dt>Posted at</dt><dd><a href="'+esc(r.url)+'" target="_blank" rel="noopener">Open the post</a></dd>':'')+
+        (r.cap?'<dt>Caption</dt><dd>'+esc(r.cap)+'</dd>':'')+'</dl></div>'}).join('')+(L.length>200?'<small style="color:var(--muted)">Showing the latest 200.</small>':'')}
   function histBox(uid){if(!open['hist:'+uid])return '';var v=HL[uid];if(v===undefined)return '<small style="color:var(--muted)">Loading…</small>';
     var L=v?Object.keys(v).map(function(k){return v[k]}).sort(function(a,b){return (+b.at||0)-(+a.at||0)}).slice(0,40):[];
     if(!L.length)return '<small style="color:var(--muted)">No posts yet.</small>';
     var nm={fb:'Facebook',fbs:'Facebook Story',ig:'Instagram',igs:'Instagram Story',tg:'Telegram'};
     return '<div class="pahist">'+L.map(function(x){return '<div><small>'+esc(paTime(x.at))+' · '+esc(String(x.d||'').split(',').map(function(k){return nm[k]||k}).join(', '))+(x.page?' · '+esc(x.page):'')+'</small>'+
       (x.cap?'<span>'+esc(String(x.cap).slice(0,160))+'</span>':'')+'<span class="lk">'+(x.src?'<a href="'+esc(x.src)+'" target="_blank" rel="noopener">Source</a>':'')+(x.url?' <a href="'+esc(x.url)+'" target="_blank" rel="noopener">Post</a>':'')+'</span></div>'}).join('')+'</div>'}
-  function stats(){var now=Date.now(),L=Object.keys(U).map(function(k){return U[k]||{}}),P=Object.keys(PY).map(function(k){return PY[k]||{}}),mo=new Date();mo.setDate(1);mo.setHours(0,0,0,0);
+  function stats(){var now=Date.now(),L=Object.keys(U).map(function(k){return U[k]||{}}).filter(function(x){return !x.deleted&&!x.hidden}),P=Object.keys(PY).map(function(k){return PY[k]||{}}),mo=new Date();mo.setDate(1);mo.setHours(0,0,0,0);
     var act=L.filter(function(x){return x.plan&&+x.plan.until>now}).length,todo=P.filter(function(x){return !x.seen}).length,pz=L.filter(function(x){return locked(x)}).length;
     var inc={};P.filter(function(x){return (x.result==='auto'||x.result==='approved')&&+x.at>=mo.getTime()}).forEach(function(x){var c=x.cur||'USD';inc[c]=(inc[c]||0)+(+x.amt||0)});
     var it=Object.keys(inc).map(function(c){return paMoney(inc[c],c)}).join(' + ')||paMoney(0,CF.cur||'USD');
@@ -2703,13 +2738,15 @@ function postAppForm(){
     body.innerHTML=h}
   function drawCust(){var now=Date.now(),cur=CF.cur==='KHR'?'KHR':'USD';
     var L=Object.keys(U).map(function(k){return Object.assign({uid:k},U[k])}).filter(function(x){if(!match(x,x.uid))return false;var on=x.plan&&+x.plan.until>now;
+      if(FL==='removed')return !!x.hidden;if(x.hidden)return false;if(FL==='deleted')return !!x.deleted;if(x.deleted&&FL!=='all')return false;
       return FL==='all'||(FL==='free'&&!on)||(FL==='plan'&&on)||(FL==='soon'&&on&&+x.plan.until-now<7*864e5)||(FL==='paused'&&locked(x))||(FL==='tester'&&!x.tester)||(FL==='req'&&x.req)});
     L.sort(function(a,b){return (b.req?1:0)-(a.req?1:0)||((b.profile||{}).at||0)-((a.profile||{}).at||0)});
     var h='<details class="pahow"><summary>How to add a new customer as a Tester</summary><ol><li>Tap <b>Open App roles</b> (opens your Facebook app).</li><li>Tap <b>Add People</b>, choose <b>Tester</b>, and paste the customer\'s Facebook link or name.</li><li>Come back here and tick <b>Added as Tester</b>.</li><li>Tell the customer to open <b>developers.facebook.com/requests</b> and tap <b>Accept</b>.</li></ol>'+
       (CF.fbAppId?'<a class="btn sm" target="_blank" rel="noopener" href="https://developers.facebook.com/apps/'+esc(CF.fbAppId)+'/roles/roles/">'+I('ext')+' Open App roles</a>':'<small style="color:var(--muted)">Add your Facebook App ID in Plans and prices first.</small>')+'</details>';
-    if(!L.length){body.innerHTML=h+'<small style="color:var(--muted)">No customers found.</small>';return}
+    if(!L.length){body.innerHTML='<div class="pasplit"><div>'+h+'<small style="color:var(--muted)">No customers found.</small></div><div class="paside'+(SIDE?'':' none')+'" data-paside-box>'+sideHtml()+'</div></div>';return}
     h+='<p class="panote">'+L.length+' shown</p><div class="palist">'+L.map(function(x){var p=x.profile||{},pl=x.plan,on=pl&&+pl.until>now,q=x.req,lk=locked(x),nd=Object.keys(x.devices||{}).length;
-      return '<div class="pacard'+(q?' req':'')+'"><div class="pahd"><span><b>'+esc(p.name||p.email||'(no name)')+'</b><small>'+esc(p.email||'')+(p.phone?' · '+esc(p.phone):'')+(p.at?' · joined '+paDay(p.at):'')+'</small></span>'+
+      if(x.deleted)return goneCard(x);
+      return '<div class="pacard'+(q?' req':'')+(SIDE&&SIDE.uid===x.uid?' sel':'')+'"><div class="pahd"><span><b>'+esc(p.name||p.email||'(no name)')+'</b><small>'+esc(p.email||'')+(p.phone?' · '+esc(p.phone):'')+(p.at?' · joined '+paDay(p.at):'')+'</small></span>'+
         (p.fb?'<a class="btn sm soft" target="_blank" rel="noopener" href="'+esc(/^https?:/.test(p.fb)?p.fb:'https://www.facebook.com/'+p.fb)+'">'+I('facebook')+' Profile</a>':'')+'</div>'+
         (p.cid?'<div class="pacid"><span>Customer ID</span><b>'+esc(p.cid)+'</b><button class="btn sm soft" type="button" data-pacopy="'+esc(p.cid)+'">Copy</button></div>':'')+
         '<div class="pameta"><span>Posts made: <b>'+(+x.used||0)+'</b></span><span>'+(on?'Plan: <b>'+esc(pkn(pl.pkg))+'</b> until <b>'+paDay(pl.until)+'</b>':pl?'Plan ended '+paDay(pl.until):'Free (Facebook only)')+'</span><span>Devices: <b>'+nd+' of '+devLimit(x)+'</b></span>'+
@@ -2722,9 +2759,19 @@ function postAppForm(){
         (on?'<button class="btn sm del" type="button" data-pastop="'+esc(x.uid)+'">Stop plan</button>':'')+
         (q?'<button class="btn sm soft" type="button" data-panoreq="'+esc(x.uid)+'">Not paid</button>':'')+'</div>'+
         '<div class="paact">'+(lk?'<button class="btn sm soft" type="button" data-paunlock="'+esc(x.uid)+'">Unpause</button>':'<button class="btn sm soft" type="button" data-patog="lock:'+esc(x.uid)+'">Pause account</button>')+
-        '<button class="btn sm soft" type="button" data-patog="msg:'+esc(x.uid)+'">'+I('chat')+' Message</button><button class="btn sm soft" type="button" data-patog="dev:'+esc(x.uid)+'">Devices</button><button class="btn sm soft" type="button" data-pahist="'+esc(x.uid)+'">'+(open['hist:'+x.uid]?'Hide history':'Posting history')+'</button></div>'+
-        lockBox(x.uid)+msgBox(x.uid)+devBox(x.uid,x)+histBox(x.uid)+'</div>'}).join('')+'</div>';
-    body.innerHTML=h}
+        '<button class="btn sm soft" type="button" data-patog="msg:'+esc(x.uid)+'">'+I('chat')+' Message</button>'+sideBtns(x.uid)+'</div>'+
+        lockBox(x.uid)+msgBox(x.uid)+'</div>'}).join('')+'</div>';
+    body.innerHTML='<div class="pasplit"><div>'+h+'</div><div class="paside'+(SIDE?'':' none')+'" data-paside-box>'+sideHtml()+'</div></div>'}
+  function sideFit(sb){if(innerWidth<900){sb.style.top='';sb.style.maxHeight='';return}var pt=m.querySelector('.patop'),bd=sb.closest('.bd'),st=pt&&getComputedStyle(pt).position==='sticky'?pt.offsetHeight-6:0;
+    sb.style.top=st+'px';if(bd)sb.style.maxHeight=Math.max(260,bd.clientHeight-st-28)+'px'}
+  function sideBtns(uid){return '<button class="btn sm soft'+(SIDE&&SIDE.uid===uid&&SIDE.k==='dev'?' on':'')+'" type="button" data-paside="dev:'+esc(uid)+'">Devices</button><button class="btn sm soft'+(SIDE&&SIDE.uid===uid&&SIDE.k==='hist'?' on':'')+'" type="button" data-paside="hist:'+esc(uid)+'">Posting history</button>'}
+  function goneCard(x){var p=x.profile||{},dl=x.deleted||{};
+    return '<div class="pacard'+(SIDE&&SIDE.uid===x.uid?' sel':'')+'"><div class="pagone"><span><b>Deleted account</b> · deleted by the customer'+(dl.at?' on '+paDay(dl.at):'')+(x.hidden?' · removed from the list':'')+'</span></div>'+
+      '<div class="pahd"><span><b>'+esc(p.name||p.email||dl.email||'(no name)')+'</b><small>'+esc(p.email||dl.email||'')+(p.phone?' · '+esc(p.phone):'')+(p.at?' · joined '+paDay(p.at):'')+'</small></span></div>'+
+      (p.cid?'<div class="pacid"><span>Customer ID</span><b>'+esc(p.cid)+'</b><button class="btn sm soft" type="button" data-pacopy="'+esc(p.cid)+'">Copy</button></div>':'')+
+      '<div class="pameta"><span>Posts made: <b>'+(+x.used||0)+'</b></span>'+(x.plan?'<span>Last plan: <b>'+esc(pkn(x.plan.pkg))+'</b> until '+paDay(x.plan.until)+'</span>':'<span>Free</span>')+'</div>'+
+      '<small style="color:var(--muted)">The customer can no longer sign in. Their details, payments and posting history are kept as proof.</small>'+
+      '<div class="paact">'+sideBtns(x.uid)+(x.hidden?'<button class="btn sm" type="button" data-paunhide="'+esc(x.uid)+'">Show in list again</button>':(open['hide:'+x.uid]?'<button class="btn sm del" type="button" data-pahide="'+esc(x.uid)+'">Tap again to remove</button>':'<button class="btn sm del" type="button" data-patog="hide:'+esc(x.uid)+'">Remove from list</button>'))+'</div></div>'}
   function drawPlans(){var c=CF,pk=c.packs||{};
     body.innerHTML='<div class="paplans"><div class="pacard"><b>General</b><div class="two"><label class="f">Free Facebook posts for new accounts<input data-pc="free" inputmode="numeric" value="'+esc(c.free==null?5:c.free)+'"></label>'+
       '<label class="f">Currency<select data-pc="cur"><option value="USD"'+(c.cur!=='KHR'?' selected':'')+'>USD $</option><option value="KHR"'+(c.cur==='KHR'?' selected':'')+'>KHR ៛</option></select></label></div>'+
@@ -2746,9 +2793,10 @@ function postAppForm(){
       '<div class="pasave"><button class="btn" type="button" data-pasave>Save</button></div>'}
   function draw(){var ae=document.activeElement;if(ae&&ae.matches&&ae.matches('textarea[data-pamsgt],input[data-pawhy]')&&tab!=='plans')return;
     m.querySelectorAll('[data-pat]').forEach(function(b){b.classList.toggle('on',b.dataset.pat===tab)});find.hidden=tab==='plans';
-    if(tab==='cust'&&sel.dataset.t!=='cust'){sel.dataset.t='cust';sel.innerHTML=[['all','All customers'],['req','Sent a receipt'],['plan','Active plan'],['soon','Plan ends in 7 days'],['free','Free'],['paused','Paused'],['tester','Not yet a Tester']].map(function(o){return '<option value="'+o[0]+'">'+o[1]+'</option>'}).join('');sel.value=FL}
+    if(tab==='cust'&&sel.dataset.t!=='cust'){sel.dataset.t='cust';sel.innerHTML=[['all','All customers'],['req','Sent a receipt'],['plan','Active plan'],['soon','Plan ends in 7 days'],['free','Free'],['paused','Paused'],['tester','Not yet a Tester'],['deleted','Deleted accounts'],['removed','Removed from list']].map(function(o){return '<option value="'+o[0]+'">'+o[1]+'</option>'}).join('');sel.value=FL}
     if(tab==='pay'&&sel.dataset.t!=='pay'){sel.dataset.t='pay';sel.innerHTML=[['all','All payments'],['todo','Not checked yet'],['review','Needs your check'],['auto','Turned on automatically'],['approved','Approved'],['rejected','Rejected'],['undone','Undone']].map(function(o){return '<option value="'+o[0]+'">'+o[1]+'</option>'}).join('');sel.value=PF}
-    stats();if(tab==='cust')drawCust();else if(tab==='pay')drawPay();else drawPlans()}
+    var sbx=m.querySelector('[data-paside-box]'),sst=sbx?sbx.scrollTop:0;
+    stats();if(tab==='cust'){drawCust();var sb2=m.querySelector('[data-paside-box]');if(sb2){sb2.scrollTop=sst;sideFit(sb2)}}else if(tab==='pay')drawPay();else drawPlans()}
   var err=function(e){body.innerHTML='<div class="msg bad" style="padding:10px">'+esc(permErr(e))+'</div>'};
   var RAWU={},TEAM={},strip=function(){U={};Object.keys(RAWU).forEach(function(k){if(!TEAM[k])U[k]=RAWU[k]})};
   window.TheanAdmin.teamIds().then(function(t){TEAM=t||{};strip();if(tab!=='plans')draw();else stats()}).catch(function(){});
@@ -2765,6 +2813,12 @@ function postAppForm(){
     if(d.pat){tab=d.pat;draw();return}
     if(d.patog){open[d.patog]=!open[d.patog];draw();return}
     if(d.pacopy){try{navigator.clipboard.writeText(d.pacopy);toast('Customer ID copied')}catch(x){}return}
+    if(d.paside){if(d.paside==='close'){SIDE=null;draw();return}var sp=d.paside.split(':'),su=sp.slice(1).join(':');SIDE={k:sp[0],uid:su};HF='all';
+      if(sp[0]==='hist'&&HL[su]===undefined){window.TheanAdmin.postLog(su).then(function(v){HL[su]=v||null;draw()}).catch(function(err){HL[su]=null;toast(permErr(err));draw()})}
+      draw();var sb=m.querySelector('[data-paside-box]');if(sb)sb.scrollTop=0;return}
+    if(d.pahf){HF=d.pahf;draw();return}
+    if(d.pahide){window.TheanAdmin.postUser(d.pahide,{hidden:true}).then(function(){open['hide:'+d.pahide]=false;if(SIDE&&SIDE.uid===d.pahide)SIDE=null;toast('Removed from the list. Find it again under "Removed from list".')}).catch(function(err){toast(permErr(err))});return}
+    if(d.paunhide){window.TheanAdmin.postUser(d.paunhide,{hidden:null}).then(function(){toast('Back in the list')}).catch(function(err){toast(permErr(err))});return}
     if(d.pahist){var hk='hist:'+d.pahist;open[hk]=!open[hk];if(open[hk]&&HL[d.pahist]===undefined){window.TheanAdmin.postLog(d.pahist).then(function(v){HL[d.pahist]=v||null;draw()}).catch(function(err){HL[d.pahist]=null;toast(permErr(err));draw()})}draw();return}
     if(d.padevdel){if(!confirm('Remove this device? That phone is signed out of the posting app the next time it opens.'))return;window.TheanAdmin.postUser(d.padevdel,{['devices/'+d.dev]:null}).then(function(){toast('Device removed')}).catch(function(err){toast(permErr(err))});return}
     if(d.padx){var n=+m.querySelector('[data-padxn="'+d.padx+'"]').value,mo=+m.querySelector('[data-padxm="'+d.padx+'"]').value;
