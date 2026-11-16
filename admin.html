@@ -2750,7 +2750,9 @@ function postAppForm(){
     if(tab==='pay'&&sel.dataset.t!=='pay'){sel.dataset.t='pay';sel.innerHTML=[['all','All payments'],['todo','Not checked yet'],['review','Needs your check'],['auto','Turned on automatically'],['approved','Approved'],['rejected','Rejected'],['undone','Undone']].map(function(o){return '<option value="'+o[0]+'">'+o[1]+'</option>'}).join('');sel.value=PF}
     stats();if(tab==='cust')drawCust();else if(tab==='pay')drawPay();else drawPlans()}
   var err=function(e){body.innerHTML='<div class="msg bad" style="padding:10px">'+esc(permErr(e))+'</div>'};
-  offs.push(window.TheanAdmin.onPostUsers(function(v){U=v||{};if(tab!=='plans')draw();else stats()},err));
+  var RAWU={},TEAM={},strip=function(){U={};Object.keys(RAWU).forEach(function(k){if(!TEAM[k])U[k]=RAWU[k]})};
+  window.TheanAdmin.teamIds().then(function(t){TEAM=t||{};strip();if(tab!=='plans')draw();else stats()}).catch(function(){});
+  offs.push(window.TheanAdmin.onPostUsers(function(v){RAWU=v||{};strip();if(tab!=='plans')draw();else stats()},err));
   offs.push(window.TheanAdmin.onPays(function(v){PY=v||{};if(tab==='pay')draw();else stats()},err));
   window.TheanAdmin.postPlans().then(function(v){CF=v||{};draw()}).catch(function(){CF={};draw()});
   var obs=new MutationObserver(function(){if(!document.body.contains(m)){offs.forEach(function(f){try{f&&f()}catch(e){}});obs.disconnect()}});obs.observe(document.body,{childList:true});
@@ -4307,6 +4309,7 @@ if(ADMIN_PAGE){
     async pushCount(){await loadFb();const v=await fb.get('push/subs');return v?Object.keys(v).length:0},
     async pushDel(id){await loadFb();await fb.set('push/queue/'+id,null)},
     onPostUsers(cb,err){let off=null,dead=false;loadFb().then(()=>{if(!dead)off=fb.on('postusers',cb,err)}).catch(e=>err&&err(e));return()=>{dead=true;try{off&&off()}catch(e){}}},
+    async teamIds(){await loadFb();const v=await fb.get('agents');return v||{}},
     async postPlans(){await loadFb();return await fb.get('settings/public/postPlans')},
     async setPostPlans(v){await loadFb();await fb.set('settings/public/postPlans',v)},
     async postUser(uid,patch){await loadFb();await fb.update('postusers/'+uid,patch)},
