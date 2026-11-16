@@ -135,7 +135,9 @@ body.out .top #chatBtn,body.out .top #meBtn{display:none}
 .merow{display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px;border:0;border-top:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:.95rem;text-align:left;cursor:pointer;text-decoration:none}
 .melist>.merow:first-child{border-top:0}.merow i{width:8px;height:8px;border-right:2px solid var(--muted);border-top:2px solid var(--muted);transform:rotate(45deg);flex:none}.merow.red{color:var(--bad)}.merow.lang{cursor:default}
 .meform{padding:4px 14px 14px;border-top:1px solid var(--line);background:var(--bg)}.btn.danger{background:var(--bad)!important;color:#fff}
-#lockCard h2{margin:0 0 6px;font-size:1.2rem}body.locked main>section:not(#lockCard):not(#authCard),body.locked main>p.note,body.locked #needSetup{display:none!important}
+#lockCard h2{margin:0 0 6px;font-size:1.2rem}body.locked main>section:not(#lockCard):not(#authCard),body.locked main>p.note,body.locked #needSetup,body.devblock main>section:not(#devCard):not(#authCard),body.devblock main>p.note,body.devblock #needSetup{display:none!important}
+#devCard h2{margin:0 0 6px;font-size:1.2rem}.devul{margin:6px 0;padding-left:20px;line-height:1.7}.devul small{color:var(--muted)}
+.cidbox{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:4px 10px;border:1px dashed var(--line);border-radius:14px;padding:10px 12px;margin-bottom:12px}.cidbox span{color:var(--muted);font-size:.84rem}.cidbox b{font-size:1.05rem;letter-spacing:.08em}.cidbox small{grid-column:1/-1;color:var(--muted);font-size:.78rem}
 .upsell{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--soft);font-size:.86rem;color:var(--muted)}
 .chatpill{position:relative;display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;padding:8px 13px 8px 10px;background:var(--grad);color:#fff;font:inherit;font-size:.84rem;font-weight:700;cursor:pointer;flex:none;box-shadow:0 2px 10px rgba(26,111,189,.35)}
 .chatpill svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -223,6 +225,14 @@ body.out .top #chatBtn{display:none}
     <p id="lockTxt" style="margin:0 0 6px"></p>
     <p class="note" style="margin-top:0" data-t="lockS"></p>
     <div class="row" style="margin-top:12px"><button class="btn sm" data-chat data-t="helpChat"></button></div>
+  </section>
+  <section class="card" id="devCard" hidden>
+    <h2 data-t="devT"></h2>
+    <p id="devTxt" style="margin:0 0 6px"></p>
+    <ul class="devul" id="devList"></ul>
+    <p class="note" id="devMore"></p>
+    <p class="note" id="devCid" style="font-weight:600"></p>
+    <div class="row" style="margin-top:12px"><button class="btn sm" data-chat data-t="helpChat"></button><button class="btn soft sm" data-signout data-t="signOut"></button></div>
   </section>
   <div class="msg info" id="needSetup" hidden><span data-t="needSetup"></span> <button class="link" data-open-settings data-t="openSettings"></button></div>
 
@@ -471,7 +481,7 @@ function applyLang(){drawKey();document.documentElement.lang=C.lang;document.bod
   if(ST.kind==='photos')countSel();
   $('needSetup').hidden=!!C.token;drawHist();if(typeof drawAll==='function'&&ACC)drawAll();if(typeof drawChat==='function'&&CH)drawChat();if(typeof drawFbBox==='function')drawFbBox();if(typeof drawDoc==='function')drawDoc()}
 document.addEventListener('click',function(e){var b=e.target.closest('[data-lang]');if(!b)return;C.lang=b.getAttribute('data-lang');save();applyLang()});
-document.addEventListener('click',function(e){if(e.target.closest('[data-chat]'))openChat()});
+document.addEventListener('click',function(e){if(e.target.closest('[data-chat]'))openChat();if(e.target.closest('[data-signout]'))signOut()});
 
 /* ---------- state ---------- */
 var ST={kind:'',video:'',images:[],sel:[],files:[],text:'',tags:[],user:'',name:'',avatar:'',srcLink:''};
@@ -844,7 +854,20 @@ function freeLeft(){return Math.max(0,freeTotal()-(+ACC.used||0))}
 function allowed(){if(ACC.team)return PKD.all;if(planOn())return PKD[ACC.plan.pkg]||PKD.all;return ['fb']}
 function destLocked(k){if(ACC.st!=='in'||ACC.team)return false;return allowed().indexOf(k)<0}
 function isLocked(){var l=ACC.lock;return !!(l&&!ACC.team&&(!(+l.until)||+l.until>Date.now()))}
-function canPost(){return ACC.team||(!isLocked()&&(planOn()||freeLeft()>0))}
+function canPost(){return ACC.team||(!isLocked()&&!ACC.devBlock&&(planOn()||freeLeft()>0))}
+function newCid(){var b=new Uint8Array(14);crypto.getRandomValues(b);var s=String(1+b[0]%9);for(var i=1;i<14;i++)s+=String(b[i]%10);return s}
+var CIDT=0;function ensureCid(u){if(ACC.cidBusy||CIDT>5)return;ACC.cidBusy=true;CIDT++;var c=newCid();
+  FBX.d.set(R('cids/'+c),u.uid).then(function(){return FBX.d.update(R('postusers/'+u.uid+'/profile'),{email:u.email||'',cid:c})}).then(function(){ACC.cidBusy=false},function(){ACC.cidBusy=false;setTimeout(function(){if(ACC.user===u&&!(ACC.prof&&ACC.prof.cid))ensureCid(u)},400)})}
+function myCid(){return (ACC.prof&&ACC.prof.cid)||''}
+function devId(){try{var d=localStorage.getItem('thean_post_dev');if(!d){var b=new Uint8Array(8);crypto.getRandomValues(b);d=[].map.call(b,function(x){return ('0'+x.toString(16)).slice(-2)}).join('');localStorage.setItem('thean_post_dev',d)}return d}catch(e){return 'nostorage'}}
+function devName(){var u=navigator.userAgent,os=/iPhone/.test(u)?'iPhone':/iPad/.test(u)?'iPad':/Android/.test(u)?'Android':/Windows/.test(u)?'Windows PC':/Mac OS X/.test(u)?'Mac':/Linux/.test(u)?'Linux':'Device';
+  var br=/Edg\//.test(u)?'Edge':/CriOS|Chrome\//.test(u)?'Chrome':/FxiOS|Firefox\//.test(u)?'Firefox':/Safari\//.test(u)?'Safari':'Browser';return os+' · '+br}
+function devLimit(){var b=+cfg().devices>0?+cfg().devices:2,e=ACC.devx;return b+(e&&(!(+e.until)||+e.until>Date.now())?(+e.n||0):0)}
+function devCheck(u){if(ACC.team||!u){ACC.devBlock=false;return}var D=ACC.devices||{},me=devId();
+  if(D[me]){ACC.devBlock=false;if(!ACC.devTouched){ACC.devTouched=true;FBX.d.update(R('postusers/'+u.uid+'/devices/'+me),{last:FBX.d.serverTimestamp(),name:devName()}).catch(function(){})}return}
+  if(Object.keys(D).length<devLimit()){ACC.devBlock=false;if(!ACC.devAdding){ACC.devAdding=true;FBX.d.set(R('postusers/'+u.uid+'/devices/'+me),{at:FBX.d.serverTimestamp(),last:FBX.d.serverTimestamp(),name:devName()}).catch(function(){}).then(function(){ACC.devAdding=false})}return}
+  ACC.devBlock=true}
+function devList(){var D=ACC.devices||{},me=devId();return Object.keys(D).sort(function(a,b){return (+(D[b]||{}).last||0)-(+(D[a]||{}).last||0)}).map(function(k){var d=D[k]||{};return '<li>'+esc(d.name||'Device')+(k===me?' <b>('+esc(t('thisDev'))+')</b>':'')+(d.last?' <small>· '+esc(t('lastUsed',{d:fday(+d.last)}))+'</small>':'')+'</li>'}).join('')}
 function R(p){return FBX.d.ref(FBX.db,p)}
 function fbLoad(){if(FBX)return Promise.resolve(FBX);
   return Promise.all([import(FBV+'firebase-app.js'),import(FBV+'firebase-auth.js'),import(FBV+'firebase-database.js')]).then(function(m){
@@ -858,6 +881,9 @@ function drawAll(){var inn=ACC.st==='in',lk=inn&&isLocked();
   $('authCard').hidden=inn;$('authLoad').hidden=ACC.st!=='load';$('authForm').hidden=ACC.st==='load'||ACC.st==='err';$('authErr').hidden=ACC.st!=='err';
   document.querySelectorAll('[data-am]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-am')===AM)});
   $('upOnly').hidden=AM!=='up';$('aGo').textContent=t(AM==='up'?'signUp':'signIn');$('aPass').autocomplete=AM==='up'?'new-password':'current-password';$('aForgot').hidden=AM==='up';
+  var db=inn&&!lk&&!!ACC.devBlock;document.body.classList.toggle('devblock',db);$('devCard').hidden=!db;
+  if(db){var c=cfg();$('devTxt').textContent=t('devS',{n:devLimit()});$('devList').innerHTML=devList();
+    $('devMore').textContent=(+c.devM||+c.devY)?t('devMore',{m:money(+c.devM||0),y:money(+c.devY||0)}):t('devMore2');$('devCid').textContent=myCid()?t('cidL')+': '+myCid():''}
   $('lockCard').hidden=!lk;if(lk){var l=ACC.lock;$('lockTxt').textContent=(+l.until?t('lockUntil',{d:fday(+l.until)}):t('lockForever'))+(l.reason?' '+t('lockWhy',{r:l.reason}):'')}
   var av=$('meBtn');av.textContent=(myName().charAt(0)||'T').toUpperCase();av.classList.toggle('own',!!ACC.team);
   $('igSec').hidden=destLocked('ig')&&destLocked('igs');$('tgSec').hidden=destLocked('tg');
@@ -880,7 +906,7 @@ $('authRetry').onclick=function(){ACC.st='load';drawAll();accStart()};
 function clearKeys(){['token','pageId','pageName','igId','igUser','fbLogin','fbPage','tgToken','tgChat','tgTitle'].forEach(function(k){delete C[k]});save();KS='none';drawKey()}
 function signOut(){if(!FBX)return;if(!ACC.team)clearKeys();chStop();FBX.A.signOut(FBX.auth);['me','settings','plans','chat'].forEach(function(id){$(id).hidden=true})}
 
-function accOff(){ACC.loaded=false;ACC.offs.forEach(function(f){try{f()}catch(e){}});ACC.offs=[];ACC.team=false;ACC.prof=null;ACC.used=0;ACC.plan=null;ACC.req=null;ACC.lock=null}
+function accOff(){ACC.loaded=false;ACC.devBlock=false;ACC.devTouched=false;ACC.devAdding=false;ACC.devices=null;ACC.devx=null;ACC.cidBusy=false;ACC.offs.forEach(function(f){try{f()}catch(e){}});ACC.offs=[];ACC.team=false;ACC.prof=null;ACC.used=0;ACC.plan=null;ACC.req=null;ACC.lock=null}
 function accOn(u){accOff();
   FBX.d.get(R('agents/'+u.uid)).then(function(s){return s.exists()},function(){return false}).then(function(team){
     if(ACC.user!==u)return;ACC.team=team;ACC.st='in';
@@ -890,13 +916,15 @@ function accOn(u){accOff();
       if(C.tgChat==='@tg_thean'&&!C.tgToken){delete C.tgChat;save()}
       ACC.offs.push(FBX.d.onValue(R('postusers/'+u.uid),function(s){var v=s.val()||{},had=planOn();ACC.prof=v.profile||null;ACC.loaded=true;ACC.used=+v.used||0;ACC.plan=v.plan||null;ACC.req=v.req||null;ACC.lock=v.lock||null;
         if(!v.profile)FBX.d.update(R('postusers/'+u.uid+'/profile'),{email:u.email||'',at:FBX.d.serverTimestamp()}).catch(function(){});
+        else if(!v.profile.cid)ensureCid(u);
+        ACC.devices=v.devices||{};ACC.devx=v.devx||null;devCheck(u);
         if(!had&&planOn()&&ACC.seen)toast(t('planOnToast',{p:pkName(ACC.plan.pkg),d:fday(+ACC.plan.until)}));ACC.seen=true;
         drawAll();checkTerms()},function(){}));
       fbSdk().then(fbSilent)}
     chStart();drawAll()})}
 function accStart(){drawAll();
   fbLoad().then(function(X){
-    FBX.d.onValue(R('settings/public/postPlans'),function(s){ACC.cfg=s.val()||{};drawAll();drawFbBox()},function(){ACC.cfg=ACC.cfg||{}});
+    FBX.d.onValue(R('settings/public/postPlans'),function(s){ACC.cfg=s.val()||{};if(ACC.st==='in'&&!ACC.team&&ACC.user)devCheck(ACC.user);drawAll();drawFbBox()},function(){ACC.cfg=ACC.cfg||{}});
     X.A.onAuthStateChanged(X.auth,function(u){ACC.user=u;ACC.seen=false;if(!u){accOff();chStop();ACC.st='out';drawAll();return}accOn(u)})})
   .catch(function(){ACC.st='err';drawAll()})}
 function toast(s){var el=$('toast');el.textContent=s;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(function(){el.hidden=true},4200)}
@@ -904,7 +932,8 @@ function toast(s){var el=$('toast');el.textContent=s;el.hidden=false;clearTimeou
 /* status line above the Post button */
 function drawPlanBar(){var el=$('planBar');if(!el)return;
   if(ACC.st!=='in'||ACC.team||isLocked()){el.hidden=true;return}el.hidden=false;
-  el.innerHTML=planOn()?'<span>'+esc(t('pbPlan',{p:pkName(ACC.plan.pkg),d:fday(+ACC.plan.until)}))+'</span><button class="link" data-plans>'+esc(t('pbMore'))+'</button>'
+  var dl=planOn()?Math.ceil((+ACC.plan.until-Date.now())/864e5):99;
+  el.innerHTML=planOn()&&dl<=3?'<span class="bad">'+esc(t('pbSoon',{n:dl}))+'</span><button class="link" data-plans>'+esc(t('renewShort'))+'</button>':planOn()?'<span>'+esc(t('pbPlan',{p:pkName(ACC.plan.pkg),d:fday(+ACC.plan.until)}))+'</span><button class="link" data-plans>'+esc(t('pbMore'))+'</button>'
     :'<span class="'+(freeLeft()?'':'bad')+'">'+esc(t('pbFree',{n:freeLeft(),f:freeTotal()}))+'</span><button class="link" data-plans>'+esc(t('upgrade'))+'</button>'}
 document.addEventListener('click',function(e){if(e.target.closest('[data-plans]')){['settings','me','chat'].forEach(function(id){$(id).hidden=true});openPlans()}});
 
@@ -916,6 +945,7 @@ $('me').addEventListener('click',function(e){if(e.target===$('me')||e.target.clo
   if(a==='set'){$('me').hidden=true;openSettings();return}
   if(a==='chat'){$('me').hidden=true;openChat();return}
   if(a==='out'){signOut();return}
+  if(a==='copyid'){try{navigator.clipboard.writeText(myCid());toast(t('copied'))}catch(x){}return}
   if(a==='edit'||a==='pw'||a==='del'){MEF=MEF===a?'':a;msg('m10','','');drawMe();return}
   if(a==='saveEdit'){var nm=$('meN').value.trim(),ph=$('meP').value.trim(),fl=$('meF').value.trim();if(!nm){msg('m10','bad',esc(t('aeNeedName')));return}
     b.disabled=true;FBX.d.update(R('postusers/'+ACC.user.uid+'/profile'),{email:ACC.user.email||'',name:nm.slice(0,90),phone:ph.slice(0,40),fb:fl.slice(0,290)}).then(function(){MEF='';msg('m10','ok',esc(t('saved')));drawMe()}).catch(function(err){b.disabled=false;msg('m10','bad',esc(authErr(err)))});return}
@@ -927,22 +957,25 @@ $('me').addEventListener('click',function(e){if(e.target===$('me')||e.target.clo
     .then(function(){clearKeys();return FBX.A.deleteUser(u)}).then(function(){$('me').hidden=true;toast(t('delDone'))}).catch(function(err){b.disabled=false;msg('m10','bad',esc(authErr(err)))})}});
 function drawMe(){var p=ACC.prof||{},em=ACC.user&&ACC.user.email||'',h='';
   h+='<div class="mehd"><div class="av big'+(ACC.team?' own':'')+'">'+esc((myName().charAt(0)||'T').toUpperCase())+'</div><div><b>'+esc(myName())+'</b><small>'+esc(em)+'</small></div></div>';
+  if(myCid())h+='<div class="cidbox"><span>'+esc(t('cidL'))+'</span><b>'+esc(myCid())+'</b><button class="btn sm soft" data-mea="copyid">'+esc(t('copy'))+'</button><small>'+esc(t('cidNote'))+'</small></div>';
   if(ACC.team)h+='<div class="mecard prem"><b>'+esc(t('ownerT'))+'</b><span>'+esc(t('ownerS'))+'</span></div>';
   else{var st=isLocked()?t('lockShort'):planOn()?t('pbPlan',{p:pkName(ACC.plan.pkg),d:fday(+ACC.plan.until)}):t('freeAcct',{n:freeLeft(),f:freeTotal()});
     var left=planOn()?Math.ceil((+ACC.plan.until-Date.now())/864e5):0;
     h+='<div class="mecard'+(planOn()?' prem':'')+'"><b>'+esc(planOn()?pkName(ACC.plan.pkg):t('freePlan'))+'</b><span>'+esc(st)+(planOn()?' · '+esc(t('daysLeft',{n:left})):'')+'</span>'+
       '<span class="inc">'+esc(t('canPostTo'))+' '+esc(allowed().map(function(d){return t({fb:'dFbPost',fbs:'dFbStory',ig:'dIgPost',igs:'dIgStory',tg:'dTg'}[d])}).join(', '))+'</span>'+
-      '<button class="btn sm" data-plans>'+esc(t(planOn()?'renew':'seePlans'))+'</button></div>'}
+      '<button class="btn sm" data-plans>'+esc(t(planOn()?'renew':'seePlans'))+'</button></div>'+
+      '<div class="mecard" style="margin-top:10px"><b>'+esc(t('myDevs',{a:Object.keys(ACC.devices||{}).length,b:devLimit()}))+'</b><ul class="devul">'+devList()+'</ul><span>'+esc(t('devNote'))+'</span></div>'}
   var row=function(a,k,cls){return '<button class="merow'+(cls||'')+'" data-mea="'+a+'"><span>'+esc(t(k))+'</span><i></i></button>'};
   h+='<div class="melist">'+row('set','postSettings')+row('chat','helpChat')+row('edit','editProfile')+
     (MEF==='edit'?'<div class="meform"><label class="f" for="meN">'+esc(t('aName'))+'</label><input type="text" id="meN" value="'+esc(p.name||'')+'">'+
       '<label class="f" for="meP">'+esc(t('phone'))+'</label><input type="text" id="meP" inputmode="tel" value="'+esc(p.phone||'')+'">'+
       '<label class="f" for="meF">'+esc(t('aFb'))+'</label><input type="url" id="meF" autocapitalize="off" value="'+esc(p.fb||'')+'">'+
       '<button class="btn sm" data-mea="saveEdit" style="margin-top:10px">'+esc(t('save'))+'</button></div>':'')+
-    row('pw','changePw')+'<button class="merow" data-doc="terms"><span>'+esc(t('termsLink'))+'</span><i></i></button><button class="merow" data-doc="privacy"><span>'+esc(t('privacyLink'))+'</span><i></i></button>'+
+    row('pw','changePw')+
     (MEF==='pw'?'<div class="meform"><label class="f" for="meO">'+esc(t('curPw'))+'</label><input type="password" id="meO" autocomplete="current-password">'+
       '<label class="f" for="meNw">'+esc(t('newPw'))+'</label><input type="password" id="meNw" autocomplete="new-password">'+
       '<button class="btn sm" data-mea="savePw" style="margin-top:10px">'+esc(t('save'))+'</button></div>':'')+
+    '<button class="merow" data-doc="terms"><span>'+esc(t('termsLink'))+'</span><i></i></button><button class="merow" data-doc="privacy"><span>'+esc(t('privacyLink'))+'</span><i></i></button>'+
     '<div class="merow lang"><span>'+esc(t('language'))+'</span><div class="lang2"><button data-lang="km" class="'+(C.lang==='km'?'on':'')+'">ខ្មែរ</button><button data-lang="en" class="'+(C.lang==='en'?'on':'')+'">EN</button></div></div>'+
     (ACC.team?'<a class="merow" href="/admin" target="_blank" rel="noopener"><span>'+esc(t('adminLink'))+'</span><i></i></a>':'')+
     row('out','signOut')+(ACC.team?'':row('del','delAcct',' red'))+
@@ -989,7 +1022,7 @@ function drawPlans(){var box=$('plansBody'),h='';
   h+=packs.map(function(k){var on=k===PS.k,p1=price(k,1);
     return '<div class="pk'+(on?' on':'')+'" data-pk="'+k+'"><div class="pkh"><b>'+esc(pkName(k))+'</b><small>'+esc(incl(k))+'</small></div>'+
       '<div class="pkm">'+MON.filter(function(m){return price(k,m)}).map(function(m){var v=price(k,m),sv=p1&&m>1?Math.round((1-v/(p1*m))*100):0;
-        return '<button type="button" class="'+(on&&PS.m===m?'on':'')+'" data-pm="'+m+'" data-pmk="'+k+'"><span>'+esc(nm(m))+'</span><b>'+esc(money(v))+'</b>'+(sv>=5?'<em>'+esc(t('save',{n:sv}))+'</em>':'')+'</button>'}).join('')+'</div></div>'}).join('');
+        return '<button type="button" class="'+(on&&PS.m===m?'on':'')+'" data-pm="'+m+'" data-pmk="'+k+'"><span>'+esc(nm(m))+'</span><b>'+esc(money(v))+'</b>'+(sv>=5?'<em>'+esc(t('saveP',{n:sv}))+'</em>':'')+'</button>'}).join('')+'</div></div>'}).join('');
   h+='<button class="btn wide" data-pay style="margin-top:12px">'+esc(t('payWith',{a:money(price(PS.k,PS.m))}))+'</button>';
   box.innerHTML=h}
 function saveQr(){var cv=$('payqr');if(!cv)return;cv.toBlob(function(bl){var f;try{f=new File([bl],'thean-khqr.png',{type:'image/png'})}catch(e){}
@@ -1034,7 +1067,7 @@ function chListen(){if(CH.on)return;CH.on=true;
 function chStart(){if(!FBX||!ACC.user)return;FBX.d.get(R(chP())).then(function(s){if(s.exists())chListen()}).catch(function(){})}
 function chEnsure(){if(CH.chat)return Promise.resolve();var u=ACC.user;
   return FBX.d.get(R(chP())).then(function(s){if(s.exists())return;
-    return FBX.d.set(R(chP()),{visitorUid:u.uid,status:'bot',lang:C.lang,name:(myName()||'Customer')+' · Posting app',contact:u.email||'',page:'/post',createdAt:FBX.d.serverTimestamp(),updatedAt:FBX.d.serverTimestamp(),lastMsg:'',lastFrom:'',unreadAgent:0,unreadVisitor:0,ua:navigator.userAgent.slice(0,160)})})
+    return FBX.d.set(R(chP()),{visitorUid:u.uid,status:'bot',lang:C.lang,name:(myName()||'Customer')+' · Posting app',contact:(u.email||'')+(myCid()?' · ID '+myCid():''),cid:myCid(),page:'/post',createdAt:FBX.d.serverTimestamp(),updatedAt:FBX.d.serverTimestamp(),lastMsg:'',lastFrom:'',unreadAgent:0,unreadVisitor:0,ua:navigator.userAgent.slice(0,160)})})
   .then(function(){chListen();return new Promise(function(r){var n=0,tm=setInterval(function(){if(CH.chat||++n>60){clearInterval(tm);r()}},50)})})}
 function live(){return CH.chat&&(CH.chat.status==='waiting'||CH.chat.status==='assigned')}
 function shown(){var c=clrAt();return CH.msgs.filter(function(m){return !(+m.ts<=c)})}
@@ -1127,7 +1160,7 @@ document.addEventListener('click',function(e){if(e.target.closest('#footChat')&&
 function accCount(){if(ACC.st!=='in'||ACC.team||!FBX)return;FBX.d.runTransaction(R('postusers/'+ACC.user.uid+'/used'),function(v){return (+v||0)+1}).catch(function(){})}
 (function(){var go=$('post').onclick;$('post').onclick=function(){
   if(ACC.st!=='in'){window.scrollTo(0,0);return}
-  if(isLocked()){window.scrollTo(0,0);return}
+  if(isLocked()||ACC.devBlock){window.scrollTo(0,0);return}
   if(!termsOk()){openTerms(true);return}
   if(!canPost()){msg('m3','info',esc(t('outOf')));openPlans();return}
   if(!ACC.team&&C.fbLogin&&KS==='bad'){openSettings();return}
@@ -1143,7 +1176,7 @@ Object.assign(T.en,{
   aReset:'We sent you an email to set a new password. Check your inbox and spam folder.',authLoadT:'Loading…',authErrT:'Could not connect. Check your internet.',retry:'Try again',
   signOut:'Sign out',seePlans:'See plans',upgrade:'Upgrade',renew:'Renew or change plan',
   pbFree:'Free Facebook posts left: {n} of {f}',pbPlan:'Plan: {p} · until {d}',pbMore:'Plans',
-  pk_fb:'Facebook',pk_fbig:'Facebook + Instagram',pk_all:'All',plansT:'Plans',nMonth1:'1 month',nMonths:'{n} months',save:'Save {n}%',payWith:'Pay {a} with KHQR',
+  pk_fb:'Facebook',pk_fbig:'Facebook + Instagram',pk_all:'All',plansT:'Plans',nMonth1:'1 month',nMonths:'{n} months',save:'Save',saveP:'Save {n}%',payWith:'Pay {a} with KHQR',
   noPrices:'Plans are not open yet. Please contact us in the chat.',noQr:'Please contact us in the chat to pay.',saveQr:'Save QR',
   paySteps:['Save the QR, or scan it with another phone.','Open your bank app (ABA, ACLEDA, Wing or any KHQR app), tap Scan, then choose the QR picture.','Pay, then take a screenshot of the receipt.','Tap "Upload receipt" and choose the screenshot.'],
   rcptBtn:'Upload receipt',rcptUp:'Uploading receipt…',rcptImg:'Please choose a picture (screenshot) of the receipt.',rcptFail:'The receipt could not be uploaded. Please try again.',
@@ -1156,7 +1189,7 @@ Object.assign(T.en,{
   fbcCancel:'Facebook was not connected.',fbcNoPage:'No Facebook Page was found. Choose your Page when Facebook asks, and allow all permissions.',fbcPick:'Choose your Page:',
   fbcFail:'Facebook did not allow this yet. Make sure you accepted our invite (see the steps), then try again.',fbcExpired:'Facebook needs you to connect again. Tap Connect with Facebook.',
   fbcHelp:'How to connect',fbcSteps:['After you create your account, our team adds you to our Facebook app (usually within 1 day).','Open <b>developers.facebook.com/requests</b> while signed in to Facebook, and tap <b>Accept</b>. If Facebook asks, confirm your phone number.','Come back here, tap <b>Connect with Facebook</b>, choose your Page, and allow everything.','With a plan that includes Instagram: your Instagram must be a Professional account linked to your Facebook Page.'],
-  myAcct:'My account',ownerT:'Owner · Premium',ownerS:'Unlimited posting to every place',freePlan:'Free',freeAcct:'Free Facebook posts left: {n} of {f}',daysLeft:'{n} days left',canPostTo:'You can post to:',
+  myAcct:'My account',ownerT:'Owner · Premium',ownerS:'Unlimited use',freePlan:'Free',freeAcct:'Free Facebook posts left: {n} of {f}',daysLeft:'{n} days left',canPostTo:'You can post to:',
   postSettings:'Posting settings',editProfile:'Edit profile',changePw:'Change password',language:'Language',adminLink:'Admin: customers and payments',delAcct:'Delete account',
   phone:'Phone number',curPw:'Current password',newPw:'New password (at least 6 characters)',saved:'Saved.',pwDone:'Your password was changed.',
   delWarn:'This deletes your account, your plan and your free posts. It cannot be undone.',delForever:'Delete my account',delDone:'Your account was deleted.',
@@ -1183,7 +1216,7 @@ Object.assign(T.km,{
   aReset:'យើងបានផ្ញើអ៊ីមែលសម្រាប់កំណត់ពាក្យសម្ងាត់ថ្មី។ សូមពិនិត្យប្រអប់សំបុត្រ និង Spam។',authLoadT:'កំពុងផ្ទុក…',authErrT:'មិនអាចភ្ជាប់បាន។ សូមពិនិត្យអ៊ីនធឺណិត។',retry:'ព្យាយាមម្តងទៀត',
   signOut:'ចាកចេញ',seePlans:'មើលគម្រោង',upgrade:'ដំឡើងគម្រោង',renew:'បន្ត ឬប្តូរគម្រោង',
   pbFree:'ការបង្ហោះ Facebook ឥតគិតថ្លៃនៅសល់៖ {n} ក្នុងចំណោម {f}',pbPlan:'គម្រោង៖ {p} · ដល់ថ្ងៃ {d}',pbMore:'គម្រោង',
-  pk_fb:'Facebook',pk_fbig:'Facebook + Instagram',pk_all:'ទាំងអស់',plansT:'គម្រោង',nMonth1:'១ ខែ',nMonths:'{n} ខែ',save:'សន្សំ {n}%',payWith:'បង់ {a} តាម KHQR',
+  pk_fb:'Facebook',pk_fbig:'Facebook + Instagram',pk_all:'ទាំងអស់',plansT:'គម្រោង',nMonth1:'១ ខែ',nMonths:'{n} ខែ',save:'រក្សាទុក',saveP:'សន្សំ {n}%',payWith:'បង់ {a} តាម KHQR',
   noPrices:'គម្រោងមិនទាន់បើកនៅឡើយទេ។ សូមទាក់ទងយើងតាមការជជែក។',noQr:'សូមទាក់ទងយើងតាមការជជែក ដើម្បីបង់ប្រាក់។',saveQr:'រក្សាទុក QR',
   paySteps:['រក្សាទុក QR ឬស្កេនវាដោយទូរស័ព្ទមួយទៀត។','បើកកម្មវិធីធនាគាររបស់អ្នក (ABA, ACLEDA, Wing ឬកម្មវិធី KHQR ណាមួយ) ចុច ស្កេន រួចជ្រើសរូប QR។','បង់ប្រាក់ រួចថតអេក្រង់បង្កាន់ដៃ។','ចុច «ផ្ញើបង្កាន់ដៃ» ហើយជ្រើសរូបថតអេក្រង់។'],
   rcptBtn:'ផ្ញើបង្កាន់ដៃ',rcptUp:'កំពុងផ្ញើបង្កាន់ដៃ…',rcptImg:'សូមជ្រើសរូបភាព (រូបថតអេក្រង់) នៃបង្កាន់ដៃ។',rcptFail:'មិនអាចផ្ញើបង្កាន់ដៃបានទេ។ សូមព្យាយាមម្តងទៀត។',
@@ -1196,7 +1229,7 @@ Object.assign(T.km,{
   fbcCancel:'Facebook មិនត្រូវបានភ្ជាប់ទេ។',fbcNoPage:'រកមិនឃើញទំព័រ Facebook ទេ។ សូមជ្រើសទំព័ររបស់អ្នក នៅពេល Facebook សួរ ហើយអនុញ្ញាតគ្រប់សិទ្ធិ។',fbcPick:'ជ្រើសទំព័ររបស់អ្នក៖',
   fbcFail:'Facebook មិនទាន់អនុញ្ញាតនៅឡើយទេ។ សូមប្រាកដថាអ្នកបានទទួលការអញ្ជើញរបស់យើង (មើលជំហាន) រួចព្យាយាមម្តងទៀត។',fbcExpired:'Facebook ត្រូវការឱ្យអ្នកភ្ជាប់ម្តងទៀត។ សូមចុច ភ្ជាប់ជាមួយ Facebook។',
   fbcHelp:'របៀបភ្ជាប់',fbcSteps:['បន្ទាប់ពីអ្នកបង្កើតគណនី ក្រុមការងាររបស់យើងនឹងបន្ថែមអ្នកទៅក្នុងកម្មវិធី Facebook របស់យើង (ជាធម្មតាក្នុងរយៈពេល ១ ថ្ងៃ)។','បើក <b>developers.facebook.com/requests</b> ពេលកំពុងចូល Facebook ហើយចុច <b>Accept</b>។ ប្រសិនបើ Facebook សួរ សូមបញ្ជាក់លេខទូរស័ព្ទ។','ត្រឡប់មកទីនេះវិញ ចុច <b>ភ្ជាប់ជាមួយ Facebook</b> ជ្រើសទំព័ររបស់អ្នក ហើយអនុញ្ញាតទាំងអស់។','ជាមួយគម្រោងដែលមាន Instagram៖ Instagram របស់អ្នកត្រូវតែជាគណនី Professional ដែលភ្ជាប់ជាមួយទំព័រ Facebook។'],
-  myAcct:'គណនីរបស់ខ្ញុំ',ownerT:'ម្ចាស់ · Premium',ownerS:'បង្ហោះបានគ្មានដែនកំណត់ គ្រប់កន្លែង',freePlan:'ឥតគិតថ្លៃ',freeAcct:'ការបង្ហោះ Facebook ឥតគិតថ្លៃនៅសល់៖ {n} ក្នុងចំណោម {f}',daysLeft:'នៅសល់ {n} ថ្ងៃ',canPostTo:'អ្នកអាចបង្ហោះទៅ៖',
+  myAcct:'គណនីរបស់ខ្ញុំ',ownerT:'ម្ចាស់ · Premium',ownerS:'ប្រើប្រាស់គ្មានដែនកំណត់',freePlan:'ឥតគិតថ្លៃ',freeAcct:'ការបង្ហោះ Facebook ឥតគិតថ្លៃនៅសល់៖ {n} ក្នុងចំណោម {f}',daysLeft:'នៅសល់ {n} ថ្ងៃ',canPostTo:'អ្នកអាចបង្ហោះទៅ៖',
   postSettings:'ការកំណត់ការបង្ហោះ',editProfile:'កែប្រូហ្វាល',changePw:'ប្តូរពាក្យសម្ងាត់',language:'ភាសា',adminLink:'Admin៖ អតិថិជន និងការបង់ប្រាក់',delAcct:'លុបគណនី',
   phone:'លេខទូរស័ព្ទ',curPw:'ពាក្យសម្ងាត់បច្ចុប្បន្ន',newPw:'ពាក្យសម្ងាត់ថ្មី (យ៉ាងតិច ៦ តួ)',saved:'បានរក្សាទុក។',pwDone:'ពាក្យសម្ងាត់របស់អ្នកត្រូវបានប្តូរ។',
   delWarn:'វានឹងលុបគណនី គម្រោង និងការបង្ហោះឥតគិតថ្លៃរបស់អ្នក។ មិនអាចត្រឡប់វិញបានទេ។',delForever:'លុបគណនីរបស់ខ្ញុំ',delDone:'គណនីរបស់អ្នកត្រូវបានលុប។',
@@ -1257,6 +1290,12 @@ function drawDoc(){if(!DOC||$('doc').hidden)return;var lg=C.lang==='km'?'km':'en
 document.addEventListener('click',function(e){var d=e.target.closest('[data-doc]');if(d){e.preventDefault();openDoc(d.getAttribute('data-doc'))}});
 $('doc').addEventListener('click',function(e){if(e.target===$('doc')||e.target.closest('[data-close]'))$('doc').hidden=true});
 
+Object.assign(T.en,{cidL:'Customer ID',copy:'Copy',copied:'Copied',cidNote:'Give this ID to our team when you need help with your account or a payment.',
+  devT:'Too many devices',devS:'Your account can be used on {n} devices, and it is already in use on:',devMore:'Need more devices? An extra device costs {m} per month or {y} per year. Chat with us to add one.',devMore2:'Need more devices? Chat with us to ask for special access.',
+  myDevs:'My devices · {a} of {b}',thisDev:'this device',devNote:'To use more devices or change a device, chat with us.',lastUsed:'last used {d}',pbSoon:'Your plan ends in {n} day(s)',renewShort:'Renew'});
+Object.assign(T.km,{cidL:'លេខសម្គាល់អតិថិជន',copy:'ចម្លង',copied:'បានចម្លង',cidNote:'សូមផ្តល់លេខនេះដល់ក្រុមការងារ ពេលអ្នកត្រូវការជំនួយអំពីគណនី ឬការបង់ប្រាក់។',
+  devT:'ឧបករណ៍ច្រើនពេក',devS:'គណនីរបស់អ្នកអាចប្រើបានលើឧបករណ៍ {n} ហើយកំពុងប្រើរួចហើយលើ៖',devMore:'ត្រូវការឧបករណ៍បន្ថែម? ឧបករណ៍បន្ថែមមួយ តម្លៃ {m} ក្នុងមួយខែ ឬ {y} ក្នុងមួយឆ្នាំ។ សូមជជែកជាមួយយើង ដើម្បីបន្ថែម។',devMore2:'ត្រូវការឧបករណ៍បន្ថែម? សូមជជែកជាមួយយើង ដើម្បីស្នើសិទ្ធិពិសេស។',
+  myDevs:'ឧបករណ៍របស់ខ្ញុំ · {a} ក្នុងចំណោម {b}',thisDev:'ឧបករណ៍នេះ',devNote:'ដើម្បីប្រើឧបករណ៍បន្ថែម ឬប្តូរឧបករណ៍ សូមជជែកជាមួយយើង។',lastUsed:'ប្រើចុងក្រោយ {d}',pbSoon:'គម្រោងរបស់អ្នកនឹងផុតក្នុង {n} ថ្ងៃ',renewShort:'បន្តគម្រោង'});
 try{$('yr').textContent=new Date().getFullYear()}catch(e){}applyLang();checkKey();accStart();
 })();
 </script>
