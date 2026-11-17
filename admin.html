@@ -313,25 +313,6 @@ svg.i.mis{fill:currentColor;stroke:none}
 .tile small{font-size:.74rem;color:var(--muted);line-height:1.3;margin-top:-6px}
 
 /* ===== Stats ===== */
-.nslsec{margin-top:8px}
-.nsl{position:relative}
-.nsl-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:var(--r);background:var(--stone-d);box-shadow:var(--shadow)}
-.nsl-track::-webkit-scrollbar{display:none}
-.nsl-s{flex:0 0 100%;scroll-snap-align:start;position:relative;display:block;aspect-ratio:16/9;max-height:520px;overflow:hidden;color:#fff;text-decoration:none;background:var(--stone-d)}
-.nsl-s>img,.nsl-s>svg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.nsl-cap{position:absolute;left:0;right:0;bottom:0;display:grid;gap:2px;padding:30px 18px 14px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.78) 45%)}
-.nsl-cap small{font-size:.76rem;opacity:.85;letter-spacing:.02em}
-.nsl-cap b{font-size:1.05rem;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.nsl-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:58px;height:58px;border-radius:50%;background:rgba(0,0,0,.45);display:grid;place-items:center;color:#fff}
-.nsl-play svg{width:26px;height:26px}
-.nsl-arw{position:absolute;top:calc(50% - 30px);width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.9);color:#111;display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.2)}
-.nsl-arw.l{left:12px}.nsl-arw.r{right:12px}
-.nsl-dots{display:flex;justify-content:center;gap:7px;margin-top:12px}
-.nsl-dots button{width:8px;height:8px;padding:0;border:0;border-radius:4px;background:var(--line);cursor:pointer;transition:width .25s,background .25s}
-.nsl-dots button.on{width:24px;background:var(--accent)}
-[data-skin="thean"] .nsl-dots button.on{background:#f3b11c}
-@media(max-width:620px){.nsl-arw{display:none}.nsl-cap{padding:26px 14px 12px}.nsl-cap b{font-size:.98rem}}
-@media(min-width:900px){.nsl-cap{padding:40px 26px 20px}.nsl-cap b{font-size:1.4rem}.nsl-cap small{font-size:.85rem}}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:48px}
 @media(max-width:620px){.stats{grid-template-columns:repeat(2,1fr)}}
 .stat{background:var(--surface);padding:18px 16px;text-align:center}
@@ -2155,7 +2136,6 @@ function renderHome(){
   /* stats */
   var temples=S.places.filter(function(p){return p.cat==='temple'}).length;
   h+='<div class="stats"><div class="stat"><b data-fbs="followers"'+(fbStatsOn()?'':E('stats.followers'))+'>'+statVal('followers')+'</b><span>'+ut('followers')+'</span></div><div class="stat"><b data-fbs="posts"'+(fbStatsOn()?'':E('stats.posts'))+'>'+statVal('posts')+'</b><span>'+ut('postsN')+'</span></div><div class="stat"><b>'+num(25)+'</b><span>'+ut('provinces')+'</span></div><div class="stat"><b>'+num(temples)+'</b><span>'+ut('temples')+'</span></div></div></section>';
-  h+=newsSlider();
   h+='<div id="fbfeedbox">'+fbFeedHtml()+'</div>';
   /* featured */
   var feat=S.places.filter(function(p){return p.featured}).slice(0,10);
@@ -2169,6 +2149,9 @@ function renderHome(){
   /* stories */
   var st=S.places.filter(function(p){return p.cat==='temple'&&p.img});st=st.filter(function(p){return p.story}).concat(st.filter(function(p){return !p.story})).slice(0,6);
   h+='<section><div class="sh"><div><div class="kick">'+ut('storiesKick')+'</div><h2 class="emb">'+ut('stories')+'</h2></div><a class="more" href="#/p/temples">'+ut('seeAll')+' '+I('arrow')+'</a></div><div class="grid g6">'+st.map(placeCard).join('')+'</div></section>';
+  /* latest posts */
+  var np=pinFirst(S.news||[]).slice(0,1);
+  if(np.length||admin)h+='<section><div class="sh"><div><div class="kick">'+ut('latestKick')+'</div><h2 class="emb">'+ut('latest')+'</h2></div><div style="display:flex;gap:8px;align-items:center">'+addBtn('news','','Add post')+'<a class="more" href="#/p/news">'+ut('seeAll')+' '+I('arrow')+'</a></div></div>'+postList(np,'news')+'</section>';
   /* tribute */
   var MS=S.message||{},mOn=MS.show!==false&&(String(MS.km||'').trim()||String(MS.en||'').trim()||MS.video);
   if(!mOn&&admin)h+='<section class="aonly"><div class="hidebar">'+(lang==='km'?'សារដឹងគុណ ត្រូវបានលាក់':'“A message of gratitude” is hidden from visitors')+'<button class="btn sm" data-act="msgshow">Show on website</button></div></section>';
@@ -2390,25 +2373,6 @@ function renderNews(key,id){var x=getObj(key,id),pid=listPage(key),pg=page(pid),
   return h+band()+'</div>'}
 function postsBlock(key){var L=pinFirst(S[key]||[]);return '<section><div class="sh"><h2 class="emb">'+ut('latest')+'</h2>'+addBtn(key,'',key==='news'?'Add news':'Add post')+'</div>'+(L.length?paged('posts-'+key,L,function(x){return newsItem(x,key)},8,'<div class="nlist">',L.length<=8):postList([],key))+'</section>'}
 var PG={},PLR={};
-/* Home: slider of the 5 latest News and Social Activity posts */
-function newsSlider(){var A=[];['news','social'].forEach(function(k){(S[k]||[]).forEach(function(x){if(x&&!x.hidden)A.push({k:k,x:x})})});
-  A.sort(function(a,b){return (b.x.pin?1:0)-(a.x.pin?1:0)||String(b.x.date||'').localeCompare(String(a.x.date||''))});A=A.slice(0,5);
-  if(!A.length&&!admin)return '';
-  var h='<section class="nslsec"><div class="sh"><div><div class="kick">'+ut('latestKick')+'</div><h2 class="emb">'+ut('latest')+'</h2></div><div style="display:flex;gap:8px;align-items:center">'+addBtn('news','','Add post')+'<a class="more" href="#/p/news">'+ut('seeAll')+' '+I('arrow')+'</a></div></div>';
-  if(!A.length)return h+postList([],'news')+'</section>';
-  h+='<div class="nsl"><div class="nsl-track">'+A.map(function(o){var x=o.x,th=nThumb(x),pl=!!playable(x),pg=page(listPage(o.k));
-    return '<a class="nsl-s" href="#/n/'+o.k+'/'+esc(x.id)+'">'+(th?'<img alt="" loading="lazy" src="'+esc(th)+'">':art('river',x.id))+(pl?'<i class="nsl-play">'+I('play')+'</i>':'')+
-      '<span class="nsl-cap"><small>'+esc(tr(pg&&pg.label)||'')+(x.date?' · '+esc(nDate(x.date)):'')+'</small><b>'+esc(tr(x.title)||nCap(x))+'</b></span></a>'}).join('')+'</div>'+
-    (A.length>1?'<button class="nsl-arw l" data-nsl="-1" aria-label="Previous">'+I('left')+'</button><button class="nsl-arw r" data-nsl="1" aria-label="Next">'+I('right')+'</button><div class="nsl-dots">'+A.map(function(_,i){return '<button data-nsld="'+i+'" class="'+(i?'':'on')+'" aria-label="'+(i+1)+'"></button>'}).join('')+'</div>':'')+'</div></section>';
-  return h}
-var nslPause=0;
-function nslGo(t,i){var n=t.children.length;if(!n)return;i=(i+n)%n;t.scrollTo({left:i*t.clientWidth,behavior:'smooth'})}
-function nslIdx(t){return Math.round(t.scrollLeft/Math.max(1,t.clientWidth))}
-document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-nsl],[data-nsld]');if(!b)return;var t=b.closest('.nsl').querySelector('.nsl-track');e.preventDefault();nslPause=Date.now()+9000;
-  if(b.hasAttribute('data-nsl'))nslGo(t,nslIdx(t)+(+b.getAttribute('data-nsl')));else nslGo(t,+b.getAttribute('data-nsld'))});
-document.addEventListener('scroll',function(e){var t=e.target;if(!t.classList||!t.classList.contains('nsl-track'))return;var i=nslIdx(t);t.parentNode.querySelectorAll('[data-nsld]').forEach(function(d,j){d.classList.toggle('on',j===i)})},true);
-['pointerdown','touchstart','mouseover'].forEach(function(ev){document.addEventListener(ev,function(e){if(e.target.closest&&e.target.closest('.nsl'))nslPause=Date.now()+9000},{passive:true,capture:true})});
-setInterval(function(){var t=document.querySelector('.nsl-track');if(!t||document.hidden||Date.now()<nslPause||t.children.length<2||matchMedia('(prefers-reduced-motion: reduce)').matches)return;var r=t.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return;nslGo(t,nslIdx(t)+1)},5000);
 function pinFirst(a){a=(a||[]).slice();return a.filter(function(x){return x.pin}).concat(a.filter(function(x){return !x.pin}))}
 function srchText(x){return [x.title,x.text,x.sum,x.region,x.body,x.when,x.dishes,x.address].map(function(v){return v?(typeof v==='object'?(v.en||'')+' '+(v.km||''):String(v)):''}).join(' ').toLowerCase()}
 function pager(key,pages,cur){if(pages<2)return '';var b=[],add=function(n){b.push('<button type="button" class="pgn'+(n===cur?' on':'')+'" data-pg="'+key+':'+n+'"'+(n===cur?' aria-current="page"':'')+'>'+num(n)+'</button>')};
