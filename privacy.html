@@ -50,5 +50,14 @@ body.km{font-family:"Kantumruy Pro",Inter,system-ui,sans-serif}
   set(pick());
 })();
 </script>
+<script>
+/* Text edited by the team in Admin (Terms & Privacy) replaces the built-in text */
+(function(){var K='sprivacy',U='https://thean-12952-default-rtdb.asia-southeast1.firebasedatabase.app/site/content/legal/'+K+'.json';
+  function e(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/info@kongthean\.com/g,'<a href="mailto:info@kongthean.com">info@kongthean.com</a>')}
+  function ok(D){return D&&typeof D.title==='string'&&D.sections&&D.sections.length}
+  fetch(U,{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(x){if(!x)return;['en','km'].forEach(function(lg){var D=x[lg],a=document.querySelector('article[data-lg="'+lg+'"]');if(!ok(D)||!a)return;
+    a.innerHTML='<h1>'+e(D.title)+'</h1>'+(x.up&&x.up[lg]?'<p class="dup">'+e(x.up[lg])+'</p>':'')+'<p class="dintro">'+e(D.intro)+'</p>'+D.sections.map(function(s){return '<section><h2>'+e(s[0])+'</h2>'+(s[1]||[]).map(function(b){return Array.isArray(b)?'<ul>'+b.map(function(i){return '<li>'+e(i)+'</li>'}).join('')+'</ul>':'<p>'+e(b)+'</p>'}).join('')+'</section>'}).join('')});
+    var h=document.querySelector('article:not([hidden]) h1');if(h)document.title=h.textContent+' · Thean'}).catch(function(){})})();
+</script>
 </body>
 </html>
