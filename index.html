@@ -319,6 +319,34 @@ svg.i.mis{fill:currentColor;stroke:none}
 .tile small{font-size:.74rem;color:var(--muted);line-height:1.3;margin-top:-6px}
 
 /* ===== Stats ===== */
+.nslsec{margin-top:8px}
+.hfollow .stats{margin-top:28px}
+.nslrow{display:grid;gap:16px}
+.nsl-c{position:relative;display:block;aspect-ratio:16/9;border-radius:var(--r);overflow:hidden;color:#fff;text-decoration:none;background:var(--stone-d);box-shadow:var(--shadow)}
+.nsl-c>img,.nsl-c>svg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.nsl-c:hover>img{transform:scale(1.04)}
+.stu-cbg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:14px;padding-bottom:18%;background:linear-gradient(135deg,#0f2a48,#1a5d97)}
+.stu-cbg img{width:68px;height:68px;border-radius:18px;box-shadow:0 8px 22px rgba(0,0,0,.3)}
+.stu-cbg b{display:block;font-size:1.25rem}.stu-cbg small{font-size:.66rem;letter-spacing:.14em;opacity:.8}
+@media(max-width:899px){.nsl-c .nsl-cap{padding:22px 12px 10px}.nsl-c .nsl-cap b{font-size:.86rem;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.nsl-c .nsl-cap small{font-size:.68rem}.nsl-c .nsl-play{width:40px;height:40px;top:38%}.nslrow>.nsl-c,.nslrow>.nsl2{display:none}}
+@media(min-width:900px){.nslrow{grid-template-columns:repeat(3,minmax(0,1fr))}.nslrow .nsl-cap{padding:26px 16px 12px}.nslrow .nsl-cap b{font-size:1rem}.nslrow .nsl-cap small{font-size:.74rem}.nslrow .nsl-arw{width:34px;height:34px;top:calc(50% - 24px)}.nslrow .nsl-arw.l{left:8px}.nslrow .nsl-arw.r{right:8px}.nslrow .nsl-dots{margin-top:8px}}
+.nsl{position:relative}
+.nsl-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:var(--r);background:var(--stone-d);box-shadow:var(--shadow)}
+.nsl-track::-webkit-scrollbar{display:none}
+.nsl-s{flex:0 0 100%;scroll-snap-align:start;position:relative;display:block;aspect-ratio:16/9;max-height:520px;overflow:hidden;color:#fff;text-decoration:none;background:var(--stone-d)}
+.nsl-s>img,.nsl-s>svg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.nsl-cap{position:absolute;left:0;right:0;bottom:0;display:grid;gap:2px;padding:30px 18px 14px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.78) 45%)}
+.nsl-cap small{font-size:.76rem;opacity:.85;letter-spacing:.02em}
+.nsl-cap b{font-size:1.05rem;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nsl-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:58px;height:58px;border-radius:50%;background:rgba(0,0,0,.45);display:grid;place-items:center;color:#fff}
+.nsl-play svg{width:26px;height:26px}
+.nsl-arw{position:absolute;top:calc(50% - 30px);width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.9);color:#111;display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+.nsl-arw.l{left:12px}.nsl-arw.r{right:12px}
+.nsl-dots{display:flex;justify-content:center;gap:7px;margin-top:12px}
+.nsl-dots button{width:8px;height:8px;padding:0;border:0;border-radius:4px;background:var(--line);cursor:pointer;transition:width .25s,background .25s}
+.nsl-dots button.on{width:24px;background:var(--accent)}
+[data-skin="thean"] .nsl-dots button.on{background:#f3b11c}
+@media(max-width:620px){.nsl-arw{display:none}.nsl-cap{padding:26px 14px 12px}.nsl-cap b{font-size:.98rem}}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:48px}
 @media(max-width:620px){.stats{grid-template-columns:repeat(2,1fr)}}
 .stat{background:var(--surface);padding:18px 16px;text-align:center}
@@ -2078,10 +2106,8 @@ function renderHome(){
   if(skinNow()==='water'){var kmW=lang==='km',fw=(S.festivals||[]).filter(function(f){return /water|អុំទូក/i.test((f.title&&f.title.en||'')+(f.title&&f.title.km||''))})[0];h+='<section class="wvsec"><a class="wvhero" href="'+(fw?'#/k/festivals/'+esc(fw.id):'#/p/culture/festivals')+'"><div class="wvtxt"><div class="kick">'+(kmW?'ព្រះរាជពិធីបុណ្យអុំទូក':'Water & Moon Festival')+'</div><h2 class="emb wvt-day">'+(kmW?'បុណ្យអុំទូក':'Racing on the river')+'</h2><h2 class="emb wvt-night">'+(kmW?'បណ្ដែតប្រទីប អកអំបុក និងសំពះព្រះខែ':'Lights on the water')+'</h2><p class="wvt-day">'+(kmW?'ទូកងរាប់រយគ្រឿងមកពីគ្រប់ខេត្ត ប្រកួតប្រជែងគ្នានៅលើទន្លេ មុខព្រះបរមរាជវាំង។':'Hundreds of long boats from every province race on the river in front of the Royal Palace.')+'</p><p class="wvt-night">'+(kmW?'ពេលយប់ ទូកភ្លើងបណ្ដែតលើទន្លេ កាំជ្រួចបាញ់ពេញមេឃ ហើយគ្រួសារសំពះព្រះខែ និងញ៉ាំអំបុក។':'At night, illuminated floats glide on the river, fireworks fill the sky, and families salute the moon and share ambok.')+'</p><span class="btn sm">'+(kmW?'អានបន្ថែម':'Read about the festival')+I('arrow')+'</span></div><div class="wvart">'+wvScene('day')+wvScene('night')+'</div></a></section>'}
   if(skinNow()==='pchum'){var kmP=lang==='km';h+='<section class="pbsec"><a class="pbhero" href="#/k/festivals/f3"><div class="pbtxt"><div class="kick">'+(kmP?'ពិធីបុណ្យភ្ជុំបិណ្ឌ':'Pchum Ben Festival')+'</div><h2 class="emb pbt-day">'+(kmP?'ឧទ្ទិសកុសលដល់ដូនតា':'Honouring our ancestors')+'</h2><h2 class="emb pbt-night">'+(kmP?'មុនថ្ងៃរះនៅវត្ត':'Before dawn at the pagoda')+'</h2><p class="pbt-day">'+(kmP?'គ្រួសារខ្មែរធ្វើនំអន្សម ទៅលេងឪពុកម្ដាយ និងនាំចង្ហាន់ទៅប្រគេនព្រះសង្ឃនៅវត្ត។':'Families make num ansom, visit their parents and bring food to the monks at the pagoda.')+'</p><p class="pbt-night">'+(kmP?'មុនថ្ងៃរះ អ្នកស្រុកដើរជុំវិញវិហារជាមួយទៀន ហើយបោះបាយបិណ្ឌ ឧទ្ទិសដល់វិញ្ញាណក្ខន្ធដូនតា។':'Before sunrise, people walk around the vihara with candles and scatter rice balls (bay ben) for the spirits of their ancestors.')+'</p><span class="btn sm">'+(kmP?'អានបន្ថែម':'Read about Pchum Ben')+I('arrow')+'</span></div><div class="pbart">'+pbScene('day')+pbScene('night')+'</div></a></section>'}
   /* tiles */
-  h+='<section><div class="sh"><div><div class="kick">'+ut('menuSub')+'</div><h2 class="emb">'+ut('explore')+'</h2></div></div>'+tilesHtml(true)+socialBar();
-  /* stats */
-  var temples=S.places.filter(function(p){return p.cat==='temple'}).length;
-  h+='<div class="stats"><div class="stat"><b data-fbs="followers"'+(fbStatsOn()?'':E('stats.followers'))+'>'+statVal('followers')+'</b><span>'+ut('followers')+'</span></div><div class="stat"><b data-fbs="posts"'+(fbStatsOn()?'':E('stats.posts'))+'>'+statVal('posts')+'</b><span>'+ut('postsN')+'</span></div><div class="stat"><b>'+num(25)+'</b><span>'+ut('provinces')+'</span></div><div class="stat"><b>'+num(temples)+'</b><span>'+ut('temples')+'</span></div></div></section>';
+  h+='<section><div class="sh"><div><div class="kick">'+ut('menuSub')+'</div><h2 class="emb">'+ut('explore')+'</h2></div></div>'+tilesHtml(true)+'</section>';
+  h+=newsSlider();
   h+='<div id="fbfeedbox">'+fbFeedHtml()+'</div>';
   /* featured */
   var feat=S.places.filter(function(p){return p.featured}).slice(0,10);
@@ -2095,15 +2121,16 @@ function renderHome(){
   /* stories */
   var st=S.places.filter(function(p){return p.cat==='temple'&&p.img});st=st.filter(function(p){return p.story}).concat(st.filter(function(p){return !p.story})).slice(0,6);
   h+='<section><div class="sh"><div><div class="kick">'+ut('storiesKick')+'</div><h2 class="emb">'+ut('stories')+'</h2></div><a class="more" href="#/p/temples">'+ut('seeAll')+' '+I('arrow')+'</a></div><div class="grid g6">'+st.map(placeCard).join('')+'</div></section>';
-  /* latest posts */
-  var np=pinFirst(S.news||[]).slice(0,1);
-  if(np.length||admin)h+='<section><div class="sh"><div><div class="kick">'+ut('latestKick')+'</div><h2 class="emb">'+ut('latest')+'</h2></div><div style="display:flex;gap:8px;align-items:center">'+addBtn('news','','Add post')+'<a class="more" href="#/p/news">'+ut('seeAll')+' '+I('arrow')+'</a></div></div>'+postList(np,'news')+'</section>';
   /* tribute */
   var MS=S.message||{},mOn=MS.show!==false&&(String(MS.km||'').trim()||String(MS.en||'').trim()||MS.video);
   if(!mOn&&admin)h+='<section class="aonly"><div class="hidebar">'+(lang==='km'?'សារដឹងគុណ ត្រូវបានលាក់':'“A message of gratitude” is hidden from visitors')+'<button class="btn sm" data-act="msgshow">Show on website</button></div></section>';
   if(mOn)h+='<section><div class="sh"><h2 class="emb">'+ut('tribute')+'</h2>'+(admin?'<button class="btn sm soft aonly" data-act="msghide">Hide this section</button>':'')+'</div><div class="tribute"><p class="km" lang="km"'+E('message.km')+'>'+esc(S.message.km)+'</p><p class="en" lang="en"'+E('message.en')+'>'+esc(S.message.en)+'</p></div>'+(S.message.video?'<div style="margin-top:22px">'+videoFeature(S.message.video,true,'msgvideo')+'</div>':(admin?'<button class="btn sm soft aonly" data-act="msgvideo" style="margin-top:16px">'+I('plus')+' Add photo or video</button>':''))+'</section>';
   /* map */
   h+='<section><div class="sh"><div><div class="kick">'+ut('mapSub')+'</div><h2 class="emb">'+ut('map')+'</h2></div>'+(admin?'<button class="btn sm soft aonly" data-act="mapimg">'+I('image')+' Map image</button>':'')+'</div><div class="mapwrap"'+(S.mapImg?'':' style="grid-template-columns:1fr"')+'>'+(S.mapImg?'<div class="mapimg"><img alt="Map of Cambodia" src="'+S.mapImg+'"></div>':'')+'<div class="chips">'+PROV.map(function(p){return '<a class="chip" target="_blank" rel="noopener" href="'+mapsQ(p[0]+', Cambodia')+'">'+I('pin')+esc(lang==='km'?p[1]:p[0])+'</a>'}).join('')+'</div></div></section>';
+  /* follow, notifications and numbers */
+  /* stats */
+  var temples=S.places.filter(function(p){return p.cat==='temple'}).length;
+  h+='<section class="hfollow">'+socialBar()+'<div class="stats"><div class="stat"><b data-fbs="followers"'+(fbStatsOn()?'':E('stats.followers'))+'>'+statVal('followers')+'</b><span>'+ut('followers')+'</span></div><div class="stat"><b data-fbs="posts"'+(fbStatsOn()?'':E('stats.posts'))+'>'+statVal('posts')+'</b><span>'+ut('postsN')+'</span></div><div class="stat"><b>'+num(25)+'</b><span>'+ut('provinces')+'</span></div><div class="stat"><b>'+num(temples)+'</b><span>'+ut('temples')+'</span></div></div></section>';
   h+=band();
   h+='</div>';
   return h;
@@ -2319,6 +2346,32 @@ function renderNews(key,id){var x=getObj(key,id),pid=listPage(key),pg=page(pid),
   return h+band()+'</div>'}
 function postsBlock(key){var L=pinFirst(S[key]||[]);return '<section><div class="sh"><h2 class="emb">'+ut('latest')+'</h2>'+addBtn(key,'',key==='news'?'Add news':'Add post')+'</div>'+(L.length?paged('posts-'+key,L,function(x){return newsItem(x,key)},8,'<div class="nlist">',L.length<=8):postList([],key))+'</section>'}
 var PG={},PLR={};
+/* Home: slider of the 5 latest News and Social Activity posts */
+function newsSlider(){var A=[];['news','social'].forEach(function(k){(S[k]||[]).forEach(function(x){if(x&&!x.hidden)A.push({k:k,x:x})})});
+  A.sort(function(a,b){return (b.x.pin?1:0)-(a.x.pin?1:0)||String(b.x.date||'').localeCompare(String(a.x.date||''))});A=A.slice(0,5);
+  if(!A.length&&!admin)return '';
+  var h='<section class="nslsec"><div class="sh"><div><div class="kick">'+ut('latestKick')+'</div><h2 class="emb">'+ut('latest')+'</h2></div><div style="display:flex;gap:8px;align-items:center">'+addBtn('news','','Add post')+'<a class="more" href="#/p/news">'+ut('seeAll')+' '+I('arrow')+'</a></div></div>';
+  if(!A.length)return h+postList([],'news')+'</section>';
+  h+='<div class="nslrow"><div class="nsl"><div class="nsl-track">'+A.map(function(o){var x=o.x,th=nThumb(x),pl=!!playable(x),pg=page(listPage(o.k));
+    return '<a class="nsl-s" href="#/n/'+o.k+'/'+esc(x.id)+'">'+(th?'<img alt="" loading="lazy" src="'+esc(th)+'">':art('river',x.id))+(pl?'<i class="nsl-play">'+I('play')+'</i>':'')+
+      '<span class="nsl-cap"><small>'+esc(tr(pg&&pg.label)||'')+(x.date?' · '+esc(nDate(x.date)):'')+'</small><b>'+esc(tr(x.title)||nCap(x))+'</b></span></a>'}).join('')+'</div>'+
+    (A.length>1?'<button class="nsl-arw l" data-nsl="-1" aria-label="Previous">'+I('left')+'</button><button class="nsl-arw r" data-nsl="1" aria-label="Next">'+I('right')+'</button><div class="nsl-dots">'+A.map(function(_,i){return '<button data-nsld="'+i+'" class="'+(i?'':'on')+'" aria-label="'+(i+1)+'"></button>'}).join('')+'</div>':'')+'</div>'+nslSide()+'</div></section>';
+  return h}
+function nslSide(){var km=lang==='km',h='',v=null;
+  var P=S.places.filter(function(p){return p&&p.cat!=='hotel'&&!p.hidden}).slice(0,5);
+  if(P.length)h+='<div class="nsl nsl2"><div class="nsl-track">'+P.map(function(p){var th=p.img||'';return '<a class="nsl-s" href="#/place/'+esc(p.id)+'">'+(th?'<img alt="" loading="lazy" src="'+esc(th)+'">':art(p.cat==='temple'?'temple':(p.art||'hills'),p.id))+'<span class="nsl-cap"><small>'+(km?'កន្លែងថ្មី':'New place')+(tr(p.region)?' · '+esc(tr(p.region)):'')+'</small><b>'+esc(tr(p.title))+'</b></span></a>'}).join('')+'</div>'+
+    (P.length>1?'<button class="nsl-arw l" data-nsl="-1" aria-label="Previous">'+I('left')+'</button><button class="nsl-arw r" data-nsl="1" aria-label="Next">'+I('right')+'</button><div class="nsl-dots">'+P.map(function(_,i){return '<button data-nsld="'+i+'" class="'+(i?'':'on')+'" aria-label="'+(i+1)+'"></button>'}).join('')+'</div>':'')+'</div>';
+  if(v){var th=nThumb(v);h+='<a class="nsl-c" href="#/p/videos">'+(th?'<img alt="" loading="lazy" src="'+esc(th)+'">':art('river','v'))+'<i class="nsl-play">'+I('play')+'</i><span class="nsl-cap"><small>'+(km?'វីដេអូថ្មី':'Latest video')+'</small><b>'+esc(tr(v.title)||(km?'មើលវីដេអូរបស់យើង':'Watch our videos'))+'</b></span></a>'}
+  if(page('studio'))h+='<a class="nsl-c stu-c" href="#/p/studio"><span class="stu-cbg"><img alt="" src="/icons/studio-icon-192.png"><span><b>Thean Studio</b><small>SOCIAL MEDIA PUBLISHING</small></span></span><span class="nsl-cap"><small>'+(km?'កម្មវិធីរបស់យើង':'Our app')+'</small><b>'+(km?'បង្ហោះទៅបណ្ដាញសង្គមទាំងអស់ក្នុងពេលតែមួយ':'Post to all your social media at once')+'</b></span></a>';
+  return h}
+var nslPause=0;
+function nslGo(t,i){var n=t.children.length;if(!n)return;i=(i+n)%n;t.scrollTo({left:i*t.clientWidth,behavior:'smooth'})}
+function nslIdx(t){return Math.round(t.scrollLeft/Math.max(1,t.clientWidth))}
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-nsl],[data-nsld]');if(!b)return;var t=b.closest('.nsl').querySelector('.nsl-track');e.preventDefault();nslPause=Date.now()+9000;
+  if(b.hasAttribute('data-nsl'))nslGo(t,nslIdx(t)+(+b.getAttribute('data-nsl')));else nslGo(t,+b.getAttribute('data-nsld'))});
+document.addEventListener('scroll',function(e){var t=e.target;if(!t.classList||!t.classList.contains('nsl-track'))return;var i=nslIdx(t);t.parentNode.querySelectorAll('[data-nsld]').forEach(function(d,j){d.classList.toggle('on',j===i)})},true);
+['pointerdown','touchstart','mouseover'].forEach(function(ev){document.addEventListener(ev,function(e){if(e.target.closest&&e.target.closest('.nsl'))nslPause=Date.now()+9000},{passive:true,capture:true})});
+var nslTick=0;setInterval(function(){if(document.hidden||Date.now()<nslPause||matchMedia('(prefers-reduced-motion: reduce)').matches)return;nslTick++;document.querySelectorAll('.nsl-track').forEach(function(t,k){if((nslTick+k*2)%4||t.children.length<2||!t.offsetParent)return;var r=t.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return;nslGo(t,nslIdx(t)+1)})},1500);
 function pinFirst(a){a=(a||[]).slice();return a.filter(function(x){return x.pin}).concat(a.filter(function(x){return !x.pin}))}
 function srchText(x){return [x.title,x.text,x.sum,x.region,x.body,x.when,x.dishes,x.address].map(function(v){return v?(typeof v==='object'?(v.en||'')+' '+(v.km||''):String(v)):''}).join(' ').toLowerCase()}
 function pager(key,pages,cur){if(pages<2)return '';var b=[],add=function(n){b.push('<button type="button" class="pgn'+(n===cur?' on':'')+'" data-pg="'+key+':'+n+'"'+(n===cur?' aria-current="page"':'')+'>'+num(n)+'</button>')};
