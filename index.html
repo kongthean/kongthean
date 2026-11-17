@@ -88,6 +88,13 @@ html .stu .stu-hero a.btn.w{background:#fff!important;color:#0f2a48!important;bo
 .stu-inst{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
 .stu-inst ol{margin:6px 0 0;padding-left:20px;line-height:1.75;color:var(--muted)}
 .stu-contact{display:flex;flex-wrap:wrap;gap:10px}
+.stu-pgrid{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+@media(min-width:900px){.stu{gap:40px}.stu h3{font-size:1.4rem;margin-bottom:16px}
+  .stu-hero{padding:40px 44px;gap:32px;border-radius:28px}.stu-hero img{width:132px;height:132px;border-radius:30px}.stu-hero h2{font-size:2.2rem}.stu-hero p{font-size:1.05rem;max-width:760px}
+  .stu-fgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.stu-card{padding:20px}.stu-card .ic{width:48px;height:48px;font-size:24px}
+  .stu-steps{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.stu-steps li{grid-template-columns:1fr;align-content:start;gap:12px;border:1px solid var(--line);border-radius:18px;padding:18px;background:var(--surface)}
+  .stu-pgrid{gap:16px}.stu-price{padding:24px}.stu-price .big{font-size:2rem}
+  .stu-inst{gap:16px}}
 @media(max-width:560px){.stu-hero{grid-template-columns:1fr;text-align:left}.stu-hero img{width:64px;height:64px;border-radius:18px}}
 svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 svg.i.iu-all{stroke:none;background:currentColor;-webkit-mask:var(--iu-all) center/contain no-repeat;mask:var(--iu-all) center/contain no-repeat}
@@ -312,6 +319,25 @@ svg.i.mis{fill:currentColor;stroke:none}
 .tile small{font-size:.74rem;color:var(--muted);line-height:1.3;margin-top:-6px}
 
 /* ===== Stats ===== */
+.nslsec{margin-top:8px}
+.nsl{position:relative}
+.nsl-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:var(--r);background:var(--stone-d);box-shadow:var(--shadow)}
+.nsl-track::-webkit-scrollbar{display:none}
+.nsl-s{flex:0 0 100%;scroll-snap-align:start;position:relative;display:block;aspect-ratio:16/9;max-height:520px;overflow:hidden;color:#fff;text-decoration:none;background:var(--stone-d)}
+.nsl-s>img,.nsl-s>svg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.nsl-cap{position:absolute;left:0;right:0;bottom:0;display:grid;gap:2px;padding:30px 18px 14px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.78) 45%)}
+.nsl-cap small{font-size:.76rem;opacity:.85;letter-spacing:.02em}
+.nsl-cap b{font-size:1.05rem;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nsl-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:58px;height:58px;border-radius:50%;background:rgba(0,0,0,.45);display:grid;place-items:center;color:#fff}
+.nsl-play svg{width:26px;height:26px}
+.nsl-arw{position:absolute;top:calc(50% - 30px);width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.9);color:#111;display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+.nsl-arw.l{left:12px}.nsl-arw.r{right:12px}
+.nsl-dots{display:flex;justify-content:center;gap:7px;margin-top:12px}
+.nsl-dots button{width:8px;height:8px;padding:0;border:0;border-radius:4px;background:var(--line);cursor:pointer;transition:width .25s,background .25s}
+.nsl-dots button.on{width:24px;background:var(--accent)}
+[data-skin="thean"] .nsl-dots button.on{background:#f3b11c}
+@media(max-width:620px){.nsl-arw{display:none}.nsl-cap{padding:26px 14px 12px}.nsl-cap b{font-size:.98rem}}
+@media(min-width:900px){.nsl-cap{padding:40px 26px 20px}.nsl-cap b{font-size:1.4rem}.nsl-cap small{font-size:.85rem}}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:48px}
 @media(max-width:620px){.stats{grid-template-columns:repeat(2,1fr)}}
 .stat{background:var(--surface);padding:18px 16px;text-align:center}
@@ -1672,6 +1698,11 @@ footer .copy .flegal{display:inline-flex;flex-wrap:wrap;align-items:center;gap:4
 #tc{--c-bg:#edf2f7;--c-surface:#fff;--c-ink:#0f2238;--c-muted:#5b6d80;--c-line:#d8e1ea;--c-soft:#e4ecf4;--c-out:#e9eef3;--c-out-ink:#0f2238;--c-accent:#1a6fbd;--c-grad:linear-gradient(135deg,#36a8dc,#1a6fbd);--c-head:linear-gradient(135deg,#0f2a48,#1a5d97)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #tc{--c-bg:#081727;--c-surface:#0f2339;--c-ink:#eaf2fa;--c-muted:#94a9bf;--c-line:#1d3753;--c-soft:#17304c;--c-out:#1d3a5a;--c-out-ink:#eaf2fa;--c-accent:#4fb3e3}}
 :root[data-theme="dark"] #tc{--c-bg:#081727;--c-surface:#0f2339;--c-ink:#eaf2fa;--c-muted:#94a9bf;--c-line:#1d3753;--c-soft:#17304c;--c-out:#1d3a5a;--c-out-ink:#eaf2fa;--c-accent:#4fb3e3}
+/* Chat follows the active theme colours (Ocean keeps the app blue above) */
+:root:not([data-skin="ocean"]):not(.x) #tc{--c-bg:var(--bg);--c-surface:var(--surface);--c-ink:var(--ink);--c-muted:var(--muted);--c-line:var(--line);--c-soft:var(--bg2);--c-out:var(--accent-soft);--c-out-ink:var(--ink);--c-accent:var(--accent);--c-grad:linear-gradient(135deg,var(--stone),var(--stone-d));--c-head:linear-gradient(135deg,var(--stone-d),var(--stone))}
+:root[data-skin="thean"]:not(.x) #tc{--c-grad:linear-gradient(135deg,#f6c445,#e0a00e)}
+:root[data-skin="thean"] #tc .tc-send,:root[data-skin="thean"] #tc .tc-fsend{color:#163023!important}
+:root[data-skin="thean"] #tc .tc-head .tc-dot,:root[data-skin="thean"] #tc .tc-head i{background:#f3b11c}
 #tc .tc-panel{background:var(--c-surface)!important;border:1px solid var(--c-line)!important;color:var(--c-ink);backdrop-filter:none!important;-webkit-backdrop-filter:none!important;opacity:1}
 #tc .tc-head{background:var(--c-head)!important;color:#fff!important}
 #tc .tc-head .logo{box-shadow:0 0 0 2px rgba(255,255,255,.4)}
@@ -2070,6 +2101,7 @@ function renderHome(){
   /* stats */
   var temples=S.places.filter(function(p){return p.cat==='temple'}).length;
   h+='<div class="stats"><div class="stat"><b data-fbs="followers"'+(fbStatsOn()?'':E('stats.followers'))+'>'+statVal('followers')+'</b><span>'+ut('followers')+'</span></div><div class="stat"><b data-fbs="posts"'+(fbStatsOn()?'':E('stats.posts'))+'>'+statVal('posts')+'</b><span>'+ut('postsN')+'</span></div><div class="stat"><b>'+num(25)+'</b><span>'+ut('provinces')+'</span></div><div class="stat"><b>'+num(temples)+'</b><span>'+ut('temples')+'</span></div></div></section>';
+  h+=newsSlider();
   h+='<div id="fbfeedbox">'+fbFeedHtml()+'</div>';
   /* featured */
   var feat=S.places.filter(function(p){return p.featured}).slice(0,10);
@@ -2083,9 +2115,6 @@ function renderHome(){
   /* stories */
   var st=S.places.filter(function(p){return p.cat==='temple'&&p.img});st=st.filter(function(p){return p.story}).concat(st.filter(function(p){return !p.story})).slice(0,6);
   h+='<section><div class="sh"><div><div class="kick">'+ut('storiesKick')+'</div><h2 class="emb">'+ut('stories')+'</h2></div><a class="more" href="#/p/temples">'+ut('seeAll')+' '+I('arrow')+'</a></div><div class="grid g6">'+st.map(placeCard).join('')+'</div></section>';
-  /* latest posts */
-  var np=pinFirst(S.news||[]).slice(0,1);
-  if(np.length||admin)h+='<section><div class="sh"><div><div class="kick">'+ut('latestKick')+'</div><h2 class="emb">'+ut('latest')+'</h2></div><div style="display:flex;gap:8px;align-items:center">'+addBtn('news','','Add post')+'<a class="more" href="#/p/news">'+ut('seeAll')+' '+I('arrow')+'</a></div></div>'+postList(np,'news')+'</section>';
   /* tribute */
   var MS=S.message||{},mOn=MS.show!==false&&(String(MS.km||'').trim()||String(MS.en||'').trim()||MS.video);
   if(!mOn&&admin)h+='<section class="aonly"><div class="hidebar">'+(lang==='km'?'សារដឹងគុណ ត្រូវបានលាក់':'“A message of gratitude” is hidden from visitors')+'<button class="btn sm" data-act="msgshow">Show on website</button></div></section>';
@@ -2307,6 +2336,25 @@ function renderNews(key,id){var x=getObj(key,id),pid=listPage(key),pg=page(pid),
   return h+band()+'</div>'}
 function postsBlock(key){var L=pinFirst(S[key]||[]);return '<section><div class="sh"><h2 class="emb">'+ut('latest')+'</h2>'+addBtn(key,'',key==='news'?'Add news':'Add post')+'</div>'+(L.length?paged('posts-'+key,L,function(x){return newsItem(x,key)},8,'<div class="nlist">',L.length<=8):postList([],key))+'</section>'}
 var PG={},PLR={};
+/* Home: slider of the 5 latest News and Social Activity posts */
+function newsSlider(){var A=[];['news','social'].forEach(function(k){(S[k]||[]).forEach(function(x){if(x&&!x.hidden)A.push({k:k,x:x})})});
+  A.sort(function(a,b){return (b.x.pin?1:0)-(a.x.pin?1:0)||String(b.x.date||'').localeCompare(String(a.x.date||''))});A=A.slice(0,5);
+  if(!A.length&&!admin)return '';
+  var h='<section class="nslsec"><div class="sh"><div><div class="kick">'+ut('latestKick')+'</div><h2 class="emb">'+ut('latest')+'</h2></div><div style="display:flex;gap:8px;align-items:center">'+addBtn('news','','Add post')+'<a class="more" href="#/p/news">'+ut('seeAll')+' '+I('arrow')+'</a></div></div>';
+  if(!A.length)return h+postList([],'news')+'</section>';
+  h+='<div class="nsl"><div class="nsl-track">'+A.map(function(o){var x=o.x,th=nThumb(x),pl=!!playable(x),pg=page(listPage(o.k));
+    return '<a class="nsl-s" href="#/n/'+o.k+'/'+esc(x.id)+'">'+(th?'<img alt="" loading="lazy" src="'+esc(th)+'">':art('river',x.id))+(pl?'<i class="nsl-play">'+I('play')+'</i>':'')+
+      '<span class="nsl-cap"><small>'+esc(tr(pg&&pg.label)||'')+(x.date?' · '+esc(nDate(x.date)):'')+'</small><b>'+esc(tr(x.title)||nCap(x))+'</b></span></a>'}).join('')+'</div>'+
+    (A.length>1?'<button class="nsl-arw l" data-nsl="-1" aria-label="Previous">'+I('left')+'</button><button class="nsl-arw r" data-nsl="1" aria-label="Next">'+I('right')+'</button><div class="nsl-dots">'+A.map(function(_,i){return '<button data-nsld="'+i+'" class="'+(i?'':'on')+'" aria-label="'+(i+1)+'"></button>'}).join('')+'</div>':'')+'</div></section>';
+  return h}
+var nslPause=0;
+function nslGo(t,i){var n=t.children.length;if(!n)return;i=(i+n)%n;t.scrollTo({left:i*t.clientWidth,behavior:'smooth'})}
+function nslIdx(t){return Math.round(t.scrollLeft/Math.max(1,t.clientWidth))}
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-nsl],[data-nsld]');if(!b)return;var t=b.closest('.nsl').querySelector('.nsl-track');e.preventDefault();nslPause=Date.now()+9000;
+  if(b.hasAttribute('data-nsl'))nslGo(t,nslIdx(t)+(+b.getAttribute('data-nsl')));else nslGo(t,+b.getAttribute('data-nsld'))});
+document.addEventListener('scroll',function(e){var t=e.target;if(!t.classList||!t.classList.contains('nsl-track'))return;var i=nslIdx(t);t.parentNode.querySelectorAll('[data-nsld]').forEach(function(d,j){d.classList.toggle('on',j===i)})},true);
+['pointerdown','touchstart','mouseover'].forEach(function(ev){document.addEventListener(ev,function(e){if(e.target.closest&&e.target.closest('.nsl'))nslPause=Date.now()+9000},{passive:true,capture:true})});
+setInterval(function(){var t=document.querySelector('.nsl-track');if(!t||document.hidden||Date.now()<nslPause||t.children.length<2||matchMedia('(prefers-reduced-motion: reduce)').matches)return;var r=t.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return;nslGo(t,nslIdx(t)+1)},5000);
 function pinFirst(a){a=(a||[]).slice();return a.filter(function(x){return x.pin}).concat(a.filter(function(x){return !x.pin}))}
 function srchText(x){return [x.title,x.text,x.sum,x.region,x.body,x.when,x.dishes,x.address].map(function(v){return v?(typeof v==='object'?(v.en||'')+' '+(v.km||''):String(v)):''}).join(' ').toLowerCase()}
 function pager(key,pages,cur){if(pages<2)return '';var b=[],add=function(n){b.push('<button type="button" class="pgn'+(n===cur?' on':'')+'" data-pg="'+key+':'+n+'"'+(n===cur?' aria-current="page"':'')+'>'+num(n)+'</button>')};
@@ -2549,7 +2597,7 @@ function stuPricesHtml(){var c=STPL;if(!c)return '<p class="stu-note">'+stuL('Lo
   var packs=['fb','fbig','all'].filter(function(k){var p=(c.packs||{})[k];return (!p||p.on!==false)&&MON.some(function(m){return +(((p||{}).p||{})[m])>0})});
   var free=c.free==null||c.free===''?5:+c.free;
   if(!packs.length)return '<p class="stu-note">'+stuL('Contact us for prices and plans.','សូមទាក់ទងយើងសម្រាប់តម្លៃ និងគម្រោង។')+'</p>';
-  return '<div class="stu-grid">'+packs.map(function(k){var p=(c.packs||{})[k]||{},pr=p.p||{},nm=(p.name&&(p.name[km?'km':'en']||p.name.en))||DN[k][km?1:0],ms=MON.filter(function(m){return +pr[m]>0}),first=ms[0];
+  return '<div class="stu-grid stu-pgrid">'+packs.map(function(k){var p=(c.packs||{})[k]||{},pr=p.p||{},nm=(p.name&&(p.name[km?'km':'en']||p.name.en))||DN[k][km?1:0],ms=MON.filter(function(m){return +pr[m]>0}),first=ms[0];
     return '<div class="stu-price'+(k==='all'?' hl':'')+'"><h4>'+esc(nm)+'</h4><div class="big">'+money(+pr[first])+' <small>/ '+esc(mn(first))+'</small></div><ul>'+INC[k].map(function(x){return '<li>'+esc(x[km?1:0])+'</li>'}).join('')+'</ul>'+
       (ms.length>1?'<div class="opts">'+ms.slice(1).map(function(m){return '<span>'+esc(mn(m))+' · '+money(+pr[m])+'</span>'}).join('')+'</div>':'')+'</div>'}).join('')+'</div>'+
     (free>0?'<p class="stu-note">'+esc(stuL('Try it free: every new account gets '+free+' free posts to Facebook.','សាកល្បងដោយឥតគិតថ្លៃ៖ គណនីថ្មីនីមួយៗទទួលបានការបង្ហោះឥតគិតថ្លៃ '+String(free).replace(/\d/g,function(d){return '០១២៣៤៥៦៧៨៩'[d]})+' ដងទៅ Facebook។'))+'</p>':'')+
@@ -2566,7 +2614,7 @@ function studioBlock(){stuLoadPrices();var L=S.links||{},km=lang==='km',x=functi
      '<div class="stu-btns"><a class="btn w" href="/publish" target="_blank" rel="noopener">'+I('ext')+x('Open Thean Studio','បើក Thean Studio')+'</a><a class="btn o" href="#stuInstall" data-stuinst>'+I('download')+x('Install on your phone','ដំឡើងលើទូរស័ព្ទ')+'</a></div></div></div>';
   h+='<div><h3>'+x('Works with','ប្រើបានជាមួយ')+'</h3><div class="stu-chips"><span>'+I('facebook')+'Facebook</span><span>'+I('instagram')+'Instagram</span><span>'+I('telegram')+'Telegram</span><span>'+I('plus')+x('More platforms','បណ្ដាញផ្សេងទៀត')+'</span></div>'+
      '<p class="stu-note">'+x('Publish to Facebook Pages and Stories, Instagram posts and Stories, Telegram channels, and more platforms as we add them.','បង្ហោះទៅ Facebook Page និង Story, Instagram និង Story, ឆានែល Telegram និងបណ្ដាញផ្សេងទៀតដែលយើងបន្ថែម។')+'</p></div>';
-  h+='<div><h3>'+x('What you can do','អ្វីដែលអ្នកអាចធ្វើបាន')+'</h3><div class="stu-grid">'+F.map(function(f){return '<div class="stu-card"><span class="ic">'+I(f[0])+'</span><b>'+x(f[1],f[2])+'</b><p>'+x(f[3],f[4])+'</p></div>'}).join('')+'</div></div>';
+  h+='<div><h3>'+x('What you can do','អ្វីដែលអ្នកអាចធ្វើបាន')+'</h3><div class="stu-grid stu-fgrid">'+F.map(function(f){return '<div class="stu-card"><span class="ic">'+I(f[0])+'</span><b>'+x(f[1],f[2])+'</b><p>'+x(f[3],f[4])+'</p></div>'}).join('')+'</div></div>';
   h+='<div><h3>'+x('How to start','របៀបចាប់ផ្ដើម')+'</h3><ol class="stu-steps">'+[['Create a free account with your email.','បង្កើតគណនីឥតគិតថ្លៃដោយប្រើអ៊ីមែលរបស់អ្នក។'],['Try your free posts to Facebook.','សាកល្បងការបង្ហោះឥតគិតថ្លៃទៅ Facebook។'],['Choose a plan and pay by KHQR.','ជ្រើសគម្រោង ហើយបង់ប្រាក់តាម KHQR។'],['Connect your pages and start publishing.','ភ្ជាប់ទំព័ររបស់អ្នក ហើយចាប់ផ្ដើមបង្ហោះ។']].map(function(s){return '<li><span>'+x(s[0],s[1])+'</span></li>'}).join('')+'</ol></div>';
   h+='<div><h3>'+x('Prices','តម្លៃ')+'</h3><div id="stuPrices">'+stuPricesHtml()+'</div></div>';
   h+='<div id="stuInstall"><h3>'+x('Install on your phone','ដំឡើងលើទូរស័ព្ទ')+'</h3><div class="stu-inst">'+
