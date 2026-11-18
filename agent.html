@@ -131,6 +131,25 @@ label.f input,label.f textarea{border:1px solid var(--line);border-radius:12px;p
 .endopt{display:grid;gap:8px}.endopt button{text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:14px;padding:12px 14px;cursor:pointer;color:var(--ink);font-size:.9rem;line-height:1.4}
 .endopt button:hover{border-color:var(--stone)}.endopt small{display:block;color:var(--muted);font-size:.74rem;margin-top:4px}
 .agrow{display:flex;gap:10px;align-items:center;width:100%}
+.qrlist{display:grid;gap:5px;align-content:start}
+.qri{display:flex;align-items:center;gap:8px;width:100%;text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:8px 10px;font:inherit;font-size:.84rem;font-weight:600;color:var(--ink);cursor:pointer;line-height:1.3}
+.qri:hover{border-color:var(--stone)}
+.qri .gr{color:var(--muted);opacity:.55;cursor:grab;display:flex;flex:none}
+.qri .t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qri.drag{opacity:.35}.qri.ovt{box-shadow:inset 0 3px 0 var(--stone)}.qri.ovb{box-shadow:inset 0 -3px 0 var(--stone)}
+.qfind{width:100%;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:8px 10px;font:inherit;font-size:.84rem}
+.qrtip{margin:0;font-size:.72rem;color:var(--muted);line-height:1.4}
+@media(min-width:1100px){
+  .conv:has(#qr.qside:not([hidden])){display:grid;grid-template-columns:minmax(0,1fr) 260px;grid-template-rows:auto auto minmax(0,1fr) auto auto auto}
+  .conv:has(#qr.qside:not([hidden]))>#chh{grid-column:1/-1;grid-row:1}
+  .conv:has(#qr.qside:not([hidden]))>#inf{grid-column:1;grid-row:2}
+  .conv:has(#qr.qside:not([hidden]))>#msgs{grid-column:1;grid-row:3;min-height:0}
+  .conv:has(#qr.qside:not([hidden]))>#acc{grid-column:1;grid-row:4}
+  .conv:has(#qr.qside:not([hidden]))>#aib{grid-column:1;grid-row:5}
+  .conv:has(#qr.qside:not([hidden]))>#comp{grid-column:1;grid-row:6}
+  #qr.qside:not([hidden]){grid-column:2;grid-row:2/7;border-top:0;border-left:1px solid var(--line);display:flex;flex-direction:column;gap:8px;min-height:0;overflow:hidden;padding:12px}
+  #qr.qside .qrhead{margin:0}#qr.qside .qlang{margin:0;align-self:flex-start}#qr.qside .qlang button{border:0;background:none;cursor:pointer;color:var(--muted);padding:3px 10px;border-radius:99px;font:inherit;font-size:.76rem;font-weight:600;white-space:nowrap}#qr.qside .qlang button.on{background:var(--char);color:var(--char-ink)}
+  #qr.qside .qrlist{flex:1;min-height:0;overflow:auto;padding-right:2px}}
 .qrhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:.8rem;color:var(--muted);font-weight:600}
 .qlang{display:flex;gap:2px;background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:2px;margin-left:auto;margin-right:8px}
 .qrhead .qlang button{color:var(--muted);padding:3px 10px;border-radius:99px;font-size:.76rem}
@@ -729,7 +748,15 @@ function drawQuick(){
   const q=root.querySelector('#qr');if(!q)return;q.hidden=!showQuick;if(!showQuick)return;
   if(!(cur()&&cur().status==='assigned'&&cur().agentUid===me.uid)){q.hidden=true;return}
   const cl=(cur()&&cur().lang==='km')?'km':'en',ql=qLang==='auto'?cl:qLang;qlDrawn=cl;
-  q.innerHTML='<div class="qrhead"><span>Quick replies</span><div class="qlang" role="group" aria-label="Send quick replies in">'+[['auto','Auto ('+(cl==='km'?'Khmer':'English')+')'],['km','ខ្មែរ'],['en','English']].map(o=>'<button type="button" data-ql="'+o[0]+'" class="'+(qLang===o[0]?'on':'')+'">'+esc(o[1])+'</button>').join('')+'</div><button type="button" id="qe">Edit</button></div><div class="qrgrid">'+quick.map((x,i)=>'<button class="qrb" type="button" data-q="'+i+'" title="'+esc(ql==='km'?(x.km||x.en):x.en)+'"><span class="ic">'+I(x.icon)+'</span>'+esc(x.label)+'</button>').join('')+'</div>';
+  const side=QSIDE.matches;q.classList.toggle('qside',side);
+  const langs=[['auto','Auto ('+(cl==='km'?'Khmer':'English')+')'],['km','ខ្មែរ'],['en','English']].map(o=>'<button type="button" data-ql="'+o[0]+'" class="'+(qLang===o[0]?'on':'')+'">'+esc(o[1])+'</button>').join('');
+  if(side){const f=qFind.trim().toLowerCase();
+    q.innerHTML='<div class="qrhead"><span>Quick replies</span><button type="button" id="qe">Edit</button></div><div class="qlang" role="group" aria-label="Send quick replies in">'+langs+'</div><input class="qfind" id="qfind" type="search" placeholder="Search replies" value="'+esc(qFind)+'"><div class="qrlist" id="qrlist">'+
+      quick.map((x,i)=>{if(f&&((x.label||'')+' '+(x.en||'')+' '+(x.km||'')).toLowerCase().indexOf(f)<0)return '';return '<button class="qri" type="button" data-q="'+i+'"'+(f?'':' draggable="true"')+' title="'+esc(ql==='km'?(x.km||x.en):x.en)+'">'+(f?'':'<span class="gr" aria-hidden="true">'+QGRIP+'</span>')+'<span class="t">'+esc(x.label)+'</span></button>'}).join('')+
+      '</div><p class="qrtip">'+(f?'Clear the search to change the order.':'Click a reply to put it in the box. Hold and drag to change the order.')+'</p>';
+    const fi=q.querySelector('#qfind');fi.oninput=()=>{qFind=fi.value;const p=fi.selectionStart;drawQuick();const n=root.querySelector('#qfind');if(n){n.focus();try{n.setSelectionRange(p,p)}catch(e){}}};
+    qDrag(q.querySelector('#qrlist'))}
+  else q.innerHTML='<div class="qrhead"><span>Quick replies</span><div class="qlang" role="group" aria-label="Send quick replies in">'+[['auto','Auto ('+(cl==='km'?'Khmer':'English')+')'],['km','ខ្មែរ'],['en','English']].map(o=>'<button type="button" data-ql="'+o[0]+'" class="'+(qLang===o[0]?'on':'')+'">'+esc(o[1])+'</button>').join('')+'</div><button type="button" id="qe">Edit</button></div><div class="qrgrid">'+quick.map((x,i)=>'<button class="qrb" type="button" data-q="'+i+'" title="'+esc(ql==='km'?(x.km||x.en):x.en)+'"><span class="ic">'+I(x.icon)+'</span>'+esc(x.label)+'</button>').join('')+'</div>';
   q.querySelector('#qe').onclick=editQuick;
   q.querySelectorAll('[data-ql]').forEach(b=>b.onclick=()=>{qLang=b.dataset.ql;drawQuick()});
   q.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{const x=quick[+b.dataset.q],c=cur();const want=qLang==='auto'?((c&&c.lang==='km')?'km':'en'):qLang;let t=want==='km'?(x.km||''):(x.en||'');
@@ -1180,6 +1207,19 @@ async function team(){
 }
 
 /* quick replies: the team set, or this agent's own set */
+/* PC: quick replies as a side list (titles only, drag to reorder) */
+const QSIDE=matchMedia('(min-width:1100px)');let qFind='',qDragI=-1;
+QSIDE.addEventListener('change',()=>drawQuick());
+const QGRIP='<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>';
+function qDrag(list){if(!list)return;const clr=()=>list.querySelectorAll('.ovt,.ovb').forEach(x=>x.classList.remove('ovt','ovb'));
+  list.addEventListener('dragstart',e=>{const b=e.target.closest('.qri');if(!b)return;qDragI=+b.dataset.q;b.classList.add('drag');try{e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',String(qDragI))}catch(x){}});
+  list.addEventListener('dragend',e=>{qDragI=-1;clr();list.querySelectorAll('.drag').forEach(x=>x.classList.remove('drag'))});
+  list.addEventListener('dragover',e=>{if(qDragI<0)return;const b=e.target.closest('.qri');e.preventDefault();clr();if(!b||+b.dataset.q===qDragI)return;const r=b.getBoundingClientRect();b.classList.add(e.clientY<r.top+r.height/2?'ovt':'ovb')});
+  list.addEventListener('drop',e=>{if(qDragI<0)return;e.preventDefault();const b=e.target.closest('.qri');const from=qDragI;clr();qDragI=-1;if(!b)return;let to=+b.dataset.q;if(to===from)return;
+    const r=b.getBoundingClientRect(),after=e.clientY>=r.top+r.height/2;const L=quick.slice(),it=L.splice(from,1)[0];if(from<to)to--;if(after)to++;L.splice(to,0,it);saveQuickOrder(L)})}
+function saveQuickOrder(L){const mine=myQuickOn();quick=L;drawQuick();
+  const p=mine?DB.update('agents/'+me.uid,{quick:L}).then(()=>{agent.quick=L}):DB.update('settings/quick',{items:L,updatedAt:TS}).then(()=>{teamQuick=L});
+  p.then(()=>toast(mine?'Order saved for your replies':'Order saved for all agents')).catch(e=>toast('Order not saved: '+(e.code||e.message)))}
 function myQuickOn(){return !!(agent&&agent.quickMine&&Array.isArray(agent.quick)&&agent.quick.length)}
 function applyQuick(){const q=myQuickOn()?agent.quick:teamQuick;if(JSON.stringify(q)!==JSON.stringify(quick)){quick=q;drawConv()}}
 function editQuick(){
