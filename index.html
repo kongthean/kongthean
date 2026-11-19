@@ -265,7 +265,8 @@ h2{margin:2px 0 0;font-size:clamp(1.8rem,4.4vw,2.6rem);text-wrap:balance}
 .galed span{position:relative}
 .gvb{position:absolute;margin:4px;background:rgba(0,0,0,.6);color:#fff;font-style:normal;font-size:.7rem;padding:1px 5px;border-radius:5px}
 /* ===== Icon tiles ===== */
-.notice .nl{display:flex;gap:14px;flex:none;min-width:0}
+.notice .nl{display:flex;gap:8px 14px;flex:0 1 auto;min-width:0;flex-wrap:wrap;max-width:100%}
+@media(max-width:899px){.notice .wrap{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:10px;row-gap:6px;align-items:start}.notice .wrap>svg{margin-top:.25em}.notice span{min-width:0}.notice .nl{grid-column:2}}
 .tslide{position:relative}
 .tiles.row{display:flex;grid-template-columns:none;gap:6px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:8px 2px 12px;scroll-behavior:smooth}
 .tiles.row::-webkit-scrollbar{display:none}
@@ -1867,6 +1868,9 @@ function pic(o,alt,kind){return o&&o.img?'<img loading="lazy" alt="'+esc(alt||''
 /* ---------- helpers ---------- */
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function url(v){v=String(v||'').trim();if(!v)return '';if(!/^https?:\/\//i.test(v))v='https://'+v;return v}
+/* platforms that can show in the announcement bar (chosen in Admin) */
+var NOTICE_PL={facebook:'Facebook',messenger:'Messenger',telegram:'Telegram',tiktok:'TikTok',youtube:'YouTube',instagram:'Instagram',website:'Website',email:'Email'};
+function noticeKeys(){return Array.isArray(S.noticeLinks)?S.noticeLinks.filter(function(k){return NOTICE_PL[k]}):['facebook','telegram','tiktok']}
 function linkOf(k,v){v=String(v||'').trim();if(!v)return '';
   if(k==='email')return 'mailto:'+v; if(k==='phone')return 'tel:'+v.replace(/[^\d+]/g,'');
   if(k==='address')return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(v);
@@ -2101,7 +2105,7 @@ function renderHome(){
   h+='</div>';
   /* notice */
   var L=S.links;
-  if(!S.noticeOff)h+='<div class="notice"><div class="wrap">'+I('bell')+'<span'+E('notice')+'>'+esc(tr(S.notice))+'</span>'+'<span class="nl">'+(L.facebook?'<a target="_blank" rel="noopener" href="'+esc(linkOf('facebook',L.facebook))+'">Facebook</a>':'')+(L.telegram?'<a target="_blank" rel="noopener" href="'+esc(linkOf('telegram',L.telegram))+'">Telegram</a>':'')+(L.tiktok?'<a target="_blank" rel="noopener" href="'+esc(linkOf('tiktok',L.tiktok))+'">TikTok</a>':'')+'</span></div></div>';
+  if(!S.noticeOff)h+='<div class="notice"><div class="wrap">'+I('bell')+'<span'+E('notice')+'>'+esc(tr(S.notice))+'</span>'+'<span class="nl">'+noticeKeys().filter(function(k){return L[k]}).map(function(k){return '<a target="_blank" rel="noopener" href="'+esc(linkOf(k,L[k]))+'">'+NOTICE_PL[k]+'</a>'}).join('')+'</span></div></div>';
   h+='<div class="wrap">';
   if(skinNow()==='water'){var kmW=lang==='km',fw=(S.festivals||[]).filter(function(f){return /water|អុំទូក/i.test((f.title&&f.title.en||'')+(f.title&&f.title.km||''))})[0];h+='<section class="wvsec"><a class="wvhero" href="'+(fw?'#/k/festivals/'+esc(fw.id):'#/p/culture/festivals')+'"><div class="wvtxt"><div class="kick">'+(kmW?'ព្រះរាជពិធីបុណ្យអុំទូក':'Water & Moon Festival')+'</div><h2 class="emb wvt-day">'+(kmW?'បុណ្យអុំទូក':'Racing on the river')+'</h2><h2 class="emb wvt-night">'+(kmW?'បណ្ដែតប្រទីប អកអំបុក និងសំពះព្រះខែ':'Lights on the water')+'</h2><p class="wvt-day">'+(kmW?'ទូកងរាប់រយគ្រឿងមកពីគ្រប់ខេត្ត ប្រកួតប្រជែងគ្នានៅលើទន្លេ មុខព្រះបរមរាជវាំង។':'Hundreds of long boats from every province race on the river in front of the Royal Palace.')+'</p><p class="wvt-night">'+(kmW?'ពេលយប់ ទូកភ្លើងបណ្ដែតលើទន្លេ កាំជ្រួចបាញ់ពេញមេឃ ហើយគ្រួសារសំពះព្រះខែ និងញ៉ាំអំបុក។':'At night, illuminated floats glide on the river, fireworks fill the sky, and families salute the moon and share ambok.')+'</p><span class="btn sm">'+(kmW?'អានបន្ថែម':'Read about the festival')+I('arrow')+'</span></div><div class="wvart">'+wvScene('day')+wvScene('night')+'</div></a></section>'}
   if(skinNow()==='pchum'){var kmP=lang==='km';h+='<section class="pbsec"><a class="pbhero" href="#/k/festivals/f3"><div class="pbtxt"><div class="kick">'+(kmP?'ពិធីបុណ្យភ្ជុំបិណ្ឌ':'Pchum Ben Festival')+'</div><h2 class="emb pbt-day">'+(kmP?'ឧទ្ទិសកុសលដល់ដូនតា':'Honouring our ancestors')+'</h2><h2 class="emb pbt-night">'+(kmP?'មុនថ្ងៃរះនៅវត្ត':'Before dawn at the pagoda')+'</h2><p class="pbt-day">'+(kmP?'គ្រួសារខ្មែរធ្វើនំអន្សម ទៅលេងឪពុកម្ដាយ និងនាំចង្ហាន់ទៅប្រគេនព្រះសង្ឃនៅវត្ត។':'Families make num ansom, visit their parents and bring food to the monks at the pagoda.')+'</p><p class="pbt-night">'+(kmP?'មុនថ្ងៃរះ អ្នកស្រុកដើរជុំវិញវិហារជាមួយទៀន ហើយបោះបាយបិណ្ឌ ឧទ្ទិសដល់វិញ្ញាណក្ខន្ធដូនតា។':'Before sunrise, people walk around the vihara with candles and scatter rice balls (bay ben) for the spirits of their ancestors.')+'</p><span class="btn sm">'+(kmP?'អានបន្ថែម':'Read about Pchum Ben')+I('arrow')+'</span></div><div class="pbart">'+pbScene('day')+pbScene('night')+'</div></a></section>'}
