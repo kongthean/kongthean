@@ -4285,43 +4285,54 @@ function msgHtml(m,isLast){
   const out=m.from==='visitor',by=m.from==='agent'?(m.agentName||'Agent'):m.from==='bot'?w('assistant'):'';
   let h='<div class="tc-m '+(out?'out':'in')+'">'+(by?'<span class="by">'+esc(by)+(m.from==='agent'?' · '+esc(w('live')):'')+'</span>':'')+esc(m.text)+
     (m.links&&m.links.length?'<span class="lk">'+m.links.map(x=>'<a href="'+esc(safeHref(x.h))+'"'+(/^https/.test(x.h)?' target="_blank" rel="noopener"':' data-nav')+'>'+esc(x.l)+'</a>').join('')+'</span>':'');
-  if(m.form&&FORMS[m.form]&&m.from!=='visitor')h+=formHtml(m);
+  if(m.form&&getForm(m.form)&&m.from!=='visitor')h+=formHtml(m);
   if(m.file)h+=chatFileHtml(m.file);
   if(Array.isArray(m.imgs)&&m.imgs.length)h+='<span class="tc-imgs">'+m.imgs.filter(u=>/^https:\/\//.test(u)).map(u=>'<a href="'+esc(u)+'" target="_blank" rel="noopener"><img alt="" src="'+esc(u)+'"></a>').join('')+'</span>';
   if(m.btns&&m.btns.length)h+='<span class="tc-btns">'+m.btns.map(b=>{const lk=chatLive()&&b.a!=='end';return '<button type="button" data-act="'+esc(b.a)+'"'+(lk?' class="lock" disabled tabindex="-1" aria-disabled="true"':isLast?'':' class="old"')+'>'+esc(b.l)+'</button>'}).join('')+'</span>';
   return h+'<time>'+tm(m.ts)+'</time></div>';
 }
-function fLang(m){const t=String(m&&m.text||'');return /[\u1780-\u17FF]/.test(t)?'km':(/[A-Za-z]/.test(t)?'en':L())}
-function formHtml(m){const lg=fLang(m),F=w('F',lg),id=m.id||'',v=FV[id]||{};
+/* chat forms: built-in defaults, overridden by Admin → Words & headings → Chat forms (S.chatForms) */
+function defForms(){const F=W.en.F,K=W.km.F,ty=k=>k==='email'?'email':k==='phone'?'phone':k==='details'?'area':(k==='ours'||k==='orig')?'url':k==='want'?'choice':k==='files'?'photos':'text';
+  const mk=(id,en,km,ticket)=>({id,en,km,ticket,needContact:true,fields:FORMS[id].map(k=>{const x={k,type:ty(k),en:k==='files'?W.en.fUp:F[k],km:k==='files'?W.km.fUp:K[k],req:k==='name'};if(k==='want')x.opts=[['credit','wCredit'],['remove','wRemove'],['other','wOther']].map(o=>({v:o[0],en:F[o[1]],km:K[o[1]]}));return x})});
+  return [mk('contact','Customer details form','ទម្រង់ព័ត៌មានអតិថិជន',false),mk('report','Content report form','ទម្រង់រាយការណ៍មាតិកា',true)]}
+window.THEAN_FORMS_DEF=defForms;
+function getForm(id){const C=T.S&&Array.isArray(T.S.chatForms)?T.S.chatForms:null,f=C&&C.find(x=>x&&x.id===id);return f&&Array.isArray(f.fields)?f:(defForms().find(x=>x.id===id)||null)}
+const fLab=(x,lg)=>String((x&&(x[lg]||x.en||x.km))||(x&&x.k)||'');
+function fLang(m){const t=String(m&&m.text||'');return /[ក-៿]/.test(t)?'km':(/[A-Za-z]/.test(t)?'en':L())}
+function formHtml(m){const lg=fLang(m),fd=getForm(m.form),id=m.id||'',v=FV[id]||{};if(!fd)return '';
   if(msgs.some(x=>x.formReply===id)||(local.some(x=>x.formReply===id)))return '<span class="tc-fdone">'+esc(w('fSent',lg))+'</span>';
-  const inp=(k,t)=>'<label><span>'+esc(F[k])+'</span>'+(t==='area'?'<textarea data-ff="'+k+'" rows="3">'+esc(v[k]||'')+'</textarea>':'<input data-ff="'+k+'" type="'+(t||'text')+'" value="'+esc(v[k]||'')+'"'+(k==='phone'?' inputmode="tel"':'')+'>')+'</label>';
   let h='<span class="tc-cform" data-fid="'+esc(id)+'" data-fk="'+esc(m.form)+'" data-fl="'+lg+'">';
-  FORMS[m.form].forEach(k=>{
-    if(k==='email')h+=inp(k,'email');else if(k==='details')h+=inp(k,'area');else if(k==='ours'||k==='orig')h+=inp(k,'url');
-    else if(k==='want')h+='<label><span>'+esc(F.want)+'</span><select data-ff="want">'+[['credit',F.wCredit],['remove',F.wRemove],['other',F.wOther]].map(o=>'<option value="'+o[0]+'"'+(v.want===o[0]?' selected':'')+'>'+esc(o[1])+'</option>').join('')+'</select></label>';
-    else if(k==='files'){const M=T.S.media||{};if(M.cloud&&M.preset)h+='<span class="tc-up"><button type="button" data-fup>'+I('image')+esc(w('fUp',lg))+'</button><span class="tc-thumbs">'+(v.imgs||[]).map(u=>'<img alt="" src="'+esc(u)+'">').join('')+'</span><small data-fupmsg>'+esc(v.upMsg||'')+'</small></span>'}
-    else h+=inp(k)});
+  fd.fields.forEach(x=>{const k=String(x.k||''),lab=esc(fLab(x,lg))+(x.req?' *':'');if(!k)return;
+    if(x.type==='photos'){const M=T.S.media||{};if(M.cloud&&M.preset)h+='<span class="tc-up"><button type="button" data-fup>'+I('image')+esc(fLab(x,lg))+'</button><span class="tc-thumbs">'+(v.imgs||[]).map(u=>'<img alt="" src="'+esc(u)+'">').join('')+'</span><small data-fupmsg>'+esc(v.upMsg||'')+'</small></span>';return}
+    if(x.type==='choice'){const O=Array.isArray(x.opts)?x.opts:[];h+='<label><span>'+lab+'</span><select data-ff="'+esc(k)+'">'+O.map((o,i)=>{const ov=o.v||String(i);return '<option value="'+esc(ov)+'"'+(v[k]===ov?' selected':'')+'>'+esc(fLab(o,lg))+'</option>'}).join('')+'</select></label>';return}
+    if(x.type==='area'){h+='<label><span>'+lab+'</span><textarea data-ff="'+esc(k)+'" rows="3">'+esc(v[k]||'')+'</textarea></label>';return}
+    const t=x.type==='email'?'email':x.type==='url'?'url':x.type==='phone'?'tel':x.type==='number'?'number':x.type==='date'?'date':'text';
+    h+='<label><span>'+lab+'</span><input data-ff="'+esc(k)+'" type="'+t+'" value="'+esc(v[k]||'')+'"'+(t==='tel'?' inputmode="tel"':'')+'></label>'});
   return h+'<small class="tc-ferr" data-ferr></small><button type="button" class="tc-fsend" data-fsend>'+esc(w('fSend',lg))+'</button></span>'}
 async function uploadShot(file){const M=T.S.media||{},fd=new FormData();fd.append('file',file);fd.append('upload_preset',M.preset);fd.append('folder','thean/reports');
   const r=await fetch('https://api.cloudinary.com/v1_1/'+encodeURIComponent(M.cloud)+'/image/upload',{method:'POST',body:fd});const j=await r.json();if(!j.secure_url)throw new Error('upload');return j.secure_url}
-async function submitForm(box){const id=box.dataset.fid,kind=box.dataset.fk,lg=box.dataset.fl||L(),F=w('F',lg),v=Object.assign({},FV[id]||{});
+async function submitForm(box){const id=box.dataset.fid,kind=box.dataset.fk,lg=box.dataset.fl||L(),fd=getForm(kind),v=Object.assign({},FV[id]||{});if(!fd)return;
   box.querySelectorAll('[data-ff]').forEach(el=>{v[el.dataset.ff]=el.value.trim()});
-  const err=box.querySelector('[data-ferr]');
-  if(!v.name||!(v.phone||v.email)){err.textContent=w('fNeed',lg);return}
-  if(kind==='report'&&!v.ours&&!v.details){err.textContent=w('fNeed2',lg);return}
-  const lines=FORMS[kind].filter(k=>k!=='files'&&v[k]).map(k=>(k==='want'?F.want+' '+({credit:F.wCredit,remove:F.wRemove,other:F.wOther}[v.want]||v.want):F[k]+': '+v[k]));
-  const text=lines.join('\n').slice(0,1900);
+  const err=box.querySelector('[data-ferr]'),has=k=>fd.fields.some(x=>x.k===k);
+  const miss=fd.fields.filter(x=>x.req&&x.type!=='photos'&&x.type!=='choice'&&!v[x.k]);
+  if(miss.length){err.textContent=(lg==='km'?'សូមបំពេញ៖ ':'Please fill in: ')+miss.map(x=>fLab(x,lg)).join(', ');return}
+  if(fd.needContact&&(has('phone')||has('email'))&&!(v.phone||v.email)){err.textContent=w('fNeed',lg);return}
+  if(kind==='report'&&has('ours')&&has('details')&&!v.ours&&!v.details){err.textContent=w('fNeed2',lg);return}
+  const optLab=(x,val)=>{const o=(x.opts||[]).find((o,i)=>(o.v||String(i))===val);return o?fLab(o,lg):val};
+  const lines=fd.fields.filter(x=>x.type!=='photos'&&v[x.k]).map(x=>{const lb=fLab(x,lg);return x.type==='choice'?lb+(/[?:។]$/.test(lb)?' ':': ')+optLab(x,v[x.k]):lb+': '+v[x.k]});
+  const text=(lines.join('\n')||fLab(fd,lg)).slice(0,1900);
   try{await ensureChat()}catch(e){offline=true}
   FV[id]=v;
   await say({from:'visitor',text,formReply:id,form:kind,imgs:(v.imgs||[]).slice(0,3)});
-  const cust={name:v.name.slice(0,80),phone:(v.phone||'').slice(0,40),email:(v.email||'').slice(0,80),other:(v.other||'').slice(0,80)};
-  const live=chat&&(chat.status==='waiting'||chat.status==='assigned');
-  if(kind==='report'){let t=chat&&chat.ticket&&chat.ticketStatus!=='closed'?(chat.ticketCur||chat.ticket):'';
-    if(!t&&!offline){try{t=await nextTicket();await fb.set('tickets/'+t,{n:Number(t),chatId:user.uid,status:'open',kind:'report',createdAt:TS})}catch(e){t=''}}
-    if(!offline)await touch({name:cust.name,contact:cust.phone||cust.email,customer:cust,ticket:String(t).split('-')[0],ticketCur:t,ticketStatus:'open',reportOpen:true,report:{ours:(v.ours||'').slice(0,300),orig:(v.orig||'').slice(0,300),want:v.want||'',at:TS},lastMsg:'Content report submitted',lastFrom:'visitor',unreadAgent:INC(1)});
+  const cust={name:(v.name||'').slice(0,80),phone:(v.phone||'').slice(0,40),email:(v.email||'').slice(0,80),other:(v.other||'').slice(0,80)},hasCust=!!(cust.name||cust.phone||cust.email);
+  const live=chat&&(chat.status==='waiting'||chat.status==='assigned'),fname=fLab(fd,'en')||'Form';
+  const base=hasCust?{name:cust.name||undefined,contact:cust.phone||cust.email||undefined,customer:cust}:{};Object.keys(base).forEach(k=>base[k]===undefined&&delete base[k]);
+  if(fd.ticket){let t=chat&&chat.ticket&&chat.ticketStatus!=='closed'?(chat.ticketCur||chat.ticket):'';
+    if(!t&&!offline){try{t=await nextTicket();await fb.set('tickets/'+t,{n:Number(t),chatId:user.uid,status:'open',kind:kind==='report'?'report':'form',createdAt:TS})}catch(e){t=''}}
+    if(!offline)await touch(Object.assign(base,{ticket:String(t).split('-')[0],ticketCur:t,ticketStatus:'open',lastMsg:kind==='report'?'Content report submitted':fname+' sent',lastFrom:'visitor',unreadAgent:INC(1)},kind==='report'?{reportOpen:true,report:{ours:(v.ours||'').slice(0,300),orig:(v.orig||'').slice(0,300),want:v.want||'',at:TS}}:{}));
     if(!live)await typeThen(900,{from:'bot',text:t?w('reportDone',lg).split('{t}').join(fmtT(t)):w('contactDone',lg)});
     if(offline){local.push({from:'system',text:w('noLive',lg),alt:true,ts:Date.now()});draw(true)}}
-  else{if(!offline)await touch({name:cust.name,contact:cust.phone||cust.email,customer:cust,lastMsg:'Customer details sent',lastFrom:'visitor',unreadAgent:live?INC(1):0});
+  else{if(!offline)await touch(Object.assign(base,{lastMsg:kind==='contact'?'Customer details sent':fname+' sent',lastFrom:'visitor',unreadAgent:live?INC(1):0}));
     if(!live)await typeThen(700,{from:'bot',text:w('contactDone',lg)})}
 }
 function statusLine(){

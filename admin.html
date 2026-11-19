@@ -715,6 +715,10 @@ body:not(.editing) .qmov{display:none!important}
 .nlpick{margin:14px 0 6px;display:grid;gap:6px}.nlpick small{color:var(--muted)}.nlpick>div{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
 .nlb{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:8px 14px;font:inherit;font-weight:600;cursor:pointer}
 .nlb.on{background:var(--char);color:var(--char-ink);border-color:var(--char)}.nlb.off{opacity:.45}
+.cfr{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px}.cfr>div{flex:1;min-width:0}.cfr b{display:block}.cfr small{color:var(--muted);font-size:.78rem}
+.cfe{max-height:66vh;overflow:auto;padding-right:4px;display:grid;gap:10px}.cf2{display:grid;grid-template-columns:1fr 1fr;gap:8px}@media(max-width:560px){.cf2{grid-template-columns:1fr}}
+.cfx{border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:grid;gap:8px}.cfrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.cfrow select{font:inherit;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.cfck{display:flex;gap:8px;align-items:center;font-size:.88rem}
 .ctw{max-height:68vh;overflow:auto;padding-right:4px}.ctg{margin:16px 0 8px;font-size:.95rem}.cti{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:10px;display:grid;gap:6px}
 .cth{display:flex;align-items:center;gap:8px}.cth b{flex:1;font-size:.88rem}.ctc{font-size:.7rem;background:var(--accent-soft);color:var(--ink);border-radius:99px;padding:2px 8px}
 .ctr{border:0;background:none;color:var(--accent);font:inherit;font-size:.8rem;font-weight:600;cursor:pointer}.cti label{display:grid;gap:2px}.cti small{color:var(--muted);font-size:.72rem}.cti textarea{width:100%;font:inherit;font-size:.88rem;resize:vertical}
@@ -3327,6 +3331,7 @@ app.addEventListener('click',function(e){
     case 'notice':dashSec='texts';render();return;
     case 'noticelink':{var nk=d.k,cur=noticeKeys().slice(),ix=cur.indexOf(nk);if(!S.links[nk]&&ix<0){toast('Add the '+NOTICE_PL[nk]+' link in Contact & settings first');return}if(ix>=0)cur.splice(ix,1);else{cur.push(nk);var od=Object.keys(NOTICE_PL);cur.sort(function(a,b){return od.indexOf(a)-od.indexOf(b)})}S.noticeLinks=cur;changed();render();return}
     case 'chattext':chatTextForm();return;
+    case 'chatforms':chatFormsList();return;
     case 'noticeonoff':S.noticeOff=!S.noticeOff;changed();render();toast(S.noticeOff?'Announcement bar hidden':'Announcement bar shown');return;
     case 'msgclear':if(S.message)delete S.message.video;changed();return;
     case 'discard':discard();return;
@@ -3685,7 +3690,7 @@ function dashSection(){
   }
   else if(sec==='texts'){
     h+=dHead('Words & headings','Change any text on the website in English and Khmer. It saves as you type.');
-    h+='<h3 class="dsub">Chat messages</h3><div class="dcards">'+dCard('chat','Chat messages','Edit what the chat assistant says to customers, in Khmer and English','data-act="chattext"')+'</div>';
+    h+='<h3 class="dsub">Chat messages</h3><div class="dcards">'+dCard('chat','Chat messages','Edit what the chat assistant says to customers, in Khmer and English','data-act="chattext"')+dCard('form','Chat forms','Edit the forms agents send in the chat, or create new ones','data-act="chatforms"')+'</div>';
     h+='<div class="dnote">The announcement bar and the message of gratitude are in <button class="btn sm soft" data-dash="home">Home page</button></div>'+dField('brand.sub','Line under the website name');
     h+='<h3 class="dsub">Headings and buttons</h3><input class="dsearch" id="dsq" placeholder="Search, e.g. Explore, Featured, Watch…" value="'+esc(dashFilter.q||'')+'"><div id="dsr">'+textRows(dashFilter.q||'')+'</div>';
   }
@@ -4039,6 +4044,46 @@ function chatTextForm(){if(!window.THEAN_CHAT_W){toast('The chat is still loadin
   m.addEventListener('click',function(e){var b=e.target.closest('[data-ctr]');if(!b)return;var k=b.getAttribute('data-ctr'),d=m.querySelector('.cti[data-k="'+k+'"]');d.querySelectorAll('textarea').forEach(function(t){t.value=ctDef(k,t.getAttribute('data-l')==='km'?'km':'en')});var c=d.querySelector('.ctc');if(c)c.remove()});
   m.querySelector('[data-ok]').onclick=function(){var out={};m.querySelectorAll('.cti').forEach(function(d){var k=d.getAttribute('data-k'),o={};var bt=d.querySelector('[data-l="both"]');['en','km'].forEach(function(lg){var v=(bt||d.querySelector('[data-l="'+lg+'"]')).value.trim();if(v&&v!==ctDef(k,lg).trim())o[lg]=v});if(o.en||o.km)out[k]=o});
     S.chatText=out;m.remove();changed();toast('Chat messages saved')};
+}
+/* ---------- chat forms editor (S.chatForms) ---------- */
+var CF_TYPES=[['fullname','Full name'],['phone','Phone number'],['email','Email'],['text','Short answer'],['area','Long answer'],['url','Link'],['number','Number'],['date','Date'],['choice','Choice list'],['photos','Photos (up to 3)']];
+function cfAll(){if(Array.isArray(S.chatForms)&&S.chatForms.length)return JSON.parse(JSON.stringify(S.chatForms));return window.THEAN_FORMS_DEF?window.THEAN_FORMS_DEF():[]}
+function cfType(x){return x.k==='name'?'fullname':x.type==='photos'?'photos':x.type||'text'}
+function chatFormsList(){if(!window.THEAN_FORMS_DEF){toast('The chat is still loading. Try again in a few seconds.');return}
+  var L=cfAll();
+  var m=modal('Chat forms','<p class="note" style="margin-top:0">Agents send these forms from Quick replies in the Inbox. The customer fills them in inside the chat, in the same language as the agent’s message.</p><div class="cfl"></div><div style="display:flex;gap:8px;justify-content:space-between;margin-top:12px"><button class="btn soft" type="button" data-cfadd>+ New form</button><button class="btn soft" type="button" data-close>Close</button></div>');
+  function draw(){m.querySelector('.cfl').innerHTML=L.map(function(fm,i){var bi=fm.id==='contact'||fm.id==='report';return '<div class="cfr"><div><b>'+esc(fm.en||fm.km||'Form')+'</b><small>'+esc(fm.km||'')+' · '+fm.fields.length+' fields'+(fm.ticket?' · creates a ticket':'')+(bi?' · built-in':'')+'</small></div><button class="btn sm soft" type="button" data-cfe="'+i+'">Edit</button>'+(bi?'':'<button class="btn sm soft" type="button" data-cfd="'+i+'">Delete</button>')+'</div>'}).join('')}
+  draw();
+  m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+    if(b.hasAttribute('data-cfadd')){chatFormEdit(L,-1,function(){draw()});return}
+    if(b.getAttribute('data-cfe')!=null){chatFormEdit(L,+b.getAttribute('data-cfe'),function(){draw()});return}
+    if(b.getAttribute('data-cfd')!=null){var i=+b.getAttribute('data-cfd');if(!b.dataset.armed){b.dataset.armed=1;b.textContent='Tap again to delete';return}L.splice(i,1);S.chatForms=L;changed();draw();toast('Form deleted')}});
+}
+function chatFormEdit(L,idx,done){var fm=idx>=0?JSON.parse(JSON.stringify(L[idx])):{id:'f'+Date.now().toString(36),en:'New form',km:'ទម្រង់ថ្មី',ticket:false,needContact:false,fields:[{k:'name',type:'text',en:'Full name',km:'ឈ្មោះពេញ',req:true},{k:'phone',type:'phone',en:'Phone number',km:'លេខទូរស័ព្ទ',req:false}]};
+  var bi=fm.id==='contact'||fm.id==='report',def=bi&&window.THEAN_FORMS_DEF?window.THEAN_FORMS_DEF().filter(function(x){return x.id===fm.id})[0]:null;
+  var m=modal(idx>=0?'Edit form':'New form','<div class="cfe"><div class="cf2"><label class="f">Form name (English)<input data-fn="en" value="'+esc(fm.en||'')+'"></label><label class="f">Form name (Khmer)<input data-fn="km" value="'+esc(fm.km||'')+'"></label></div>'+
+    '<label class="cfck"><input type="checkbox" data-fo="ticket"'+(fm.ticket?' checked':'')+'> Create a ticket ID when the customer sends this form</label><label class="cfck"><input type="checkbox" data-fo="needContact"'+(fm.needContact?' checked':'')+'> Customer must give a phone number or email</label>'+
+    '<h4 class="ctg">Fields</h4><div class="cff"></div><button class="btn soft sm" type="button" data-fadd>+ Add field</button></div>'+
+    '<div style="display:flex;gap:8px;justify-content:space-between;margin-top:12px">'+(def?'<button class="btn soft" type="button" data-freset>Reset to original</button>':'<span></span>')+'<span style="display:flex;gap:8px"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-ok>Save form</button></span></div>');
+  function draw(){m.querySelector('.cff').innerHTML=fm.fields.map(function(x,i){var t=cfType(x);return '<div class="cfx" data-i="'+i+'"><div class="cf2"><label class="f">Question (English)<input data-fk="en" value="'+esc(x.en||'')+'"></label><label class="f">Question (Khmer)<input data-fk="km" value="'+esc(x.km||'')+'"></label></div>'+
+      '<div class="cfrow"><select data-fk="type">'+CF_TYPES.map(function(o){return '<option value="'+o[0]+'"'+(o[0]===t?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select>'+(t==='photos'?'':'<label class="cfck"><input type="checkbox" data-fk="req"'+(x.req?' checked':'')+'> Required</label>')+'<span style="flex:1"></span><button class="btn sm soft" type="button" data-fmv="-1">↑</button><button class="btn sm soft" type="button" data-fmv="1">↓</button><button class="btn sm soft" type="button" data-frm>Remove</button></div>'+
+      (t==='choice'?'<label class="f">Choices, one per line: English | Khmer<textarea data-fk="opts" rows="3">'+esc((x.opts||[]).map(function(o){return (o.en||'')+' | '+(o.km||'')}).join('\n'))+'</textarea></label>':'')+'</div>'}).join('')}
+  draw();
+  function readField(d){var x=fm.fields[+d.getAttribute('data-i')];d.querySelectorAll('[data-fk]').forEach(function(el){var k=el.getAttribute('data-fk');
+    if(k==='req')x.req=el.checked;else if(k==='opts'){var old=x.opts||[];x.opts=el.value.split('\n').map(function(l){return l.trim()}).filter(Boolean).map(function(l,i){var p=l.split('|');var en=(p[0]||'').trim(),km=(p[1]||'').trim()||en,prev=old.filter(function(o){return o.en===en})[0];return {v:(prev&&prev.v)||('o'+i+'_'+en.toLowerCase().replace(/[^a-z0-9]+/g,'').slice(0,12)),en:en,km:km}})}
+    else if(k==='type'){var t=el.value;if(t===cfType(x))return;if(t==='fullname'){x.k='name';x.type='text'}else{if(x.k==='name'||(x.k==='phone'&&t!=='phone')||(x.k==='email'&&t!=='email')||x.k==='files')x.k='q'+Math.random().toString(36).slice(2,8);
+      if(t==='phone'&&!fm.fields.some(function(y){return y!==x&&y.k==='phone'}))x.k='phone';if(t==='email'&&!fm.fields.some(function(y){return y!==x&&y.k==='email'}))x.k='email';if(t==='photos')x.k='files';x.type=t;if(t==='choice'&&!x.opts)x.opts=[{v:'o0',en:'Yes',km:'បាទ/ចាស'},{v:'o1',en:'No',km:'ទេ'}]}}
+    else x[k]=el.value})}
+  function readAll(){m.querySelectorAll('.cfx').forEach(readField);m.querySelectorAll('[data-fn]').forEach(function(el){fm[el.getAttribute('data-fn')]=el.value.trim()});m.querySelectorAll('[data-fo]').forEach(function(el){fm[el.getAttribute('data-fo')]=el.checked})}
+  m.addEventListener('change',function(e){if(e.target.getAttribute('data-fk')==='type'){var d=e.target.closest('.cfx');var t=e.target.value;if(t==='photos'&&fm.fields.some(function(y,i){return i!==+d.getAttribute('data-i')&&cfType(y)==='photos'})){toast('A form can have only one photos field');draw();return}readAll();draw()}});
+  m.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var d=b.closest('.cfx');
+    if(b.hasAttribute('data-fadd')){readAll();fm.fields.push({k:'q'+Math.random().toString(36).slice(2,8),type:'text',en:'New question',km:'សំណួរថ្មី',req:false});draw();return}
+    if(d&&b.hasAttribute('data-frm')){readAll();fm.fields.splice(+d.getAttribute('data-i'),1);draw();return}
+    if(d&&b.getAttribute('data-fmv')){readAll();var i=+d.getAttribute('data-i'),j=i+(+b.getAttribute('data-fmv'));if(j>=0&&j<fm.fields.length){var t=fm.fields[i];fm.fields[i]=fm.fields[j];fm.fields[j]=t;draw()}return}
+    if(b.hasAttribute('data-freset')&&def){fm=JSON.parse(JSON.stringify(def));m.querySelector('[data-fn="en"]').value=fm.en;m.querySelector('[data-fn="km"]').value=fm.km;m.querySelector('[data-fo="ticket"]').checked=!!fm.ticket;m.querySelector('[data-fo="needContact"]').checked=!!fm.needContact;draw();return}
+    if(b.hasAttribute('data-ok')){readAll();if(!fm.en&&!fm.km){toast('Give the form a name');return}if(!fm.fields.length){toast('Add at least one field');return}
+      fm.fields.forEach(function(x){if(!x.en&&x.km)x.en=x.km;if(!x.km&&x.en)x.km=x.en});
+      if(idx>=0)L[idx]=fm;else L.push(fm);S.chatForms=L;changed();m.remove();toast('Form saved');if(done)done()}});
 }
 function bioForm(){
   var m=modal('About me',fieldHtml(['bio','About us text (blank line = new paragraph, ## = heading, - = list)','biarea'],isOldBio(tr(S.about.bio))?{en:ABOUTW.en,km:ABOUTW.km}:S.about.bio)+'<div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-ok>Update</button></div>');
@@ -4564,43 +4609,54 @@ function msgHtml(m,isLast){
   const out=m.from==='visitor',by=m.from==='agent'?(m.agentName||'Agent'):m.from==='bot'?w('assistant'):'';
   let h='<div class="tc-m '+(out?'out':'in')+'">'+(by?'<span class="by">'+esc(by)+(m.from==='agent'?' · '+esc(w('live')):'')+'</span>':'')+esc(m.text)+
     (m.links&&m.links.length?'<span class="lk">'+m.links.map(x=>'<a href="'+esc(safeHref(x.h))+'"'+(/^https/.test(x.h)?' target="_blank" rel="noopener"':' data-nav')+'>'+esc(x.l)+'</a>').join('')+'</span>':'');
-  if(m.form&&FORMS[m.form]&&m.from!=='visitor')h+=formHtml(m);
+  if(m.form&&getForm(m.form)&&m.from!=='visitor')h+=formHtml(m);
   if(m.file)h+=chatFileHtml(m.file);
   if(Array.isArray(m.imgs)&&m.imgs.length)h+='<span class="tc-imgs">'+m.imgs.filter(u=>/^https:\/\//.test(u)).map(u=>'<a href="'+esc(u)+'" target="_blank" rel="noopener"><img alt="" src="'+esc(u)+'"></a>').join('')+'</span>';
   if(m.btns&&m.btns.length)h+='<span class="tc-btns">'+m.btns.map(b=>{const lk=chatLive()&&b.a!=='end';return '<button type="button" data-act="'+esc(b.a)+'"'+(lk?' class="lock" disabled tabindex="-1" aria-disabled="true"':isLast?'':' class="old"')+'>'+esc(b.l)+'</button>'}).join('')+'</span>';
   return h+'<time>'+tm(m.ts)+'</time></div>';
 }
-function fLang(m){const t=String(m&&m.text||'');return /[\u1780-\u17FF]/.test(t)?'km':(/[A-Za-z]/.test(t)?'en':L())}
-function formHtml(m){const lg=fLang(m),F=w('F',lg),id=m.id||'',v=FV[id]||{};
+/* chat forms: built-in defaults, overridden by Admin → Words & headings → Chat forms (S.chatForms) */
+function defForms(){const F=W.en.F,K=W.km.F,ty=k=>k==='email'?'email':k==='phone'?'phone':k==='details'?'area':(k==='ours'||k==='orig')?'url':k==='want'?'choice':k==='files'?'photos':'text';
+  const mk=(id,en,km,ticket)=>({id,en,km,ticket,needContact:true,fields:FORMS[id].map(k=>{const x={k,type:ty(k),en:k==='files'?W.en.fUp:F[k],km:k==='files'?W.km.fUp:K[k],req:k==='name'};if(k==='want')x.opts=[['credit','wCredit'],['remove','wRemove'],['other','wOther']].map(o=>({v:o[0],en:F[o[1]],km:K[o[1]]}));return x})});
+  return [mk('contact','Customer details form','ទម្រង់ព័ត៌មានអតិថិជន',false),mk('report','Content report form','ទម្រង់រាយការណ៍មាតិកា',true)]}
+window.THEAN_FORMS_DEF=defForms;
+function getForm(id){const C=T.S&&Array.isArray(T.S.chatForms)?T.S.chatForms:null,f=C&&C.find(x=>x&&x.id===id);return f&&Array.isArray(f.fields)?f:(defForms().find(x=>x.id===id)||null)}
+const fLab=(x,lg)=>String((x&&(x[lg]||x.en||x.km))||(x&&x.k)||'');
+function fLang(m){const t=String(m&&m.text||'');return /[ក-៿]/.test(t)?'km':(/[A-Za-z]/.test(t)?'en':L())}
+function formHtml(m){const lg=fLang(m),fd=getForm(m.form),id=m.id||'',v=FV[id]||{};if(!fd)return '';
   if(msgs.some(x=>x.formReply===id)||(local.some(x=>x.formReply===id)))return '<span class="tc-fdone">'+esc(w('fSent',lg))+'</span>';
-  const inp=(k,t)=>'<label><span>'+esc(F[k])+'</span>'+(t==='area'?'<textarea data-ff="'+k+'" rows="3">'+esc(v[k]||'')+'</textarea>':'<input data-ff="'+k+'" type="'+(t||'text')+'" value="'+esc(v[k]||'')+'"'+(k==='phone'?' inputmode="tel"':'')+'>')+'</label>';
   let h='<span class="tc-cform" data-fid="'+esc(id)+'" data-fk="'+esc(m.form)+'" data-fl="'+lg+'">';
-  FORMS[m.form].forEach(k=>{
-    if(k==='email')h+=inp(k,'email');else if(k==='details')h+=inp(k,'area');else if(k==='ours'||k==='orig')h+=inp(k,'url');
-    else if(k==='want')h+='<label><span>'+esc(F.want)+'</span><select data-ff="want">'+[['credit',F.wCredit],['remove',F.wRemove],['other',F.wOther]].map(o=>'<option value="'+o[0]+'"'+(v.want===o[0]?' selected':'')+'>'+esc(o[1])+'</option>').join('')+'</select></label>';
-    else if(k==='files'){const M=T.S.media||{};if(M.cloud&&M.preset)h+='<span class="tc-up"><button type="button" data-fup>'+I('image')+esc(w('fUp',lg))+'</button><span class="tc-thumbs">'+(v.imgs||[]).map(u=>'<img alt="" src="'+esc(u)+'">').join('')+'</span><small data-fupmsg>'+esc(v.upMsg||'')+'</small></span>'}
-    else h+=inp(k)});
+  fd.fields.forEach(x=>{const k=String(x.k||''),lab=esc(fLab(x,lg))+(x.req?' *':'');if(!k)return;
+    if(x.type==='photos'){const M=T.S.media||{};if(M.cloud&&M.preset)h+='<span class="tc-up"><button type="button" data-fup>'+I('image')+esc(fLab(x,lg))+'</button><span class="tc-thumbs">'+(v.imgs||[]).map(u=>'<img alt="" src="'+esc(u)+'">').join('')+'</span><small data-fupmsg>'+esc(v.upMsg||'')+'</small></span>';return}
+    if(x.type==='choice'){const O=Array.isArray(x.opts)?x.opts:[];h+='<label><span>'+lab+'</span><select data-ff="'+esc(k)+'">'+O.map((o,i)=>{const ov=o.v||String(i);return '<option value="'+esc(ov)+'"'+(v[k]===ov?' selected':'')+'>'+esc(fLab(o,lg))+'</option>'}).join('')+'</select></label>';return}
+    if(x.type==='area'){h+='<label><span>'+lab+'</span><textarea data-ff="'+esc(k)+'" rows="3">'+esc(v[k]||'')+'</textarea></label>';return}
+    const t=x.type==='email'?'email':x.type==='url'?'url':x.type==='phone'?'tel':x.type==='number'?'number':x.type==='date'?'date':'text';
+    h+='<label><span>'+lab+'</span><input data-ff="'+esc(k)+'" type="'+t+'" value="'+esc(v[k]||'')+'"'+(t==='tel'?' inputmode="tel"':'')+'></label>'});
   return h+'<small class="tc-ferr" data-ferr></small><button type="button" class="tc-fsend" data-fsend>'+esc(w('fSend',lg))+'</button></span>'}
 async function uploadShot(file){const M=T.S.media||{},fd=new FormData();fd.append('file',file);fd.append('upload_preset',M.preset);fd.append('folder','thean/reports');
   const r=await fetch('https://api.cloudinary.com/v1_1/'+encodeURIComponent(M.cloud)+'/image/upload',{method:'POST',body:fd});const j=await r.json();if(!j.secure_url)throw new Error('upload');return j.secure_url}
-async function submitForm(box){const id=box.dataset.fid,kind=box.dataset.fk,lg=box.dataset.fl||L(),F=w('F',lg),v=Object.assign({},FV[id]||{});
+async function submitForm(box){const id=box.dataset.fid,kind=box.dataset.fk,lg=box.dataset.fl||L(),fd=getForm(kind),v=Object.assign({},FV[id]||{});if(!fd)return;
   box.querySelectorAll('[data-ff]').forEach(el=>{v[el.dataset.ff]=el.value.trim()});
-  const err=box.querySelector('[data-ferr]');
-  if(!v.name||!(v.phone||v.email)){err.textContent=w('fNeed',lg);return}
-  if(kind==='report'&&!v.ours&&!v.details){err.textContent=w('fNeed2',lg);return}
-  const lines=FORMS[kind].filter(k=>k!=='files'&&v[k]).map(k=>(k==='want'?F.want+' '+({credit:F.wCredit,remove:F.wRemove,other:F.wOther}[v.want]||v.want):F[k]+': '+v[k]));
-  const text=lines.join('\n').slice(0,1900);
+  const err=box.querySelector('[data-ferr]'),has=k=>fd.fields.some(x=>x.k===k);
+  const miss=fd.fields.filter(x=>x.req&&x.type!=='photos'&&x.type!=='choice'&&!v[x.k]);
+  if(miss.length){err.textContent=(lg==='km'?'សូមបំពេញ៖ ':'Please fill in: ')+miss.map(x=>fLab(x,lg)).join(', ');return}
+  if(fd.needContact&&(has('phone')||has('email'))&&!(v.phone||v.email)){err.textContent=w('fNeed',lg);return}
+  if(kind==='report'&&has('ours')&&has('details')&&!v.ours&&!v.details){err.textContent=w('fNeed2',lg);return}
+  const optLab=(x,val)=>{const o=(x.opts||[]).find((o,i)=>(o.v||String(i))===val);return o?fLab(o,lg):val};
+  const lines=fd.fields.filter(x=>x.type!=='photos'&&v[x.k]).map(x=>{const lb=fLab(x,lg);return x.type==='choice'?lb+(/[?:។]$/.test(lb)?' ':': ')+optLab(x,v[x.k]):lb+': '+v[x.k]});
+  const text=(lines.join('\n')||fLab(fd,lg)).slice(0,1900);
   try{await ensureChat()}catch(e){offline=true}
   FV[id]=v;
   await say({from:'visitor',text,formReply:id,form:kind,imgs:(v.imgs||[]).slice(0,3)});
-  const cust={name:v.name.slice(0,80),phone:(v.phone||'').slice(0,40),email:(v.email||'').slice(0,80),other:(v.other||'').slice(0,80)};
-  const live=chat&&(chat.status==='waiting'||chat.status==='assigned');
-  if(kind==='report'){let t=chat&&chat.ticket&&chat.ticketStatus!=='closed'?(chat.ticketCur||chat.ticket):'';
-    if(!t&&!offline){try{t=await nextTicket();await fb.set('tickets/'+t,{n:Number(t),chatId:user.uid,status:'open',kind:'report',createdAt:TS})}catch(e){t=''}}
-    if(!offline)await touch({name:cust.name,contact:cust.phone||cust.email,customer:cust,ticket:String(t).split('-')[0],ticketCur:t,ticketStatus:'open',reportOpen:true,report:{ours:(v.ours||'').slice(0,300),orig:(v.orig||'').slice(0,300),want:v.want||'',at:TS},lastMsg:'Content report submitted',lastFrom:'visitor',unreadAgent:INC(1)});
+  const cust={name:(v.name||'').slice(0,80),phone:(v.phone||'').slice(0,40),email:(v.email||'').slice(0,80),other:(v.other||'').slice(0,80)},hasCust=!!(cust.name||cust.phone||cust.email);
+  const live=chat&&(chat.status==='waiting'||chat.status==='assigned'),fname=fLab(fd,'en')||'Form';
+  const base=hasCust?{name:cust.name||undefined,contact:cust.phone||cust.email||undefined,customer:cust}:{};Object.keys(base).forEach(k=>base[k]===undefined&&delete base[k]);
+  if(fd.ticket){let t=chat&&chat.ticket&&chat.ticketStatus!=='closed'?(chat.ticketCur||chat.ticket):'';
+    if(!t&&!offline){try{t=await nextTicket();await fb.set('tickets/'+t,{n:Number(t),chatId:user.uid,status:'open',kind:kind==='report'?'report':'form',createdAt:TS})}catch(e){t=''}}
+    if(!offline)await touch(Object.assign(base,{ticket:String(t).split('-')[0],ticketCur:t,ticketStatus:'open',lastMsg:kind==='report'?'Content report submitted':fname+' sent',lastFrom:'visitor',unreadAgent:INC(1)},kind==='report'?{reportOpen:true,report:{ours:(v.ours||'').slice(0,300),orig:(v.orig||'').slice(0,300),want:v.want||'',at:TS}}:{}));
     if(!live)await typeThen(900,{from:'bot',text:t?w('reportDone',lg).split('{t}').join(fmtT(t)):w('contactDone',lg)});
     if(offline){local.push({from:'system',text:w('noLive',lg),alt:true,ts:Date.now()});draw(true)}}
-  else{if(!offline)await touch({name:cust.name,contact:cust.phone||cust.email,customer:cust,lastMsg:'Customer details sent',lastFrom:'visitor',unreadAgent:live?INC(1):0});
+  else{if(!offline)await touch(Object.assign(base,{lastMsg:kind==='contact'?'Customer details sent':fname+' sent',lastFrom:'visitor',unreadAgent:live?INC(1):0}));
     if(!live)await typeThen(700,{from:'bot',text:w('contactDone',lg)})}
 }
 function statusLine(){
