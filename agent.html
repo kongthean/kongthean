@@ -545,6 +545,10 @@ const TRANSFER={en:'Please hold on a moment. We are transferring you to another 
 const JOIN_DEF={en:'{name} has joined the chat.',km:'{name} បានចូលរួមការជជែក។'};
 const BUSY={en:'Sorry, all our agents are busy right now. Please try again later. You can keep chatting with me in the meantime.',km:'សូមអភ័យទោស ភ្នាក់ងាររបស់យើងទាំងអស់កំពុងរវល់នៅពេលនេះ។ សូមព្យាយាមម្ដងទៀតនៅពេលក្រោយ។ អ្នកអាចបន្តជជែកជាមួយខ្ញុំក្នុងពេលនេះ។'};
 const BTN={en:{live:'Talk to Live Agent',more:'More Options'},km:{live:'ជជែកជាមួយភ្នាក់ងារ',more:'ជម្រើសផ្សេងៗ'}};
+/* messages edited in Admin → Texts → Chat messages */
+function applyChatText(ct){if(!ct||typeof ct!=='object')return;const M={autoEnd:AUTO_END,solved:SOLVED,transfer:TRANSFER,busy:BUSY,ended:ENDED};
+  ['en','km'].forEach(lg=>{Object.keys(M).forEach(k=>{const v=ct[k]&&ct[k][lg];if(typeof v==='string'&&v.trim())M[k][lg]=v});
+    if(ct.bLive&&ct.bLive[lg])BTN[lg].live=ct.bLive[lg];if(ct.bMore&&ct.bMore[lg])BTN[lg].more=ct.bMore[lg]})}
 const ekey=e=>String(e||'').toLowerCase().split('.').join(',');
 const isOwner=()=>!!agent&&(agent.role==='owner'||!agent.role);
 const ENDED={en:'Your chat session has ended. Thank you for contacting us today.',km:'វគ្គជជែករបស់អ្នកបានបញ្ចប់។ អរគុណសម្រាប់ការទាក់ទងមកយើងនៅថ្ងៃនេះ។'};
@@ -609,6 +613,7 @@ function start(){
   beat=setInterval(()=>{if(agent&&agent.online)DB.update('agents/'+me.uid,{lastSeen:TS}).catch(()=>{})},60000);
   connUnsub=DB.onConnected(c=>{if(c&&wantOnline){DB.onDisconnect('agents/'+me.uid,{online:false,lastSeen:TS});DB.update('agents/'+me.uid,{online:true,lastSeen:TS}).catch(()=>{})}});
   meUnsub=DB.on('agents/'+me.uid,v=>{if(v){agent=v;drawTop();applyQuick()}});
+  DB.get('site/content/chatText').then(applyChatText).catch(()=>{});
   DB.get('settings/public').then(v=>{if(v&&v.waitMin)waitMin=+v.waitMin||10;if(v&&v.autoMin)autoMin=+v.autoMin||30;if(v&&v.replyMin)replyMin=+v.replyMin||20;if(v&&v.lateMin)lateMin=+v.lateMin||30}).catch(()=>{});
   setInterval(expireWaiting,30000);setInterval(checkLate,20000);
   DB.get('settings/quick').then(v=>{if(v&&Array.isArray(v.items)&&v.items.length){quick=v.items;

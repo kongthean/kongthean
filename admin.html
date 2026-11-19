@@ -715,6 +715,9 @@ body:not(.editing) .qmov{display:none!important}
 .nlpick{margin:14px 0 6px;display:grid;gap:6px}.nlpick small{color:var(--muted)}.nlpick>div{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
 .nlb{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:8px 14px;font:inherit;font-weight:600;cursor:pointer}
 .nlb.on{background:var(--char);color:var(--char-ink);border-color:var(--char)}.nlb.off{opacity:.45}
+.ctw{max-height:68vh;overflow:auto;padding-right:4px}.ctg{margin:16px 0 8px;font-size:.95rem}.cti{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:10px;display:grid;gap:6px}
+.cth{display:flex;align-items:center;gap:8px}.cth b{flex:1;font-size:.88rem}.ctc{font-size:.7rem;background:var(--accent-soft);color:var(--ink);border-radius:99px;padding:2px 8px}
+.ctr{border:0;background:none;color:var(--accent);font:inherit;font-size:.8rem;font-weight:600;cursor:pointer}.cti label{display:grid;gap:2px}.cti small{color:var(--muted);font-size:.72rem}.cti textarea{width:100%;font:inherit;font-size:.88rem;resize:vertical}
 .dcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
 .dcard{display:flex;gap:12px;align-items:center;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;cursor:pointer;color:var(--ink)}
 .dcard:hover{border-color:var(--stone)}
@@ -3323,6 +3326,7 @@ app.addEventListener('click',function(e){
     case 'pagemode':adminView='page';editing=true;render();window.scrollTo(0,0);toast('Tap any text with a dashed outline to change it. Changes save automatically.');return;
     case 'notice':dashSec='texts';render();return;
     case 'noticelink':{var nk=d.k,cur=noticeKeys().slice(),ix=cur.indexOf(nk);if(!S.links[nk]&&ix<0){toast('Add the '+NOTICE_PL[nk]+' link in Contact & settings first');return}if(ix>=0)cur.splice(ix,1);else{cur.push(nk);var od=Object.keys(NOTICE_PL);cur.sort(function(a,b){return od.indexOf(a)-od.indexOf(b)})}S.noticeLinks=cur;changed();render();return}
+    case 'chattext':chatTextForm();return;
     case 'noticeonoff':S.noticeOff=!S.noticeOff;changed();render();toast(S.noticeOff?'Announcement bar hidden':'Announcement bar shown');return;
     case 'msgclear':if(S.message)delete S.message.video;changed();return;
     case 'discard':discard();return;
@@ -3681,6 +3685,7 @@ function dashSection(){
   }
   else if(sec==='texts'){
     h+=dHead('Words & headings','Change any text on the website in English and Khmer. It saves as you type.');
+    h+='<h3 class="dsub">Chat messages</h3><div class="dcards">'+dCard('chat','Chat messages','Edit what the chat assistant says to customers, in Khmer and English','data-act="chattext"')+'</div>';
     h+='<div class="dnote">The announcement bar and the message of gratitude are in <button class="btn sm soft" data-dash="home">Home page</button></div>'+dField('brand.sub','Line under the website name');
     h+='<h3 class="dsub">Headings and buttons</h3><input class="dsearch" id="dsq" placeholder="Search, e.g. Explore, Featured, Watch…" value="'+esc(dashFilter.q||'')+'"><div id="dsr">'+textRows(dashFilter.q||'')+'</div>';
   }
@@ -4015,6 +4020,26 @@ function donateForm(){
   m.addEventListener('change',function(e){if(e.target.closest('[data-bkrow]'))readBk()});m.addEventListener('input',function(e){if(e.target.closest('[data-bkrow]'))readBk()});
   drawBk();
 }
+/* ---------- chat messages editor (overrides stored in S.chatText) ---------- */
+var CT_AGENT={"solved": {"en": "Your case {t} has been marked as solved. If you need more help, send this ticket ID in the chat any time and you can reopen it.", "km": "ករណីរបស់អ្នក {t} ត្រូវបានដោះស្រាយរួចរាល់។ ប្រសិនបើអ្នកត្រូវការជំនួយបន្ថែម សូមផ្ញើលេខសំបុត្រនេះក្នុងការជជែកពេលណាក៏បាន ហើយអ្នកអាចបើកករណីនេះឡើងវិញបាន។"}, "transfer": {"en": "Please hold on a moment. We are transferring you to another agent who can help you further.", "km": "សូមរង់ចាំបន្តិច។ យើងកំពុងផ្ទេរអ្នកទៅភ្នាក់ងារម្នាក់ទៀត ដែលអាចជួយអ្នកបន្ថែម។"}};
+var CT_GROUPS=[
+ ['Start and menu',[['welcome','First message: choose a language'],['intro','Greeting with the menu'],['more','“More options” question'],['title','Chat window title'],['bot','Subtitle when the assistant answers'],['assistant','Assistant name'],['ph','Message box placeholder']]],
+ ['Live agent',[['hold1','After “Talk to Live Agent” (first message)'],['hold2','After “Talk to Live Agent” (second message)'],['wait','Subtitle while connecting'],['live','Live agent label'],['busy','All agents are busy'],['noLive','Live chat not available'],['transfer','Transferring to another agent (sent from the Inbox)'],['ended','Chat ended'],['autoEnd','Chat closed automatically'],['endedSys','Note for agents when the customer ends the chat'],['peek','New message preview'],['typing','“typing” word']]],
+ ['Tickets and cases',[['solved','Case marked as solved (sent from the Inbox)'],['tClosed','Customer sends a solved ticket ID'],['follow','Customer sends an open ticket ID'],['tNotFound','Ticket ID not found'],['tReopened','Case reopened'],['reportDone','Report received (when no agent is in the chat)'],['contactDone','Details received (when no agent is in the chat)'],['reportAsk','Content report: message above the form']]],
+ ['Buttons',[['bLive','Talk to Live Agent'],['bCall','Call us'],['bMore','More Options'],['bEnd','End Live Chat'],['bReopen','Reopen my case'],['clr','Clear chat'],['clrQ','Clear chat: question'],['clrQLive','Clear chat during a live chat: question'],['clrYes','Clear chat: yes'],['clrNo','Clear chat: cancel']]],
+ ['Forms',[['fSend','Send button'],['fSent','After the form is sent'],['fNeed','Missing name or contact'],['fNeed2','Missing link or details'],['fUp','Add screenshots button'],['fUping','Uploading…'],['fUpErr','Upload failed']]]];
+function ctDef(k,lg){var W=window.THEAN_CHAT_W;if(CT_AGENT[k])return CT_AGENT[k][lg];return W&&W[lg]&&typeof W[lg][k]==='string'?W[lg][k]:''}
+function chatTextForm(){if(!window.THEAN_CHAT_W){toast('The chat is still loading. Try again in a few seconds.');return}
+  var cur=S.chatText||{},seen={},h='<p class="note" style="margin-top:0">Change any message the chat assistant sends. Leave a box as it is to keep the original. Words in curly brackets are filled in automatically: {t} ticket ID, {d} date, {min} minutes.</p><input class="ctq" placeholder="Search messages" style="width:100%;margin-bottom:10px">';
+  CT_GROUPS.forEach(function(g){h+='<h4 class="ctg">'+esc(g[0])+'</h4>';g[1].forEach(function(it){var k=it[0];seen[k]=1;var o=cur[k]||{},en=o.en||ctDef(k,'en'),km=o.km||ctDef(k,'km'),ch=!!(o.en||o.km),both=ctDef(k,'en')===ctDef(k,'km');
+    h+='<div class="cti" data-k="'+k+'"><div class="cth"><b>'+esc(it[1])+'</b>'+(ch?'<span class="ctc">Edited</span>':'')+'<button type="button" class="ctr" data-ctr="'+k+'">Reset</button></div>'+(both?'<label><small>Khmer and English together (one message)</small><textarea rows="2" data-l="both">'+esc(en)+'</textarea></label>':'<label><small>English</small><textarea rows="2" data-l="en">'+esc(en)+'</textarea></label><label><small>ខ្មែរ</small><textarea rows="2" data-l="km">'+esc(km)+'</textarea></label>')+'</div>'})});
+  var m=modal('Chat messages','<div class="ctw">'+h+'</div><div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-ok>Save</button></div>');
+  m.querySelectorAll('textarea').forEach(function(t){t.style.height='';t.style.height=Math.min(220,t.scrollHeight+4)+'px';t.oninput=function(){t.style.height='';t.style.height=Math.min(220,t.scrollHeight+4)+'px'}});
+  m.querySelector('.ctq').oninput=function(){var q=this.value.toLowerCase();m.querySelectorAll('.cti').forEach(function(d){d.hidden=!!q&&d.textContent.toLowerCase().indexOf(q)<0&&[].every.call(d.querySelectorAll('textarea'),function(t){return t.value.toLowerCase().indexOf(q)<0})})};
+  m.addEventListener('click',function(e){var b=e.target.closest('[data-ctr]');if(!b)return;var k=b.getAttribute('data-ctr'),d=m.querySelector('.cti[data-k="'+k+'"]');d.querySelectorAll('textarea').forEach(function(t){t.value=ctDef(k,t.getAttribute('data-l')==='km'?'km':'en')});var c=d.querySelector('.ctc');if(c)c.remove()});
+  m.querySelector('[data-ok]').onclick=function(){var out={};m.querySelectorAll('.cti').forEach(function(d){var k=d.getAttribute('data-k'),o={};var bt=d.querySelector('[data-l="both"]');['en','km'].forEach(function(lg){var v=(bt||d.querySelector('[data-l="'+lg+'"]')).value.trim();if(v&&v!==ctDef(k,lg).trim())o[lg]=v});if(o.en||o.km)out[k]=o});
+    S.chatText=out;m.remove();changed();toast('Chat messages saved')};
+}
 function bioForm(){
   var m=modal('About me',fieldHtml(['bio','About us text (blank line = new paragraph, ## = heading, - = list)','biarea'],isOldBio(tr(S.about.bio))?{en:ABOUTW.en,km:ABOUTW.km}:S.about.bio)+'<div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn soft" type="button" data-close>Cancel</button><button class="btn" type="button" data-ok>Update</button></div>');
   m.querySelector('[data-ok]').onclick=function(){S.about.bio={en:m.querySelector('[data-l="en"]').value.trim(),km:m.querySelector('[data-l="km"]').value.trim()};m.remove();changed()};
@@ -4123,7 +4148,8 @@ const W = {
    fSend:'ផ្ញើ',fSent:'បានផ្ញើ។ អរគុណ។',fNeed:'សូមបញ្ចូលឈ្មោះពេញ និងលេខទូរស័ព្ទ ឬអ៊ីមែល។',fNeed2:'សូមបញ្ចូលតំណនៃមាតិកា ឬពិពណ៌នាវានៅក្នុងព័ត៌មានលម្អិត។',fUp:'បន្ថែមរូបថតអេក្រង់ (រហូតដល់ ៣)',fUping:'កំពុងបញ្ជូន…',fUpErr:'បញ្ជូនមិនបាន។ អ្នកអាចផ្ញើរូបថតអេក្រង់តាមអ៊ីមែលជំនួសវិញ។',
    F:{name:'ឈ្មោះពេញ',phone:'លេខទូរស័ព្ទ',email:'អ៊ីមែល',other:'Telegram, WhatsApp ឬផ្សេងៗ',ours:'តំណមាតិកានៅលើគេហទំព័រ ឬទំព័ររបស់យើង',orig:'តំណស្នាដៃដើមរបស់អ្នក',details:'ព័ត៌មានលម្អិត៖ អ្វីដែលត្រូវបានប្រើ និងពេលណា',want:'តើអ្នកចង់ឱ្យយើងធ្វើអ្វី?',wCredit:'ដាក់ឈ្មោះខ្ញុំជាម្ចាស់',wRemove:'លុបមាតិកាចេញ',wOther:'ផ្សេងៗ'}}
 };
-const w=(k,lg)=>W[lg||L()][k];
+window.THEAN_CHAT_W=W;
+const w=(k,lg)=>{lg=lg||L();const d=W[lg][k];if(typeof d!=='string')return d;const o=((T.S||{}).chatText||{})[k];return (o&&typeof o[lg]==='string'&&o[lg].trim())?o[lg]:d};
 const esc=T.esc, I=T.icon;
 const STARTED='thean-chat-started', CACHE='thean-site-cache';
 
@@ -4544,10 +4570,11 @@ function msgHtml(m,isLast){
   if(m.btns&&m.btns.length)h+='<span class="tc-btns">'+m.btns.map(b=>{const lk=chatLive()&&b.a!=='end';return '<button type="button" data-act="'+esc(b.a)+'"'+(lk?' class="lock" disabled tabindex="-1" aria-disabled="true"':isLast?'':' class="old"')+'>'+esc(b.l)+'</button>'}).join('')+'</span>';
   return h+'<time>'+tm(m.ts)+'</time></div>';
 }
-function formHtml(m){const lg=L(),F=w('F',lg),id=m.id||'',v=FV[id]||{};
+function fLang(m){const t=String(m&&m.text||'');return /[\u1780-\u17FF]/.test(t)?'km':(/[A-Za-z]/.test(t)?'en':L())}
+function formHtml(m){const lg=fLang(m),F=w('F',lg),id=m.id||'',v=FV[id]||{};
   if(msgs.some(x=>x.formReply===id)||(local.some(x=>x.formReply===id)))return '<span class="tc-fdone">'+esc(w('fSent',lg))+'</span>';
   const inp=(k,t)=>'<label><span>'+esc(F[k])+'</span>'+(t==='area'?'<textarea data-ff="'+k+'" rows="3">'+esc(v[k]||'')+'</textarea>':'<input data-ff="'+k+'" type="'+(t||'text')+'" value="'+esc(v[k]||'')+'"'+(k==='phone'?' inputmode="tel"':'')+'>')+'</label>';
-  let h='<span class="tc-cform" data-fid="'+esc(id)+'" data-fk="'+esc(m.form)+'">';
+  let h='<span class="tc-cform" data-fid="'+esc(id)+'" data-fk="'+esc(m.form)+'" data-fl="'+lg+'">';
   FORMS[m.form].forEach(k=>{
     if(k==='email')h+=inp(k,'email');else if(k==='details')h+=inp(k,'area');else if(k==='ours'||k==='orig')h+=inp(k,'url');
     else if(k==='want')h+='<label><span>'+esc(F.want)+'</span><select data-ff="want">'+[['credit',F.wCredit],['remove',F.wRemove],['other',F.wOther]].map(o=>'<option value="'+o[0]+'"'+(v.want===o[0]?' selected':'')+'>'+esc(o[1])+'</option>').join('')+'</select></label>';
@@ -4556,7 +4583,7 @@ function formHtml(m){const lg=L(),F=w('F',lg),id=m.id||'',v=FV[id]||{};
   return h+'<small class="tc-ferr" data-ferr></small><button type="button" class="tc-fsend" data-fsend>'+esc(w('fSend',lg))+'</button></span>'}
 async function uploadShot(file){const M=T.S.media||{},fd=new FormData();fd.append('file',file);fd.append('upload_preset',M.preset);fd.append('folder','thean/reports');
   const r=await fetch('https://api.cloudinary.com/v1_1/'+encodeURIComponent(M.cloud)+'/image/upload',{method:'POST',body:fd});const j=await r.json();if(!j.secure_url)throw new Error('upload');return j.secure_url}
-async function submitForm(box){const id=box.dataset.fid,kind=box.dataset.fk,lg=L(),F=w('F',lg),v=Object.assign({},FV[id]||{});
+async function submitForm(box){const id=box.dataset.fid,kind=box.dataset.fk,lg=box.dataset.fl||L(),F=w('F',lg),v=Object.assign({},FV[id]||{});
   box.querySelectorAll('[data-ff]').forEach(el=>{v[el.dataset.ff]=el.value.trim()});
   const err=box.querySelector('[data-ferr]');
   if(!v.name||!(v.phone||v.email)){err.textContent=w('fNeed',lg);return}
@@ -4571,7 +4598,7 @@ async function submitForm(box){const id=box.dataset.fid,kind=box.dataset.fk,lg=L
   if(kind==='report'){let t=chat&&chat.ticket&&chat.ticketStatus!=='closed'?(chat.ticketCur||chat.ticket):'';
     if(!t&&!offline){try{t=await nextTicket();await fb.set('tickets/'+t,{n:Number(t),chatId:user.uid,status:'open',kind:'report',createdAt:TS})}catch(e){t=''}}
     if(!offline)await touch({name:cust.name,contact:cust.phone||cust.email,customer:cust,ticket:String(t).split('-')[0],ticketCur:t,ticketStatus:'open',reportOpen:true,report:{ours:(v.ours||'').slice(0,300),orig:(v.orig||'').slice(0,300),want:v.want||'',at:TS},lastMsg:'Content report submitted',lastFrom:'visitor',unreadAgent:INC(1)});
-    await typeThen(900,{from:'bot',text:t?w('reportDone',lg).split('{t}').join(fmtT(t)):w('contactDone',lg)});
+    if(!live)await typeThen(900,{from:'bot',text:t?w('reportDone',lg).split('{t}').join(fmtT(t)):w('contactDone',lg)});
     if(offline){local.push({from:'system',text:w('noLive',lg),alt:true,ts:Date.now()});draw(true)}}
   else{if(!offline)await touch({name:cust.name,contact:cust.phone||cust.email,customer:cust,lastMsg:'Customer details sent',lastFrom:'visitor',unreadAgent:live?INC(1):0});
     if(!live)await typeThen(700,{from:'bot',text:w('contactDone',lg)})}

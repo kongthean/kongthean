@@ -3869,7 +3869,8 @@ const W = {
    fSend:'ផ្ញើ',fSent:'បានផ្ញើ។ អរគុណ។',fNeed:'សូមបញ្ចូលឈ្មោះពេញ និងលេខទូរស័ព្ទ ឬអ៊ីមែល។',fNeed2:'សូមបញ្ចូលតំណនៃមាតិកា ឬពិពណ៌នាវានៅក្នុងព័ត៌មានលម្អិត។',fUp:'បន្ថែមរូបថតអេក្រង់ (រហូតដល់ ៣)',fUping:'កំពុងបញ្ជូន…',fUpErr:'បញ្ជូនមិនបាន។ អ្នកអាចផ្ញើរូបថតអេក្រង់តាមអ៊ីមែលជំនួសវិញ។',
    F:{name:'ឈ្មោះពេញ',phone:'លេខទូរស័ព្ទ',email:'អ៊ីមែល',other:'Telegram, WhatsApp ឬផ្សេងៗ',ours:'តំណមាតិកានៅលើគេហទំព័រ ឬទំព័ររបស់យើង',orig:'តំណស្នាដៃដើមរបស់អ្នក',details:'ព័ត៌មានលម្អិត៖ អ្វីដែលត្រូវបានប្រើ និងពេលណា',want:'តើអ្នកចង់ឱ្យយើងធ្វើអ្វី?',wCredit:'ដាក់ឈ្មោះខ្ញុំជាម្ចាស់',wRemove:'លុបមាតិកាចេញ',wOther:'ផ្សេងៗ'}}
 };
-const w=(k,lg)=>W[lg||L()][k];
+window.THEAN_CHAT_W=W;
+const w=(k,lg)=>{lg=lg||L();const d=W[lg][k];if(typeof d!=='string')return d;const o=((T.S||{}).chatText||{})[k];return (o&&typeof o[lg]==='string'&&o[lg].trim())?o[lg]:d};
 const esc=T.esc, I=T.icon;
 const STARTED='thean-chat-started', CACHE='thean-site-cache';
 
@@ -4290,10 +4291,11 @@ function msgHtml(m,isLast){
   if(m.btns&&m.btns.length)h+='<span class="tc-btns">'+m.btns.map(b=>{const lk=chatLive()&&b.a!=='end';return '<button type="button" data-act="'+esc(b.a)+'"'+(lk?' class="lock" disabled tabindex="-1" aria-disabled="true"':isLast?'':' class="old"')+'>'+esc(b.l)+'</button>'}).join('')+'</span>';
   return h+'<time>'+tm(m.ts)+'</time></div>';
 }
-function formHtml(m){const lg=L(),F=w('F',lg),id=m.id||'',v=FV[id]||{};
+function fLang(m){const t=String(m&&m.text||'');return /[\u1780-\u17FF]/.test(t)?'km':(/[A-Za-z]/.test(t)?'en':L())}
+function formHtml(m){const lg=fLang(m),F=w('F',lg),id=m.id||'',v=FV[id]||{};
   if(msgs.some(x=>x.formReply===id)||(local.some(x=>x.formReply===id)))return '<span class="tc-fdone">'+esc(w('fSent',lg))+'</span>';
   const inp=(k,t)=>'<label><span>'+esc(F[k])+'</span>'+(t==='area'?'<textarea data-ff="'+k+'" rows="3">'+esc(v[k]||'')+'</textarea>':'<input data-ff="'+k+'" type="'+(t||'text')+'" value="'+esc(v[k]||'')+'"'+(k==='phone'?' inputmode="tel"':'')+'>')+'</label>';
-  let h='<span class="tc-cform" data-fid="'+esc(id)+'" data-fk="'+esc(m.form)+'">';
+  let h='<span class="tc-cform" data-fid="'+esc(id)+'" data-fk="'+esc(m.form)+'" data-fl="'+lg+'">';
   FORMS[m.form].forEach(k=>{
     if(k==='email')h+=inp(k,'email');else if(k==='details')h+=inp(k,'area');else if(k==='ours'||k==='orig')h+=inp(k,'url');
     else if(k==='want')h+='<label><span>'+esc(F.want)+'</span><select data-ff="want">'+[['credit',F.wCredit],['remove',F.wRemove],['other',F.wOther]].map(o=>'<option value="'+o[0]+'"'+(v.want===o[0]?' selected':'')+'>'+esc(o[1])+'</option>').join('')+'</select></label>';
@@ -4302,7 +4304,7 @@ function formHtml(m){const lg=L(),F=w('F',lg),id=m.id||'',v=FV[id]||{};
   return h+'<small class="tc-ferr" data-ferr></small><button type="button" class="tc-fsend" data-fsend>'+esc(w('fSend',lg))+'</button></span>'}
 async function uploadShot(file){const M=T.S.media||{},fd=new FormData();fd.append('file',file);fd.append('upload_preset',M.preset);fd.append('folder','thean/reports');
   const r=await fetch('https://api.cloudinary.com/v1_1/'+encodeURIComponent(M.cloud)+'/image/upload',{method:'POST',body:fd});const j=await r.json();if(!j.secure_url)throw new Error('upload');return j.secure_url}
-async function submitForm(box){const id=box.dataset.fid,kind=box.dataset.fk,lg=L(),F=w('F',lg),v=Object.assign({},FV[id]||{});
+async function submitForm(box){const id=box.dataset.fid,kind=box.dataset.fk,lg=box.dataset.fl||L(),F=w('F',lg),v=Object.assign({},FV[id]||{});
   box.querySelectorAll('[data-ff]').forEach(el=>{v[el.dataset.ff]=el.value.trim()});
   const err=box.querySelector('[data-ferr]');
   if(!v.name||!(v.phone||v.email)){err.textContent=w('fNeed',lg);return}
@@ -4317,7 +4319,7 @@ async function submitForm(box){const id=box.dataset.fid,kind=box.dataset.fk,lg=L
   if(kind==='report'){let t=chat&&chat.ticket&&chat.ticketStatus!=='closed'?(chat.ticketCur||chat.ticket):'';
     if(!t&&!offline){try{t=await nextTicket();await fb.set('tickets/'+t,{n:Number(t),chatId:user.uid,status:'open',kind:'report',createdAt:TS})}catch(e){t=''}}
     if(!offline)await touch({name:cust.name,contact:cust.phone||cust.email,customer:cust,ticket:String(t).split('-')[0],ticketCur:t,ticketStatus:'open',reportOpen:true,report:{ours:(v.ours||'').slice(0,300),orig:(v.orig||'').slice(0,300),want:v.want||'',at:TS},lastMsg:'Content report submitted',lastFrom:'visitor',unreadAgent:INC(1)});
-    await typeThen(900,{from:'bot',text:t?w('reportDone',lg).split('{t}').join(fmtT(t)):w('contactDone',lg)});
+    if(!live)await typeThen(900,{from:'bot',text:t?w('reportDone',lg).split('{t}').join(fmtT(t)):w('contactDone',lg)});
     if(offline){local.push({from:'system',text:w('noLive',lg),alt:true,ts:Date.now()});draw(true)}}
   else{if(!offline)await touch({name:cust.name,contact:cust.phone||cust.email,customer:cust,lastMsg:'Customer details sent',lastFrom:'visitor',unreadAgent:live?INC(1):0});
     if(!live)await typeThen(700,{from:'bot',text:w('contactDone',lg)})}
