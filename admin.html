@@ -4235,7 +4235,7 @@ async function endLive(){
 }
 let toBusy=false;
 async function checkTimeout(){
-  if(chat&&chat.status==='assigned'&&chat.updatedAt&&!toBusy&&Date.now()-ms(chat.updatedAt)>=autoMin*60000){
+  if(chat&&chat.status==='assigned'&&chat.lastFrom!=='visitor'&&chat.updatedAt&&!toBusy&&Date.now()-ms(chat.updatedAt)>=autoMin*60000){
     toBusy=true;
     try{const r=await fb.tx(CP()+'/status',cur=>cur===null?null:(cur==='assigned'?'bot':undefined));
       if(r.committed&&r.val==='bot'){const lg=L();await say({from:'bot',text:w('autoEnd',lg).split('{min}').join(lg==='km'?String(autoMin).replace(/\d/g,d=>'០១២៣៤៥៦៧៨៩'[d]):autoMin),auto:true});await touch({lastMsg:'Closed automatically after '+autoMin+' min without messages',lastFrom:'system'})}}catch(e){}
