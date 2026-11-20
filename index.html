@@ -3008,7 +3008,7 @@ app.addEventListener('click',function(e){
   if(d.mv&&t.closest('.dash')){var mq=d.mv.split(':');moveItem(mq[0],mq[1],+mq[2]);return}
   if(d.rm){var rq=d.rm.split(':');if(!t.dataset.armed){t.dataset.armed=1;t.textContent='Tap again to delete';setTimeout(function(){if(t.isConnected){delete t.dataset.armed;t.textContent='Delete'}},3500);return}rmItem(rq[0],rq[1]);return}
   if(d.qm){e.preventDefault();e.stopPropagation();var mq2=d.qm.split('|');quickMedia(mq2[0],mq2[1],mq2[2]);return}
-  if(d.gx){e.preventDefault();e.stopPropagation();var gq=d.gx.split('|'),go=getObj(gq[0],gq[1]);if(go&&go.gallery){if(!t.dataset.armed){t.dataset.armed=1;t.style.background='#b3362f';toast('Tap again to remove');return}go.gallery.splice(+gq[2],1);changed()}return}
+  if(d.gx){e.preventDefault();e.stopPropagation();var gq=d.gx.split('|'),gob=getObj(gq[0],gq[1]);if(gob&&gob.gallery){if(!t.dataset.armed){t.dataset.armed=1;t.style.background='#b3362f';toast('Tap again to remove');return}gob.gallery.splice(+gq[2],1);changed()}return}
   if(d.gm){e.preventDefault();var mq=d.gm.split('|'),mo=getObj(mq[0],mq[1]);if(!mo)return;mo.gallery=mo.gallery||[];
     if(mq[2]==='photos')pickImages(1600,function(L){mo.gallery=mo.gallery.concat(L);changed();toast(L.length+' photo'+(L.length>1?'s':'')+' added')});
     else if(mq[2]==='video')addVideoForm(mo);
