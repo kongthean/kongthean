@@ -2256,11 +2256,11 @@ function shareBtn(path,title,cls){return '<button type="button" class="shbtn '+(
 function copyText(t,done){function fb(){var x=document.createElement('textarea');x.value=t;x.setAttribute('readonly','');x.style.position='fixed';x.style.opacity='0';document.body.appendChild(x);x.select();try{document.execCommand('copy')}catch(e){}x.remove();done&&done()}
   try{if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(t).then(function(){done&&done()},fb);else fb()}catch(e){fb()}}
 function doShare(path,title){var link=shareUrl(path),t=(title?title+' · ':'')+'Thean';
-  if(navigator.share&&/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent||'')){navigator.share({title:t,text:t,url:link}).catch(function(){});return}
+  if(navigator.share&&/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent||'')){navigator.share({title:t,url:link}).catch(function(){});return}
   var E2=encodeURIComponent,opts=[['facebook','Facebook','https://www.facebook.com/sharer/sharer.php?u='+E2(link)],['telegram','Telegram','https://t.me/share/url?url='+E2(link)+'&text='+E2(t)],['chat','WhatsApp','https://wa.me/?text='+E2(t+' '+link)],['mail',u('email'),'mailto:?subject='+E2(t)+'&body='+E2(link)]];
   var m=modal(u('shareThis'),'<p class="shtitle">'+esc(t)+'</p><div class="shopts">'+opts.map(function(o){return '<a class="shopt" target="_blank" rel="noopener" href="'+esc(o[2])+'"><span class="ic '+o[0]+'">'+I(o[0])+'</span><b>'+esc(o[1])+'</b></a>'}).join('')+'</div><div class="shlink"><input readonly value="'+esc(link)+'" aria-label="Link"><button type="button" class="btn sm" data-copy>'+I('link')+'<span>'+esc(u('copyLink'))+'</span></button></div>'+(navigator.share?'<button type="button" class="btn sm soft" data-more style="margin-top:12px">'+I('share')+' '+esc(lang==='km'?'ជម្រើសផ្សេងទៀត':'More options')+'</button>':''));
   m.classList.add('shmodal');
-  m.addEventListener('click',function(e){var b=e.target.closest('[data-copy],[data-more]');if(!b)return;if(b.hasAttribute('data-more')){navigator.share({title:t,text:t,url:link}).catch(function(){});return}copyText(link,function(){b.querySelector('span').textContent=u('linkCopied');toast(u('linkCopied'))})})}
+  m.addEventListener('click',function(e){var b=e.target.closest('[data-copy],[data-more]');if(!b)return;if(b.hasAttribute('data-more')){navigator.share({title:t,url:link}).catch(function(){});return}copyText(link,function(){b.querySelector('span').textContent=u('linkCopied');toast(u('linkCopied'))})})}
 
 /* ---------- theme (skin) ---------- */
 function skinNow(){var k='';try{k=localStorage.getItem('thean-skin')||''}catch(e){}return k==='water'||k==='thean'||k==='heritage'||k==='classic'||k==='apsara'||k==='kbach'||k==='pchum'||k==='ocean'?k:((S.ui&&S.ui.skin)||'thean')}
