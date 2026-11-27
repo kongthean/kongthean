@@ -1,0 +1,181 @@
+{
+  "id": "thean-gold-classic",
+  "title": {
+    "en": "Gold classic frame (3 per sheet)",
+    "km": "ស៊ុមមាសបុរាណ (៣ សន្លឹក)"
+  },
+  "client": "",
+  "note": "Frame from Thean design. 3 cards (99 mm wide) on A4 landscape.",
+  "sheet": {
+    "w": 841.89,
+    "h": 595.28,
+    "mm": [
+      297,
+      210
+    ],
+    "dpi": 300
+  },
+  "bg": "bg.jpg",
+  "thumb": "thumb.jpg",
+  "cards": [
+    0,
+    280.63,
+    561.26
+  ],
+  "fonts": {
+    "title": {
+      "family": "CS Muol",
+      "url": "/studio/card/fonts/Moul-Regular.ttf"
+    },
+    "text": {
+      "family": "CS Battambang",
+      "url": "/studio/card/fonts/Battambang-Regular.ttf"
+    },
+    "menu": {
+      "family": "CS Battambang Bold",
+      "url": "/studio/card/fonts/Battambang-Bold.ttf"
+    },
+    "latin": {
+      "family": "CS Playfair",
+      "url": "/studio/card/fonts/lib/playfair.ttf"
+    }
+  },
+  "fields": [
+    {
+      "k": "menu",
+      "g": "event",
+      "t": "list",
+      "en": "Menu (one dish per line)",
+      "km": "មុខម្ហូប (មួយបន្ទាត់ មួយមុខ)",
+      "def": "មហាសម្បត្តិទាំង៥\nញាំជើងមាន់គ្រឿងសមុទ្រ\nស៊ុបសាច់ក្តាម\nទាខ្វៃទឹកឃ្មុំ\nត្រីចំហុយទឹកស៊ីអ៊ីវ\nបង្គាខ្ទិះនិងនំប៉័ង\nបាយឆា បាយស\nបង្អែមខ្មែរ"
+    },
+    {
+      "k": "date",
+      "g": "event",
+      "t": "date",
+      "en": "Date",
+      "km": "កាលបរិច្ឆេទ",
+      "def": ""
+    },
+    {
+      "k": "closing",
+      "g": "event",
+      "t": "text",
+      "en": "Closing words",
+      "km": "សារបញ្ចប់",
+      "def": "សូមអញ្ជើញពិសារដោយរីករាយ!"
+    },
+    {
+      "k": "name",
+      "g": "biz",
+      "t": "text",
+      "en": "Name",
+      "km": "ឈ្មោះ",
+      "def": "ចុងភៅ ឈ្មោះហាង"
+    },
+    {
+      "k": "svc",
+      "g": "biz",
+      "t": "text",
+      "en": "Services",
+      "km": "សេវាកម្ម",
+      "def": "មានទទួលធ្វើម្ហូបក្នុងពិធីមង្គលការ បុណ្យ និងពិធីជប់លៀងផ្សេងៗ"
+    },
+    {
+      "k": "addr",
+      "g": "biz",
+      "t": "text",
+      "en": "Address",
+      "km": "អាសយដ្ឋាន",
+      "def": "អាសយដ្ឋាន៖ ភូមិ... ឃុំ... ស្រុក... ខេត្ត..."
+    },
+    {
+      "k": "tel",
+      "g": "biz",
+      "t": "text",
+      "en": "Phone",
+      "km": "លេខទូរស័ព្ទ",
+      "def": "Tel : 012 345 678 | 098 765 432"
+    }
+  ],
+  "slots": [
+    {
+      "k": "name",
+      "x": 140.315,
+      "y": 103.45199570815447,
+      "size": 20,
+      "font": "title",
+      "align": "center",
+      "maxw": 200,
+      "color": "#9a5a1f"
+    },
+    {
+      "k": "svc",
+      "x": 140.315,
+      "y": 127.45199570815447,
+      "size": 9.5,
+      "font": "text",
+      "align": "center",
+      "maxw": 210,
+      "color": "#6a4420"
+    },
+    {
+      "k": "addr",
+      "x": 140.315,
+      "y": 143.45199570815447,
+      "size": 9,
+      "font": "text",
+      "align": "center",
+      "maxw": 210,
+      "color": "#6a4420"
+    },
+    {
+      "k": "tel",
+      "x": 140.315,
+      "y": 162.45199570815447,
+      "size": 11,
+      "font": "latin",
+      "align": "center",
+      "maxw": 210,
+      "color": "#9a5a1f"
+    },
+    {
+      "k": "menu",
+      "t": "list",
+      "x": 40,
+      "gap": 20,
+      "y": 194.45199570815447,
+      "step": 23,
+      "size": 12,
+      "minstep": 17,
+      "maxy": 438.45199570815447,
+      "font": "menu",
+      "align": "left",
+      "maxw": 200,
+      "color": "#5a3516",
+      "num": "km"
+    },
+    {
+      "k": "closing",
+      "x": 140.315,
+      "y": 480.45199570815447,
+      "size": 11,
+      "font": "title",
+      "align": "center",
+      "maxw": 200,
+      "color": "#9a5a1f"
+    },
+    {
+      "k": "date",
+      "x": 140.315,
+      "y": 503.45199570815447,
+      "size": 11,
+      "font": "latin",
+      "align": "center",
+      "maxw": 150,
+      "color": "#9a5a1f",
+      "t": "date",
+      "format": "dd-mm-yyyy"
+    }
+  ]
+}

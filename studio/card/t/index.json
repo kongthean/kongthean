@@ -115,5 +115,23 @@
     },
     "client": "",
     "thumb": "thumb.jpg"
+  },
+  {
+    "id": "thean-gold-classic",
+    "title": {
+      "en": "Gold classic frame (3 per sheet)",
+      "km": "ស៊ុមមាសបុរាណ (៣ សន្លឹក)"
+    },
+    "client": "",
+    "thumb": "thumb.jpg"
+  },
+  {
+    "id": "thean-blue-classic",
+    "title": {
+      "en": "Blue classic frame (3 per sheet)",
+      "km": "ស៊ុមខៀវបុរាណ (៣ សន្លឹក)"
+    },
+    "client": "",
+    "thumb": "thumb.jpg"
   }
 ]
