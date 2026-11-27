@@ -7,7 +7,7 @@
 <meta name="description" content="Thean Card Studio: beautiful menu cards for weddings, ceremonies and events in Cambodia. Type your menu, download and print. កាតមុខម្ហូបសម្រាប់មង្គលការ និងពិធីផ្សេងៗ។">
 <meta property="og:title" content="Thean Card Studio">
 <meta property="og:description" content="Menu cards for weddings and events, ready to print. កាតមុខម្ហូបសម្រាប់មង្គលការ និងពិធីផ្សេងៗ ត្រៀមបោះពុម្ព។">
-<meta property="og:image" content="https://kongthean.com/studio/card/sample.jpg">
+<meta property="og:image" content="https://kongthean.com/logo.png">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&family=Koulen&display=swap" rel="stylesheet">
@@ -76,6 +76,22 @@ details.biz{border:1px dashed var(--line);border-radius:14px;padding:10px 12px}d
 .end{max-width:520px;text-align:center}.end .ic{width:64px;height:64px;border-radius:50%;background:#fde4e1;color:var(--red);display:grid;place-items:center;margin:0 auto}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--green);color:#fff;padding:10px 16px;border-radius:12px;z-index:90;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
 .hide{display:none!important}
+.top .btn.sm{padding:8px 12px}@media(max-width:480px){.top .brand small{display:none}.top .brand b{font-size:16px;white-space:nowrap;letter-spacing:.04em}.lang button{padding:5px 8px}}
+.hm{max-width:1100px;margin:0 auto;padding:20px;display:grid;gap:16px}
+.hcard{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px}.hcard h3{font-size:17px;margin-bottom:12px}
+.hwel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,340px);gap:18px;align-items:center;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;border:0}
+.hwel small{color:#cdbb86}.hwel h2{font-size:26px;line-height:1.3;margin:2px 0 10px}.hmeta{display:flex;gap:8px;flex-wrap:wrap}.hwel .idpill{background:rgba(255,255,255,.12);color:#fff}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:4px 12px;font-size:13px;font-weight:700}.pill.ok{background:#e3f3e8;color:#1d7a3d}.pill svg{width:14px;height:14px}
+.hper{background:rgba(255,255,255,.08);border-radius:16px;padding:14px}.hpt{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:#dfe8e2;flex-wrap:wrap}.hpt b{color:#fff}
+.bar{height:8px;border-radius:8px;background:rgba(255,255,255,.18);margin:10px 0 6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--gold);border-radius:8px}
+.hbig{width:100%;display:flex;align-items:center;gap:16px;border:0;cursor:pointer;background:var(--gold);color:var(--green);border-radius:20px;padding:20px;text-align:left;box-shadow:0 10px 24px rgba(243,177,28,.25)}
+.hbig .ic{width:52px;height:52px;border-radius:16px;background:var(--green);color:var(--gold);display:grid;place-items:center;flex:none}.hbig .ic svg{width:26px;height:26px}.hbig b{display:block;font-size:19px}.hbig small{font-size:14px;opacity:.85}
+.hdes{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}.hdes button{border:1px solid var(--line);background:#fff;border-radius:14px;padding:6px;cursor:pointer;text-align:center;font-size:13px}.hdes button:hover{border-color:var(--gold)}.hdes img{width:100%;aspect-ratio:841/595;object-fit:cover;border-radius:10px;display:block;margin-bottom:6px}
+.h2c{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.hrec{list-style:none;display:grid;gap:8px}.hrec li{display:flex;align-items:center;gap:10px}.hrec .ic{width:36px;height:36px;border-radius:10px;background:var(--soft);display:grid;place-items:center;flex:none}.hrec span:nth-child(2){flex:1;min-width:0}.hrec b{display:block;font-size:14px}.hrec small{color:var(--muted);font-size:12.5px}.hrec em{font-style:normal;font-size:11.5px;font-weight:700;background:var(--soft);border-radius:8px;padding:3px 8px}
+.hq{list-style:none;display:grid;gap:10px}.hq li{display:flex;gap:10px;align-items:flex-start}.hq i{font-style:normal;width:28px;height:28px;border-radius:50%;background:var(--green);color:var(--gold);display:grid;place-items:center;font-weight:700;font-size:13px;flex:none}.hq b{display:block;font-size:14px}.hq small{color:var(--muted);font-size:13px}
+.edtop{max-width:1440px;margin:0 auto;padding:14px 20px 0}
+@media(max-width:760px){.hm{padding:14px}.hwel{grid-template-columns:1fr}.h2c{grid-template-columns:1fr}.edtop{padding:12px 14px 0}}
 </style>
 </head>
 <body>
@@ -109,7 +125,7 @@ const TX={
   wMany:'Too many dishes for this card ({n}). The text was made smaller to fit. For the best result, use {max} dishes or fewer.',wLong:'Some lines are long, so they were made a little smaller to fit inside the frame.',
   noTpl:'No design is set for your account yet. Please contact us.',
   account:'My account',period:'Service period',until:'Active until {d}',chU:'Change username',chP:'Change password',curPw:'Current password',contact:'Contact us',terms:'Terms of use',privacy:'Privacy policy',lang:'ភាសាខ្មែរ',logout:'Log out',
-  uDone:'Username changed',pDone:'Password changed',eCur:'The current password is not correct.',close:'Close',idTip:'Give this ID to our team if you need help.',hello:'Hello'},
+  home:'Home',create:'Create a new card',createT:'Make a menu card for your next event',cont:'Continue my last card',myDesigns:'My designs',recent:'Recent downloads',noRecent:'No downloads yet. Your printed cards will show here.',daysLeft:'{n} days left',endsSoon:'Your service ends in {n} days. Contact us to renew so you can keep using it.',help:'Need help?',helpT:'Our team is happy to help. Give us your account ID when you contact us.',quick:'How to make a card',q:[['Choose a design','Pick one of your designs.'],['Type the menu','One dish per line, then the date.'],['Download and print','PDF for printing, PNG or JPG to share.']],status:'Status',active:'Active',loginBtn:'Log in',back:'Home',open:'Open',pDone:'Password changed',eCur:'The current password is not correct.',close:'Close',idTip:'Give this ID to our team if you need help.',hello:'Hello'},
  km:{brandSub:'កាតមុខម្ហូបសម្រាប់មង្គលការ និងពិធីផ្សេងៗ',menu:'ម៉ឺនុយ',
   hKick:'Thean Card Studio',hTitle:'កាតមុខម្ហូបដ៏ស្រស់ស្អាត ត្រៀមបោះពុម្ព',hText:'ម៉ូដកាតផ្ទាល់ខ្លួនរបស់អ្នក រក្សាទុកដដែលទាំងស្រុង។ គ្រាន់តែវាយមុខម្ហូប និងកាលបរិច្ឆេទ មើលភ្លាមៗ ហើយទាញយកឯកសារត្រៀមបោះពុម្ព សម្រាប់មង្គលការ ពិធីបុណ្យ និងគ្រប់កម្មវិធី។',
   hContact:'ទាក់ទងយើង ដើម្បីដឹងតម្លៃ',hHow:'របៀបប្រើ',
@@ -127,7 +143,7 @@ const TX={
   wMany:'មុខម្ហូបច្រើនពេកសម្រាប់កាតនេះ ({n})។ អក្សរត្រូវបានបង្រួម ដើម្បីឱ្យសម។ ដើម្បីលទ្ធផលល្អបំផុត សូមប្រើ {max} មុខ ឬតិចជាងនេះ។',wLong:'បន្ទាត់ខ្លះវែង ដូច្នេះត្រូវបានបង្រួមបន្តិច ដើម្បីឱ្យនៅក្នុងស៊ុម។',
   noTpl:'គណនីរបស់អ្នកមិនទាន់មានម៉ូដនៅឡើយ។ សូមទាក់ទងមកយើង។',
   account:'គណនីរបស់ខ្ញុំ',period:'រយៈពេលសេវាកម្ម',until:'ប្រើបានដល់ {d}',chU:'ប្តូរឈ្មោះអ្នកប្រើ',chP:'ប្តូរពាក្យសម្ងាត់',curPw:'ពាក្យសម្ងាត់បច្ចុប្បន្ន',contact:'ទាក់ទងយើង',terms:'លក្ខខណ្ឌប្រើប្រាស់',privacy:'គោលការណ៍ឯកជនភាព',lang:'English',logout:'ចាកចេញ',
-  uDone:'បានប្តូរឈ្មោះអ្នកប្រើ',pDone:'បានប្តូរពាក្យសម្ងាត់',eCur:'ពាក្យសម្ងាត់បច្ចុប្បន្នមិនត្រឹមត្រូវ។',close:'បិទ',idTip:'ផ្តល់លេខនេះដល់ក្រុមការងារ ប្រសិនបើអ្នកត្រូវការជំនួយ។',hello:'សួស្តី'}};
+  home:'ទំព័រដើម',create:'បង្កើតកាតថ្មី',createT:'បង្កើតកាតមុខម្ហូប សម្រាប់កម្មវិធីបន្ទាប់របស់អ្នក',cont:'បន្តកាតចុងក្រោយរបស់ខ្ញុំ',myDesigns:'ម៉ូដរបស់ខ្ញុំ',recent:'ការទាញយកថ្មីៗ',noRecent:'មិនទាន់មានការទាញយកនៅឡើយ។ កាតដែលអ្នកបានបោះពុម្ព នឹងបង្ហាញនៅទីនេះ។',daysLeft:'នៅសល់ {n} ថ្ងៃ',endsSoon:'សេវាកម្មរបស់អ្នកនឹងផុតកំណត់ក្នុងរយៈពេល {n} ថ្ងៃទៀត។ សូមទាក់ទងមកយើង ដើម្បីបន្ត។',help:'ត្រូវការជំនួយ?',helpT:'ក្រុមការងាររបស់យើងរីករាយជួយអ្នក។ សូមផ្តល់លេខគណនីរបស់អ្នក នៅពេលទាក់ទងមក។',quick:'របៀបបង្កើតកាត',q:[['ជ្រើសម៉ូដ','ជ្រើសម៉ូដមួយរបស់អ្នក។'],['វាយមុខម្ហូប','មួយបន្ទាត់ មួយមុខ រួចកាលបរិច្ឆេទ។'],['ទាញយក និងបោះពុម្ព','PDF សម្រាប់បោះពុម្ព, PNG ឬ JPG សម្រាប់ចែករំលែក។']],status:'ស្ថានភាព',active:'កំពុងដំណើរការ',loginBtn:'ចូលគណនី',back:'ទំព័រដើម',open:'បើក',pDone:'បានប្តូរពាក្យសម្ងាត់',eCur:'ពាក្យសម្ងាត់បច្ចុប្បន្នមិនត្រឹមត្រូវ។',close:'បិទ',idTip:'ផ្តល់លេខនេះដល់ក្រុមការងារ ប្រសិនបើអ្នកត្រូវការជំនួយ។',hello:'សួស្តី'}};
 const t=k=>(TX[LG]&&TX[LG][k]!=null?TX[LG][k]:TX.en[k]);
 const KN=n=>String(n).replace(/\d/g,d=>'០១២៣៤៥៦៧៨៩'[d]);
 const fmtD=ms=>{if(!ms)return '—';const d=new Date(ms);return ('0'+d.getDate()).slice(-2)+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+d.getFullYear()};
@@ -146,18 +162,26 @@ function contactBtns(kind){const c=kind==='light'?'btn s':'btn y';const o=kind==
   if(LINKS.messenger)h+='<a class="'+o+'" href="'+esc(url(LINKS.messenger))+'" target="_blank" rel="noopener">'+I('ms')+esc(t('cMs'))+'</a>';
   if(LINKS.phone)h+='<a class="'+o+'" href="tel:'+esc(String(LINKS.phone).replace(/[^0-9+]/g,''))+'">'+I('phone')+esc(t('cCall'))+'</a>';return h}
 /* ---------- top bar ---------- */
-function topbar(withMenu){return '<header class="top"><a class="brand" href="/studio/card/'+(LINK_ID?'?c='+LINK_ID:'')+'"><img src="/logo.png" alt=""><span><b>THEAN CARD STUDIO</b><small>'+esc(t('brandSub'))+'</small></span></a><div class="lang"><button type="button" data-lg="km" class="'+(LG==='km'?'on':'')+'">ខ្មែរ</button><button type="button" data-lg="en" class="'+(LG==='en'?'on':'')+'">EN</button></div>'+(withMenu?'<button class="ib" type="button" data-drawer aria-label="'+esc(t('menu'))+'">'+I('menu')+'</button>':'')+'</header>'}
+function topbar(withMenu,pub){return '<header class="top"><a class="brand" href="/studio/card/'+(LINK_ID?'?c='+LINK_ID:'')+'"'+(withMenu?' data-go="home"':'')+'><img src="/logo.png" alt=""><span><b>THEAN CARD STUDIO</b><small>'+esc(t('brandSub'))+'</small></span></a><div class="lang"><button type="button" data-lg="km" class="'+(LG==='km'?'on':'')+'">ខ្មែរ</button><button type="button" data-lg="en" class="'+(LG==='en'?'on':'')+'">EN</button></div>'+(withMenu?'<button class="ib" type="button" data-drawer aria-label="'+esc(t('menu'))+'">'+I('menu')+'</button>':'')+(pub?'<a class="btn y sm" href="?login=1">'+I('user')+'<span class="lbt">'+esc(t('loginBtn'))+'</span></a>':'')+'</header>'}
+document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(!g)return;e.preventDefault();const v=g.dataset.go;if(v==='home')home();else if(v==='edit')editor();else if(v.indexOf('tpl:')===0)pickTpl(v.slice(4))});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-lg]');if(b){LG=b.dataset.lg;try{localStorage.setItem('cs-lang',LG)}catch(x){}document.documentElement.lang=LG;rerender()}});
 let rerender=()=>{};
 /* ---------- landing page ---------- */
 function landing(){document.documentElement.lang=LG;
-  $('#app').innerHTML=topbar(false)+
-  '<section class="hero"><div class="in"><div><div class="kick">'+esc(t('hKick'))+'</div><h1>'+esc(t('hTitle'))+'</h1><p>'+esc(t('hText'))+'</p><div class="cta"><a class="btn y" href="#contact">'+I('chat')+esc(t('hContact'))+'</a><a class="btn o" href="#how">'+esc(t('hHow'))+'</a></div></div><div class="pic"><img src="sample.jpg" alt="Menu card sample" onerror="this.parentNode.style.display=\'none\'"></div></div></section>'+
+  $('#app').innerHTML=topbar(false,true)+
+  '<section class="hero"><div class="in"><div><div class="kick">'+esc(t('hKick'))+'</div><h1>'+esc(t('hTitle'))+'</h1><p>'+esc(t('hText'))+'</p><div class="cta"><a class="btn y" href="#contact">'+I('chat')+esc(t('hContact'))+'</a><a class="btn o" href="#how">'+esc(t('hHow'))+'</a></div></div><div class="pic">'+demoArt()+'</div></div></section>'+
   '<section class="sec" id="how"><div class="kick" style="color:#9a6a00">'+esc(t('hHow'))+'</div><h2>'+esc(t('howT'))+'</h2><div class="steps">'+t('how').map((s,i)=>'<div class="stp"><i>'+(LG==='km'?KN(i+1):i+1)+'</i><b>'+esc(s[0])+'</b><p>'+esc(s[1])+'</p></div>').join('')+'</div></section>'+
   '<section class="sec" style="padding-top:0"><h2>'+esc(t('featT'))+'</h2><div class="feats">'+t('feats').map(f=>'<div class="ft"><span class="ic">'+I(f[0])+'</span><div><b>'+esc(f[1])+'</b><p>'+esc(f[2])+'</p></div></div>').join('')+'</div></section>'+
   '<section class="sec" id="contact" style="padding-top:0"><div class="contact"><div><div class="kick">'+esc(t('hContact'))+'</div><h2>'+esc(t('cT'))+'</h2><p>'+esc(t('cText'))+'</p></div><div class="cbtns" data-contacts="dark">'+contactBtns('dark')+'</div></div><p class="note" style="text-align:center;margin-top:18px">'+esc(t('have'))+'</p></section>'+
   '<footer class="foot">© '+new Date().getFullYear()+' Thean · <a href="/">kongthean.com</a> · <a href="#" data-legal="cterms">'+esc(t('terms'))+'</a> · <a href="#" data-legal="cprivacy">'+esc(t('privacy'))+'</a></footer>';
 }
+/* neutral sample illustration (no client design) */
+function demoArt(){const card=x=>'<g transform="translate('+x+',0)"><rect x="14" y="14" width="272" height="392" rx="10" fill="#fff" stroke="#c8a24a" stroke-width="5"/><rect x="26" y="26" width="248" height="368" rx="6" fill="none" stroke="#e7d49b" stroke-width="2"/>'+
+  [[40,40],[260,40],[40,380],[260,380]].map(p=>'<circle cx="'+p[0]+'" cy="'+p[1]+'" r="9" fill="#e9b949"/><circle cx="'+p[0]+'" cy="'+p[1]+'" r="4" fill="#fff"/>').join('')+
+  '<text x="150" y="82" text-anchor="middle" font-family="Koulen,sans-serif" font-size="30" fill="#163023" letter-spacing="3">MENU</text><path d="M95 98h110" stroke="#2f8a4f" stroke-width="2"/><circle cx="150" cy="98" r="4" fill="#2f8a4f"/>'+
+  [0,1,2,3,4,5,6].map(i=>'<circle cx="74" cy="'+(140+i*30)+'" r="4" fill="#24418f"/><rect x="88" y="'+(135+i*30)+'" width="'+[150,120,160,110,140,95,130][i]+'" height="9" rx="4.5" fill="#24418f" opacity=".75"/>').join('')+
+  '<rect x="150" y="358" width="100" height="9" rx="4.5" fill="#d23a3a" opacity=".8"/><rect x="50" y="370" width="80" height="12" rx="6" fill="#2f8a4f" opacity=".8"/></g>';
+  return '<svg viewBox="0 0 620 420" role="img" aria-label="Menu card example" style="width:100%;height:auto;display:block">'+card(0)+card(320)+'</svg>'}
 /* ---------- legal texts (editable in Admin → Terms & Privacy) ---------- */
 const LEGAL_DEF={cterms:{"en":{"title":"Terms of Use · Thean Card Studio","intro":"These terms apply to Thean Card Studio, the menu card service provided by the Thean team (kongthean.com). By logging in and using the service, you agree to them.","sections":[["Your account",["We create your account after we agree on your project. Keep your username and password private. You are responsible for what is done with your account.",["Change the starting password the first time you log in."],["Tell us at once if you think someone else knows your password."]]],["Service period",["You can use the service during the period agreed with us. When the period ends, the account stops working until it is renewed. We may pause an account that is used against these terms."]],["Your designs and texts",["Your card designs stay yours. You must have the right to use every picture, logo and text you send us. We use your files only to prepare and run your templates."]],["Files you download",["You may print and share the cards you make for your own business and events. You check every text before printing. We are not responsible for printing costs caused by mistakes in the text you typed."]],["Fair use",["Do not try to copy the app, share your login with other businesses, or use the service for anything unlawful."]],["Changes and contact",["We may update these terms and the service. The date of the latest update is shown here. For any question, contact our customer service."]]]},"km":{"title":"លក្ខខណ្ឌប្រើប្រាស់ · Thean Card Studio","intro":"លក្ខខណ្ឌទាំងនេះអនុវត្តចំពោះ Thean Card Studio ដែលជាសេវាកាតមុខម្ហូប ផ្តល់ដោយក្រុមការងារ Thean (kongthean.com)។ ដោយការចូល និងប្រើសេវាកម្ម អ្នកយល់ព្រមតាមលក្ខខណ្ឌទាំងនេះ។","sections":[["គណនីរបស់អ្នក",["យើងបង្កើតគណនីរបស់អ្នក បន្ទាប់ពីយើងបានព្រមព្រៀងលើគម្រោង។ សូមរក្សាឈ្មោះអ្នកប្រើ និងពាក្យសម្ងាត់ជាការសម្ងាត់។ អ្នកទទួលខុសត្រូវចំពោះអ្វីដែលធ្វើឡើងតាមគណនីរបស់អ្នក។",["ប្តូរពាក្យសម្ងាត់ដំបូង នៅពេលចូលលើកដំបូង។"],["ប្រាប់យើងភ្លាមៗ ប្រសិនបើអ្នកគិតថាមានអ្នកផ្សេងដឹងពាក្យសម្ងាត់របស់អ្នក។"]]],["រយៈពេលសេវាកម្ម",["អ្នកអាចប្រើសេវាកម្មក្នុងរយៈពេលដែលបានព្រមព្រៀងជាមួយយើង។ នៅពេលផុតកំណត់ គណនីនឹងឈប់ដំណើរការរហូតដល់ការបន្ត។ យើងអាចផ្អាកគណនី ដែលប្រើប្រាស់ផ្ទុយនឹងលក្ខខណ្ឌទាំងនេះ។"]],["ម៉ូដ និងអត្ថបទរបស់អ្នក",["ម៉ូដកាតរបស់អ្នក នៅតែជារបស់អ្នក។ អ្នកត្រូវមានសិទ្ធិប្រើរូបភាព ឡូហ្គោ និងអត្ថបទទាំងអស់ដែលអ្នកផ្ញើមកយើង។ យើងប្រើឯកសាររបស់អ្នក សម្រាប់តែរៀបចំ និងដំណើរការម៉ូដរបស់អ្នកប៉ុណ្ណោះ។"]],["ឯកសារដែលអ្នកទាញយក",["អ្នកអាចបោះពុម្ព និងចែករំលែកកាតដែលអ្នកបង្កើត សម្រាប់អាជីវកម្ម និងកម្មវិធីរបស់អ្នក។ អ្នកពិនិត្យរាល់អត្ថបទមុនពេលបោះពុម្ព។ យើងមិនទទួលខុសត្រូវចំពោះថ្លៃបោះពុម្ព ដែលកើតពីកំហុសក្នុងអត្ថបទដែលអ្នកវាយនោះទេ។"]],["ការប្រើប្រាស់ត្រឹមត្រូវ",["សូមកុំព្យាយាមចម្លងកម្មវិធី ចែករំលែកការចូលជាមួយអាជីវកម្មផ្សេង ឬប្រើសេវាកម្មសម្រាប់អ្វីដែលខុសច្បាប់។"]],["ការផ្លាស់ប្តូរ និងទំនាក់ទំនង",["យើងអាចធ្វើបច្ចុប្បន្នភាពលក្ខខណ្ឌ និងសេវាកម្មនេះ។ សម្រាប់សំណួរណាមួយ សូមទាក់ទងផ្នែកសេវាអតិថិជនរបស់យើង។"]]]}},cprivacy:{"en":{"title":"Privacy Policy · Thean Card Studio","intro":"We keep only the information needed to run your account and your cards.","sections":[["What we keep",[["Your account ID, username and service period."],["The business details and menu texts you type, so you can continue later."],["A simple record of when you download a card."],"We never see or keep your password."]],["How we use it",["Only to run the service, help you when you contact us, and prepare your templates. We do not sell your information or use it for advertising."]],["Who can see it",["You and our team. Your templates and texts are private to your account."]],["Your choices",["You can ask us to change or delete your information at any time by contacting customer service."]]]},"km":{"title":"គោលការណ៍ឯកជនភាព · Thean Card Studio","intro":"យើងរក្សាទុកតែព័ត៌មានដែលចាំបាច់ សម្រាប់ដំណើរការគណនី និងកាតរបស់អ្នកប៉ុណ្ណោះ។","sections":[["អ្វីដែលយើងរក្សាទុក",[["លេខគណនី ឈ្មោះអ្នកប្រើ និងរយៈពេលសេវាកម្ម។"],["ព័ត៌មានអាជីវកម្ម និងមុខម្ហូបដែលអ្នកវាយ ដើម្បីឱ្យអ្នកបន្តពេលក្រោយ។"],["កំណត់ត្រាសាមញ្ញ នៃពេលដែលអ្នកទាញយកកាត។"],"យើងមិនដែលឃើញ ឬរក្សាទុកពាក្យសម្ងាត់របស់អ្នកឡើយ។"]],["របៀបដែលយើងប្រើ",["សម្រាប់តែដំណើរការសេវាកម្ម ជួយអ្នកនៅពេលអ្នកទាក់ទងមក និងរៀបចំម៉ូដរបស់អ្នកប៉ុណ្ណោះ។ យើងមិនលក់ព័ត៌មានរបស់អ្នក ឬប្រើសម្រាប់ការផ្សាយពាណិជ្ជកម្មឡើយ។"]],["អ្នកណាអាចមើលឃើញ",["អ្នក និងក្រុមការងាររបស់យើង។ ម៉ូដ និងអត្ថបទរបស់អ្នក ជាឯកជនសម្រាប់គណនីរបស់អ្នក។"]],["ជម្រើសរបស់អ្នក",["អ្នកអាចស្នើឱ្យយើងកែប្រែ ឬលុបព័ត៌មានរបស់អ្នកបានគ្រប់ពេល ដោយទាក់ទងផ្នែកសេវាអតិថិជន។"]]]}}};
 let LEGALX=null;fetch(RTDB+'/site/content/legal.json').then(r=>r.ok?r.json():null).then(v=>{LEGALX=v||{}}).catch(()=>{});
@@ -172,12 +196,12 @@ let FB=null;
 async function fb(){if(FB)return FB;const [app,au,d]=await Promise.all([import(SDK+'firebase-app.js'),import(SDK+'firebase-auth.js'),import(SDK+'firebase-database.js')]);
   const a=app.initializeApp(window.CS_FB,'cards');const db=d.getDatabase(a,window.CS_FB.databaseURL);const R=p=>d.ref(db,p);
   FB={A:au,auth:au.getAuth(a),get:async p=>{const s=await d.get(R(p));return s.exists()?s.val():null},set:(p,v)=>d.set(R(p),v),update:(p,v)=>d.update(R(p),v),push:(p,v)=>d.push(R(p),v),on:(p,cb,er)=>d.onValue(R(p),s=>cb(s.exists()?s.val():null),er||(()=>{})),now:()=>d.serverTimestamp()};return FB}
-let ID=null,CL=null,USER=null,DATA={},TPLS=[],TPL=null,offCl=null;
+let VIEW='home',ID=null,CL=null,USER=null,DATA={},TPLS=[],TPL=null,offCl=null;
 function emailFor(id,gen){return id.toLowerCase()+'.'+gen+'@card.kongthean.com'}
 function state(c){const n=Date.now();if(!c||!c.active)return 'off';if(c.start&&n<c.start)return 'soon';if(!c.end||n>c.end)return 'exp';return 'ok'}
 /* ---------- login ---------- */
 function loginView(msg){document.documentElement.lang=LG;
-  $('#app').innerHTML=topbar(false)+'<div class="authw"><form class="card" data-login novalidate><div><span class="idpill">'+esc(t('acc'))+' <code>'+esc(ccId(LINK_ID))+'</code></span></div><h2>'+esc(t('loginT'))+'</h2>'+
+  $('#app').innerHTML=topbar(false)+'<div class="authw"><form class="card" data-login novalidate>'+(LINK_ID?'<div><span class="idpill">'+esc(t('acc'))+' <code>'+esc(ccId(LINK_ID))+'</code></span></div>':'')+'<h2>'+esc(t('loginT'))+'</h2>'+
   '<label class="f">'+esc(t('user'))+'<input name="u" autocomplete="username" autocapitalize="off" spellcheck="false"></label>'+
   '<label class="f">'+esc(t('pw'))+'<span class="pwrow"><input name="p" type="password" autocomplete="current-password"><button type="button" data-eye>'+esc(t('show'))+'</button></span></label>'+
   '<p class="err" data-err>'+esc(msg||'')+'</p><button class="btn g" type="submit">'+esc(t('login'))+'</button><p class="note">'+esc(t('forgot'))+'</p><div class="cbtns" data-contacts="light">'+contactBtns('light')+'</div></form></div>';
@@ -229,14 +253,33 @@ function drawSheet(ctx,T,V,s,bg){const W=T.sheet.w*s,H=T.sheet.h*s;ctx.fillStyle
       clusters.forEach(cl=>{const before=ctx.measureText(acc).width;acc+=cl;ctx.fillStyle=cl.trim()?C[ci++%C.length]:'#000';if(cl.trim()){ctx.save();ctx.beginPath();const a=ctx.measureText(acc).width;ctx.rect(cx+before,y-size*s*1.6,a-before+1,size*s*2.4);ctx.clip();ctx.fillText(txt,cx,y);ctx.restore()}})}
     else{ctx.fillStyle=sl.color;ctx.fillText(txt,x,y)}})});
   return warn}
+/* ---------- client home screen ---------- */
+let LOGS=null;
+function home(){VIEW='home';document.documentElement.lang=LG;const st=state(CL);if(st!=='ok'){endView(st);return}
+  const left=Math.max(0,Math.ceil((CL.end-Date.now())/864e5)),tot=Math.max(1,(CL.end-CL.start)/864e5),pct=Math.max(3,Math.min(100,Math.round(left/tot*100)));
+  const hasLast=!!(DATA&&(DATA.menu||DATA.date));
+  const tname=id=>{const x=TPLS.find(t=>t.id===id);return x?(x.title&&x.title[LG]||x.title||id):id};
+  $('#app').innerHTML=topbar(true)+'<div class="hm">'+
+   '<section class="hcard hwel"><div><small>'+esc(t('hello'))+'</small><h2>'+esc(CL.name||'')+'</h2><div class="hmeta"><span class="idpill">'+esc(t('acc'))+' <code>'+esc(ccId(ID))+'</code></span><span class="pill ok">'+I('check')+esc(t('active'))+'</span></div></div>'+
+    '<div class="hper"><div class="hpt"><span>'+esc(t('period'))+'</span><b>'+esc(fmtD(CL.start))+' → '+esc(fmtD(CL.end))+'</b></div><div class="bar"><i style="width:'+pct+'%"></i></div><small>'+esc(t('daysLeft').replace('{n}',LG==='km'?KN(left):left))+'</small></div></section>'+
+   (left<=7?'<p class="warn">'+esc(t('endsSoon').replace('{n}',LG==='km'?KN(left):left))+'</p>':'')+
+   '<section class="hact"><button class="hbig" type="button" data-go="edit"><span class="ic">'+I('card')+'</span><span><b>'+esc(hasLast?t('cont'):t('create'))+'</b><small>'+esc(t('createT'))+'</small></span></button></section>'+
+   '<section class="hcard"><h3>'+esc(t('myDesigns'))+'</h3>'+(TPLS.length?'<div class="hdes">'+TPLS.map(x=>'<button type="button" data-go="tpl:'+esc(x.id)+'"><img alt="" src="t/'+esc(x.id)+'/'+esc(x.thumb||'thumb.jpg')+'"><b>'+esc(x.title&&x.title[LG]||x.title||x.id)+'</b></button>').join('')+'</div>':'<p class="note">'+esc(t('noTpl'))+'</p>')+'</section>'+
+   '<div class="h2c"><section class="hcard"><h3>'+esc(t('recent'))+'</h3><div data-recent><p class="note">…</p></div></section>'+
+   '<section class="hcard"><h3>'+esc(t('quick'))+'</h3><ol class="hq">'+t('q').map((q,i)=>'<li><i>'+(LG==='km'?KN(i+1):i+1)+'</i><span><b>'+esc(q[0])+'</b><small>'+esc(q[1])+'</small></span></li>').join('')+'</ol></section></div>'+
+   '<section class="hcard"><h3>'+esc(t('help'))+'</h3><p class="note">'+esc(t('helpT'))+'</p><div class="cbtns" data-contacts="light" style="margin-top:10px">'+contactBtns('light')+'</div></section>'+
+   '<p class="foot" style="padding:8px 0 24px"><a href="#" data-legal="cterms">'+esc(t('terms'))+'</a> · <a href="#" data-legal="cprivacy">'+esc(t('privacy'))+'</a></p></div>';
+  const drawR=()=>{const box=$('[data-recent]');if(!box)return;const L=Object.values(LOGS||{}).filter(x=>x&&x.at).sort((a,b)=>b.at-a.at).slice(0,6);
+    box.innerHTML=L.length?'<ul class="hrec">'+L.map(x=>{const d=new Date(x.at);return '<li><span class="ic">'+I(x.type==='print'?'print':'dl')+'</span><span><b>'+esc(tname(x.tpl))+'</b><small>'+esc(fmtD(x.at))+' · '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+'</small></span><em>'+esc(String(x.type||'').toUpperCase())+'</em></li>'}).join('')+'</ul>':'<p class="note">'+esc(t('noRecent'))+'</p>'};
+  if(LOGS)drawR();else fb().then(F=>F.get('cards/log/'+ID)).then(v=>{LOGS=v||{};drawR()}).catch(()=>{LOGS={};drawR()})}
 /* ---------- main editor ---------- */
 let saveT=null;
-function editor(){document.documentElement.lang=LG;const st=state(CL);if(st!=='ok'){endView(st);return}
+function editor(){VIEW='edit';document.documentElement.lang=LG;const st=state(CL);if(st!=='ok'){endView(st);return}
   const lab=f=>f[LG]||f.en;const ev=(TPL?TPL.fields:[]).filter(f=>f.g!=='biz'),bz=(TPL?TPL.fields:[]).filter(f=>f.g==='biz');
   const field=f=>{const v=DATA[f.k]==null?f.def:DATA[f.k];if(f.t==='list')return '<label class="f">'+esc(lab(f))+(LG==='km'?' <small>លេខត្រូវបានបន្ថែមដោយស្វ័យប្រវត្តិ</small>':' <small>Numbers are added for you</small>')+'<textarea class="menu" data-f="'+f.k+'">'+esc(v)+'</textarea></label>';
     if(f.t==='date')return '<label class="f">'+esc(lab(f))+'<input type="date" data-f="'+f.k+'" value="'+esc(v||'')+'"></label>';return '<label class="f">'+esc(lab(f))+'<input data-f="'+f.k+'" value="'+esc(v)+'"></label>'};
   const sm=ev.filter(f=>f.t!=='list');
-  $('#app').innerHTML=topbar(true)+'<div class="ed"><div class="panel">'+
+  $('#app').innerHTML=topbar(true)+'<div class="edtop"><button class="btn s sm" type="button" data-go="home">← '+esc(t('back'))+'</button></div><div class="ed"><div class="panel">'+
    '<div class="step"><i>'+(LG==='km'?'១':'1')+'</i>'+esc(t('s1'))+'</div><div class="tpls">'+TPLS.map(x=>'<button type="button" data-tpl="'+esc(x.id)+'" class="'+(TPL&&x.id===TPL.id?'on':'')+'"><img alt="" src="t/'+esc(x.id)+'/'+esc(x.thumb||'thumb.jpg')+'">'+esc(x.title&&x.title[LG]||x.title||x.id)+'</button>').join('')+'</div>'+
    (TPL?'<div class="step"><i>'+(LG==='km'?'២':'2')+'</i>'+esc(t('s2'))+'</div>'+ev.filter(f=>f.t==='list').map(field).join('')+(sm.length?'<div class="row2">'+sm.map(field).join('')+'</div>':'')+
    '<div class="warn hide" data-warn></div>'+(bz.length?'<details class="biz"><summary>'+esc(t('biz'))+'</summary><div class="in">'+bz.map(field).join('')+'</div></details>':'')+'<p class="saved" data-saved></p>':'<p class="warn">'+esc(t('noTpl'))+'</p>')+
@@ -249,7 +292,7 @@ function editor(){document.documentElement.lang=LG;const st=state(CL);if(st!=='o
 async function preview(){const cv=$('[data-cv]');if(!cv||!TPL)return;const s=cv.width/TPL.sheet.w;cv.height=Math.round(TPL.sheet.h*s);const bg=await loadBg(TPL);await loadFonts(TPL);const w=drawSheet(cv.getContext('2d'),TPL,vals(),s,bg);
   const box=$('[data-warn]');if(box){const m=w.many?t('wMany').replace('{n}',w.many).replace('{max}',w.max):w.long?t('wLong'):'';box.textContent=m;box.classList.toggle('hide',!m)}}
 function queueSave(){const e=$('[data-saved]');if(e)e.textContent=t('saving');clearTimeout(saveT);saveT=setTimeout(async()=>{try{const F=await fb();await F.set('cards/data/'+ID+'/fields',DATA);if(e)e.textContent=t('saved')}catch(x){if(e)e.textContent=''}},900)}
-async function pickTpl(id){try{TPL=await getTpl(id);DATA.__tpl=id;queueSave()}catch(e){toast('Error')}editor()}
+async function pickTpl(id){if(!TPL||TPL.id!==id){try{TPL=await getTpl(id);DATA.__tpl=id;queueSave()}catch(e){toast('Error')}}editor()}
 async function renderFull(){const s=TPL.sheet.dpi/72;const c=document.createElement('canvas');c.width=Math.round(TPL.sheet.w*s);c.height=Math.round(TPL.sheet.h*s);await loadFonts(TPL);drawSheet(c.getContext('2d'),TPL,vals(),s,await loadBg(TPL));return c}
 function fname(ext){const d=DATA.date||new Date().toISOString().slice(0,10);return 'menu-card-'+d+'.'+ext}
 function saveBlob(b,n){const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000)}
@@ -270,14 +313,15 @@ async function download(kind,btn){const old=btn.innerHTML;btn.disabled=true;btn.
     else if(kind==='jpg'){const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.95));saveBlob(b,fname('jpg'))}
     else if(kind==='pdf'){saveBlob(await makePdf(c,TPL.sheet.w,TPL.sheet.h),fname('pdf'))}
     else{const u=c.toDataURL('image/jpeg',.96);const w=window.open('','_blank');if(w){const mm=TPL.sheet.mm;w.document.write('<!doctype html><title>Print</title><style>@page{size:'+mm[0]+'mm '+mm[1]+'mm;margin:0}html,body{margin:0}img{width:'+mm[0]+'mm;height:'+mm[1]+'mm;display:block}</style><img src="'+u+'" onload="setTimeout(function(){print()},300)">');w.document.close()}}
-    toast(t('done'));fb().then(F=>F.push('cards/log/'+ID,{at:F.now(),tpl:TPL.id,type:kind})).catch(()=>{})}
+    toast(t('done'));if(LOGS)LOGS['l'+Date.now()]={at:Date.now(),tpl:TPL.id,type:kind};fb().then(F=>F.push('cards/log/'+ID,{at:F.now(),tpl:TPL.id,type:kind})).catch(()=>{})}
   catch(e){toast(String(e&&e.message||e))}finally{btn.disabled=false;btn.innerHTML=old}}
 /* ---------- drawer menu ---------- */
 document.addEventListener('click',e=>{if(e.target.closest('[data-drawer]'))drawer()});
 function drawer(){const ov=document.createElement('div');ov.className='ov';const st=state(CL);
   ov.innerHTML='<nav class="drawer"><div class="who"><small>'+esc(t('hello'))+'</small><b>'+esc(CL&&CL.name||'')+'</b><small>@'+esc(CL&&CL.username||'')+'</small><small style="margin-top:6px">'+esc(t('acc'))+': <b style="display:inline;font-size:14px">'+esc(ccId(ID))+'</b></small><small>'+esc(t('period'))+': '+esc(fmtD(CL&&CL.start))+' → '+esc(fmtD(CL&&CL.end))+'</small><small class="'+(st==='ok'?'ok':'err')+'">'+esc(st==='ok'?t('until').replace('{d}',fmtD(CL.end)):st==='soon'?t('soonT'):t('expT'))+'</small></div>'+
-   '<button class="mi" data-m="acct">'+I('user')+esc(t('account'))+'</button><button class="mi" data-m="cu">'+I('user')+esc(t('chU'))+'</button><button class="mi" data-m="cp">'+I('key')+esc(t('chP'))+'</button><button class="mi" data-m="contact">'+I('chat')+esc(t('contact'))+'</button><button class="mi" data-m="cterms">'+I('doc')+esc(t('terms'))+'</button><button class="mi" data-m="cprivacy">'+I('lock')+esc(t('privacy'))+'</button><button class="mi" data-m="lang">'+I('globe')+esc(t('lang'))+'</button><button class="mi red" data-m="out">'+I('out')+esc(t('logout'))+'</button></nav>';
+   '<button class="mi" data-m="home">'+I('star')+esc(t('home'))+'</button><button class="mi" data-m="edit">'+I('card')+esc(t('create'))+'</button><button class="mi" data-m="acct">'+I('user')+esc(t('account'))+'</button><button class="mi" data-m="cu">'+I('user')+esc(t('chU'))+'</button><button class="mi" data-m="cp">'+I('key')+esc(t('chP'))+'</button><button class="mi" data-m="contact">'+I('chat')+esc(t('contact'))+'</button><button class="mi" data-m="cterms">'+I('doc')+esc(t('terms'))+'</button><button class="mi" data-m="cprivacy">'+I('lock')+esc(t('privacy'))+'</button><button class="mi" data-m="lang">'+I('globe')+esc(t('lang'))+'</button><button class="mi red" data-m="out">'+I('out')+esc(t('logout'))+'</button></nav>';
   document.body.appendChild(ov);ov.addEventListener('click',e=>{if(e.target===ov){ov.remove();return}const b=e.target.closest('[data-m]');if(!b)return;const k=b.dataset.m;ov.remove();
+    if(k==='home'){home();return}if(k==='edit'){editor();return}
     if(k==='acct')openModal(t('account'),'<div class="who" style="background:var(--soft);border-radius:14px;padding:14px;display:grid;gap:4px"><b>'+esc(CL.name||'')+'</b><span>'+esc(t('acc'))+': <b>'+esc(ccId(ID))+'</b></span><span>'+esc(t('user'))+': <b>@'+esc(CL.username||'')+'</b></span><span>'+esc(t('period'))+': '+esc(fmtD(CL.start))+' → '+esc(fmtD(CL.end))+'</span></div><p class="note">'+esc(t('idTip'))+'</p>');
     else if(k==='cu')changeUser();else if(k==='cp')changePw();
     else if(k==='contact')openModal(t('contact'),'<div class="cbtns" style="display:grid;gap:8px" data-contacts="light">'+contactBtns('light')+'</div><p class="note">'+esc(t('acc'))+': <b>'+esc(ccId(ID))+'</b>. '+esc(t('idTip'))+'</p>');
@@ -292,8 +336,8 @@ function changePw(){const m=openModal(t('chP'),'<form style="display:grid;gap:12
     try{const F=await fb();const u=F.auth.currentUser||USER;await F.A.reauthenticateWithCredential(u,F.A.EmailAuthProvider.credential(u.email,f.c.value));await F.A.updatePassword(u,f.p.value);m.remove();toast(t('pDone'))}catch(x){err.textContent=/invalid|wrong/.test(x&&x.code||'')?t('eCur'):String(x&&(x.code||x.message))}}}
 /* ---------- start ---------- */
 async function start(){
-  if(!LINK_ID){rerender=landing;landing();return}
-  rerender=()=>{if(!USER)loginView();else if(!CL)return;else editor()};
+  if(!LINK_ID&&!params.has('login')){rerender=landing;landing();return}
+  rerender=()=>{if(!USER)loginView();else if(!CL)return;else if(VIEW==='edit')editor();else home()};
   $('#app').innerHTML=topbar(false)+'<div class="authw"><p class="note">…</p></div>';
   let F;try{F=await fb()}catch(e){loginView(t('eNet'));return}
   F.A.onAuthStateChanged(F.auth,async u=>{if(offCl){offCl();offCl=null}USER=u;CL=null;
@@ -304,7 +348,8 @@ async function start(){
       if(first){F.set('cards/clients/'+ID+'/lastSeen',Date.now()).catch(()=>{});try{DATA=(await F.get('cards/data/'+ID+'/fields'))||{}}catch(e){DATA={}}
         let reg=[];try{reg=await (await fetch('t/index.json',{cache:'no-cache'})).json()}catch(e){}
         TPLS=reg.filter(x=>c.templates&&c.templates[x.id]);const want=DATA.__tpl&&TPLS.some(x=>x.id===DATA.__tpl)?DATA.__tpl:(TPLS[0]&&TPLS[0].id);TPL=null;if(want){try{TPL=await getTpl(want)}catch(e){}}}
-      editor();if(c.mustChange&&state(c)==='ok'&&!$('[data-first]'))firstView()},()=>{loginView(t('eNet'))})})}
+      if(!LINK_ID){try{history.replaceState(null,'','?c='+ID)}catch(e){}}
+      if(first||VIEW!=='edit')home();else editor();if(c.mustChange&&state(c)==='ok'&&!$('[data-first]'))firstView()},()=>{loginView(t('eNet'))})})}
 start();
 </script>
 </body>

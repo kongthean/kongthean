@@ -1,25 +1,37 @@
 [
   {
     "id": "khovsieng-floral",
-    "title": "Khmer floral frame",
+    "title": {
+      "en": "Khmer floral frame",
+      "km": "ស៊ុមផ្កាខ្មែរ"
+    },
     "client": "ចុងភៅខូវ ស៊ាង",
     "thumb": "thumb.jpg"
   },
   {
     "id": "khovsieng-gold",
-    "title": "Gold frame",
+    "title": {
+      "en": "Gold frame",
+      "km": "ស៊ុមពណ៌មាស"
+    },
     "client": "ចុងភៅខូវ ស៊ាង",
     "thumb": "thumb.jpg"
   },
   {
     "id": "khovsieng-orange",
-    "title": "Orange frame",
+    "title": {
+      "en": "Orange frame",
+      "km": "ស៊ុមពណ៌ទឹកក្រូច"
+    },
     "client": "ចុងភៅខូវ ស៊ាង",
     "thumb": "thumb.jpg"
   },
   {
     "id": "khovsieng-coral",
-    "title": "Coral frame",
+    "title": {
+      "en": "Coral frame",
+      "km": "ស៊ុមពណ៌ផ្កាឈូក"
+    },
     "client": "ចុងភៅខូវ ស៊ាង",
     "thumb": "thumb.jpg"
   }
