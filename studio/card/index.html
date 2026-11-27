@@ -87,7 +87,11 @@ details.biz{border:1px dashed var(--line);border-radius:14px;padding:10px 12px}d
 .hide{display:none!important}
 .mst{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:-4px}.mst>span{font-size:13.5px;font-weight:600;color:#3a4540;margin-right:2px}
 .mst .seg{display:flex;align-items:center;border:1px solid var(--line);border-radius:99px;padding:3px;background:#fbfaf7}.mst .seg button{border:0;background:none;border-radius:99px;padding:6px 12px;font-size:13.5px;cursor:pointer;font-weight:600}.mst .seg button.on{background:var(--green);color:var(--gold)}
-.mst .seg em{font-style:normal;font-size:13px;font-weight:700;min-width:46px;text-align:center}.mrs{border:0;background:none;color:var(--muted);font-size:12.5px;text-decoration:underline;cursor:pointer}
+.mst .seg em{font-style:normal;font-size:13px;font-weight:700;min-width:46px;text-align:center}.fnt{border:1px dashed var(--line);border-radius:12px;padding:10px 12px}.fnt summary{cursor:pointer;font-weight:700;font-size:14px}.fnt[open] summary{margin-bottom:10px}.fnt .in{display:grid;gap:12px;min-width:0}.frow{min-width:0}
+.frow>span{display:block;font-size:13px;font-weight:600;color:#3a4540;margin-bottom:6px}.fch{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+.fch button{flex:0 0 auto;scroll-snap-align:start;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:8px 12px;display:grid;gap:2px;text-align:center;cursor:pointer;min-width:104px}.fch button em{font-style:normal;font-size:17px;line-height:1.6;color:var(--ink);white-space:nowrap}.fch button small{font-size:11px;color:var(--muted)}
+.fch button.on{border-color:var(--gold);box-shadow:0 0 0 3px rgba(243,177,28,.25)}
+.mrs{border:0;background:none;color:var(--muted);font-size:12.5px;text-decoration:underline;cursor:pointer}
 .top .btn.sm{padding:8px 12px}@media(max-width:480px){.top .brand small{display:none}.top .brand b{font-size:16px;white-space:nowrap;letter-spacing:.04em}.lang button{padding:5px 8px}}
 .hm{max-width:1100px;margin:0 auto;padding:20px;display:grid;gap:16px}
 .hcard{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px}.hcard h3{font-size:17px;margin-bottom:12px}
@@ -168,7 +172,7 @@ const TX={
   wMany:'Too many dishes for this card ({n}). The text was made smaller to fit. For the best result, use {max} dishes or fewer.',wLong:'Some lines are long, so they were made a little smaller to fit inside the frame.',
   noTpl:'No design is set for your account yet. Please contact us.',
   account:'My account',period:'Service period',until:'Active until {d}',chU:'Change username',chP:'Change password',curPw:'Current password',contact:'Contact us',terms:'Terms of use',privacy:'Privacy policy',lang:'ភាសាខ្មែរ',logout:'Log out',
-  mStyle:'Menu text',mBold:'Bold',mNormal:'Normal',mReset:'Reset size',home:'Home',create:'Create a new card',createT:'Make a menu card for your next event',cont:'Continue my last card',myDesigns:'My designs',recent:'Recent downloads',noRecent:'No downloads yet. Your printed cards will show here.',daysLeft:'{n} days left',endsSoon:'Your service ends in {n} days. Contact us to renew so you can keep using it.',help:'Need help?',helpT:'Our team is happy to help. Give us your account ID when you contact us.',quick:'How to make a card',q:[['Choose a design','Pick one of your designs.'],['Type the menu','One dish per line, then the date.'],['Download and print','PDF for printing, PNG or JPG to share.']],status:'Status',active:'Active',loginBtn:'Log in',back:'Home',open:'Open',pDone:'Password changed',eCur:'The current password is not correct.',close:'Close',idTip:'Give this ID to our team if you need help.',hello:'Hello'},
+  fonts:'Fonts',fOrig:'Original',fOrigS:'Design font',fReset:'Use original fonts',mStyle:'Menu text',mBold:'Bold',mNormal:'Normal',mReset:'Reset size',home:'Home',create:'Create a new card',createT:'Make a menu card for your next event',cont:'Continue my last card',myDesigns:'My designs',recent:'Recent downloads',noRecent:'No downloads yet. Your printed cards will show here.',daysLeft:'{n} days left',endsSoon:'Your service ends in {n} days. Contact us to renew so you can keep using it.',help:'Need help?',helpT:'Our team is happy to help. Give us your account ID when you contact us.',quick:'How to make a card',q:[['Choose a design','Pick one of your designs.'],['Type the menu','One dish per line, then the date.'],['Download and print','PDF for printing, PNG or JPG to share.']],status:'Status',active:'Active',loginBtn:'Log in',back:'Home',open:'Open',pDone:'Password changed',eCur:'The current password is not correct.',close:'Close',idTip:'Give this ID to our team if you need help.',hello:'Hello'},
  km:{brandSub:'កាតមុខម្ហូបសម្រាប់មង្គលការ និងពិធីផ្សេងៗ',menu:'ម៉ឺនុយ',
   hKick:'Thean Card Studio',hTitle:'កាតមុខម្ហូបដ៏ស្រស់ស្អាត ត្រៀមបោះពុម្ព',hText:'ម៉ូដកាតផ្ទាល់ខ្លួនរបស់អ្នក រក្សាទុកដដែលទាំងស្រុង។ គ្រាន់តែវាយមុខម្ហូប និងកាលបរិច្ឆេទ មើលភ្លាមៗ ហើយទាញយកឯកសារត្រៀមបោះពុម្ព សម្រាប់មង្គលការ ពិធីបុណ្យ និងគ្រប់កម្មវិធី។',
   hContact:'ទាក់ទងយើង ដើម្បីដឹងតម្លៃ',hHow:'របៀបប្រើ',
@@ -186,7 +190,7 @@ const TX={
   wMany:'មុខម្ហូបច្រើនពេកសម្រាប់កាតនេះ ({n})។ អក្សរត្រូវបានបង្រួម ដើម្បីឱ្យសម។ ដើម្បីលទ្ធផលល្អបំផុត សូមប្រើ {max} មុខ ឬតិចជាងនេះ។',wLong:'បន្ទាត់ខ្លះវែង ដូច្នេះត្រូវបានបង្រួមបន្តិច ដើម្បីឱ្យនៅក្នុងស៊ុម។',
   noTpl:'គណនីរបស់អ្នកមិនទាន់មានម៉ូដនៅឡើយ។ សូមទាក់ទងមកយើង។',
   account:'គណនីរបស់ខ្ញុំ',period:'រយៈពេលសេវាកម្ម',until:'ប្រើបានដល់ {d}',chU:'ប្តូរឈ្មោះអ្នកប្រើ',chP:'ប្តូរពាក្យសម្ងាត់',curPw:'ពាក្យសម្ងាត់បច្ចុប្បន្ន',contact:'ទាក់ទងយើង',terms:'លក្ខខណ្ឌប្រើប្រាស់',privacy:'គោលការណ៍ឯកជនភាព',lang:'English',logout:'ចាកចេញ',
-  mStyle:'អក្សរមុខម្ហូប',mBold:'ដិត',mNormal:'ធម្មតា',mReset:'ទំហំដើម',home:'ទំព័រដើម',create:'បង្កើតកាតថ្មី',createT:'បង្កើតកាតមុខម្ហូប សម្រាប់កម្មវិធីបន្ទាប់របស់អ្នក',cont:'បន្តកាតចុងក្រោយរបស់ខ្ញុំ',myDesigns:'ម៉ូដរបស់ខ្ញុំ',recent:'ការទាញយកថ្មីៗ',noRecent:'មិនទាន់មានការទាញយកនៅឡើយ។ កាតដែលអ្នកបានបោះពុម្ព នឹងបង្ហាញនៅទីនេះ។',daysLeft:'នៅសល់ {n} ថ្ងៃ',endsSoon:'សេវាកម្មរបស់អ្នកនឹងផុតកំណត់ក្នុងរយៈពេល {n} ថ្ងៃទៀត។ សូមទាក់ទងមកយើង ដើម្បីបន្ត។',help:'ត្រូវការជំនួយ?',helpT:'ក្រុមការងាររបស់យើងរីករាយជួយអ្នក។ សូមផ្តល់លេខគណនីរបស់អ្នក នៅពេលទាក់ទងមក។',quick:'របៀបបង្កើតកាត',q:[['ជ្រើសម៉ូដ','ជ្រើសម៉ូដមួយរបស់អ្នក។'],['វាយមុខម្ហូប','មួយបន្ទាត់ មួយមុខ រួចកាលបរិច្ឆេទ។'],['ទាញយក និងបោះពុម្ព','PDF សម្រាប់បោះពុម្ព, PNG ឬ JPG សម្រាប់ចែករំលែក។']],status:'ស្ថានភាព',active:'កំពុងដំណើរការ',loginBtn:'ចូលគណនី',back:'ទំព័រដើម',open:'បើក',pDone:'បានប្តូរពាក្យសម្ងាត់',eCur:'ពាក្យសម្ងាត់បច្ចុប្បន្នមិនត្រឹមត្រូវ។',close:'បិទ',idTip:'ផ្តល់លេខនេះដល់ក្រុមការងារ ប្រសិនបើអ្នកត្រូវការជំនួយ។',hello:'សួស្តី'}};
+  fonts:'ពុម្ពអក្សរ',fOrig:'ដើម',fOrigS:'ពុម្ពដើម',fReset:'ប្រើពុម្ពអក្សរដើមវិញ',mStyle:'អក្សរមុខម្ហូប',mBold:'ដិត',mNormal:'ធម្មតា',mReset:'ទំហំដើម',home:'ទំព័រដើម',create:'បង្កើតកាតថ្មី',createT:'បង្កើតកាតមុខម្ហូប សម្រាប់កម្មវិធីបន្ទាប់របស់អ្នក',cont:'បន្តកាតចុងក្រោយរបស់ខ្ញុំ',myDesigns:'ម៉ូដរបស់ខ្ញុំ',recent:'ការទាញយកថ្មីៗ',noRecent:'មិនទាន់មានការទាញយកនៅឡើយ។ កាតដែលអ្នកបានបោះពុម្ព នឹងបង្ហាញនៅទីនេះ។',daysLeft:'នៅសល់ {n} ថ្ងៃ',endsSoon:'សេវាកម្មរបស់អ្នកនឹងផុតកំណត់ក្នុងរយៈពេល {n} ថ្ងៃទៀត។ សូមទាក់ទងមកយើង ដើម្បីបន្ត។',help:'ត្រូវការជំនួយ?',helpT:'ក្រុមការងាររបស់យើងរីករាយជួយអ្នក។ សូមផ្តល់លេខគណនីរបស់អ្នក នៅពេលទាក់ទងមក។',quick:'របៀបបង្កើតកាត',q:[['ជ្រើសម៉ូដ','ជ្រើសម៉ូដមួយរបស់អ្នក។'],['វាយមុខម្ហូប','មួយបន្ទាត់ មួយមុខ រួចកាលបរិច្ឆេទ។'],['ទាញយក និងបោះពុម្ព','PDF សម្រាប់បោះពុម្ព, PNG ឬ JPG សម្រាប់ចែករំលែក។']],status:'ស្ថានភាព',active:'កំពុងដំណើរការ',loginBtn:'ចូលគណនី',back:'ទំព័រដើម',open:'បើក',pDone:'បានប្តូរពាក្យសម្ងាត់',eCur:'ពាក្យសម្ងាត់បច្ចុប្បន្នមិនត្រឹមត្រូវ។',close:'បិទ',idTip:'ផ្តល់លេខនេះដល់ក្រុមការងារ ប្រសិនបើអ្នកត្រូវការជំនួយ។',hello:'សួស្តី'}};
 const t=k=>(TX[LG]&&TX[LG][k]!=null?TX[LG][k]:TX.en[k]);
 const KN=n=>String(n).replace(/\d/g,d=>'០១២៣៤៥៦៧៨៩'[d]);
 const fmtD=ms=>{if(!ms)return '—';const d=new Date(ms);return ('0'+d.getDate()).slice(-2)+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+d.getFullYear()};
@@ -278,16 +282,25 @@ const FONTS={};
 async function loadFonts(T){const L=[];for(const k in T.fonts){const f=T.fonts[k];if(f.url&&!FONTS[f.family]){const ff=new FontFace(f.family,'url('+f.url+')',f.weight?{weight:'100 900'}:{});FONTS[f.family]=ff.load().then(x=>{document.fonts.add(x);return x}).catch(()=>null)}if(FONTS[f.family])L.push(FONTS[f.family])}await Promise.all(L)}
 const BG={};function loadBg(T){if(!BG[T.id])BG[T.id]=new Promise(r=>{const im=new Image();im.onload=()=>r(im);im.onerror=()=>r(null);im.src='t/'+T.id+'/'+T.bg});return BG[T.id]}
 async function getTpl(id){const r=await fetch('t/'+id+'/template.json',{cache:'no-cache'});if(!r.ok)throw new Error('template');return r.json()}
-function fam(T,k){const f=T.fonts[k]||T.fonts.text;const n=/,/.test(f.family)?f.family:'"'+f.family+'"';return {n:n,w:f.weight||''}}
+/* font library the client can choose from (all SIL Open Font License, Google Fonts) */
+const FKH=[['battambang','Battambang','../Battambang-Regular.ttf','../Battambang-Bold.ttf'],['moul','Moul','../Moul-Regular.ttf'],['moulpali','Moulpali','moulpali.ttf'],['koulen','Koulen','koulen.ttf'],['bokor','Bokor','bokor.ttf'],['angkor','Angkor','angkor.ttf'],['taprom','Taprom','taprom.ttf'],['preahvihear','Preah Vihear','preahvihear.ttf'],['dangrek','Dangrek','dangrek.ttf'],['fasthand','Fasthand','fasthand.ttf'],['kdam','Kdam Thmor','kdam.ttf'],['siemreap','Siem Reap','siemreap.ttf'],['hanuman','Hanuman','hanuman-r.ttf','hanuman-b.ttf'],['kantumruy','Kantumruy','kantumruy-r.ttf','kantumruy-b.ttf'],['notoserif','Noto Serif','notoserif-r.ttf','notoserif-b.ttf'],['content','Content','content-r.ttf','content-b.ttf'],['suwannaphum','Suwannaphum','suwannaphum-r.ttf','suwannaphum-b.ttf'],['nokora','Nokora','nokora-r.ttf','nokora-b.ttf']];
+const FLA=[['bodoni','Bodoni','../LibreBodoni.ttf'],['playfair','Playfair','playfair.ttf'],['cinzel','Cinzel','cinzel.ttf'],['robotoslab','Roboto Slab','robotoslab.ttf'],['oswald','Oswald','oswald.ttf'],['montserrat','Montserrat','montserrat.ttf'],['kantumruy','Kantumruy','kantumruy-b.ttf'],['hanuman','Hanuman','hanuman-b.ttf']];
+const FL={};FKH.forEach(a=>FL[a[0]]={n:a[1],r:a[2],b:a[3]});FLA.forEach(a=>{FL['la-'+a[0]]={n:a[1],r:a[2],lat:1}});
+let CURF={},CURB=true;
+function libFace(id,bold){const e=FL[id];if(!e)return null;const v=bold&&e.b?'b':'r';return {n:'"CSL-'+id+'-'+v+'"',w:bold&&!e.b&&!e.lat?'700':''}}
+function loadLib(id,bold){const e=FL[id];if(!e)return Promise.resolve();const v=bold&&e.b?'b':'r',fam='CSL-'+id+'-'+v;
+  if(!FONTS[fam]){const ff=new FontFace(fam,'url(/studio/card/fonts/lib/'+e[v]+')');FONTS[fam]=ff.load().then(x=>{document.fonts.add(x);return x}).catch(()=>null)}return FONTS[fam]}
+function loadChosen(F,mb){const L=[];for(const k in F||{}){L.push(loadLib(F[k],k==='menu'?mb:false));if(k==='menu')L.push(loadLib(F[k],false))}return Promise.all(L)}
+function fam(T,k){if(CURF[k]){const x=libFace(CURF[k],k==='menu'?CURB:false);if(x)return x}const f=T.fonts[k]||T.fonts.text;const n=/,/.test(f.family)?f.family:'"'+f.family+'"';return {n:n,w:f.weight||''}}
 const FS=(px,f)=>(f.w?f.w+' ':'')+px+'px '+f.n;
-function vals(){const v={};(TPL.fields||[]).forEach(f=>{const x=DATA[f.k];v[f.k]=(x==null?f.def:x)});v.__mb=DATA.__mb!==false;v.__ms=+DATA.__ms||1;return v}
+function vals(){const v={};(TPL.fields||[]).forEach(f=>{const x=DATA[f.k];v[f.k]=(x==null?f.def:x)});v.__mb=DATA.__mb!==false;v.__ms=+DATA.__ms||1;v.__f=DATA.__f||{};return v}
 function fmtDate(v,f){if(!v)return '';const p=String(v).split('-');if(p.length!==3)return v;return p[2]+'-'+p[1]+'-'+p[0]}
 /* draws the full sheet; s = pixels per point. Returns warnings. */
-function drawSheet(ctx,T,V,s,bg){const W=T.sheet.w*s,H=T.sheet.h*s;ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);if(bg)ctx.drawImage(bg,0,0,W,H);const warn={long:false,many:0,max:0};
+function drawSheet(ctx,T,V,s,bg){const W=T.sheet.w*s,H=T.sheet.h*s;ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);if(bg)ctx.drawImage(bg,0,0,W,H);const warn={long:false,many:0,max:0};CURF=V.__f||{};CURB=V.__mb!==false;
   ctx.textBaseline='alphabetic';
   const fit=(txt,font,size,maxw)=>{ctx.font=FS(size*s,font);const w=ctx.measureText(txt).width;if(maxw&&w>maxw*s){const ns=size*maxw*s/w;if(ns<size*.8)warn.long=true;ctx.font=FS(ns*s,font);return ns}return size};
   (T.cards||[0]).forEach(ox=>{T.slots.forEach(sl=>{let txt=V[sl.k];if(txt==null)return;const font=fam(T,sl.font);
-    if(sl.t==='list'){const items=String(txt).split('\n').map(x=>x.trim()).filter(Boolean);const room=sl.maxy-sl.y,sc=Math.max(.7,Math.min(1.3,+V.__ms||1)),LF=V.__mb===false?fam(T,'text'):font;let step=sl.step*sc,size=sl.size*sc;const max=Math.floor(room/sl.minstep)+1,ideal=Math.floor(room/step)+1;warn.max=ideal;
+    if(sl.t==='list'){const items=String(txt).split('\n').map(x=>x.trim()).filter(Boolean);const room=sl.maxy-sl.y,sc=Math.max(.7,Math.min(1.3,+V.__ms||1)),LF=V.__mb===false?(CURF.menu?libFace(CURF.menu,false):fam(T,'text')):font;let step=sl.step*sc,size=sl.size*sc;const max=Math.floor(room/sl.minstep)+1,ideal=Math.floor(room/step)+1;warn.max=ideal;
       if(items.length>ideal){step=Math.max(sl.minstep,room/(items.length-1));size=sl.size*step/sl.step;if(items.length>max){warn.many=items.length;step=room/(items.length-1);size=sl.size*step/sl.step}}
       ctx.fillStyle=sl.color;ctx.textAlign='left';items.forEach((it,i)=>{const y=(sl.y+i*step)*s;const num=(sl.num==='km'?KN(i+1):String(i+1))+'.';ctx.font=FS(size*s,LF);ctx.fillText(num,(ox+sl.x)*s,y);const sz=fit(it,LF,size,sl.maxw-sl.gap);ctx.fillText(it,(ox+sl.x+sl.gap*size/sl.size)*s,y)});return}
     if(sl.t==='date')txt=fmtDate(txt,sl.format);txt=String(txt).replace(/\n/g,' ');if(!txt)return;
@@ -305,6 +318,20 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-mb],[data-
   if(b.hasAttribute('data-mb'))DATA.__mb=b.dataset.mb==='1';
   else{const d=+b.dataset.ms;let sc=+DATA.__ms||1;sc=d===0?1:Math.round(Math.max(.7,Math.min(1.3,sc+d*.05))*100)/100;DATA.__ms=sc}
   const box=$('.mst');if(box)box.outerHTML=mstyle();preview();queueSave()});
+/* font picker: one row per text group used by the template */
+const FGRP={title:['Name and closing words','ឈ្មោះ និងសារបញ្ចប់'],text:['Business details','ព័ត៌មានហាង'],menu:['Menu','មុខម្ហូប'],latin:['Phone and date','លេខទូរស័ព្ទ និងកាលបរិច្ឆេទ']};
+let FOPEN=false;
+function fpick(){if(!TPL)return '';const keys=[...new Set(TPL.slots.map(x=>x.font))].sort((a,b)=>Object.keys(FGRP).indexOf(a)-Object.keys(FGRP).indexOf(b));const F=DATA.__f||{};
+  const row=k=>{const g=FGRP[k]||[k,k],lat=k==='latin',list=lat?FLA.map(a=>'la-'+a[0]):FKH.map(a=>a[0]),smp=lat?'012 345 678':'ចុងភៅ ធាន';
+    return '<div class="frow"><span>'+esc(LG==='km'?g[1]:g[0])+'</span><div class="fch"><button type="button" data-fk="'+k+'" data-fid="" class="'+(F[k]?'':'on')+'"><em>'+esc(t('fOrig'))+'</em><small>'+esc(t('fOrigS'))+'</small></button>'+
+     list.map(id=>'<button type="button" data-fk="'+k+'" data-fid="'+id+'" class="'+(F[k]===id?'on':'')+'"><em style="font-family:\'CSL-'+id+'-r\',sans-serif">'+smp+'</em><small>'+esc(FL[id].n)+'</small></button>').join('')+'</div></div>'};
+  return '<details class="fnt"'+(FOPEN?' open':'')+'><summary>'+esc(t('fonts'))+'</summary><div class="in">'+keys.map(row).join('')+(Object.keys(F).length?'<button type="button" class="mrs" data-fid="__reset">'+esc(t('fReset'))+'</button>':'')+'</div></details>'}
+function fpickLoad(){const ids=new Set();FKH.forEach(a=>ids.add(a[0]));FLA.forEach(a=>ids.add('la-'+a[0]));ids.forEach(id=>loadLib(id,false))}
+document.addEventListener('toggle',e=>{if(e.target.classList&&e.target.classList.contains('fnt')){FOPEN=e.target.open;if(FOPEN)fpickLoad()}},true);
+document.addEventListener('click',e=>{const b=e.target.closest('[data-fid]');if(!b||!TPL)return;const F=Object.assign({},DATA.__f||{});
+  if(b.dataset.fid==='__reset')DATA.__f={};else{const k=b.dataset.fk;if(b.dataset.fid)F[k]=b.dataset.fid;else delete F[k];DATA.__f=F}
+  const box=$('.fnt');if(box){const sl=box.querySelector('.fch')&&[...box.querySelectorAll('.fch')].map(x=>x.scrollLeft);box.outerHTML=fpick();if(sl)[...$('.fnt').querySelectorAll('.fch')].forEach((x,i)=>x.scrollLeft=sl[i]||0)}
+  preview();queueSave()});
 /* ---------- client home screen ---------- */
 let LOGS=null;
 function home(){VIEW='home';document.documentElement.lang=LG;const st=state(CL);if(st!=='ok'){endView(st);return}
@@ -333,7 +360,7 @@ function editor(){VIEW='edit';document.documentElement.lang=LG;const st=state(CL
   const sm=ev.filter(f=>f.t!=='list');
   $('#app').innerHTML=topbar(true)+'<div class="edtop"><button class="btn s sm" type="button" data-go="home">← '+esc(t('back'))+'</button></div><div class="ed"><div class="panel">'+
    '<div class="step"><i>'+(LG==='km'?'១':'1')+'</i>'+esc(t('s1'))+'</div><div class="tpls">'+TPLS.map(x=>'<button type="button" data-tpl="'+esc(x.id)+'" class="'+(TPL&&x.id===TPL.id?'on':'')+'"><img alt="" src="t/'+esc(x.id)+'/'+esc(x.thumb||'thumb.jpg')+'">'+esc(x.title&&x.title[LG]||x.title||x.id)+'</button>').join('')+'</div>'+
-   (TPL?'<div class="step"><i>'+(LG==='km'?'២':'2')+'</i>'+esc(t('s2'))+'</div>'+ev.filter(f=>f.t==='list').map(field).join('')+mstyle()+(sm.length?'<div class="row2">'+sm.map(field).join('')+'</div>':'')+
+   (TPL?'<div class="step"><i>'+(LG==='km'?'២':'2')+'</i>'+esc(t('s2'))+'</div>'+ev.filter(f=>f.t==='list').map(field).join('')+mstyle()+fpick()+(sm.length?'<div class="row2">'+sm.map(field).join('')+'</div>':'')+
    '<div class="warn hide" data-warn></div>'+(bz.length?'<details class="biz"><summary>'+esc(t('biz'))+'</summary><div class="in">'+bz.map(field).join('')+'</div></details>':'')+'<p class="saved" data-saved></p>':'<p class="warn">'+esc(t('noTpl'))+'</p>')+
    '</div><div class="prev"><div class="prevbar"><b>'+esc(t('preview'))+'</b></div><div class="sheet"><canvas data-cv width="1400" height="990"></canvas></div>'+
    '<div class="step"><i>'+(LG==='km'?'៣':'3')+'</i>'+esc(t('s3'))+'</div><div class="dl"><button class="btn g" type="button" data-dl="pdf">'+I('dl')+esc(t('pdf'))+'</button><button class="btn y" type="button" data-dl="png">'+I('dl')+esc(t('png'))+'</button><button class="btn o" type="button" data-dl="jpg">'+I('dl')+esc(t('jpg'))+'</button><button class="btn s" type="button" data-dl="print">'+I('print')+esc(t('print'))+'</button></div><p class="note">'+esc(t('sheetInfo'))+'</p></div></div>';
@@ -341,7 +368,7 @@ function editor(){VIEW='edit';document.documentElement.lang=LG;const st=state(CL
   $$('[data-tpl]').forEach(b=>b.onclick=()=>pickTpl(b.dataset.tpl));
   $$('[data-dl]').forEach(b=>b.onclick=()=>download(b.dataset.dl,b));
   preview()}
-async function preview(){const cv=$('[data-cv]');if(!cv||!TPL)return;const s=cv.width/TPL.sheet.w;cv.height=Math.round(TPL.sheet.h*s);const bg=await loadBg(TPL);await loadFonts(TPL);const w=drawSheet(cv.getContext('2d'),TPL,vals(),s,bg);
+async function preview(){const cv=$('[data-cv]');if(!cv||!TPL)return;const s=cv.width/TPL.sheet.w;cv.height=Math.round(TPL.sheet.h*s);const bg=await loadBg(TPL);await loadFonts(TPL);await loadChosen(DATA.__f,DATA.__mb!==false);const w=drawSheet(cv.getContext('2d'),TPL,vals(),s,bg);
   const box=$('[data-warn]');if(box){const m=w.many?t('wMany').replace('{n}',w.many).replace('{max}',w.max):w.long?t('wLong'):'';box.textContent=m;box.classList.toggle('hide',!m)}}
 function queueSave(){const e=$('[data-saved]');if(e)e.textContent=t('saving');clearTimeout(saveT);saveT=setTimeout(async()=>{try{const F=await fb();await F.set('cards/data/'+ID+'/fields',DATA);if(e)e.textContent=t('saved')}catch(x){if(e)e.textContent=''}},900)}
 async function pickTpl(id){if(!TPL||TPL.id!==id){try{TPL=await getTpl(id);DATA.__tpl=id;queueSave()}catch(e){toast('Error')}}editor()}
