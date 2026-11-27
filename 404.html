@@ -10,6 +10,8 @@
 /* Clean addresses (kongthean.com/donate): send the visitor to the website, which then shows /donate again. */
 (function(){
   var p=location.pathname.replace(/^\/+/,'').replace(/\/+$/,'');
+  var m=p.match(/^studio\/card\/([^\/]+)$/i);
+  if(m){location.replace('/studio/card/?c='+encodeURIComponent(m[1])+(location.hash||''));return}
   var last=p.split('/').pop()||'';
   if(p&&last.indexOf('.')<0){
     location.replace('/?go='+p.split('/').map(encodeURIComponent).join('/')+(location.hash||''));

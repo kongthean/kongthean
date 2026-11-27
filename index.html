@@ -4397,6 +4397,8 @@ function toggle(v){
   draw(true);
 }
 window.TheanChat={open:()=>toggle(true),toggle:()=>toggle(),close:()=>toggle(false)};
+/* kongthean.com/?chat=1 opens the chat (used by Thean Card Studio) */
+if(/[?&]chat=1\b/.test(location.search)&&!ADMIN_PAGE)setTimeout(()=>toggle(true),600);
 document.addEventListener('thean:render',()=>{if(T.lang!==siteLangSeen){siteLangSeen=T.lang;sesLang=null;if(chat&&chat.lang!==L()&&fb&&user)fb.update(CP(),{lang:L()}).catch(()=>{})}const p=root.querySelector('.tc-panel');if(p){lastBody='';draw(false)}else draw()});
 /* returning visitor: reconnect quietly so agent replies show a badge */
 if(!ADMIN_PAGE&&started()){authUser().then(u=>{if(u&&u.isAnonymous){user=u;return fb.get(CP()).then(v=>{if(v){chat=v;listen();fb.get('settings/public').then(s=>{if(s&&s.waitMin)waitMin=+s.waitMin||10;if(s&&s.autoMin)autoMin=+s.autoMin||30}).catch(()=>{})}})}}).catch(()=>{})}
