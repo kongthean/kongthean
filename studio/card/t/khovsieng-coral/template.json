@@ -170,9 +170,9 @@
       "x": 95.2,
       "gap": 24.2,
       "y": 298.3,
-      "step": 16.9,
+      "step": 20.7,
       "size": 14.0,
-      "minstep": 12.7,
+      "minstep": 16.1,
       "maxy": 470,
       "font": "menu",
       "align": "left",
@@ -182,12 +182,12 @@
     },
     {
       "k": "closing",
-      "x": 238.7,
+      "x": 350,
       "y": 509.9,
       "size": 15,
       "font": "title",
-      "align": "left",
-      "maxw": 140,
+      "align": "right",
+      "maxw": 125,
       "color": "#ff0000"
     },
     {
