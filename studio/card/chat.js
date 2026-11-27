@@ -56,9 +56,9 @@ function linkOf(k,v){v=String(v||'').trim();if(!v)return '';if(k==='email')retur
   const PRE={messenger:'m.me/',telegram:'t.me/',tiktok:'tiktok.com/@',youtube:'youtube.com/@',instagram:'instagram.com/',facebook:'facebook.com/'};
   if(PRE[k]&&!/^https?:/i.test(v)&&v.indexOf('/')<0&&!/\.(com|me|net|org|kh|io|be|tv|app)$/i.test(v))v=PRE[k]+v.replace(/^@/,'');return url(v)}
 function I(n){return '<svg class="i" viewBox="0 0 24 24" aria-hidden="true">'+(P[n]||P.info||'')+'</svg>'}
-let CS_S={links:{},brand:{},media:{},places:[],tips:[],festivals:[]};
+let CS_S={links:{},brand:{logo:'/logo.png'},media:{},places:[],tips:[],festivals:[]};
 window.TheanSite={get S(){return CS_S},get lang(){return (window.CS_LANG&&window.CS_LANG())||'km'},icon:I,esc:esc,linkOf:linkOf,
-  setState(c){if(c&&typeof c==='object'){CS_S=Object.assign({places:[],tips:[],festivals:[]},c);document.dispatchEvent(new Event('thean:render'))}},setFb(){},setMaint(){},setLang(){}};
+  setState(c){if(c&&typeof c==='object'){CS_S=Object.assign({places:[],tips:[],festivals:[]},c);CS_S.brand=Object.assign({},c.brand||{});if(!CS_S.brand.logo)CS_S.brand.logo='/logo.png';document.dispatchEvent(new Event('thean:render'))}},setFb(){},setMaint(){},setLang(){}};
 })();
 
 /* Small wrapper around Firebase Realtime Database, shared by the website chat and the agent inbox */
