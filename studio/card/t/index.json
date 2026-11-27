@@ -97,5 +97,23 @@
     },
     "client": "",
     "thumb": "thumb.jpg"
+  },
+  {
+    "id": "thean-lotus-crown",
+    "title": {
+      "en": "Lotus crown",
+      "km": "មកុដផ្កាឈូក"
+    },
+    "client": "",
+    "thumb": "thumb.jpg"
+  },
+  {
+    "id": "thean-lotus-banner",
+    "title": {
+      "en": "Lotus and gold kbach",
+      "km": "ផ្កាឈូក និងក្បាច់មាស"
+    },
+    "client": "",
+    "thumb": "thumb.jpg"
   }
 ]

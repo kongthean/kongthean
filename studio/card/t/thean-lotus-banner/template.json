@@ -1,0 +1,180 @@
+{
+  "id": "thean-lotus-banner",
+  "title": {
+    "en": "Lotus and gold kbach",
+    "km": "ផ្កាឈូក និងក្បាច់មាស"
+  },
+  "client": "",
+  "note": "Thean design (art generated for Thean). Positions in points.",
+  "sheet": {
+    "w": 841.89,
+    "h": 595.28,
+    "mm": [
+      297,
+      210
+    ],
+    "dpi": 300
+  },
+  "bg": "bg.jpg",
+  "thumb": "thumb.jpg",
+  "cards": [
+    0,
+    420.945
+  ],
+  "fonts": {
+    "title": {
+      "family": "CS Muol",
+      "url": "/studio/card/fonts/Moul-Regular.ttf"
+    },
+    "text": {
+      "family": "CS Battambang",
+      "url": "/studio/card/fonts/Battambang-Regular.ttf"
+    },
+    "menu": {
+      "family": "CS Battambang Bold",
+      "url": "/studio/card/fonts/Battambang-Bold.ttf"
+    },
+    "latin": {
+      "family": "CS Playfair",
+      "url": "/studio/card/fonts/lib/playfair.ttf"
+    }
+  },
+  "fields": [
+    {
+      "k": "menu",
+      "g": "event",
+      "t": "list",
+      "en": "Menu (one dish per line)",
+      "km": "មុខម្ហូប (មួយបន្ទាត់ មួយមុខ)",
+      "def": "មហាសម្បត្តិទាំង៥\nញាំជើងមាន់គ្រឿងសមុទ្រ\nស៊ុបសាច់ក្តាម\nទាខ្វៃទឹកឃ្មុំ\nត្រីចំហុយទឹកស៊ីអ៊ីវ\nបង្គាខ្ទិះនិងនំប៉័ង\nបាយឆា បាយស\nបង្អែមខ្មែរ"
+    },
+    {
+      "k": "date",
+      "g": "event",
+      "t": "date",
+      "en": "Date",
+      "km": "កាលបរិច្ឆេទ",
+      "def": ""
+    },
+    {
+      "k": "closing",
+      "g": "event",
+      "t": "text",
+      "en": "Closing words",
+      "km": "សារបញ្ចប់",
+      "def": "សូមអញ្ជើញពិសារដោយរីករាយ!"
+    },
+    {
+      "k": "name",
+      "g": "biz",
+      "t": "text",
+      "en": "Name",
+      "km": "ឈ្មោះ",
+      "def": "ចុងភៅ ឈ្មោះហាង"
+    },
+    {
+      "k": "svc",
+      "g": "biz",
+      "t": "text",
+      "en": "Services",
+      "km": "សេវាកម្ម",
+      "def": "មានទទួលធ្វើម្ហូបក្នុងពិធីមង្គលការ បុណ្យ និងពិធីជប់លៀងផ្សេងៗ"
+    },
+    {
+      "k": "addr",
+      "g": "biz",
+      "t": "text",
+      "en": "Address",
+      "km": "អាសយដ្ឋាន",
+      "def": "អាសយដ្ឋាន៖ ភូមិ... ឃុំ... ស្រុក... ខេត្ត..."
+    },
+    {
+      "k": "tel",
+      "g": "biz",
+      "t": "text",
+      "en": "Phone",
+      "km": "លេខទូរស័ព្ទ",
+      "def": "Tel : 012 345 678 | 098 765 432"
+    }
+  ],
+  "slots": [
+    {
+      "k": "name",
+      "x": 219,
+      "y": 133,
+      "size": 13,
+      "font": "title",
+      "align": "center",
+      "maxw": 160,
+      "color": "#f6e2a8"
+    },
+    {
+      "k": "svc",
+      "x": 232,
+      "y": 172,
+      "size": 10,
+      "font": "text",
+      "align": "center",
+      "maxw": 270,
+      "color": "#5a3a2a"
+    },
+    {
+      "k": "addr",
+      "x": 232,
+      "y": 190,
+      "size": 9.5,
+      "font": "text",
+      "align": "center",
+      "maxw": 270,
+      "color": "#5a3a2a"
+    },
+    {
+      "k": "tel",
+      "x": 232,
+      "y": 210,
+      "size": 12,
+      "font": "latin",
+      "align": "center",
+      "maxw": 270,
+      "color": "#a3741f"
+    },
+    {
+      "k": "menu",
+      "t": "list",
+      "x": 100,
+      "gap": 21,
+      "y": 240,
+      "step": 21,
+      "size": 12.5,
+      "minstep": 16,
+      "maxy": 392,
+      "font": "menu",
+      "align": "left",
+      "maxw": 190,
+      "color": "#4a2a1e",
+      "num": "km"
+    },
+    {
+      "k": "closing",
+      "x": 105,
+      "y": 414,
+      "size": 11.5,
+      "font": "title",
+      "align": "left",
+      "maxw": 170,
+      "color": "#8b2f45"
+    },
+    {
+      "k": "date",
+      "x": 105,
+      "y": 438,
+      "size": 11,
+      "font": "latin",
+      "align": "left",
+      "maxw": 130,
+      "color": "#a3741f",
+      "t": "date",
+      "format": "dd-mm-yyyy"
+    }
+  ]
+}
