@@ -8,7 +8,15 @@
 <meta property="og:title" content="Thean Card Studio">
 <meta property="og:description" content="Menu cards for weddings and events, ready to print. កាតមុខម្ហូបសម្រាប់មង្គលការ និងពិធីផ្សេងៗ ត្រៀមបោះពុម្ព។">
 <meta property="og:image" content="https://kongthean.com/logo.png">
-<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/icons/card-favicon-48.png" sizes="48x48" type="image/png">
+<link rel="icon" href="/icons/card-favicon-96.png" sizes="96x96" type="image/png">
+<link rel="apple-touch-icon" href="/icons/card-apple-touch-icon.png">
+<link rel="manifest" href="/icons/card.webmanifest">
+<meta name="theme-color" content="#163023">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Card Studio">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="chat.css">
 <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&family=Koulen&display=swap" rel="stylesheet">
@@ -388,5 +396,6 @@ window.CS_WHO=()=>CL&&ID?{name:(CL.name||'Client')+' · Card '+ccId(ID),contact:
 start();
 </script>
 <script type="module" src="chat.js"></script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(function(){});</script>
 </body>
 </html>

@@ -1,0 +1,16 @@
+{
+  "name": "Thean Card Studio",
+  "short_name": "Card Studio",
+  "description": "Menu cards for weddings and events, ready to print.",
+  "id": "/studio/card/",
+  "start_url": "/studio/card/?login=1",
+  "scope": "/studio/card/",
+  "display": "standalone",
+  "background_color": "#163023",
+  "theme_color": "#163023",
+  "icons": [
+    {"src": "/icons/card-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "/icons/card-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "/icons/card-icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
