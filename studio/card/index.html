@@ -10,6 +10,7 @@
 <meta property="og:image" content="https://kongthean.com/logo.png">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="chat.css">
 <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&family=Koulen&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f4f1ea;--surface:#fff;--ink:#17211b;--muted:#68706a;--line:#e3ddd0;--soft:#ece8df;--green:#163023;--green2:#1f4a35;--gold:#f3b11c;--red:#b3362f;--ok:#1d7a3d}
@@ -97,7 +98,38 @@ details.biz{border:1px dashed var(--line);border-radius:14px;padding:10px 12px}d
 <body>
 <div id="app"></div>
 <script>
+/* the assistant's knowledge for Thean Card Studio (the chat itself is shared with kongthean.com and arrives in the same Inbox) */
+window.THEAN_CHAT_PROFILE={
+ w:{en:{title:'Chat with us',bot:'Card Studio assistant · instant answers',
+   intro:'Hello! Welcome to Thean Card Studio. I can help you with:\n• How the service works\n• Prices and plans\n• Designs and your template\n• Login and your account\n• Downloading and printing\n\nChoose a topic below, or talk to our team.',
+   opts:[['cs_how','How it works'],['cs_price','Prices'],['cs_design','Designs & templates'],['cs_login','Login & account'],['cs_print','Download & print'],['contact','Contact']]},
+  km:{title:'ជជែកជាមួយយើង',bot:'ជំនួយការ Card Studio · ឆ្លើយភ្លាមៗ',
+   intro:'សួស្តី! សូមស្វាគមន៍មកកាន់ Thean Card Studio។ ខ្ញុំអាចជួយអ្នកអំពី៖\n• របៀបដែលសេវាកម្មដំណើរការ\n• តម្លៃ និងគម្រោង\n• ម៉ូដ និងគំរូរបស់អ្នក\n• ការចូល និងគណនីរបស់អ្នក\n• ការទាញយក និងបោះពុម្ព\n\nសូមជ្រើសប្រធានបទខាងក្រោម ឬជជែកជាមួយក្រុមការងារ។',
+   opts:[['cs_how','របៀបដំណើរការ'],['cs_price','តម្លៃ'],['cs_design','ម៉ូដ និងគំរូ'],['cs_login','ការចូល និងគណនី'],['cs_print','ទាញយក និងបោះពុម្ព'],['contact','ទំនាក់ទំនង']]}},
+ caps:{en:'I can help you with:\n• How the service works\n• Prices and plans\n• Designs and your template\n• Login and your account\n• Downloading and printing\n\nJust type your question, or tap «Talk to Live Agent» to chat with our team.',km:'ខ្ញុំអាចជួយអ្នកអំពី៖\n• របៀបដែលសេវាកម្មដំណើរការ\n• តម្លៃ និងគម្រោង\n• ម៉ូដ និងគំរូរបស់អ្នក\n• ការចូល និងគណនីរបស់អ្នក\n• ការទាញយក និងបោះពុម្ព\n\nសូមវាយសំណួររបស់អ្នក ឬចុច «ជជែកជាមួយភ្នាក់ងារ» ដើម្បីជជែកជាមួយក្រុមការងារ។'},
+ A:{
+  cs_how:{en:'How Thean Card Studio works:\n1. Contact us and tell us about the cards you need.\n2. Send us your design file. We prepare your template so every text fits your frame.\n3. We give you a personal link, a username and a password.\n4. Log in, type the menu and date, check the live preview, then download a print-ready PDF, PNG or JPG.',
+          km:'របៀបដែល Thean Card Studio ដំណើរការ៖\n១. ទាក់ទងមកយើង ហើយប្រាប់អំពីកាតដែលអ្នកត្រូវការ។\n២. ផ្ញើឯកសារម៉ូដមកយើង។ យើងរៀបចំគំរូ ឱ្យអក្សរសមល្អក្នុងស៊ុម។\n៣. យើងផ្តល់តំណផ្ទាល់ខ្លួន ឈ្មោះអ្នកប្រើ និងពាក្យសម្ងាត់។\n៤. ចូលគណនី វាយមុខម្ហូប និងកាលបរិច្ឆេទ មើលជាមុន រួចទាញយក PDF, PNG ឬ JPG ត្រៀមបោះពុម្ព។'},
+  cs_price:{en:'Our price depends on your design and how long you need the service (for example 1, 3, 6 or 12 months). Talk to our team and we will give you a price for your project.',
+          km:'តម្លៃរបស់យើងអាស្រ័យលើម៉ូដរបស់អ្នក និងរយៈពេលដែលអ្នកត្រូវការសេវាកម្ម (ឧទាហរណ៍ ១, ៣, ៦ ឬ ១២ ខែ)។ សូមជជែកជាមួយក្រុមការងារ យើងនឹងផ្តល់តម្លៃសម្រាប់គម្រោងរបស់អ្នក។',live:true},
+  cs_design:{en:'We use your own design: your frame, pictures and colours stay exactly the same. Send us your file (CorelDRAW, Photoshop, Illustrator, PDF or a clear photo) and we set it up. You can have more than one design in your account.',
+          km:'យើងប្រើម៉ូដផ្ទាល់ខ្លួនរបស់អ្នក៖ ស៊ុម រូបភាព និងពណ៌ នៅដដែលទាំងស្រុង។ ផ្ញើឯកសារមកយើង (CorelDRAW, Photoshop, Illustrator, PDF ឬរូបថតច្បាស់) យើងនឹងរៀបចំឱ្យ។ គណនីរបស់អ្នកអាចមានម៉ូដច្រើនជាងមួយ។'},
+  cs_login:{en:'To log in, open your personal link or tap “Log in” at the top, then enter your username and password. The first time, you choose your own username and password. Forgot your password? Talk to our team with your account ID (for example CS-000101) and we will reset it.',
+          km:'ដើម្បីចូល សូមបើកតំណផ្ទាល់ខ្លួនរបស់អ្នក ឬចុច «ចូលគណនី» នៅខាងលើ រួចបញ្ចូលឈ្មោះអ្នកប្រើ និងពាក្យសម្ងាត់។ លើកដំបូង អ្នកជ្រើសឈ្មោះ និងពាក្យសម្ងាត់ផ្ទាល់ខ្លួន។ ភ្លេចពាក្យសម្ងាត់? សូមជជែកជាមួយក្រុមការងារ ដោយប្រាប់លេខគណនី (ឧ. CS-000101) យើងនឹងកំណត់ថ្មីជូន។'},
+  cs_print:{en:'Download tips:\n• PDF: best for printing. It is exactly A4 landscape with two cards per sheet.\n• PNG or JPG: 300 dpi pictures, good for printing or sending on Telegram.\nWhen printing, choose A4 landscape, “Actual size” or 100% (not “Fit”), then cut the sheet in the middle.',
+          km:'គន្លឹះទាញយក៖\n• PDF៖ ល្អបំផុតសម្រាប់បោះពុម្ព។ ទំហំ A4 ផ្តេក ពីរកាតក្នុងមួយសន្លឹក។\n• PNG ឬ JPG៖ រូបភាព 300 dpi សម្រាប់បោះពុម្ព ឬផ្ញើតាមតេឡេក្រាម។\nពេលបោះពុម្ព សូមជ្រើស A4 ផ្តេក «Actual size» ឬ 100% (មិនមែន «Fit») រួចកាត់កណ្តាលសន្លឹក។'},
+  cs_renew:{en:'Your service works during the period agreed with us. When it ends, you will see that your subscription has expired. Talk to our team to renew and we will extend your period.',
+          km:'សេវាកម្មរបស់អ្នកដំណើរការក្នុងរយៈពេលដែលបានព្រមព្រៀង។ នៅពេលផុតកំណត់ អ្នកនឹងឃើញថាការជាវបានផុតកំណត់។ សូមជជែកជាមួយក្រុមការងារ ដើម្បីបន្តរយៈពេល។',live:true}},
+ KW:[['cs_price',['price','cost','how much','fee','pay','plan','តម្លៃ','ថ្លៃ','ប៉ុន្មាន','បង់','លុយ']],['cs_renew',['renew','expire','expired','extend','subscription','ផុតកំណត់','បន្ត','ជាវ']],
+  ['cs_login',['login','log in','password','username','account','sign in','ពាក្យសម្ងាត់','ឈ្មោះអ្នកប្រើ','គណនី','ចូល']],['cs_print','print pdf png jpg download size a4 paper dpi បោះពុម្ព ទាញយក ក្រដាស'.split(' ')],
+  ['cs_design',['design','template','frame','font','logo','corel','photoshop','ម៉ូដ','គំរូ','ស៊ុម','ពុម្ព','ឡូហ្គោ']],['cs_how',['how','work','start','use','service','របៀប','ដំណើរការ','ចាប់ផ្តើម','សេវា','ប្រើ']]],
+ opt(key,lg){const a=this.A[key];return a?{text:a[lg]||a.en,live:!!a.live}:null},
+ bot(text,lg){const t=' '+String(text||'').toLowerCase()+' ';for(const [k,L] of this.KW){if(L.some(w=>w&&t.indexOf(w)>=0))return this.opt(k,lg)}
+  if(/hi|hello|hey|សួស្តី|ជំរាបសួរ/i.test(t))return null;
+  return {text:lg==='km'?'ខ្ញុំជាជំនួយការរបស់ Thean Card Studio។ ខ្ញុំអាចប្រាប់អំពីតម្លៃ ម៉ូដ ការចូល និងការបោះពុម្ព។ សម្រាប់សំណួរផ្សេងទៀត សូមជជែកជាមួយក្រុមការងារ។':'I am the Thean Card Studio assistant. I can tell you about prices, designs, login and printing. For anything else, please talk to our team.',live:true}},
+ who(){try{return window.CS_WHO?window.CS_WHO():{}}catch(e){return {}}}};
 window.CS_FB={"apiKey":"AIzaSyD9hhjSe53uha7jADGUOiWK-MLHOGoz6Pk","authDomain":"thean-12952.firebaseapp.com","projectId":"thean-12952","storageBucket":"thean-12952.firebasestorage.app","messagingSenderId":"1082546170540","appId":"1:1082546170540:web:71e42aaada4df363588d09","databaseURL":"https://thean-12952-default-rtdb.asia-southeast1.firebasedatabase.app"};
+window.THEAN_FIREBASE=window.CS_FB;
 </script>
 <script type="module">
 /* ================= Thean Card Studio ================= */
@@ -113,7 +145,7 @@ const TX={
   hContact:'Contact us for a price',hHow:'How it works',
   howT:'How it works',how:[['Contact us','Tell us about your business and the cards you need. We discuss the price and your design.'],['We prepare your template','Send us your design file. We set it up so every text fits perfectly in your frame.'],['Log in with your link','We send you a personal link, a username and a password. Your account is private.'],['Type, download, print','Type the menu and date, check the live preview, then download a PDF, PNG or JPG at the original print size.']],
   featT:'Why clients love it',feats:[['star','Your design, kept original','Frames, pictures and colours stay exactly like your design file.'],['bolt','Ready in one minute','Type the dishes, one per line. Numbers and layout are done for you.'],['print','Print quality','A4 at 300 dpi, two cards per sheet, in PDF, PNG or JPG.'],['lock','Private account','Only you can use your templates, with your own login.'],['globe','Khmer and English','The app works in both languages, on phone and computer.'],['heart','Support from our team','Chat with us on the website, Telegram or Messenger.']],
-  cT:'Interested? Talk to us',cText:'Prices depend on your design and how long you need the service. Contact us and we will reply quickly.',cWeb:'Chat on our website',cTg:'Telegram',cMs:'Messenger',cCall:'Call us',
+  cT:'Interested? Talk to us',cText:'Prices depend on your design and how long you need the service. Contact us and we will reply quickly.',cWeb:'Chat with us now',cTg:'Telegram',cMs:'Messenger',cCall:'Call us',
   have:'Already a client? Open the personal link we sent you.',
   loginT:'Log in to your account',acc:'Account ID',user:'Username',pw:'Password',show:'Show',hidePw:'Hide',login:'Log in',forgot:'Forgot your password? Contact us and we will reset it for you.',
   eFill:'Please enter your username and password.',eWrong:'The username or password is not correct.',eOther:'This login belongs to another account. Please use the link we sent you.',eNet:'Cannot connect. Please check your internet and try again.',eMany:'Too many tries. Please wait a few minutes and try again.',
@@ -131,7 +163,7 @@ const TX={
   hContact:'ទាក់ទងយើង ដើម្បីដឹងតម្លៃ',hHow:'របៀបប្រើ',
   howT:'របៀបដំណើរការ',how:[['ទាក់ទងមកយើង','ប្រាប់យើងអំពីអាជីវកម្ម និងកាតដែលអ្នកត្រូវការ។ យើងពិភាក្សាតម្លៃ និងម៉ូដរបស់អ្នក។'],['យើងរៀបចំម៉ូដរបស់អ្នក','ផ្ញើឯកសារម៉ូដមកយើង។ យើងរៀបចំឱ្យអក្សរគ្រប់កន្លែង សមល្អឥតខ្ចោះក្នុងស៊ុម។'],['ចូលតាមតំណរបស់អ្នក','យើងផ្ញើតំណផ្ទាល់ខ្លួន ឈ្មោះអ្នកប្រើ និងពាក្យសម្ងាត់។ គណនីរបស់អ្នកជាឯកជន។'],['វាយ ទាញយក បោះពុម្ព','វាយមុខម្ហូប និងកាលបរិច្ឆេទ មើលជាមុន រួចទាញយក PDF, PNG ឬ JPG តាមទំហំដើម។']],
   featT:'ហេតុអ្វីអតិថិជនចូលចិត្ត',feats:[['star','ម៉ូដដើមរបស់អ្នក','ស៊ុម រូបភាព និងពណ៌ នៅដដែលដូចឯកសារម៉ូដរបស់អ្នក។'],['bolt','រួចរាល់ក្នុងមួយនាទី','វាយមុខម្ហូប មួយបន្ទាត់ មួយមុខ។ លេខ និងការរៀបចំ ធ្វើឡើងដោយស្វ័យប្រវត្តិ។'],['print','គុណភាពបោះពុម្ព','ក្រដាស A4 គុណភាព 300 dpi ពីរកាតក្នុងមួយសន្លឹក ជា PDF, PNG ឬ JPG។'],['lock','គណនីឯកជន','មានតែអ្នកទេដែលអាចប្រើម៉ូដរបស់អ្នក ដោយការចូលផ្ទាល់ខ្លួន។'],['globe','ខ្មែរ និងអង់គ្លេស','កម្មវិធីប្រើបានទាំងពីរភាសា លើទូរស័ព្ទ និងកុំព្យូទ័រ។'],['heart','ក្រុមការងារជួយអ្នក','ជជែកជាមួយយើងលើគេហទំព័រ តេឡេក្រាម ឬ Messenger។']],
-  cT:'ចាប់អារម្មណ៍? និយាយជាមួយយើង',cText:'តម្លៃអាស្រ័យលើម៉ូដ និងរយៈពេលដែលអ្នកត្រូវការសេវាកម្ម។ ទាក់ទងមកយើង យើងនឹងឆ្លើយតបយ៉ាងឆាប់រហ័ស។',cWeb:'ជជែកលើគេហទំព័រ',cTg:'តេឡេក្រាម',cMs:'Messenger',cCall:'ទូរស័ព្ទមកយើង',
+  cT:'ចាប់អារម្មណ៍? និយាយជាមួយយើង',cText:'តម្លៃអាស្រ័យលើម៉ូដ និងរយៈពេលដែលអ្នកត្រូវការសេវាកម្ម។ ទាក់ទងមកយើង យើងនឹងឆ្លើយតបយ៉ាងឆាប់រហ័ស។',cWeb:'ជជែកជាមួយយើងឥឡូវនេះ',cTg:'តេឡេក្រាម',cMs:'Messenger',cCall:'ទូរស័ព្ទមកយើង',
   have:'ជាអតិថិជនរួចហើយ? សូមបើកតំណផ្ទាល់ខ្លួន ដែលយើងបានផ្ញើជូន។',
   loginT:'ចូលគណនីរបស់អ្នក',acc:'លេខគណនី',user:'ឈ្មោះអ្នកប្រើ',pw:'ពាក្យសម្ងាត់',show:'បង្ហាញ',hidePw:'លាក់',login:'ចូល',forgot:'ភ្លេចពាក្យសម្ងាត់? សូមទាក់ទងមកយើង យើងនឹងកំណត់ថ្មីជូន។',
   eFill:'សូមបញ្ចូលឈ្មោះអ្នកប្រើ និងពាក្យសម្ងាត់។',eWrong:'ឈ្មោះអ្នកប្រើ ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ។',eOther:'ការចូលនេះជារបស់គណនីផ្សេង។ សូមប្រើតំណដែលយើងបានផ្ញើជូន។',eNet:'មិនអាចភ្ជាប់បានទេ។ សូមពិនិត្យអ៊ីនធឺណិត ហើយសាកម្តងទៀត។',eMany:'ព្យាយាមច្រើនដងពេក។ សូមរង់ចាំបន្តិច ហើយសាកម្តងទៀត។',
@@ -157,14 +189,15 @@ let LINKS={messenger:'m.me/fb.thean',telegram:'t.me/tg_thean',email:'info@kongth
 const RTDB=window.CS_FB.databaseURL;
 fetch(RTDB+'/site/content/links.json').then(r=>r.ok?r.json():null).then(v=>{if(v&&typeof v==='object'){LINKS=Object.assign(LINKS,v);$$('[data-contacts]').forEach(e=>e.innerHTML=contactBtns(e.dataset.contacts))}}).catch(()=>{});
 const url=v=>{v=String(v||'').trim();return /^https?:/i.test(v)?v:'https://'+v.replace(/^\/+/,'')};
-function contactBtns(kind){const c=kind==='light'?'btn s':'btn y';const o=kind==='light'?'btn s':'btn o';let h='<a class="'+c+'" href="https://kongthean.com/?chat=1" target="_blank" rel="noopener">'+I('chat')+esc(t('cWeb'))+'</a>';
+function contactBtns(kind){const c=kind==='light'?'btn s':'btn y';const o=kind==='light'?'btn s':'btn o';let h='<button type="button" class="'+c+'" data-chat>'+I('chat')+esc(t('cWeb'))+'</button>';
   if(LINKS.telegram)h+='<a class="'+o+'" href="'+esc(url(LINKS.telegram))+'" target="_blank" rel="noopener">'+I('tg')+esc(t('cTg'))+'</a>';
   if(LINKS.messenger)h+='<a class="'+o+'" href="'+esc(url(LINKS.messenger))+'" target="_blank" rel="noopener">'+I('ms')+esc(t('cMs'))+'</a>';
   if(LINKS.phone)h+='<a class="'+o+'" href="tel:'+esc(String(LINKS.phone).replace(/[^0-9+]/g,''))+'">'+I('phone')+esc(t('cCall'))+'</a>';return h}
 /* ---------- top bar ---------- */
 function topbar(withMenu,pub){return '<header class="top"><a class="brand" href="/studio/card/'+(LINK_ID?'?c='+LINK_ID:'')+'"'+(withMenu?' data-go="home"':'')+'><img src="/logo.png" alt=""><span><b>THEAN CARD STUDIO</b><small>'+esc(t('brandSub'))+'</small></span></a><div class="lang"><button type="button" data-lg="km" class="'+(LG==='km'?'on':'')+'">ខ្មែរ</button><button type="button" data-lg="en" class="'+(LG==='en'?'on':'')+'">EN</button></div>'+(withMenu?'<button class="ib" type="button" data-drawer aria-label="'+esc(t('menu'))+'">'+I('menu')+'</button>':'')+(pub?'<a class="btn y sm" href="?login=1">'+I('user')+'<span class="lbt">'+esc(t('loginBtn'))+'</span></a>':'')+'</header>'}
 document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(!g)return;e.preventDefault();const v=g.dataset.go;if(v==='home')home();else if(v==='edit')editor();else if(v.indexOf('tpl:')===0)pickTpl(v.slice(4))});
-document.addEventListener('click',e=>{const b=e.target.closest('[data-lg]');if(b){LG=b.dataset.lg;try{localStorage.setItem('cs-lang',LG)}catch(x){}document.documentElement.lang=LG;rerender()}});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-lg]');if(b){LG=b.dataset.lg;try{localStorage.setItem('cs-lang',LG)}catch(x){}document.documentElement.lang=LG;rerender();document.dispatchEvent(new Event('thean:render'))}});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-chat]');if(b){e.preventDefault();const m=b.closest('.mo');if(m)m.remove();if(window.TheanChat)window.TheanChat.open()}});
 let rerender=()=>{};
 /* ---------- landing page ---------- */
 function landing(){document.documentElement.lang=LG;
@@ -326,7 +359,7 @@ function drawer(){const ov=document.createElement('div');ov.className='ov';const
     else if(k==='cu')changeUser();else if(k==='cp')changePw();
     else if(k==='contact')openModal(t('contact'),'<div class="cbtns" style="display:grid;gap:8px" data-contacts="light">'+contactBtns('light')+'</div><p class="note">'+esc(t('acc'))+': <b>'+esc(ccId(ID))+'</b>. '+esc(t('idTip'))+'</p>');
     else if(k==='cterms'||k==='cprivacy')showLegal(k);
-    else if(k==='lang'){LG=LG==='km'?'en':'km';try{localStorage.setItem('cs-lang',LG)}catch(x){}rerender()}
+    else if(k==='lang'){LG=LG==='km'?'en':'km';try{localStorage.setItem('cs-lang',LG)}catch(x){}rerender();document.dispatchEvent(new Event('thean:render'))}
     else if(k==='out'){fb().then(F=>F.A.signOut(F.auth))}})}
 function changeUser(){const m=openModal(t('chU'),'<form style="display:grid;gap:12px" novalidate><label class="f">'+esc(t('nUser'))+' <small>'+esc(t('nUserH'))+'</small><input name="u" autocapitalize="off" spellcheck="false" value="'+esc(CL.username||'')+'"></label><p class="err" data-err></p><button class="btn g" type="submit">'+esc(t('save'))+'</button></form>');const f=m.querySelector('form');
   f.onsubmit=async e=>{e.preventDefault();const err=f.querySelector('[data-err]');const u=normU(f.u.value);if(!/^[a-z0-9_-]{4,30}$/.test(u)){err.textContent=t('eUser');return}if(u===CL.username){m.remove();return}
@@ -350,7 +383,10 @@ async function start(){
         TPLS=reg.filter(x=>c.templates&&c.templates[x.id]);const want=DATA.__tpl&&TPLS.some(x=>x.id===DATA.__tpl)?DATA.__tpl:(TPLS[0]&&TPLS[0].id);TPL=null;if(want){try{TPL=await getTpl(want)}catch(e){}}}
       if(!LINK_ID){try{history.replaceState(null,'','?c='+ID)}catch(e){}}
       if(first||VIEW!=='edit')home();else editor();if(c.mustChange&&state(c)==='ok'&&!$('[data-first]'))firstView()},()=>{loginView(t('eNet'))})})}
+window.CS_LANG=()=>LG;
+window.CS_WHO=()=>CL&&ID?{name:(CL.name||'Client')+' · Card '+ccId(ID),contact:'@'+(CL.username||'')}:{};
 start();
 </script>
+<script type="module" src="chat.js"></script>
 </body>
 </html>
