@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="km">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Thean Card Studio · Menu cards for weddings and events</title>
+<meta name="description" content="Thean Card Studio: beautiful menu cards for weddings, ceremonies and events in Cambodia. Type your menu, download and print. កាតមុខម្ហូបសម្រាប់មង្គលការ និងពិធីផ្សេងៗ។">
+<meta property="og:title" content="Thean Card Studio">
+<meta property="og:description" content="Menu cards for weddings and events, ready to print. កាតមុខម្ហូបសម្រាប់មង្គលការ និងពិធីផ្សេងៗ ត្រៀមបោះពុម្ព។">
+<meta property="og:image" content="https://kongthean.com/studio/card/sample.jpg">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&family=Koulen&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f1ea;--surface:#fff;--ink:#17211b;--muted:#68706a;--line:#e3ddd0;--soft:#ece8df;--green:#163023;--green2:#1f4a35;--gold:#f3b11c;--red:#b3362f;--ok:#1d7a3d}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:'Kantumruy Pro',system-ui,-apple-system,sans-serif;line-height:1.55;-webkit-text-size-adjust:100%}
+a{color:inherit}button{font:inherit;color:inherit}
+.btn{border:0;border-radius:12px;padding:12px 18px;font-weight:700;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;line-height:1.2}
+.btn.g{background:var(--green);color:var(--gold)}.btn.y{background:var(--gold);color:var(--green)}.btn.o{background:transparent;border:1.5px solid currentColor}.btn.s{background:var(--soft);color:var(--ink)}.btn.sm{padding:8px 12px;font-size:13px;border-radius:10px}
+.btn:disabled{opacity:.55;cursor:default}
+svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+input,textarea,select{width:100%;font:inherit;font-size:15px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fbfaf7;color:var(--ink)}
+input:focus,textarea:focus{outline:2px solid rgba(243,177,28,.6);outline-offset:1px}
+label.f{display:grid;gap:5px;font-size:13.5px;font-weight:600;color:#3a4540}label.f small{font-weight:500;color:var(--muted);font-size:12px}
+.note{font-size:13px;color:var(--muted)}
+.lang{display:flex;border:1px solid rgba(255,255,255,.25);border-radius:99px;padding:3px;font-size:12.5px;font-weight:700}.lang button{border:0;background:none;padding:5px 11px;border-radius:99px;cursor:pointer;color:inherit}.lang button.on{background:var(--gold);color:var(--green)}
+.top{background:var(--green);color:#fff;padding:12px 18px;padding-top:calc(12px + env(safe-area-inset-top));display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex:1;min-width:0}.brand img{width:40px;height:40px;border-radius:50%;border:2px solid var(--gold);background:#0f2219;object-fit:cover}
+.brand b{font-family:Koulen,sans-serif;font-weight:400;font-size:20px;letter-spacing:.08em;display:block;line-height:1.05}.brand small{display:block;color:#cdbb86;font-size:11.5px;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ib{width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.1);color:#fff;display:grid;place-items:center;cursor:pointer}
+/* landing */
+.hero{background:radial-gradient(ellipse at 70% 0%,#2a5a40 0%,var(--green) 55%,#0f2219 100%);color:#fff;padding:48px 20px 56px}
+.hero .in{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:40px;align-items:center}
+.kick{color:var(--gold);font-weight:700;letter-spacing:.16em;font-size:12.5px;text-transform:uppercase}
+.hero h1{font-family:Koulen,'Kantumruy Pro',sans-serif;font-weight:400;font-size:46px;line-height:1.15;margin:10px 0 14px;letter-spacing:.02em}
+.hero p{color:#dfe8e2;font-size:17px;max-width:560px}.hero .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.hero .pic{background:#fff;border-radius:16px;padding:10px;box-shadow:0 24px 60px rgba(0,0,0,.35);transform:rotate(-1.5deg)}.hero .pic img{width:100%;display:block;border-radius:8px}
+.sec{max-width:1120px;margin:0 auto;padding:52px 20px}.sec h2{font-family:Koulen,'Kantumruy Pro',sans-serif;font-weight:400;font-size:32px;letter-spacing:.02em;line-height:1.2;margin:6px 0 20px}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.stp{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px}.stp i{font-style:normal;width:34px;height:34px;border-radius:50%;background:var(--green);color:var(--gold);display:grid;place-items:center;font-weight:700;margin-bottom:10px}.stp b{display:block;margin-bottom:4px}.stp p{color:var(--muted);font-size:14px}
+.feats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.ft{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;gap:12px}.ft .ic{width:42px;height:42px;border-radius:12px;background:#fff6dc;color:#9a6a00;display:grid;place-items:center;flex:none}.ft b{display:block}.ft p{color:var(--muted);font-size:14px}
+.contact{background:var(--green);color:#fff;border-radius:24px;padding:28px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center}.contact h2{color:#fff;margin:4px 0 6px}.contact p{color:#dfe8e2}.cbtns{display:flex;gap:10px;flex-wrap:wrap}
+.foot{text-align:center;color:var(--muted);font-size:13px;padding:24px 16px 40px}.foot a{color:var(--muted)}
+@media(max-width:900px){.hero .in{grid-template-columns:1fr}.hero h1{font-size:36px}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}.feats{grid-template-columns:1fr}.contact{grid-template-columns:1fr}}
+@media(max-width:520px){.hero{padding:32px 16px 40px}.hero h1{font-size:30px}.sec{padding:36px 16px}.steps{grid-template-columns:1fr}}
+/* auth */
+.authw{min-height:calc(100vh - 64px);display:grid;place-items:center;padding:24px 16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:24px;width:min(440px,100%);display:grid;gap:14px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+.card h2{font-size:22px;line-height:1.3}.err{color:var(--red);font-size:13.5px;min-height:1px}.ok{color:var(--ok)}
+.pwrow{position:relative}.pwrow button{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--muted);cursor:pointer;padding:6px;font-size:12px;font-weight:700}
+.idpill{display:inline-flex;gap:6px;align-items:center;background:var(--soft);border-radius:99px;padding:4px 12px;font-size:13px;font-weight:600}.idpill code{font-family:ui-monospace,Menlo,monospace}
+/* editor */
+.ed{display:grid;grid-template-columns:400px minmax(0,1fr);gap:20px;padding:20px;max-width:1440px;margin:0 auto}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px;display:grid;gap:14px;align-content:start}
+.step{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px}.step i{font-style:normal;width:26px;height:26px;border-radius:50%;background:var(--green);color:var(--gold);display:grid;place-items:center;font-size:13px;flex:none}
+.tpls{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}.tpls button{border:2px solid var(--line);border-radius:12px;padding:4px;background:#fff;cursor:pointer;text-align:center;font-size:12px;font-weight:600}.tpls button.on{border-color:var(--gold);box-shadow:0 0 0 3px rgba(243,177,28,.25)}.tpls img{width:100%;display:block;border-radius:8px;aspect-ratio:841/595;object-fit:cover;margin-bottom:4px}
+textarea.menu{min-height:230px;line-height:1.8;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+details.biz{border:1px dashed var(--line);border-radius:14px;padding:10px 12px}details.biz summary{cursor:pointer;font-weight:700;font-size:14px}details.biz[open] summary{margin-bottom:10px}details.biz .in{display:grid;gap:10px}
+.warn{background:#fff4dd;color:#8a5a00;border-radius:12px;padding:10px 12px;font-size:13.5px}
+.prev{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px;display:grid;gap:14px;align-content:start;position:sticky;top:84px}
+.prevbar{display:flex;align-items:center;gap:10px}.prevbar b{flex:1;font-size:15px}
+.sheet{background:#d9d6cf;border-radius:12px;padding:14px}.sheet canvas{width:100%;height:auto;display:block;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.dl{display:flex;gap:10px;flex-wrap:wrap}.saved{font-size:12.5px;color:var(--muted)}
+@media(max-width:960px){.ed{grid-template-columns:1fr;padding:14px}.prev{position:static;order:-1}}
+/* drawer & modal */
+.ov{position:fixed;inset:0;background:rgba(10,20,15,.5);z-index:50;display:flex;justify-content:flex-end}
+.drawer{background:var(--surface);width:min(380px,100%);height:100%;overflow:auto;padding:20px;padding-top:calc(20px + env(safe-area-inset-top));display:grid;gap:6px;align-content:start}
+.drawer .who{background:var(--soft);border-radius:16px;padding:14px;margin-bottom:8px}.drawer .who b{display:block;font-size:16px}.drawer .who small{display:block;color:var(--muted)}
+.mi{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:12px 10px;border-radius:12px;cursor:pointer;text-align:left;font-size:15px;font-weight:600;text-decoration:none}.mi:hover{background:var(--soft)}.mi.red{color:var(--red)}
+.mo{position:fixed;inset:0;background:rgba(10,20,15,.55);z-index:60;display:grid;place-items:center;padding:16px}
+.mo .box{background:var(--surface);border-radius:20px;width:min(560px,100%);max-height:88vh;overflow:auto;padding:20px;display:grid;gap:12px}
+.mo .hd{display:flex;align-items:center;gap:10px}.mo .hd h3{flex:1;font-size:18px}.mo .x{border:0;background:var(--soft);width:36px;height:36px;border-radius:50%;cursor:pointer}
+.legal h4{margin-top:10px}.legal p{margin:4px 0}.legal li{margin-left:20px}
+.end{max-width:520px;text-align:center}.end .ic{width:64px;height:64px;border-radius:50%;background:#fde4e1;color:var(--red);display:grid;place-items:center;margin:0 auto}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--green);color:#fff;padding:10px 16px;border-radius:12px;z-index:90;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+window.CS_FB={"apiKey":"AIzaSyD9hhjSe53uha7jADGUOiWK-MLHOGoz6Pk","authDomain":"thean-12952.firebaseapp.com","projectId":"thean-12952","storageBucket":"thean-12952.firebasestorage.app","messagingSenderId":"1082546170540","appId":"1:1082546170540:web:71e42aaada4df363588d09","databaseURL":"https://thean-12952-default-rtdb.asia-southeast1.firebasedatabase.app"};
+</script>
+<script type="module">
+/* ================= Thean Card Studio ================= */
+const SDK='https://www.gstatic.com/firebasejs/10.12.2/';
+const $=(s,r)=>(r||document).querySelector(s),$$=(s,r)=>[...(r||document).querySelectorAll(s)];
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const IC={menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3"/>',chat:'<path d="M4 5h16v11H8l-4 4z"/>',tg:'<path d="M21 4.2L2.8 11.2l5.6 2L18 7.4l-7.4 7.2.3 5.2 3-3.6 4.7 3.6z"/>',ms:'<path d="M12 3C7 3 3 6.7 3 11.4c0 2.6 1.2 4.9 3.3 6.4V21l3.1-1.7c.8.2 1.7.3 2.6.3 5 0 9-3.6 9-8.2S17 3 12 3z"/>',phone:'<path d="M5 3h4l2 5-3 2a12 12 0 006 6l2-3 5 2v4a2 2 0 01-2 2A17 17 0 013 5a2 2 0 012-2z"/>',doc:'<path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h8M9 17h8"/>',lock:'<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/>',out:'<path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/>',dl:'<path d="M12 3v12M7 10l5 5 5-5M4 21h16"/>',print:'<path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M8 14h8v7H8z"/>',x:'<path d="M6 6l12 12M18 6L6 18"/>',check:'<path d="M5 12.5l4.2 4.2L19 7"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.4 2.5 3.7 5.5 3.7 9s-1.3 6.5-3.7 9c-2.4-2.5-3.7-5.5-3.7-9S9.6 5.5 12 3z"/>',card:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h10M7 17h6"/>',star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/>',bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',heart:'<path d="M12 20s-7-4.4-9-9a5 5 0 019-3 5 5 0 019 3c-2 4.6-9 9-9 9z"/>'};
+const I=n=>'<svg class="i" viewBox="0 0 24 24">'+(IC[n]||'')+'</svg>';
+let LG=(()=>{try{return localStorage.getItem('cs-lang')||'km'}catch(e){return 'km'}})();
+const TX={
+ en:{brandSub:'Menu cards for weddings and events',menu:'Menu',
+  hKick:'Thean Card Studio',hTitle:'Beautiful menu cards, ready to print',hText:'Your own card design, kept exactly as it is. Just type the menu and the date, see it instantly, and download a print-ready file for weddings, ceremonies and every event.',
+  hContact:'Contact us for a price',hHow:'How it works',
+  howT:'How it works',how:[['Contact us','Tell us about your business and the cards you need. We discuss the price and your design.'],['We prepare your template','Send us your design file. We set it up so every text fits perfectly in your frame.'],['Log in with your link','We send you a personal link, a username and a password. Your account is private.'],['Type, download, print','Type the menu and date, check the live preview, then download a PDF, PNG or JPG at the original print size.']],
+  featT:'Why clients love it',feats:[['star','Your design, kept original','Frames, pictures and colours stay exactly like your design file.'],['bolt','Ready in one minute','Type the dishes, one per line. Numbers and layout are done for you.'],['print','Print quality','A4 at 300 dpi, two cards per sheet, in PDF, PNG or JPG.'],['lock','Private account','Only you can use your templates, with your own login.'],['globe','Khmer and English','The app works in both languages, on phone and computer.'],['heart','Support from our team','Chat with us on the website, Telegram or Messenger.']],
+  cT:'Interested? Talk to us',cText:'Prices depend on your design and how long you need the service. Contact us and we will reply quickly.',cWeb:'Chat on our website',cTg:'Telegram',cMs:'Messenger',cCall:'Call us',
+  have:'Already a client? Open the personal link we sent you.',
+  loginT:'Log in to your account',acc:'Account ID',user:'Username',pw:'Password',show:'Show',hidePw:'Hide',login:'Log in',forgot:'Forgot your password? Contact us and we will reset it for you.',
+  eFill:'Please enter your username and password.',eWrong:'The username or password is not correct.',eOther:'This login belongs to another account. Please use the link we sent you.',eNet:'Cannot connect. Please check your internet and try again.',eMany:'Too many tries. Please wait a few minutes and try again.',
+  firstT:'Welcome! Please set your own login',firstText:'For your safety, choose a new username and password before you start.',nUser:'New username',nUserH:'4 to 30 letters or numbers, - and _',nPw:'New password',nPwH:'At least 8 characters',nPw2:'Type the new password again',save:'Save and continue',
+  eUser:'Username: use 4 to 30 letters, numbers, - or _.',eTaken:'This username is already used. Please choose another one.',ePw:'The password must have at least 8 characters.',ePw2:'The two passwords are not the same.',
+  expT:'Subscription expired',exp:'Your subscription has been expired, please contact customer service for support. Thank you!',offT:'Service paused',soonT:'Your service starts soon',soon:'Your service starts on {d}. Please come back then, or contact us.',
+  s1:'Choose a design',s2:'Type the menu',s3:'Download for printing',biz:'Business details',preview:'Live preview',sheetInfo:'Original size: A4 landscape 297 × 210 mm, 300 dpi. Two cards per sheet.',
+  pdf:'PDF (print)',png:'PNG',jpg:'JPG',print:'Print',saving:'Saving…',saved:'Saved',making:'Preparing file…',done:'Downloaded',
+  wMany:'Too many dishes for this card ({n}). The text was made smaller to fit. For the best result, use {max} dishes or fewer.',wLong:'Some lines are long, so they were made a little smaller to fit inside the frame.',
+  noTpl:'No design is set for your account yet. Please contact us.',
+  account:'My account',period:'Service period',until:'Active until {d}',chU:'Change username',chP:'Change password',curPw:'Current password',contact:'Contact us',terms:'Terms of use',privacy:'Privacy policy',lang:'ភាសាខ្មែរ',logout:'Log out',
+  uDone:'Username changed',pDone:'Password changed',eCur:'The current password is not correct.',close:'Close',idTip:'Give this ID to our team if you need help.',hello:'Hello'},
+ km:{brandSub:'កាតមុខម្ហូបសម្រាប់មង្គលការ និងពិធីផ្សេងៗ',menu:'ម៉ឺនុយ',
+  hKick:'Thean Card Studio',hTitle:'កាតមុខម្ហូបដ៏ស្រស់ស្អាត ត្រៀមបោះពុម្ព',hText:'ម៉ូដកាតផ្ទាល់ខ្លួនរបស់អ្នក រក្សាទុកដដែលទាំងស្រុង។ គ្រាន់តែវាយមុខម្ហូប និងកាលបរិច្ឆេទ មើលភ្លាមៗ ហើយទាញយកឯកសារត្រៀមបោះពុម្ព សម្រាប់មង្គលការ ពិធីបុណ្យ និងគ្រប់កម្មវិធី។',
+  hContact:'ទាក់ទងយើង ដើម្បីដឹងតម្លៃ',hHow:'របៀបប្រើ',
+  howT:'របៀបដំណើរការ',how:[['ទាក់ទងមកយើង','ប្រាប់យើងអំពីអាជីវកម្ម និងកាតដែលអ្នកត្រូវការ។ យើងពិភាក្សាតម្លៃ និងម៉ូដរបស់អ្នក។'],['យើងរៀបចំម៉ូដរបស់អ្នក','ផ្ញើឯកសារម៉ូដមកយើង។ យើងរៀបចំឱ្យអក្សរគ្រប់កន្លែង សមល្អឥតខ្ចោះក្នុងស៊ុម។'],['ចូលតាមតំណរបស់អ្នក','យើងផ្ញើតំណផ្ទាល់ខ្លួន ឈ្មោះអ្នកប្រើ និងពាក្យសម្ងាត់។ គណនីរបស់អ្នកជាឯកជន។'],['វាយ ទាញយក បោះពុម្ព','វាយមុខម្ហូប និងកាលបរិច្ឆេទ មើលជាមុន រួចទាញយក PDF, PNG ឬ JPG តាមទំហំដើម។']],
+  featT:'ហេតុអ្វីអតិថិជនចូលចិត្ត',feats:[['star','ម៉ូដដើមរបស់អ្នក','ស៊ុម រូបភាព និងពណ៌ នៅដដែលដូចឯកសារម៉ូដរបស់អ្នក។'],['bolt','រួចរាល់ក្នុងមួយនាទី','វាយមុខម្ហូប មួយបន្ទាត់ មួយមុខ។ លេខ និងការរៀបចំ ធ្វើឡើងដោយស្វ័យប្រវត្តិ។'],['print','គុណភាពបោះពុម្ព','ក្រដាស A4 គុណភាព 300 dpi ពីរកាតក្នុងមួយសន្លឹក ជា PDF, PNG ឬ JPG។'],['lock','គណនីឯកជន','មានតែអ្នកទេដែលអាចប្រើម៉ូដរបស់អ្នក ដោយការចូលផ្ទាល់ខ្លួន។'],['globe','ខ្មែរ និងអង់គ្លេស','កម្មវិធីប្រើបានទាំងពីរភាសា លើទូរស័ព្ទ និងកុំព្យូទ័រ។'],['heart','ក្រុមការងារជួយអ្នក','ជជែកជាមួយយើងលើគេហទំព័រ តេឡេក្រាម ឬ Messenger។']],
+  cT:'ចាប់អារម្មណ៍? និយាយជាមួយយើង',cText:'តម្លៃអាស្រ័យលើម៉ូដ និងរយៈពេលដែលអ្នកត្រូវការសេវាកម្ម។ ទាក់ទងមកយើង យើងនឹងឆ្លើយតបយ៉ាងឆាប់រហ័ស។',cWeb:'ជជែកលើគេហទំព័រ',cTg:'តេឡេក្រាម',cMs:'Messenger',cCall:'ទូរស័ព្ទមកយើង',
+  have:'ជាអតិថិជនរួចហើយ? សូមបើកតំណផ្ទាល់ខ្លួន ដែលយើងបានផ្ញើជូន។',
+  loginT:'ចូលគណនីរបស់អ្នក',acc:'លេខគណនី',user:'ឈ្មោះអ្នកប្រើ',pw:'ពាក្យសម្ងាត់',show:'បង្ហាញ',hidePw:'លាក់',login:'ចូល',forgot:'ភ្លេចពាក្យសម្ងាត់? សូមទាក់ទងមកយើង យើងនឹងកំណត់ថ្មីជូន។',
+  eFill:'សូមបញ្ចូលឈ្មោះអ្នកប្រើ និងពាក្យសម្ងាត់។',eWrong:'ឈ្មោះអ្នកប្រើ ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ។',eOther:'ការចូលនេះជារបស់គណនីផ្សេង។ សូមប្រើតំណដែលយើងបានផ្ញើជូន។',eNet:'មិនអាចភ្ជាប់បានទេ។ សូមពិនិត្យអ៊ីនធឺណិត ហើយសាកម្តងទៀត។',eMany:'ព្យាយាមច្រើនដងពេក។ សូមរង់ចាំបន្តិច ហើយសាកម្តងទៀត។',
+  firstT:'សូមស្វាគមន៍! សូមកំណត់ការចូលរបស់អ្នក',firstText:'ដើម្បីសុវត្ថិភាព សូមជ្រើសឈ្មោះអ្នកប្រើ និងពាក្យសម្ងាត់ថ្មី មុនពេលចាប់ផ្តើម។',nUser:'ឈ្មោះអ្នកប្រើថ្មី',nUserH:'អក្សរ ឬលេខ ៤ ទៅ ៣០ តួ, - និង _',nPw:'ពាក្យសម្ងាត់ថ្មី',nPwH:'យ៉ាងតិច ៨ តួ',nPw2:'វាយពាក្យសម្ងាត់ថ្មីម្តងទៀត',save:'រក្សាទុក ហើយបន្ត',
+  eUser:'ឈ្មោះអ្នកប្រើ៖ ប្រើអក្សរ លេខ - ឬ _ ពី ៤ ទៅ ៣០ តួ។',eTaken:'ឈ្មោះអ្នកប្រើនេះមានគេប្រើហើយ។ សូមជ្រើសឈ្មោះផ្សេង។',ePw:'ពាក្យសម្ងាត់ត្រូវមានយ៉ាងតិច ៨ តួ។',ePw2:'ពាក្យសម្ងាត់ទាំងពីរមិនដូចគ្នា។',
+  expT:'ការជាវបានផុតកំណត់',exp:'ការជាវរបស់អ្នកបានផុតកំណត់ហើយ សូមទាក់ទងផ្នែកសេវាអតិថិជន ដើម្បីទទួលបានជំនួយ។ សូមអរគុណ!',offT:'សេវាកម្មបានផ្អាក',soonT:'សេវាកម្មរបស់អ្នកនឹងចាប់ផ្តើមឆាប់ៗ',soon:'សេវាកម្មរបស់អ្នកចាប់ផ្តើមនៅថ្ងៃ {d}។ សូមត្រឡប់មកវិញនៅពេលនោះ ឬទាក់ទងមកយើង។',
+  s1:'ជ្រើសរើសម៉ូដ',s2:'វាយមុខម្ហូប',s3:'ទាញយកសម្រាប់បោះពុម្ព',biz:'ព័ត៌មានអាជីវកម្ម',preview:'មើលជាមុន',sheetInfo:'ទំហំដើម៖ A4 ផ្តេក ២៩៧ × ២១០ ម.ម, 300 dpi។ ពីរកាតក្នុងមួយសន្លឹក។',
+  pdf:'PDF (បោះពុម្ព)',png:'PNG',jpg:'JPG',print:'បោះពុម្ព',saving:'កំពុងរក្សាទុក…',saved:'បានរក្សាទុក',making:'កំពុងរៀបចំឯកសារ…',done:'បានទាញយក',
+  wMany:'មុខម្ហូបច្រើនពេកសម្រាប់កាតនេះ ({n})។ អក្សរត្រូវបានបង្រួម ដើម្បីឱ្យសម។ ដើម្បីលទ្ធផលល្អបំផុត សូមប្រើ {max} មុខ ឬតិចជាងនេះ។',wLong:'បន្ទាត់ខ្លះវែង ដូច្នេះត្រូវបានបង្រួមបន្តិច ដើម្បីឱ្យនៅក្នុងស៊ុម។',
+  noTpl:'គណនីរបស់អ្នកមិនទាន់មានម៉ូដនៅឡើយ។ សូមទាក់ទងមកយើង។',
+  account:'គណនីរបស់ខ្ញុំ',period:'រយៈពេលសេវាកម្ម',until:'ប្រើបានដល់ {d}',chU:'ប្តូរឈ្មោះអ្នកប្រើ',chP:'ប្តូរពាក្យសម្ងាត់',curPw:'ពាក្យសម្ងាត់បច្ចុប្បន្ន',contact:'ទាក់ទងយើង',terms:'លក្ខខណ្ឌប្រើប្រាស់',privacy:'គោលការណ៍ឯកជនភាព',lang:'English',logout:'ចាកចេញ',
+  uDone:'បានប្តូរឈ្មោះអ្នកប្រើ',pDone:'បានប្តូរពាក្យសម្ងាត់',eCur:'ពាក្យសម្ងាត់បច្ចុប្បន្នមិនត្រឹមត្រូវ។',close:'បិទ',idTip:'ផ្តល់លេខនេះដល់ក្រុមការងារ ប្រសិនបើអ្នកត្រូវការជំនួយ។',hello:'សួស្តី'}};
+const t=k=>(TX[LG]&&TX[LG][k]!=null?TX[LG][k]:TX.en[k]);
+const KN=n=>String(n).replace(/\d/g,d=>'០១២៣៤៥៦៧៨៩'[d]);
+const fmtD=ms=>{if(!ms)return '—';const d=new Date(ms);return ('0'+d.getDate()).slice(-2)+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+d.getFullYear()};
+const ccId=id=>String(id||'').replace(/^([A-Z]+)(\d+)$/,'$1-$2');
+const normId=v=>String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+const normU=v=>String(v||'').trim().toLowerCase();
+function toast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),2800)}
+const params=new URLSearchParams(location.search);const LINK_ID=normId(params.get('c'));
+/* ---------- contacts (from the website settings) ---------- */
+let LINKS={messenger:'m.me/fb.thean',telegram:'t.me/tg_thean',email:'info@kongthean.com',phone:''};
+const RTDB=window.CS_FB.databaseURL;
+fetch(RTDB+'/site/content/links.json').then(r=>r.ok?r.json():null).then(v=>{if(v&&typeof v==='object'){LINKS=Object.assign(LINKS,v);$$('[data-contacts]').forEach(e=>e.innerHTML=contactBtns(e.dataset.contacts))}}).catch(()=>{});
+const url=v=>{v=String(v||'').trim();return /^https?:/i.test(v)?v:'https://'+v.replace(/^\/+/,'')};
+function contactBtns(kind){const c=kind==='light'?'btn s':'btn y';const o=kind==='light'?'btn s':'btn o';let h='<a class="'+c+'" href="https://kongthean.com/?chat=1" target="_blank" rel="noopener">'+I('chat')+esc(t('cWeb'))+'</a>';
+  if(LINKS.telegram)h+='<a class="'+o+'" href="'+esc(url(LINKS.telegram))+'" target="_blank" rel="noopener">'+I('tg')+esc(t('cTg'))+'</a>';
+  if(LINKS.messenger)h+='<a class="'+o+'" href="'+esc(url(LINKS.messenger))+'" target="_blank" rel="noopener">'+I('ms')+esc(t('cMs'))+'</a>';
+  if(LINKS.phone)h+='<a class="'+o+'" href="tel:'+esc(String(LINKS.phone).replace(/[^0-9+]/g,''))+'">'+I('phone')+esc(t('cCall'))+'</a>';return h}
+/* ---------- top bar ---------- */
+function topbar(withMenu){return '<header class="top"><a class="brand" href="/studio/card/'+(LINK_ID?'?c='+LINK_ID:'')+'"><img src="/logo.png" alt=""><span><b>THEAN CARD STUDIO</b><small>'+esc(t('brandSub'))+'</small></span></a><div class="lang"><button type="button" data-lg="km" class="'+(LG==='km'?'on':'')+'">ខ្មែរ</button><button type="button" data-lg="en" class="'+(LG==='en'?'on':'')+'">EN</button></div>'+(withMenu?'<button class="ib" type="button" data-drawer aria-label="'+esc(t('menu'))+'">'+I('menu')+'</button>':'')+'</header>'}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-lg]');if(b){LG=b.dataset.lg;try{localStorage.setItem('cs-lang',LG)}catch(x){}document.documentElement.lang=LG;rerender()}});
+let rerender=()=>{};
+/* ---------- landing page ---------- */
+function landing(){document.documentElement.lang=LG;
+  $('#app').innerHTML=topbar(false)+
+  '<section class="hero"><div class="in"><div><div class="kick">'+esc(t('hKick'))+'</div><h1>'+esc(t('hTitle'))+'</h1><p>'+esc(t('hText'))+'</p><div class="cta"><a class="btn y" href="#contact">'+I('chat')+esc(t('hContact'))+'</a><a class="btn o" href="#how">'+esc(t('hHow'))+'</a></div></div><div class="pic"><img src="sample.jpg" alt="Menu card sample" onerror="this.parentNode.style.display=\'none\'"></div></div></section>'+
+  '<section class="sec" id="how"><div class="kick" style="color:#9a6a00">'+esc(t('hHow'))+'</div><h2>'+esc(t('howT'))+'</h2><div class="steps">'+t('how').map((s,i)=>'<div class="stp"><i>'+(LG==='km'?KN(i+1):i+1)+'</i><b>'+esc(s[0])+'</b><p>'+esc(s[1])+'</p></div>').join('')+'</div></section>'+
+  '<section class="sec" style="padding-top:0"><h2>'+esc(t('featT'))+'</h2><div class="feats">'+t('feats').map(f=>'<div class="ft"><span class="ic">'+I(f[0])+'</span><div><b>'+esc(f[1])+'</b><p>'+esc(f[2])+'</p></div></div>').join('')+'</div></section>'+
+  '<section class="sec" id="contact" style="padding-top:0"><div class="contact"><div><div class="kick">'+esc(t('hContact'))+'</div><h2>'+esc(t('cT'))+'</h2><p>'+esc(t('cText'))+'</p></div><div class="cbtns" data-contacts="dark">'+contactBtns('dark')+'</div></div><p class="note" style="text-align:center;margin-top:18px">'+esc(t('have'))+'</p></section>'+
+  '<footer class="foot">© '+new Date().getFullYear()+' Thean · <a href="/">kongthean.com</a> · <a href="#" data-legal="cterms">'+esc(t('terms'))+'</a> · <a href="#" data-legal="cprivacy">'+esc(t('privacy'))+'</a></footer>';
+}
+/* ---------- legal texts (editable in Admin → Terms & Privacy) ---------- */
+const LEGAL_DEF={cterms:{"en":{"title":"Terms of Use · Thean Card Studio","intro":"These terms apply to Thean Card Studio, the menu card service provided by the Thean team (kongthean.com). By logging in and using the service, you agree to them.","sections":[["Your account",["We create your account after we agree on your project. Keep your username and password private. You are responsible for what is done with your account.",["Change the starting password the first time you log in."],["Tell us at once if you think someone else knows your password."]]],["Service period",["You can use the service during the period agreed with us. When the period ends, the account stops working until it is renewed. We may pause an account that is used against these terms."]],["Your designs and texts",["Your card designs stay yours. You must have the right to use every picture, logo and text you send us. We use your files only to prepare and run your templates."]],["Files you download",["You may print and share the cards you make for your own business and events. You check every text before printing. We are not responsible for printing costs caused by mistakes in the text you typed."]],["Fair use",["Do not try to copy the app, share your login with other businesses, or use the service for anything unlawful."]],["Changes and contact",["We may update these terms and the service. The date of the latest update is shown here. For any question, contact our customer service."]]]},"km":{"title":"លក្ខខណ្ឌប្រើប្រាស់ · Thean Card Studio","intro":"លក្ខខណ្ឌទាំងនេះអនុវត្តចំពោះ Thean Card Studio ដែលជាសេវាកាតមុខម្ហូប ផ្តល់ដោយក្រុមការងារ Thean (kongthean.com)។ ដោយការចូល និងប្រើសេវាកម្ម អ្នកយល់ព្រមតាមលក្ខខណ្ឌទាំងនេះ។","sections":[["គណនីរបស់អ្នក",["យើងបង្កើតគណនីរបស់អ្នក បន្ទាប់ពីយើងបានព្រមព្រៀងលើគម្រោង។ សូមរក្សាឈ្មោះអ្នកប្រើ និងពាក្យសម្ងាត់ជាការសម្ងាត់។ អ្នកទទួលខុសត្រូវចំពោះអ្វីដែលធ្វើឡើងតាមគណនីរបស់អ្នក។",["ប្តូរពាក្យសម្ងាត់ដំបូង នៅពេលចូលលើកដំបូង។"],["ប្រាប់យើងភ្លាមៗ ប្រសិនបើអ្នកគិតថាមានអ្នកផ្សេងដឹងពាក្យសម្ងាត់របស់អ្នក។"]]],["រយៈពេលសេវាកម្ម",["អ្នកអាចប្រើសេវាកម្មក្នុងរយៈពេលដែលបានព្រមព្រៀងជាមួយយើង។ នៅពេលផុតកំណត់ គណនីនឹងឈប់ដំណើរការរហូតដល់ការបន្ត។ យើងអាចផ្អាកគណនី ដែលប្រើប្រាស់ផ្ទុយនឹងលក្ខខណ្ឌទាំងនេះ។"]],["ម៉ូដ និងអត្ថបទរបស់អ្នក",["ម៉ូដកាតរបស់អ្នក នៅតែជារបស់អ្នក។ អ្នកត្រូវមានសិទ្ធិប្រើរូបភាព ឡូហ្គោ និងអត្ថបទទាំងអស់ដែលអ្នកផ្ញើមកយើង។ យើងប្រើឯកសាររបស់អ្នក សម្រាប់តែរៀបចំ និងដំណើរការម៉ូដរបស់អ្នកប៉ុណ្ណោះ។"]],["ឯកសារដែលអ្នកទាញយក",["អ្នកអាចបោះពុម្ព និងចែករំលែកកាតដែលអ្នកបង្កើត សម្រាប់អាជីវកម្ម និងកម្មវិធីរបស់អ្នក។ អ្នកពិនិត្យរាល់អត្ថបទមុនពេលបោះពុម្ព។ យើងមិនទទួលខុសត្រូវចំពោះថ្លៃបោះពុម្ព ដែលកើតពីកំហុសក្នុងអត្ថបទដែលអ្នកវាយនោះទេ។"]],["ការប្រើប្រាស់ត្រឹមត្រូវ",["សូមកុំព្យាយាមចម្លងកម្មវិធី ចែករំលែកការចូលជាមួយអាជីវកម្មផ្សេង ឬប្រើសេវាកម្មសម្រាប់អ្វីដែលខុសច្បាប់។"]],["ការផ្លាស់ប្តូរ និងទំនាក់ទំនង",["យើងអាចធ្វើបច្ចុប្បន្នភាពលក្ខខណ្ឌ និងសេវាកម្មនេះ។ សម្រាប់សំណួរណាមួយ សូមទាក់ទងផ្នែកសេវាអតិថិជនរបស់យើង។"]]]}},cprivacy:{"en":{"title":"Privacy Policy · Thean Card Studio","intro":"We keep only the information needed to run your account and your cards.","sections":[["What we keep",[["Your account ID, username and service period."],["The business details and menu texts you type, so you can continue later."],["A simple record of when you download a card."],"We never see or keep your password."]],["How we use it",["Only to run the service, help you when you contact us, and prepare your templates. We do not sell your information or use it for advertising."]],["Who can see it",["You and our team. Your templates and texts are private to your account."]],["Your choices",["You can ask us to change or delete your information at any time by contacting customer service."]]]},"km":{"title":"គោលការណ៍ឯកជនភាព · Thean Card Studio","intro":"យើងរក្សាទុកតែព័ត៌មានដែលចាំបាច់ សម្រាប់ដំណើរការគណនី និងកាតរបស់អ្នកប៉ុណ្ណោះ។","sections":[["អ្វីដែលយើងរក្សាទុក",[["លេខគណនី ឈ្មោះអ្នកប្រើ និងរយៈពេលសេវាកម្ម។"],["ព័ត៌មានអាជីវកម្ម និងមុខម្ហូបដែលអ្នកវាយ ដើម្បីឱ្យអ្នកបន្តពេលក្រោយ។"],["កំណត់ត្រាសាមញ្ញ នៃពេលដែលអ្នកទាញយកកាត។"],"យើងមិនដែលឃើញ ឬរក្សាទុកពាក្យសម្ងាត់របស់អ្នកឡើយ។"]],["របៀបដែលយើងប្រើ",["សម្រាប់តែដំណើរការសេវាកម្ម ជួយអ្នកនៅពេលអ្នកទាក់ទងមក និងរៀបចំម៉ូដរបស់អ្នកប៉ុណ្ណោះ។ យើងមិនលក់ព័ត៌មានរបស់អ្នក ឬប្រើសម្រាប់ការផ្សាយពាណិជ្ជកម្មឡើយ។"]],["អ្នកណាអាចមើលឃើញ",["អ្នក និងក្រុមការងាររបស់យើង។ ម៉ូដ និងអត្ថបទរបស់អ្នក ជាឯកជនសម្រាប់គណនីរបស់អ្នក។"]],["ជម្រើសរបស់អ្នក",["អ្នកអាចស្នើឱ្យយើងកែប្រែ ឬលុបព័ត៌មានរបស់អ្នកបានគ្រប់ពេល ដោយទាក់ទងផ្នែកសេវាអតិថិជន។"]]]}}};
+let LEGALX=null;fetch(RTDB+'/site/content/legal.json').then(r=>r.ok?r.json():null).then(v=>{LEGALX=v||{}}).catch(()=>{});
+function legalDoc(k){const o=LEGALX&&LEGALX[k],x=o&&o[LG]&&o[LG].title?o[LG]:LEGAL_DEF[k][LG];return {d:x,up:o&&o.up}}
+function showLegal(k){const L=legalDoc(k),D=L.d;let h='<div class="legal"><p>'+esc(D.intro||'')+'</p>';(D.sections||[]).forEach(s=>{h+='<h4>'+esc(s[0])+'</h4>';let ul=false;(s[1]||[]).forEach(p=>{if(Array.isArray(p)||/^- /.test(p)){if(!ul){h+='<ul>';ul=true}(Array.isArray(p)?p:[p.slice(2)]).forEach(x=>{h+='<li>'+esc(x)+'</li>'})}else{if(ul){h+='</ul>';ul=false}h+='<p>'+esc(p)+'</p>'}});if(ul)h+='</ul>'});
+  if(L.up)h+='<p class="note" style="margin-top:12px">'+(LG==='km'?'ធ្វើបច្ចុប្បន្នភាពចុងក្រោយ៖ ':'Last updated: ')+esc(fmtD(L.up))+'</p>';openModal(D.title,h+'</div>')}
+document.addEventListener('click',e=>{const a=e.target.closest('[data-legal]');if(a){e.preventDefault();showLegal(a.dataset.legal)}});
+function openModal(title,body,keep){const m=document.createElement('div');m.className='mo';m.innerHTML='<div class="box" role="dialog" aria-modal="true"><div class="hd"><h3>'+esc(title)+'</h3><button class="x" type="button" data-x aria-label="'+esc(t('close'))+'">'+I('x')+'</button></div>'+body+'</div>';document.body.appendChild(m);
+  if(!keep)m.addEventListener('click',e=>{if(e.target===m||e.target.closest('[data-x]'))m.remove()});else{const x=m.querySelector('[data-x]');if(x)x.remove()}return m}
+/* ---------- Firebase ---------- */
+let FB=null;
+async function fb(){if(FB)return FB;const [app,au,d]=await Promise.all([import(SDK+'firebase-app.js'),import(SDK+'firebase-auth.js'),import(SDK+'firebase-database.js')]);
+  const a=app.initializeApp(window.CS_FB,'cards');const db=d.getDatabase(a,window.CS_FB.databaseURL);const R=p=>d.ref(db,p);
+  FB={A:au,auth:au.getAuth(a),get:async p=>{const s=await d.get(R(p));return s.exists()?s.val():null},set:(p,v)=>d.set(R(p),v),update:(p,v)=>d.update(R(p),v),push:(p,v)=>d.push(R(p),v),on:(p,cb,er)=>d.onValue(R(p),s=>cb(s.exists()?s.val():null),er||(()=>{})),now:()=>d.serverTimestamp()};return FB}
+let ID=null,CL=null,USER=null,DATA={},TPLS=[],TPL=null,offCl=null;
+function emailFor(id,gen){return id.toLowerCase()+'.'+gen+'@card.kongthean.com'}
+function state(c){const n=Date.now();if(!c||!c.active)return 'off';if(c.start&&n<c.start)return 'soon';if(!c.end||n>c.end)return 'exp';return 'ok'}
+/* ---------- login ---------- */
+function loginView(msg){document.documentElement.lang=LG;
+  $('#app').innerHTML=topbar(false)+'<div class="authw"><form class="card" data-login novalidate><div><span class="idpill">'+esc(t('acc'))+' <code>'+esc(ccId(LINK_ID))+'</code></span></div><h2>'+esc(t('loginT'))+'</h2>'+
+  '<label class="f">'+esc(t('user'))+'<input name="u" autocomplete="username" autocapitalize="off" spellcheck="false"></label>'+
+  '<label class="f">'+esc(t('pw'))+'<span class="pwrow"><input name="p" type="password" autocomplete="current-password"><button type="button" data-eye>'+esc(t('show'))+'</button></span></label>'+
+  '<p class="err" data-err>'+esc(msg||'')+'</p><button class="btn g" type="submit">'+esc(t('login'))+'</button><p class="note">'+esc(t('forgot'))+'</p><div class="cbtns" data-contacts="light">'+contactBtns('light')+'</div></form></div>';
+  const f=$('[data-login]');$('[data-eye]').onclick=function(){const p=f.p;p.type=p.type==='password'?'text':'password';this.textContent=p.type==='password'?t('show'):t('hidePw')};
+  f.onsubmit=async e=>{e.preventDefault();const err=$('[data-err]'),btn=f.querySelector('[type=submit]');const u=normU(f.u.value),p=f.p.value;if(!u||!p){err.textContent=t('eFill');return}
+    btn.disabled=true;err.textContent='';try{const F=await fb();const id=await F.get('cards/usernames/'+u.replace(/[.#$\[\]\/]/g,''));if(!id){err.textContent=t('eWrong');btn.disabled=false;return}
+      if(LINK_ID&&id!==LINK_ID){err.textContent=t('eOther');btn.disabled=false;return}
+      const gen=(await F.get('cards/login/'+id))||1;await F.A.signInWithEmailAndPassword(F.auth,emailFor(id,gen),p);}
+    catch(x){btn.disabled=false;const c=x&&x.code||'';err.textContent=/too-many/.test(c)?t('eMany'):/network/.test(c)?t('eNet'):t('eWrong')}};
+}
+/* ---------- first login: set own username + password ---------- */
+function firstView(){const m=openModal(t('firstT'),'<p class="note" style="margin-top:-4px">'+esc(t('firstText'))+'</p><form data-first novalidate style="display:grid;gap:12px">'+
+  '<label class="f">'+esc(t('nUser'))+' <small>'+esc(t('nUserH'))+'</small><input name="u" autocapitalize="off" spellcheck="false" value="'+esc(CL.username||'')+'"></label>'+
+  '<label class="f">'+esc(t('nPw'))+' <small>'+esc(t('nPwH'))+'</small><input name="p" type="password" autocomplete="new-password"></label>'+
+  '<label class="f">'+esc(t('nPw2'))+'<input name="p2" type="password" autocomplete="new-password"></label><p class="err" data-err></p><button class="btn g" type="submit">'+esc(t('save'))+'</button></form>',true);
+  const f=m.querySelector('form');
+  f.onsubmit=async e=>{e.preventDefault();const err=f.querySelector('[data-err]'),btn=f.querySelector('[type=submit]');const u=normU(f.u.value),p=f.p.value,p2=f.p2.value;
+    if(!/^[a-z0-9_-]{4,30}$/.test(u)){err.textContent=t('eUser');return}if(p.length<8){err.textContent=t('ePw');return}if(p!==p2){err.textContent=t('ePw2');return}
+    btn.disabled=true;err.textContent='';try{const F=await fb();
+      if(u!==CL.username){const cur=await F.get('cards/usernames/'+u);if(cur&&cur!==ID){err.textContent=t('eTaken');btn.disabled=false;return}}
+      await F.A.updatePassword(F.auth.currentUser||USER,p);
+      if(u!==CL.username){const up={['usernames/'+u]:ID,['clients/'+ID+'/username']:u};if(CL.username)up['usernames/'+CL.username]=null;await F.update('cards',up)}
+      await F.set('cards/clients/'+ID+'/mustChange',false);m.remove();toast(LG==='km'?'រួចរាល់! សូមចាប់ផ្តើមប្រើ':'Done! You can start now')}
+    catch(x){btn.disabled=false;err.textContent=(x&&x.code)==='auth/requires-recent-login'?t('eWrong'):String(x&&(x.code||x.message)||'Error')}}}
+/* ---------- service ended / paused ---------- */
+function endView(st){const title=st==='soon'?t('soonT'):st==='off'?t('offT'):t('expT');const msg=st==='soon'?t('soon').replace('{d}',fmtD(CL&&CL.start)):t('exp');
+  $('#app').innerHTML=topbar(true)+'<div class="authw"><div class="card end"><div class="ic">'+I('clock')+'</div><h2>'+esc(title)+'</h2><p>'+esc(msg)+'</p><p><span class="idpill">'+esc(t('acc'))+' <code>'+esc(ccId(ID))+'</code></span></p><div class="cbtns" style="justify-content:center" data-contacts="light">'+contactBtns('light')+'</div></div></div>'}
+/* ---------- templates + drawing ---------- */
+const FONTS={};
+async function loadFonts(T){const L=[];for(const k in T.fonts){const f=T.fonts[k];if(f.url&&!FONTS[f.family]){const ff=new FontFace(f.family,'url('+f.url+')');FONTS[f.family]=ff.load().then(x=>{document.fonts.add(x);return x}).catch(()=>null)}if(FONTS[f.family])L.push(FONTS[f.family])}await Promise.all(L)}
+const BG={};function loadBg(T){if(!BG[T.id])BG[T.id]=new Promise(r=>{const im=new Image();im.onload=()=>r(im);im.onerror=()=>r(null);im.src='t/'+T.id+'/'+T.bg});return BG[T.id]}
+async function getTpl(id){const r=await fetch('t/'+id+'/template.json',{cache:'no-cache'});if(!r.ok)throw new Error('template');return r.json()}
+function fam(T,k){const f=T.fonts[k]||T.fonts.text;return /,/.test(f.family)?f.family:'"'+f.family+'"'}
+function vals(){const v={};(TPL.fields||[]).forEach(f=>{const x=DATA[f.k];v[f.k]=(x==null?f.def:x)});return v}
+function fmtDate(v,f){if(!v)return '';const p=String(v).split('-');if(p.length!==3)return v;return p[2]+'-'+p[1]+'-'+p[0]}
+/* draws the full sheet; s = pixels per point. Returns warnings. */
+function drawSheet(ctx,T,V,s,bg){const W=T.sheet.w*s,H=T.sheet.h*s;ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);if(bg)ctx.drawImage(bg,0,0,W,H);const warn={long:false,many:0,max:0};
+  ctx.textBaseline='alphabetic';
+  const fit=(txt,font,size,maxw)=>{ctx.font=size*s+'px '+font;const w=ctx.measureText(txt).width;if(maxw&&w>maxw*s){const ns=size*maxw*s/w;if(ns<size*.8)warn.long=true;ctx.font=ns*s+'px '+font;return ns}return size};
+  (T.cards||[0]).forEach(ox=>{T.slots.forEach(sl=>{let txt=V[sl.k];if(txt==null)return;const font=fam(T,sl.font);
+    if(sl.t==='list'){const items=String(txt).split('\n').map(x=>x.trim()).filter(Boolean);const room=sl.maxy-sl.y;let step=sl.step,size=sl.size;const max=Math.floor(room/sl.minstep)+1,ideal=Math.floor(room/sl.step)+1;warn.max=ideal;
+      if(items.length>ideal){step=Math.max(sl.minstep,room/(items.length-1));size=sl.size*step/sl.step;if(items.length>max){warn.many=items.length;step=room/(items.length-1);size=sl.size*step/sl.step}}
+      ctx.fillStyle=sl.color;ctx.textAlign='left';items.forEach((it,i)=>{const y=(sl.y+i*step)*s;const num=(sl.num==='km'?KN(i+1):String(i+1))+'.';ctx.font=size*s+'px '+font;ctx.fillText(num,(ox+sl.x)*s,y);const sz=fit(it,font,size,sl.maxw-sl.gap);ctx.fillText(it,(ox+sl.x+sl.gap*size/sl.size)*s,y)});return}
+    if(sl.t==='date')txt=fmtDate(txt,sl.format);txt=String(txt).replace(/\n/g,' ');if(!txt)return;
+    const size=fit(txt,font,sl.size,sl.maxw);ctx.textAlign=sl.align||'left';const x=(ox+sl.x)*s,y=sl.y*s;
+    if(sl.color==='rainbow'){const C=sl.colors||['#e8262b','#1e9b45','#1d6fd1'];const chars=[...txt];const clusters=[];chars.forEach(ch=>{if(clusters.length&&/[឴-៓៝‌‍]/.test(ch))clusters[clusters.length-1]+=ch;else clusters.push(ch)});
+      const total=ctx.measureText(txt).width;let cx=sl.align==='center'?x-total/2:sl.align==='right'?x-total:x;ctx.textAlign='left';let ci=0,acc='';
+      clusters.forEach(cl=>{const before=ctx.measureText(acc).width;acc+=cl;ctx.fillStyle=cl.trim()?C[ci++%C.length]:'#000';if(cl.trim()){ctx.save();ctx.beginPath();const a=ctx.measureText(acc).width;ctx.rect(cx+before,y-size*s*1.6,a-before+1,size*s*2.4);ctx.clip();ctx.fillText(txt,cx,y);ctx.restore()}})}
+    else{ctx.fillStyle=sl.color;ctx.fillText(txt,x,y)}})});
+  return warn}
+/* ---------- main editor ---------- */
+let saveT=null;
+function editor(){document.documentElement.lang=LG;const st=state(CL);if(st!=='ok'){endView(st);return}
+  const lab=f=>f[LG]||f.en;const ev=(TPL?TPL.fields:[]).filter(f=>f.g!=='biz'),bz=(TPL?TPL.fields:[]).filter(f=>f.g==='biz');
+  const field=f=>{const v=DATA[f.k]==null?f.def:DATA[f.k];if(f.t==='list')return '<label class="f">'+esc(lab(f))+(LG==='km'?' <small>លេខត្រូវបានបន្ថែមដោយស្វ័យប្រវត្តិ</small>':' <small>Numbers are added for you</small>')+'<textarea class="menu" data-f="'+f.k+'">'+esc(v)+'</textarea></label>';
+    if(f.t==='date')return '<label class="f">'+esc(lab(f))+'<input type="date" data-f="'+f.k+'" value="'+esc(v||'')+'"></label>';return '<label class="f">'+esc(lab(f))+'<input data-f="'+f.k+'" value="'+esc(v)+'"></label>'};
+  const sm=ev.filter(f=>f.t!=='list');
+  $('#app').innerHTML=topbar(true)+'<div class="ed"><div class="panel">'+
+   '<div class="step"><i>'+(LG==='km'?'១':'1')+'</i>'+esc(t('s1'))+'</div><div class="tpls">'+TPLS.map(x=>'<button type="button" data-tpl="'+esc(x.id)+'" class="'+(TPL&&x.id===TPL.id?'on':'')+'"><img alt="" src="t/'+esc(x.id)+'/'+esc(x.thumb||'thumb.jpg')+'">'+esc(x.title&&x.title[LG]||x.title||x.id)+'</button>').join('')+'</div>'+
+   (TPL?'<div class="step"><i>'+(LG==='km'?'២':'2')+'</i>'+esc(t('s2'))+'</div>'+ev.filter(f=>f.t==='list').map(field).join('')+(sm.length?'<div class="row2">'+sm.map(field).join('')+'</div>':'')+
+   '<div class="warn hide" data-warn></div>'+(bz.length?'<details class="biz"><summary>'+esc(t('biz'))+'</summary><div class="in">'+bz.map(field).join('')+'</div></details>':'')+'<p class="saved" data-saved></p>':'<p class="warn">'+esc(t('noTpl'))+'</p>')+
+   '</div><div class="prev"><div class="prevbar"><b>'+esc(t('preview'))+'</b></div><div class="sheet"><canvas data-cv width="1400" height="990"></canvas></div>'+
+   '<div class="step"><i>'+(LG==='km'?'៣':'3')+'</i>'+esc(t('s3'))+'</div><div class="dl"><button class="btn g" type="button" data-dl="pdf">'+I('dl')+esc(t('pdf'))+'</button><button class="btn y" type="button" data-dl="png">'+I('dl')+esc(t('png'))+'</button><button class="btn o" type="button" data-dl="jpg">'+I('dl')+esc(t('jpg'))+'</button><button class="btn s" type="button" data-dl="print">'+I('print')+esc(t('print'))+'</button></div><p class="note">'+esc(t('sheetInfo'))+'</p></div></div>';
+  $$('[data-f]').forEach(el=>el.addEventListener('input',()=>{DATA[el.dataset.f]=el.value;preview();queueSave()}));
+  $$('[data-tpl]').forEach(b=>b.onclick=()=>pickTpl(b.dataset.tpl));
+  $$('[data-dl]').forEach(b=>b.onclick=()=>download(b.dataset.dl,b));
+  preview()}
+async function preview(){const cv=$('[data-cv]');if(!cv||!TPL)return;const s=cv.width/TPL.sheet.w;cv.height=Math.round(TPL.sheet.h*s);const bg=await loadBg(TPL);await loadFonts(TPL);const w=drawSheet(cv.getContext('2d'),TPL,vals(),s,bg);
+  const box=$('[data-warn]');if(box){const m=w.many?t('wMany').replace('{n}',w.many).replace('{max}',w.max):w.long?t('wLong'):'';box.textContent=m;box.classList.toggle('hide',!m)}}
+function queueSave(){const e=$('[data-saved]');if(e)e.textContent=t('saving');clearTimeout(saveT);saveT=setTimeout(async()=>{try{const F=await fb();await F.set('cards/data/'+ID+'/fields',DATA);if(e)e.textContent=t('saved')}catch(x){if(e)e.textContent=''}},900)}
+async function pickTpl(id){try{TPL=await getTpl(id);DATA.__tpl=id;queueSave()}catch(e){toast('Error')}editor()}
+async function renderFull(){const s=TPL.sheet.dpi/72;const c=document.createElement('canvas');c.width=Math.round(TPL.sheet.w*s);c.height=Math.round(TPL.sheet.h*s);await loadFonts(TPL);drawSheet(c.getContext('2d'),TPL,vals(),s,await loadBg(TPL));return c}
+function fname(ext){const d=DATA.date||new Date().toISOString().slice(0,10);return 'menu-card-'+d+'.'+ext}
+function saveBlob(b,n){const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000)}
+/* a one-page PDF with the full-size JPEG, page size = the template sheet (no outside library) */
+async function makePdf(canvas,wpt,hpt){const jb=new Uint8Array(await (await new Promise(r=>canvas.toBlob(r,'image/jpeg',.96))).arrayBuffer());const enc=new TextEncoder();const parts=[],offs=[];let len=0;
+  const add=x=>{const b=typeof x==='string'?enc.encode(x):x;parts.push(b);len+=b.length};const obj=(n,body)=>{offs[n]=len;add(n+' 0 obj\n');body();add('\nendobj\n')};
+  const W=wpt.toFixed(2),H=hpt.toFixed(2),cs='q '+W+' 0 0 '+H+' 0 0 cm /Im0 Do Q';
+  add('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n');
+  obj(1,()=>add('<< /Type /Catalog /Pages 2 0 R >>'));obj(2,()=>add('<< /Type /Pages /Kids [3 0 R] /Count 1 >>'));
+  obj(3,()=>add('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+W+' '+H+'] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>'));
+  obj(4,()=>{add('<< /Type /XObject /Subtype /Image /Width '+canvas.width+' /Height '+canvas.height+' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length '+jb.length+' >>\nstream\n');add(jb);add('\nendstream')});
+  obj(5,()=>add('<< /Length '+cs.length+' >>\nstream\n'+cs+'\nendstream'));
+  const x=len;add('xref\n0 6\n0000000000 65535 f \n'+[1,2,3,4,5].map(n=>String(offs[n]).padStart(10,'0')+' 00000 n \n').join('')+'trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n'+x+'\n%%EOF');
+  return new Blob(parts,{type:'application/pdf'})}
+async function download(kind,btn){const old=btn.innerHTML;btn.disabled=true;btn.textContent=t('making');
+  try{const c=await renderFull();
+    if(kind==='png'){const b=await new Promise(r=>c.toBlob(r,'image/png'));saveBlob(b,fname('png'))}
+    else if(kind==='jpg'){const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.95));saveBlob(b,fname('jpg'))}
+    else if(kind==='pdf'){saveBlob(await makePdf(c,TPL.sheet.w,TPL.sheet.h),fname('pdf'))}
+    else{const u=c.toDataURL('image/jpeg',.96);const w=window.open('','_blank');if(w){const mm=TPL.sheet.mm;w.document.write('<!doctype html><title>Print</title><style>@page{size:'+mm[0]+'mm '+mm[1]+'mm;margin:0}html,body{margin:0}img{width:'+mm[0]+'mm;height:'+mm[1]+'mm;display:block}</style><img src="'+u+'" onload="setTimeout(function(){print()},300)">');w.document.close()}}
+    toast(t('done'));fb().then(F=>F.push('cards/log/'+ID,{at:F.now(),tpl:TPL.id,type:kind})).catch(()=>{})}
+  catch(e){toast(String(e&&e.message||e))}finally{btn.disabled=false;btn.innerHTML=old}}
+/* ---------- drawer menu ---------- */
+document.addEventListener('click',e=>{if(e.target.closest('[data-drawer]'))drawer()});
+function drawer(){const ov=document.createElement('div');ov.className='ov';const st=state(CL);
+  ov.innerHTML='<nav class="drawer"><div class="who"><small>'+esc(t('hello'))+'</small><b>'+esc(CL&&CL.name||'')+'</b><small>@'+esc(CL&&CL.username||'')+'</small><small style="margin-top:6px">'+esc(t('acc'))+': <b style="display:inline;font-size:14px">'+esc(ccId(ID))+'</b></small><small>'+esc(t('period'))+': '+esc(fmtD(CL&&CL.start))+' → '+esc(fmtD(CL&&CL.end))+'</small><small class="'+(st==='ok'?'ok':'err')+'">'+esc(st==='ok'?t('until').replace('{d}',fmtD(CL.end)):st==='soon'?t('soonT'):t('expT'))+'</small></div>'+
+   '<button class="mi" data-m="acct">'+I('user')+esc(t('account'))+'</button><button class="mi" data-m="cu">'+I('user')+esc(t('chU'))+'</button><button class="mi" data-m="cp">'+I('key')+esc(t('chP'))+'</button><button class="mi" data-m="contact">'+I('chat')+esc(t('contact'))+'</button><button class="mi" data-m="cterms">'+I('doc')+esc(t('terms'))+'</button><button class="mi" data-m="cprivacy">'+I('lock')+esc(t('privacy'))+'</button><button class="mi" data-m="lang">'+I('globe')+esc(t('lang'))+'</button><button class="mi red" data-m="out">'+I('out')+esc(t('logout'))+'</button></nav>';
+  document.body.appendChild(ov);ov.addEventListener('click',e=>{if(e.target===ov){ov.remove();return}const b=e.target.closest('[data-m]');if(!b)return;const k=b.dataset.m;ov.remove();
+    if(k==='acct')openModal(t('account'),'<div class="who" style="background:var(--soft);border-radius:14px;padding:14px;display:grid;gap:4px"><b>'+esc(CL.name||'')+'</b><span>'+esc(t('acc'))+': <b>'+esc(ccId(ID))+'</b></span><span>'+esc(t('user'))+': <b>@'+esc(CL.username||'')+'</b></span><span>'+esc(t('period'))+': '+esc(fmtD(CL.start))+' → '+esc(fmtD(CL.end))+'</span></div><p class="note">'+esc(t('idTip'))+'</p>');
+    else if(k==='cu')changeUser();else if(k==='cp')changePw();
+    else if(k==='contact')openModal(t('contact'),'<div class="cbtns" style="display:grid;gap:8px" data-contacts="light">'+contactBtns('light')+'</div><p class="note">'+esc(t('acc'))+': <b>'+esc(ccId(ID))+'</b>. '+esc(t('idTip'))+'</p>');
+    else if(k==='cterms'||k==='cprivacy')showLegal(k);
+    else if(k==='lang'){LG=LG==='km'?'en':'km';try{localStorage.setItem('cs-lang',LG)}catch(x){}rerender()}
+    else if(k==='out'){fb().then(F=>F.A.signOut(F.auth))}})}
+function changeUser(){const m=openModal(t('chU'),'<form style="display:grid;gap:12px" novalidate><label class="f">'+esc(t('nUser'))+' <small>'+esc(t('nUserH'))+'</small><input name="u" autocapitalize="off" spellcheck="false" value="'+esc(CL.username||'')+'"></label><p class="err" data-err></p><button class="btn g" type="submit">'+esc(t('save'))+'</button></form>');const f=m.querySelector('form');
+  f.onsubmit=async e=>{e.preventDefault();const err=f.querySelector('[data-err]');const u=normU(f.u.value);if(!/^[a-z0-9_-]{4,30}$/.test(u)){err.textContent=t('eUser');return}if(u===CL.username){m.remove();return}
+    try{const F=await fb();const cur=await F.get('cards/usernames/'+u);if(cur&&cur!==ID){err.textContent=t('eTaken');return}const up={['usernames/'+u]:ID,['clients/'+ID+'/username']:u};if(CL.username)up['usernames/'+CL.username]=null;await F.update('cards',up);m.remove();toast(t('uDone'))}catch(x){err.textContent=String(x&&(x.code||x.message))}}}
+function changePw(){const m=openModal(t('chP'),'<form style="display:grid;gap:12px" novalidate><label class="f">'+esc(t('curPw'))+'<input name="c" type="password" autocomplete="current-password"></label><label class="f">'+esc(t('nPw'))+' <small>'+esc(t('nPwH'))+'</small><input name="p" type="password" autocomplete="new-password"></label><label class="f">'+esc(t('nPw2'))+'<input name="p2" type="password" autocomplete="new-password"></label><p class="err" data-err></p><button class="btn g" type="submit">'+esc(t('save'))+'</button></form>');const f=m.querySelector('form');
+  f.onsubmit=async e=>{e.preventDefault();const err=f.querySelector('[data-err]');if(f.p.value.length<8){err.textContent=t('ePw');return}if(f.p.value!==f.p2.value){err.textContent=t('ePw2');return}
+    try{const F=await fb();const u=F.auth.currentUser||USER;await F.A.reauthenticateWithCredential(u,F.A.EmailAuthProvider.credential(u.email,f.c.value));await F.A.updatePassword(u,f.p.value);m.remove();toast(t('pDone'))}catch(x){err.textContent=/invalid|wrong/.test(x&&x.code||'')?t('eCur'):String(x&&(x.code||x.message))}}}
+/* ---------- start ---------- */
+async function start(){
+  if(!LINK_ID){rerender=landing;landing();return}
+  rerender=()=>{if(!USER)loginView();else if(!CL)return;else editor()};
+  $('#app').innerHTML=topbar(false)+'<div class="authw"><p class="note">…</p></div>';
+  let F;try{F=await fb()}catch(e){loginView(t('eNet'));return}
+  F.A.onAuthStateChanged(F.auth,async u=>{if(offCl){offCl();offCl=null}USER=u;CL=null;
+    if(!u||u.isAnonymous){loginView();return}
+    try{ID=await F.get('cards/uids/'+u.uid)}catch(e){ID=null}
+    if(!ID||(LINK_ID&&ID!==LINK_ID)){await F.A.signOut(F.auth);loginView(t('eOther'));return}
+    offCl=F.on('cards/clients/'+ID,async c=>{const first=!CL;CL=c;if(!c){loginView();return}
+      if(first){F.set('cards/clients/'+ID+'/lastSeen',Date.now()).catch(()=>{});try{DATA=(await F.get('cards/data/'+ID+'/fields'))||{}}catch(e){DATA={}}
+        let reg=[];try{reg=await (await fetch('t/index.json',{cache:'no-cache'})).json()}catch(e){}
+        TPLS=reg.filter(x=>c.templates&&c.templates[x.id]);const want=DATA.__tpl&&TPLS.some(x=>x.id===DATA.__tpl)?DATA.__tpl:(TPLS[0]&&TPLS[0].id);TPL=null;if(want){try{TPL=await getTpl(want)}catch(e){}}}
+      editor();if(c.mustChange&&state(c)==='ok'&&!$('[data-first]'))firstView()},()=>{loginView(t('eNet'))})})}
+start();
+</script>
+</body>
+</html>
