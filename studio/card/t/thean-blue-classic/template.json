@@ -1,11 +1,11 @@
 {
   "id": "thean-blue-classic",
   "title": {
-    "en": "Blue classic frame (3 per sheet)",
-    "km": "ស៊ុមខៀវបុរាណ (៣ សន្លឹក)"
+    "en": "Blue classic frame",
+    "km": "ស៊ុមខៀវបុរាណ"
   },
   "client": "",
-  "note": "Frame from Thean design. 3 cards (99 mm wide) on A4 landscape.",
+  "note": "Frame from Thean design. 2 cards (A5) on A4 landscape.",
   "sheet": {
     "w": 841.89,
     "h": 595.28,
@@ -19,8 +19,7 @@
   "thumb": "thumb.jpg",
   "cards": [
     0,
-    280.63,
-    561.26
+    420.945
   ],
   "fonts": {
     "title": {
@@ -101,78 +100,78 @@
   "slots": [
     {
       "k": "name",
-      "x": 140.315,
-      "y": 151.24767857142854,
-      "size": 19,
+      "x": 210.47,
+      "y": 112,
+      "size": 22,
       "font": "title",
       "align": "center",
-      "maxw": 215,
+      "maxw": 290,
       "color": "#a0601c"
     },
     {
       "k": "svc",
-      "x": 140.315,
-      "y": 174.24767857142854,
-      "size": 9.5,
+      "x": 210.47,
+      "y": 137,
+      "size": 11,
       "font": "text",
       "align": "center",
-      "maxw": 215,
+      "maxw": 310,
       "color": "#33389a"
     },
     {
       "k": "addr",
-      "x": 140.315,
-      "y": 189.24767857142854,
-      "size": 9,
+      "x": 210.47,
+      "y": 154,
+      "size": 10.5,
       "font": "text",
       "align": "center",
-      "maxw": 215,
+      "maxw": 310,
       "color": "#33389a"
     },
     {
       "k": "tel",
-      "x": 140.315,
-      "y": 207.24767857142854,
-      "size": 11,
+      "x": 210.47,
+      "y": 175,
+      "size": 13,
       "font": "latin",
       "align": "center",
-      "maxw": 215,
+      "maxw": 310,
       "color": "#a0601c"
     },
     {
       "k": "menu",
       "t": "list",
-      "x": 38,
-      "gap": 20,
-      "y": 236.24767857142854,
-      "step": 22,
-      "size": 12,
-      "minstep": 16.5,
-      "maxy": 431.24767857142854,
+      "x": 60,
+      "gap": 23,
+      "y": 212,
+      "step": 25,
+      "size": 14,
+      "minstep": 18,
+      "maxy": 458,
       "font": "menu",
       "align": "left",
-      "maxw": 205,
+      "maxw": 300,
       "color": "#2b2f86",
       "num": "km"
     },
     {
       "k": "closing",
-      "x": 140.315,
-      "y": 456.25,
-      "size": 11,
+      "x": 210.47,
+      "y": 500,
+      "size": 13,
       "font": "title",
       "align": "center",
-      "maxw": 170,
+      "maxw": 230,
       "color": "#a0601c"
     },
     {
       "k": "date",
-      "x": 140.315,
-      "y": 483.24767857142854,
-      "size": 10.5,
+      "x": 210.47,
+      "y": 526,
+      "size": 12,
       "font": "latin",
       "align": "center",
-      "maxw": 120,
+      "maxw": 150,
       "color": "#33389a",
       "t": "date",
       "format": "dd-mm-yyyy"

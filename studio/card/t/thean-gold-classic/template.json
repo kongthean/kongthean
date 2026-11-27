@@ -1,11 +1,11 @@
 {
   "id": "thean-gold-classic",
   "title": {
-    "en": "Gold classic frame (3 per sheet)",
-    "km": "ស៊ុមមាសបុរាណ (៣ សន្លឹក)"
+    "en": "Gold classic frame",
+    "km": "ស៊ុមមាសបុរាណ"
   },
   "client": "",
-  "note": "Frame from Thean design. 3 cards (99 mm wide) on A4 landscape.",
+  "note": "Frame from Thean design. 2 cards (A5) on A4 landscape.",
   "sheet": {
     "w": 841.89,
     "h": 595.28,
@@ -19,8 +19,7 @@
   "thumb": "thumb.jpg",
   "cards": [
     0,
-    280.63,
-    561.26
+    420.945
   ],
   "fonts": {
     "title": {
@@ -101,78 +100,78 @@
   "slots": [
     {
       "k": "name",
-      "x": 140.315,
-      "y": 103.45199570815447,
-      "size": 20,
+      "x": 210.47,
+      "y": 100,
+      "size": 24,
       "font": "title",
       "align": "center",
-      "maxw": 200,
+      "maxw": 300,
       "color": "#9a5a1f"
     },
     {
       "k": "svc",
-      "x": 140.315,
-      "y": 127.45199570815447,
-      "size": 9.5,
+      "x": 210.47,
+      "y": 128,
+      "size": 11,
       "font": "text",
       "align": "center",
-      "maxw": 210,
+      "maxw": 310,
       "color": "#6a4420"
     },
     {
       "k": "addr",
-      "x": 140.315,
-      "y": 143.45199570815447,
-      "size": 9,
+      "x": 210.47,
+      "y": 146,
+      "size": 10.5,
       "font": "text",
       "align": "center",
-      "maxw": 210,
+      "maxw": 310,
       "color": "#6a4420"
     },
     {
       "k": "tel",
-      "x": 140.315,
-      "y": 162.45199570815447,
-      "size": 11,
+      "x": 210.47,
+      "y": 168,
+      "size": 13,
       "font": "latin",
       "align": "center",
-      "maxw": 210,
+      "maxw": 310,
       "color": "#9a5a1f"
     },
     {
       "k": "menu",
       "t": "list",
-      "x": 40,
-      "gap": 20,
-      "y": 194.45199570815447,
-      "step": 23,
-      "size": 12,
-      "minstep": 17,
-      "maxy": 438.45199570815447,
+      "x": 62,
+      "gap": 23,
+      "y": 208,
+      "step": 26,
+      "size": 14,
+      "minstep": 19,
+      "maxy": 470,
       "font": "menu",
       "align": "left",
-      "maxw": 200,
+      "maxw": 300,
       "color": "#5a3516",
       "num": "km"
     },
     {
       "k": "closing",
-      "x": 140.315,
-      "y": 480.45199570815447,
-      "size": 11,
+      "x": 210.47,
+      "y": 518,
+      "size": 13,
       "font": "title",
       "align": "center",
-      "maxw": 200,
+      "maxw": 300,
       "color": "#9a5a1f"
     },
     {
       "k": "date",
-      "x": 140.315,
-      "y": 503.45199570815447,
-      "size": 11,
+      "x": 210.47,
+      "y": 546,
+      "size": 13,
       "font": "latin",
       "align": "center",
-      "maxw": 150,
+      "maxw": 200,
       "color": "#9a5a1f",
       "t": "date",
       "format": "dd-mm-yyyy"

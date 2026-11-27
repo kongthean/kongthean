@@ -36,69 +36,6 @@
     "thumb": "thumb.jpg"
   },
   {
-    "id": "thean-modern-pink",
-    "title": {
-      "en": "Modern pink flowers",
-      "km": "ផ្កាពណ៌ផ្កាឈូក"
-    },
-    "client": "",
-    "thumb": "thumb.jpg"
-  },
-  {
-    "id": "thean-modern-purple",
-    "title": {
-      "en": "Modern purple flowers",
-      "km": "ផ្កាពណ៌ស្វាយ"
-    },
-    "client": "",
-    "thumb": "thumb.jpg"
-  },
-  {
-    "id": "thean-khmer-lotus",
-    "title": {
-      "en": "Khmer gold lotus",
-      "km": "ក្បាច់ខ្មែរ ផ្កាឈូក"
-    },
-    "client": "",
-    "thumb": "thumb.jpg"
-  },
-  {
-    "id": "thean-gold-red-khmer",
-    "title": {
-      "en": "Red and gold Khmer",
-      "km": "ក្បាច់ខ្មែរ ក្រហម និងមាស"
-    },
-    "client": "",
-    "thumb": "thumb.jpg"
-  },
-  {
-    "id": "thean-gold-deco",
-    "title": {
-      "en": "Gold modern lines",
-      "km": "មាសទំនើប"
-    },
-    "client": "",
-    "thumb": "thumb.jpg"
-  },
-  {
-    "id": "thean-gold-floral",
-    "title": {
-      "en": "Gold line flowers",
-      "km": "ផ្កាខ្សែមាស"
-    },
-    "client": "",
-    "thumb": "thumb.jpg"
-  },
-  {
-    "id": "thean-gold-leaves",
-    "title": {
-      "en": "Gold leaves",
-      "km": "ស្លឹកមាស"
-    },
-    "client": "",
-    "thumb": "thumb.jpg"
-  },
-  {
     "id": "thean-lotus-crown",
     "title": {
       "en": "Lotus crown",
@@ -119,8 +56,8 @@
   {
     "id": "thean-gold-classic",
     "title": {
-      "en": "Gold classic frame (3 per sheet)",
-      "km": "ស៊ុមមាសបុរាណ (៣ សន្លឹក)"
+      "en": "Gold classic frame",
+      "km": "ស៊ុមមាសបុរាណ"
     },
     "client": "",
     "thumb": "thumb.jpg"
@@ -128,8 +65,8 @@
   {
     "id": "thean-blue-classic",
     "title": {
-      "en": "Blue classic frame (3 per sheet)",
-      "km": "ស៊ុមខៀវបុរាណ (៣ សន្លឹក)"
+      "en": "Blue classic frame",
+      "km": "ស៊ុមខៀវបុរាណ"
     },
     "client": "",
     "thumb": "thumb.jpg"
