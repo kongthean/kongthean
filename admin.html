@@ -2907,7 +2907,7 @@ function ccEnd(v){var p=String(v||'').split('-');return p.length===3?new Date(+p
 function ccId(id){id=String(id||'');return id.replace(/^([A-Z]+)(\d+)$/,'$1-$2')}
 function ccLink(id){return CC_SITE+'/studio/card/'+ccId(id)}
 function ccState(c){var n=Date.now();if(!c)return ['off','Offline'];if(!c.active)return ['off','Offline'];if(c.start&&n<c.start)return ['soon','Starts '+ccFmt(c.start)];if(!c.end||n>c.end)return ['exp','Expired'];var d=Math.ceil((c.end-n)/864e5);return d<=7?['warn','Active · ends in '+d+' day'+(d===1?'':'s')]:['ok','Active until '+ccFmt(c.end)]}
-function ccPw(){var a='abcdefghjkmnpqrstuvwxyz23456789',s='';for(var i=0;i<8;i++)s+=a[Math.floor(Math.random()*a.length)];return s.slice(0,4)+'-'+s.slice(4)}
+function ccPw(){var x='';for(var i=0;i<6;i++)x+=Math.floor(Math.random()*10);return x}
 function ccUser(v){return String(v||'').trim().toLowerCase().replace(/[^a-z0-9_-]/g,'')}
 var CC_TPL=null;function ccTemplates(){if(CC_TPL)return Promise.resolve(CC_TPL);return fetch('/studio/card/t/index.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():[]}).catch(function(){return []}).then(function(j){CC_TPL=Array.isArray(j)?j:[];return CC_TPL})}
 function ccMsg(id,u,pw){return 'Thean Card Studio\nLink: '+ccLink(id)+'\nAccount ID: '+ccId(id)+'\nUsername: '+u+'\nPassword: '+pw+'\n\nPlease change your username and password after your first login.\nសូមប្តូរឈ្មោះអ្នកប្រើ និងពាក្យសម្ងាត់ បន្ទាប់ពីចូលលើកដំបូង។'}
@@ -2933,8 +2933,8 @@ function cardEdit(id,C){var c=id?JSON.parse(JSON.stringify(C[id]||{})):{active:t
     '<div class="ccq"><small>Extend:</small><button type="button" class="btn sm soft" data-ext="1">+1 month</button><button type="button" class="btn sm soft" data-ext="3">+3 months</button><button type="button" class="btn sm soft" data-ext="6">+6 months</button><button type="button" class="btn sm soft" data-ext="12">+1 year</button></div>'+
     '<label class="cfck"><input type="checkbox" data-k="active"'+(c.active?' checked':'')+'> <b>Active</b>: the client can log in and use the service during the period</label>'+
     '<h4 class="ctg">Templates for this client</h4><div data-cctpl><small class="note">Loading templates…</small></div>'+
-    '<h4 class="ctg">Login</h4>'+(isNew?'<div class="cf2"><label class="f">Username<input data-k="username" autocapitalize="off" placeholder="e.g. khovsieng"></label><label class="f">Starting password<span style="display:flex;gap:6px"><input data-k="pw" value="'+ccPw()+'" style="flex:1"><button type="button" class="btn sm soft" data-gen>New</button></span></label></div><p class="note">The client must change both the first time they log in. Letters, numbers, - and _ only for the username.</p>':
-      '<div class="ccline"><span>Username: <b>@'+esc(c.username||'')+'</b></span><button type="button" class="btn sm soft" data-ren>Change username</button><button type="button" class="btn sm soft" data-rpw>Reset password</button></div>'+(c.mustChange?'<p class="note">Waiting for the client to log in and set their own username and password.</p>':'')+
+    '<h4 class="ctg">Login</h4>'+(isNew?'<div class="cf2"><label class="f">Username<input data-k="username" autocapitalize="off" placeholder="e.g. khovsieng"></label><label class="f">Starting password<span style="display:flex;gap:6px"><input data-k="pw" value="'+ccPw()+'" style="flex:1" inputmode="numeric" maxlength="6"><button type="button" class="btn sm soft" data-gen>New</button></span></label></div><p class="note">The password is 6 numbers. The client must change the username and password the first time they log in. Letters, numbers, - and _ only for the username.</p>':
+      '<div class="ccline"><span>Username: <b>@'+esc(c.username||'')+'</b></span><button type="button" class="btn sm soft" data-ren>Change username</button><button type="button" class="btn sm soft" data-rpw>Reset password</button><button type="button" class="btn sm soft" data-fresh>Reset to a new account</button></div>'+(c.mustChange?'<p class="note">Waiting for the client to log in and set their own username and password.</p>':'')+
       '<div class="ccline"><span>Link: <b>'+esc(ccLink(id))+'</b></span><button type="button" class="btn sm soft" data-cpl>Copy link</button></div>')+
     '<label class="f">Notes (only your team sees this)<textarea data-k="notes" rows="3" placeholder="Price, payment, what they ordered…">'+esc(c.notes||'')+'</textarea></label>'+
     (isNew?'':'<p class="note" data-cclog></p>')+
@@ -2950,13 +2950,15 @@ function cardEdit(id,C){var c=id?JSON.parse(JSON.stringify(C[id]||{})):{active:t
     if(b.hasAttribute('data-cpl')){copyText(ccLink(id),function(){toast('Link copied')});return}
     if(b.hasAttribute('data-ren')){var nu=ccUser(prompt('New username for this client (letters, numbers, - and _):',c.username||''));if(!nu||nu===c.username)return;if(nu.length<4){toast('Use at least 4 characters');return}
       window.TheanAdmin.cardRename(id,c.username,nu).then(function(){c.username=nu;toast('Username changed to @'+nu);m.remove();cardEdit(id,Object.assign({},C,{[id]:Object.assign({},C[id],{username:nu})}))}).catch(function(er){toast(er.message||'Could not change the username')});return}
+    if(b.hasAttribute('data-fresh')){if(!b.dataset.armed){b.dataset.armed=1;b.textContent='Tap again: clear everything';toast('This clears the saved menu and download history, and gives a new 6-number password.');return}var pw2=ccPw();b.disabled=true;b.textContent='Resetting…';
+      window.TheanAdmin.cardFresh(id,pw2).then(function(){m.remove();ccShowLogin(id,c.username,pw2,'Account reset to new')}).catch(function(er){b.disabled=false;b.textContent='Reset to a new account';toast((er&&(er.code||er.message))||'Could not reset')});return}
     if(b.hasAttribute('data-rpw')){if(!b.dataset.armed){b.dataset.armed=1;b.textContent='Tap again to reset';return}var pw=ccPw();b.disabled=true;b.textContent='Resetting…';
       window.TheanAdmin.cardResetPw(id,pw).then(function(){m.remove();ccShowLogin(id,c.username,pw,'Password reset')}).catch(function(er){b.disabled=false;b.textContent='Reset password';toast((er&&(er.code||er.message))||'Could not reset')});return}
     if(b.hasAttribute('data-ok')){var rec={name:String(val('name')||'').trim(),phone:String(val('phone')||'').trim(),notes:String(val('notes')||''),start:ccStart(val('start')),end:ccEnd(val('end')),active:!!val('active'),templates:{}};
       m.querySelectorAll('[data-tp]').forEach(function(x){if(x.checked)rec.templates[x.getAttribute('data-tp')]=true});if(!m.querySelector('[data-tp]')&&c.templates)rec.templates=c.templates;
       if(!rec.name){toast('Add the client name');return}if(!rec.start||!rec.end){toast('Set the service period (from and to)');return}if(rec.end<rec.start){toast('The last day must be after the first day');return}
       b.disabled=true;b.textContent='Saving…';
-      if(isNew){var u=ccUser(val('username')),pw=String(val('pw')||'').trim();if(u.length<4){b.disabled=false;b.textContent='Create client';toast('Username: at least 4 letters or numbers');return}if(pw.length<8){b.disabled=false;b.textContent='Create client';toast('Password: at least 8 characters');return}
+      if(isNew){var u=ccUser(val('username')),pw=String(val('pw')||'').trim();if(u.length<4){b.disabled=false;b.textContent='Create client';toast('Username: at least 4 letters or numbers');return}if(!/^\d{6}$/.test(pw)){b.disabled=false;b.textContent='Create client';toast('Password: exactly 6 numbers');return}
         window.TheanAdmin.cardCreate(rec,u,pw).then(function(nid){m.remove();ccShowLogin(nid,u,pw,'Client created')}).catch(function(er){b.disabled=false;b.textContent='Create client';toast((er&&(er.message||er.code))||'Could not create the client')})}
       else window.TheanAdmin.cardSave(id,rec).then(function(){m.remove();toast('Saved')}).catch(function(er){b.disabled=false;b.textContent='Save';toast((er&&(er.code||er.message))||'Could not save')})}});
 }
@@ -4885,6 +4887,7 @@ if(ADMIN_PAGE){
       const up={['usernames/'+newU]:id,['clients/'+id+'/username']:newU};if(oldU&&oldU!==newU)up['usernames/'+oldU]=null;await fb.update('cards',up)},
     async cardResetPw(id,pw){await loadFb();const c=await fb.get('cards/clients/'+id);if(!c)throw new Error('Client not found');const gen=(c.gen||1)+1;const uid=await this.cardLogin(id,gen,pw);
       const up={['uids/'+uid]:id,['login/'+id]:gen,['clients/'+id+'/uid']:uid,['clients/'+id+'/gen']:gen,['clients/'+id+'/mustChange']:true};if(c.uid)up['uids/'+c.uid]=null;await fb.update('cards',up)},
+    async cardFresh(id,pw){await this.cardResetPw(id,pw);await fb.update('cards',{['data/'+id]:null,['clients/'+id+'/lastSeen']:null});try{await fb.set('cards/log/'+id,null)}catch(e){}},
     async cardLog(id){await loadFb();return (await fb.get('cards/log/'+id))||{}},
     async publish(S){await loadFb();
       const to=new Promise((_,rej)=>setTimeout(()=>rej(new Error('network: the server did not answer in 40 seconds')),40000));
