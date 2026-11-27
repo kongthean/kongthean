@@ -85,6 +85,9 @@ details.biz{border:1px dashed var(--line);border-radius:14px;padding:10px 12px}d
 .end{max-width:520px;text-align:center}.end .ic{width:64px;height:64px;border-radius:50%;background:#fde4e1;color:var(--red);display:grid;place-items:center;margin:0 auto}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--green);color:#fff;padding:10px 16px;border-radius:12px;z-index:90;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
 .hide{display:none!important}
+.mst{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:-4px}.mst>span{font-size:13.5px;font-weight:600;color:#3a4540;margin-right:2px}
+.mst .seg{display:flex;align-items:center;border:1px solid var(--line);border-radius:99px;padding:3px;background:#fbfaf7}.mst .seg button{border:0;background:none;border-radius:99px;padding:6px 12px;font-size:13.5px;cursor:pointer;font-weight:600}.mst .seg button.on{background:var(--green);color:var(--gold)}
+.mst .seg em{font-style:normal;font-size:13px;font-weight:700;min-width:46px;text-align:center}.mrs{border:0;background:none;color:var(--muted);font-size:12.5px;text-decoration:underline;cursor:pointer}
 .top .btn.sm{padding:8px 12px}@media(max-width:480px){.top .brand small{display:none}.top .brand b{font-size:16px;white-space:nowrap;letter-spacing:.04em}.lang button{padding:5px 8px}}
 .hm{max-width:1100px;margin:0 auto;padding:20px;display:grid;gap:16px}
 .hcard{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px}.hcard h3{font-size:17px;margin-bottom:12px}
@@ -165,7 +168,7 @@ const TX={
   wMany:'Too many dishes for this card ({n}). The text was made smaller to fit. For the best result, use {max} dishes or fewer.',wLong:'Some lines are long, so they were made a little smaller to fit inside the frame.',
   noTpl:'No design is set for your account yet. Please contact us.',
   account:'My account',period:'Service period',until:'Active until {d}',chU:'Change username',chP:'Change password',curPw:'Current password',contact:'Contact us',terms:'Terms of use',privacy:'Privacy policy',lang:'ភាសាខ្មែរ',logout:'Log out',
-  home:'Home',create:'Create a new card',createT:'Make a menu card for your next event',cont:'Continue my last card',myDesigns:'My designs',recent:'Recent downloads',noRecent:'No downloads yet. Your printed cards will show here.',daysLeft:'{n} days left',endsSoon:'Your service ends in {n} days. Contact us to renew so you can keep using it.',help:'Need help?',helpT:'Our team is happy to help. Give us your account ID when you contact us.',quick:'How to make a card',q:[['Choose a design','Pick one of your designs.'],['Type the menu','One dish per line, then the date.'],['Download and print','PDF for printing, PNG or JPG to share.']],status:'Status',active:'Active',loginBtn:'Log in',back:'Home',open:'Open',pDone:'Password changed',eCur:'The current password is not correct.',close:'Close',idTip:'Give this ID to our team if you need help.',hello:'Hello'},
+  mStyle:'Menu text',mBold:'Bold',mNormal:'Normal',mReset:'Reset size',home:'Home',create:'Create a new card',createT:'Make a menu card for your next event',cont:'Continue my last card',myDesigns:'My designs',recent:'Recent downloads',noRecent:'No downloads yet. Your printed cards will show here.',daysLeft:'{n} days left',endsSoon:'Your service ends in {n} days. Contact us to renew so you can keep using it.',help:'Need help?',helpT:'Our team is happy to help. Give us your account ID when you contact us.',quick:'How to make a card',q:[['Choose a design','Pick one of your designs.'],['Type the menu','One dish per line, then the date.'],['Download and print','PDF for printing, PNG or JPG to share.']],status:'Status',active:'Active',loginBtn:'Log in',back:'Home',open:'Open',pDone:'Password changed',eCur:'The current password is not correct.',close:'Close',idTip:'Give this ID to our team if you need help.',hello:'Hello'},
  km:{brandSub:'កាតមុខម្ហូបសម្រាប់មង្គលការ និងពិធីផ្សេងៗ',menu:'ម៉ឺនុយ',
   hKick:'Thean Card Studio',hTitle:'កាតមុខម្ហូបដ៏ស្រស់ស្អាត ត្រៀមបោះពុម្ព',hText:'ម៉ូដកាតផ្ទាល់ខ្លួនរបស់អ្នក រក្សាទុកដដែលទាំងស្រុង។ គ្រាន់តែវាយមុខម្ហូប និងកាលបរិច្ឆេទ មើលភ្លាមៗ ហើយទាញយកឯកសារត្រៀមបោះពុម្ព សម្រាប់មង្គលការ ពិធីបុណ្យ និងគ្រប់កម្មវិធី។',
   hContact:'ទាក់ទងយើង ដើម្បីដឹងតម្លៃ',hHow:'របៀបប្រើ',
@@ -183,7 +186,7 @@ const TX={
   wMany:'មុខម្ហូបច្រើនពេកសម្រាប់កាតនេះ ({n})។ អក្សរត្រូវបានបង្រួម ដើម្បីឱ្យសម។ ដើម្បីលទ្ធផលល្អបំផុត សូមប្រើ {max} មុខ ឬតិចជាងនេះ។',wLong:'បន្ទាត់ខ្លះវែង ដូច្នេះត្រូវបានបង្រួមបន្តិច ដើម្បីឱ្យនៅក្នុងស៊ុម។',
   noTpl:'គណនីរបស់អ្នកមិនទាន់មានម៉ូដនៅឡើយ។ សូមទាក់ទងមកយើង។',
   account:'គណនីរបស់ខ្ញុំ',period:'រយៈពេលសេវាកម្ម',until:'ប្រើបានដល់ {d}',chU:'ប្តូរឈ្មោះអ្នកប្រើ',chP:'ប្តូរពាក្យសម្ងាត់',curPw:'ពាក្យសម្ងាត់បច្ចុប្បន្ន',contact:'ទាក់ទងយើង',terms:'លក្ខខណ្ឌប្រើប្រាស់',privacy:'គោលការណ៍ឯកជនភាព',lang:'English',logout:'ចាកចេញ',
-  home:'ទំព័រដើម',create:'បង្កើតកាតថ្មី',createT:'បង្កើតកាតមុខម្ហូប សម្រាប់កម្មវិធីបន្ទាប់របស់អ្នក',cont:'បន្តកាតចុងក្រោយរបស់ខ្ញុំ',myDesigns:'ម៉ូដរបស់ខ្ញុំ',recent:'ការទាញយកថ្មីៗ',noRecent:'មិនទាន់មានការទាញយកនៅឡើយ។ កាតដែលអ្នកបានបោះពុម្ព នឹងបង្ហាញនៅទីនេះ។',daysLeft:'នៅសល់ {n} ថ្ងៃ',endsSoon:'សេវាកម្មរបស់អ្នកនឹងផុតកំណត់ក្នុងរយៈពេល {n} ថ្ងៃទៀត។ សូមទាក់ទងមកយើង ដើម្បីបន្ត។',help:'ត្រូវការជំនួយ?',helpT:'ក្រុមការងាររបស់យើងរីករាយជួយអ្នក។ សូមផ្តល់លេខគណនីរបស់អ្នក នៅពេលទាក់ទងមក។',quick:'របៀបបង្កើតកាត',q:[['ជ្រើសម៉ូដ','ជ្រើសម៉ូដមួយរបស់អ្នក។'],['វាយមុខម្ហូប','មួយបន្ទាត់ មួយមុខ រួចកាលបរិច្ឆេទ។'],['ទាញយក និងបោះពុម្ព','PDF សម្រាប់បោះពុម្ព, PNG ឬ JPG សម្រាប់ចែករំលែក។']],status:'ស្ថានភាព',active:'កំពុងដំណើរការ',loginBtn:'ចូលគណនី',back:'ទំព័រដើម',open:'បើក',pDone:'បានប្តូរពាក្យសម្ងាត់',eCur:'ពាក្យសម្ងាត់បច្ចុប្បន្នមិនត្រឹមត្រូវ។',close:'បិទ',idTip:'ផ្តល់លេខនេះដល់ក្រុមការងារ ប្រសិនបើអ្នកត្រូវការជំនួយ។',hello:'សួស្តី'}};
+  mStyle:'អក្សរមុខម្ហូប',mBold:'ដិត',mNormal:'ធម្មតា',mReset:'ទំហំដើម',home:'ទំព័រដើម',create:'បង្កើតកាតថ្មី',createT:'បង្កើតកាតមុខម្ហូប សម្រាប់កម្មវិធីបន្ទាប់របស់អ្នក',cont:'បន្តកាតចុងក្រោយរបស់ខ្ញុំ',myDesigns:'ម៉ូដរបស់ខ្ញុំ',recent:'ការទាញយកថ្មីៗ',noRecent:'មិនទាន់មានការទាញយកនៅឡើយ។ កាតដែលអ្នកបានបោះពុម្ព នឹងបង្ហាញនៅទីនេះ។',daysLeft:'នៅសល់ {n} ថ្ងៃ',endsSoon:'សេវាកម្មរបស់អ្នកនឹងផុតកំណត់ក្នុងរយៈពេល {n} ថ្ងៃទៀត។ សូមទាក់ទងមកយើង ដើម្បីបន្ត។',help:'ត្រូវការជំនួយ?',helpT:'ក្រុមការងាររបស់យើងរីករាយជួយអ្នក។ សូមផ្តល់លេខគណនីរបស់អ្នក នៅពេលទាក់ទងមក។',quick:'របៀបបង្កើតកាត',q:[['ជ្រើសម៉ូដ','ជ្រើសម៉ូដមួយរបស់អ្នក។'],['វាយមុខម្ហូប','មួយបន្ទាត់ មួយមុខ រួចកាលបរិច្ឆេទ។'],['ទាញយក និងបោះពុម្ព','PDF សម្រាប់បោះពុម្ព, PNG ឬ JPG សម្រាប់ចែករំលែក។']],status:'ស្ថានភាព',active:'កំពុងដំណើរការ',loginBtn:'ចូលគណនី',back:'ទំព័រដើម',open:'បើក',pDone:'បានប្តូរពាក្យសម្ងាត់',eCur:'ពាក្យសម្ងាត់បច្ចុប្បន្នមិនត្រឹមត្រូវ។',close:'បិទ',idTip:'ផ្តល់លេខនេះដល់ក្រុមការងារ ប្រសិនបើអ្នកត្រូវការជំនួយ។',hello:'សួស្តី'}};
 const t=k=>(TX[LG]&&TX[LG][k]!=null?TX[LG][k]:TX.en[k]);
 const KN=n=>String(n).replace(/\d/g,d=>'០១២៣៤៥៦៧៨៩'[d]);
 const fmtD=ms=>{if(!ms)return '—';const d=new Date(ms);return ('0'+d.getDate()).slice(-2)+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+d.getFullYear()};
@@ -277,16 +280,16 @@ const BG={};function loadBg(T){if(!BG[T.id])BG[T.id]=new Promise(r=>{const im=ne
 async function getTpl(id){const r=await fetch('t/'+id+'/template.json',{cache:'no-cache'});if(!r.ok)throw new Error('template');return r.json()}
 function fam(T,k){const f=T.fonts[k]||T.fonts.text;const n=/,/.test(f.family)?f.family:'"'+f.family+'"';return {n:n,w:f.weight||''}}
 const FS=(px,f)=>(f.w?f.w+' ':'')+px+'px '+f.n;
-function vals(){const v={};(TPL.fields||[]).forEach(f=>{const x=DATA[f.k];v[f.k]=(x==null?f.def:x)});return v}
+function vals(){const v={};(TPL.fields||[]).forEach(f=>{const x=DATA[f.k];v[f.k]=(x==null?f.def:x)});v.__mb=DATA.__mb!==false;v.__ms=+DATA.__ms||1;return v}
 function fmtDate(v,f){if(!v)return '';const p=String(v).split('-');if(p.length!==3)return v;return p[2]+'-'+p[1]+'-'+p[0]}
 /* draws the full sheet; s = pixels per point. Returns warnings. */
 function drawSheet(ctx,T,V,s,bg){const W=T.sheet.w*s,H=T.sheet.h*s;ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);if(bg)ctx.drawImage(bg,0,0,W,H);const warn={long:false,many:0,max:0};
   ctx.textBaseline='alphabetic';
   const fit=(txt,font,size,maxw)=>{ctx.font=FS(size*s,font);const w=ctx.measureText(txt).width;if(maxw&&w>maxw*s){const ns=size*maxw*s/w;if(ns<size*.8)warn.long=true;ctx.font=FS(ns*s,font);return ns}return size};
   (T.cards||[0]).forEach(ox=>{T.slots.forEach(sl=>{let txt=V[sl.k];if(txt==null)return;const font=fam(T,sl.font);
-    if(sl.t==='list'){const items=String(txt).split('\n').map(x=>x.trim()).filter(Boolean);const room=sl.maxy-sl.y;let step=sl.step,size=sl.size;const max=Math.floor(room/sl.minstep)+1,ideal=Math.floor(room/sl.step)+1;warn.max=ideal;
+    if(sl.t==='list'){const items=String(txt).split('\n').map(x=>x.trim()).filter(Boolean);const room=sl.maxy-sl.y,sc=Math.max(.7,Math.min(1.3,+V.__ms||1)),LF=V.__mb===false?fam(T,'text'):font;let step=sl.step*sc,size=sl.size*sc;const max=Math.floor(room/sl.minstep)+1,ideal=Math.floor(room/step)+1;warn.max=ideal;
       if(items.length>ideal){step=Math.max(sl.minstep,room/(items.length-1));size=sl.size*step/sl.step;if(items.length>max){warn.many=items.length;step=room/(items.length-1);size=sl.size*step/sl.step}}
-      ctx.fillStyle=sl.color;ctx.textAlign='left';items.forEach((it,i)=>{const y=(sl.y+i*step)*s;const num=(sl.num==='km'?KN(i+1):String(i+1))+'.';ctx.font=FS(size*s,font);ctx.fillText(num,(ox+sl.x)*s,y);const sz=fit(it,font,size,sl.maxw-sl.gap);ctx.fillText(it,(ox+sl.x+sl.gap*size/sl.size)*s,y)});return}
+      ctx.fillStyle=sl.color;ctx.textAlign='left';items.forEach((it,i)=>{const y=(sl.y+i*step)*s;const num=(sl.num==='km'?KN(i+1):String(i+1))+'.';ctx.font=FS(size*s,LF);ctx.fillText(num,(ox+sl.x)*s,y);const sz=fit(it,LF,size,sl.maxw-sl.gap);ctx.fillText(it,(ox+sl.x+sl.gap*size/sl.size)*s,y)});return}
     if(sl.t==='date')txt=fmtDate(txt,sl.format);txt=String(txt).replace(/\n/g,' ');if(!txt)return;
     const size=fit(txt,font,sl.size,sl.maxw);ctx.textAlign=sl.align||'left';const x=(ox+sl.x)*s,y=sl.y*s;
     if(sl.color==='rainbow'){const C=sl.colors||['#e8262b','#1e9b45','#1d6fd1'];const chars=[...txt];const clusters=[];chars.forEach(ch=>{if(clusters.length&&/[឴-៓៝‌‍]/.test(ch))clusters[clusters.length-1]+=ch;else clusters.push(ch)});
@@ -294,6 +297,14 @@ function drawSheet(ctx,T,V,s,bg){const W=T.sheet.w*s,H=T.sheet.h*s;ctx.fillStyle
       clusters.forEach(cl=>{const before=ctx.measureText(acc).width;acc+=cl;ctx.fillStyle=cl.trim()?C[ci++%C.length]:'#000';if(cl.trim()){ctx.save();ctx.beginPath();const a=ctx.measureText(acc).width;ctx.rect(cx+before,y-size*s*1.6,a-before+1,size*s*2.4);ctx.clip();ctx.fillText(txt,cx,y);ctx.restore()}})}
     else{ctx.fillStyle=sl.color;ctx.fillText(txt,x,y)}})});
   return warn}
+/* menu text style: bold on/off and size */
+function mstyle(){const b=DATA.__mb!==false,sc=+DATA.__ms||1,pct=Math.round(sc*100);
+  return '<div class="mst"><span>'+esc(t('mStyle'))+'</span><div class="seg"><button type="button" data-mb="1" class="'+(b?'on':'')+'"><b>'+esc(t('mBold'))+'</b></button><button type="button" data-mb="0" class="'+(b?'':'on')+'">'+esc(t('mNormal'))+'</button></div>'+
+   '<div class="seg"><button type="button" data-ms="-1" aria-label="Smaller">A−</button><em data-mspct>'+(LG==='km'?KN(pct):pct)+'%</em><button type="button" data-ms="1" aria-label="Bigger">A+</button></div>'+(sc!==1?'<button type="button" class="mrs" data-ms="0">'+esc(t('mReset'))+'</button>':'')+'</div>'}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-mb],[data-ms]');if(!b||!TPL)return;
+  if(b.hasAttribute('data-mb'))DATA.__mb=b.dataset.mb==='1';
+  else{const d=+b.dataset.ms;let sc=+DATA.__ms||1;sc=d===0?1:Math.round(Math.max(.7,Math.min(1.3,sc+d*.05))*100)/100;DATA.__ms=sc}
+  const box=$('.mst');if(box)box.outerHTML=mstyle();preview();queueSave()});
 /* ---------- client home screen ---------- */
 let LOGS=null;
 function home(){VIEW='home';document.documentElement.lang=LG;const st=state(CL);if(st!=='ok'){endView(st);return}
@@ -322,7 +333,7 @@ function editor(){VIEW='edit';document.documentElement.lang=LG;const st=state(CL
   const sm=ev.filter(f=>f.t!=='list');
   $('#app').innerHTML=topbar(true)+'<div class="edtop"><button class="btn s sm" type="button" data-go="home">← '+esc(t('back'))+'</button></div><div class="ed"><div class="panel">'+
    '<div class="step"><i>'+(LG==='km'?'១':'1')+'</i>'+esc(t('s1'))+'</div><div class="tpls">'+TPLS.map(x=>'<button type="button" data-tpl="'+esc(x.id)+'" class="'+(TPL&&x.id===TPL.id?'on':'')+'"><img alt="" src="t/'+esc(x.id)+'/'+esc(x.thumb||'thumb.jpg')+'">'+esc(x.title&&x.title[LG]||x.title||x.id)+'</button>').join('')+'</div>'+
-   (TPL?'<div class="step"><i>'+(LG==='km'?'២':'2')+'</i>'+esc(t('s2'))+'</div>'+ev.filter(f=>f.t==='list').map(field).join('')+(sm.length?'<div class="row2">'+sm.map(field).join('')+'</div>':'')+
+   (TPL?'<div class="step"><i>'+(LG==='km'?'២':'2')+'</i>'+esc(t('s2'))+'</div>'+ev.filter(f=>f.t==='list').map(field).join('')+mstyle()+(sm.length?'<div class="row2">'+sm.map(field).join('')+'</div>':'')+
    '<div class="warn hide" data-warn></div>'+(bz.length?'<details class="biz"><summary>'+esc(t('biz'))+'</summary><div class="in">'+bz.map(field).join('')+'</div></details>':'')+'<p class="saved" data-saved></p>':'<p class="warn">'+esc(t('noTpl'))+'</p>')+
    '</div><div class="prev"><div class="prevbar"><b>'+esc(t('preview'))+'</b></div><div class="sheet"><canvas data-cv width="1400" height="990"></canvas></div>'+
    '<div class="step"><i>'+(LG==='km'?'៣':'3')+'</i>'+esc(t('s3'))+'</div><div class="dl"><button class="btn g" type="button" data-dl="pdf">'+I('dl')+esc(t('pdf'))+'</button><button class="btn y" type="button" data-dl="png">'+I('dl')+esc(t('png'))+'</button><button class="btn o" type="button" data-dl="jpg">'+I('dl')+esc(t('jpg'))+'</button><button class="btn s" type="button" data-dl="print">'+I('print')+esc(t('print'))+'</button></div><p class="note">'+esc(t('sheetInfo'))+'</p></div></div>';
