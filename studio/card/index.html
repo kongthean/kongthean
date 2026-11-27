@@ -207,20 +207,21 @@ function endView(st){const title=st==='soon'?t('soonT'):st==='off'?t('offT'):t('
   $('#app').innerHTML=topbar(true)+'<div class="authw"><div class="card end"><div class="ic">'+I('clock')+'</div><h2>'+esc(title)+'</h2><p>'+esc(msg)+'</p><p><span class="idpill">'+esc(t('acc'))+' <code>'+esc(ccId(ID))+'</code></span></p><div class="cbtns" style="justify-content:center" data-contacts="light">'+contactBtns('light')+'</div></div></div>'}
 /* ---------- templates + drawing ---------- */
 const FONTS={};
-async function loadFonts(T){const L=[];for(const k in T.fonts){const f=T.fonts[k];if(f.url&&!FONTS[f.family]){const ff=new FontFace(f.family,'url('+f.url+')');FONTS[f.family]=ff.load().then(x=>{document.fonts.add(x);return x}).catch(()=>null)}if(FONTS[f.family])L.push(FONTS[f.family])}await Promise.all(L)}
+async function loadFonts(T){const L=[];for(const k in T.fonts){const f=T.fonts[k];if(f.url&&!FONTS[f.family]){const ff=new FontFace(f.family,'url('+f.url+')',f.weight?{weight:'100 900'}:{});FONTS[f.family]=ff.load().then(x=>{document.fonts.add(x);return x}).catch(()=>null)}if(FONTS[f.family])L.push(FONTS[f.family])}await Promise.all(L)}
 const BG={};function loadBg(T){if(!BG[T.id])BG[T.id]=new Promise(r=>{const im=new Image();im.onload=()=>r(im);im.onerror=()=>r(null);im.src='t/'+T.id+'/'+T.bg});return BG[T.id]}
 async function getTpl(id){const r=await fetch('t/'+id+'/template.json',{cache:'no-cache'});if(!r.ok)throw new Error('template');return r.json()}
-function fam(T,k){const f=T.fonts[k]||T.fonts.text;return /,/.test(f.family)?f.family:'"'+f.family+'"'}
+function fam(T,k){const f=T.fonts[k]||T.fonts.text;const n=/,/.test(f.family)?f.family:'"'+f.family+'"';return {n:n,w:f.weight||''}}
+const FS=(px,f)=>(f.w?f.w+' ':'')+px+'px '+f.n;
 function vals(){const v={};(TPL.fields||[]).forEach(f=>{const x=DATA[f.k];v[f.k]=(x==null?f.def:x)});return v}
 function fmtDate(v,f){if(!v)return '';const p=String(v).split('-');if(p.length!==3)return v;return p[2]+'-'+p[1]+'-'+p[0]}
 /* draws the full sheet; s = pixels per point. Returns warnings. */
 function drawSheet(ctx,T,V,s,bg){const W=T.sheet.w*s,H=T.sheet.h*s;ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);if(bg)ctx.drawImage(bg,0,0,W,H);const warn={long:false,many:0,max:0};
   ctx.textBaseline='alphabetic';
-  const fit=(txt,font,size,maxw)=>{ctx.font=size*s+'px '+font;const w=ctx.measureText(txt).width;if(maxw&&w>maxw*s){const ns=size*maxw*s/w;if(ns<size*.8)warn.long=true;ctx.font=ns*s+'px '+font;return ns}return size};
+  const fit=(txt,font,size,maxw)=>{ctx.font=FS(size*s,font);const w=ctx.measureText(txt).width;if(maxw&&w>maxw*s){const ns=size*maxw*s/w;if(ns<size*.8)warn.long=true;ctx.font=FS(ns*s,font);return ns}return size};
   (T.cards||[0]).forEach(ox=>{T.slots.forEach(sl=>{let txt=V[sl.k];if(txt==null)return;const font=fam(T,sl.font);
     if(sl.t==='list'){const items=String(txt).split('\n').map(x=>x.trim()).filter(Boolean);const room=sl.maxy-sl.y;let step=sl.step,size=sl.size;const max=Math.floor(room/sl.minstep)+1,ideal=Math.floor(room/sl.step)+1;warn.max=ideal;
       if(items.length>ideal){step=Math.max(sl.minstep,room/(items.length-1));size=sl.size*step/sl.step;if(items.length>max){warn.many=items.length;step=room/(items.length-1);size=sl.size*step/sl.step}}
-      ctx.fillStyle=sl.color;ctx.textAlign='left';items.forEach((it,i)=>{const y=(sl.y+i*step)*s;const num=(sl.num==='km'?KN(i+1):String(i+1))+'.';ctx.font=size*s+'px '+font;ctx.fillText(num,(ox+sl.x)*s,y);const sz=fit(it,font,size,sl.maxw-sl.gap);ctx.fillText(it,(ox+sl.x+sl.gap*size/sl.size)*s,y)});return}
+      ctx.fillStyle=sl.color;ctx.textAlign='left';items.forEach((it,i)=>{const y=(sl.y+i*step)*s;const num=(sl.num==='km'?KN(i+1):String(i+1))+'.';ctx.font=FS(size*s,font);ctx.fillText(num,(ox+sl.x)*s,y);const sz=fit(it,font,size,sl.maxw-sl.gap);ctx.fillText(it,(ox+sl.x+sl.gap*size/sl.size)*s,y)});return}
     if(sl.t==='date')txt=fmtDate(txt,sl.format);txt=String(txt).replace(/\n/g,' ');if(!txt)return;
     const size=fit(txt,font,sl.size,sl.maxw);ctx.textAlign=sl.align||'left';const x=(ox+sl.x)*s,y=sl.y*s;
     if(sl.color==='rainbow'){const C=sl.colors||['#e8262b','#1e9b45','#1d6fd1'];const chars=[...txt];const clusters=[];chars.forEach(ch=>{if(clusters.length&&/[឴-៓៝‌‍]/.test(ch))clusters[clusters.length-1]+=ch;else clusters.push(ch)});

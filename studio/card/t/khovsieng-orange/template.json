@@ -1,0 +1,206 @@
+{
+  "id": "khovsieng-orange",
+  "title": {
+    "en": "Orange frame",
+    "km": "ស៊ុមពណ៌ទឹកក្រូច"
+  },
+  "client": "ចុងភៅខូវ ស៊ាង",
+  "note": "Measured from the original CorelDRAW file, page 3.",
+  "sheet": {
+    "w": 841.89,
+    "h": 595.28,
+    "mm": [
+      297,
+      210
+    ],
+    "dpi": 300
+  },
+  "bg": "bg.jpg",
+  "thumb": "thumb.jpg",
+  "cards": [
+    0,
+    418.0
+  ],
+  "fonts": {
+    "title": {
+      "family": "CS Muol",
+      "url": "/studio/card/fonts/Moul-Regular.ttf"
+    },
+    "text": {
+      "family": "CS Battambang",
+      "url": "/studio/card/fonts/Battambang-Regular.ttf"
+    },
+    "menu": {
+      "family": "CS Battambang Bold",
+      "url": "/studio/card/fonts/Battambang-Bold.ttf"
+    },
+    "latin": {
+      "family": "CS Bodoni",
+      "url": "/studio/card/fonts/LibreBodoni.ttf",
+      "weight": "700"
+    }
+  },
+  "fields": [
+    {
+      "k": "menu",
+      "g": "event",
+      "t": "list",
+      "en": "Menu (one dish per line)",
+      "km": "មុខម្ហូប (មួយបន្ទាត់ មួយមុខ)",
+      "def": "គ្រឿងក្លែម\nញាំគូមដូងបន្លែស្រស់ជើងទា + គ្រឿងសមុទ្រ\nគោចុះខ្លាញ់ + ផ្កាឡៃហៀង\nត្រីស្ពុងកាត់ដុំបំពងស្រោចទឹកត្រីជូអែម\nសាច់ជ្រូកហុងចំហុយ\nទាទឹម\nម្ជូរយួនត្រីស្ពុង\nបាយស + មីឆា\nបង្អែមនំខ្មែរ"
+    },
+    {
+      "k": "date",
+      "g": "event",
+      "t": "date",
+      "en": "Date",
+      "km": "កាលបរិច្ឆេទ",
+      "def": ""
+    },
+    {
+      "k": "closing",
+      "g": "event",
+      "t": "text",
+      "en": "Closing words",
+      "km": "សារបញ្ចប់",
+      "def": "សូមពិសារដោយរីករាយ !"
+    },
+    {
+      "k": "name",
+      "g": "biz",
+      "t": "text",
+      "en": "Name",
+      "km": "ឈ្មោះ",
+      "def": "ចុងភៅខូវ ស៊ាង"
+    },
+    {
+      "k": "svc",
+      "g": "biz",
+      "t": "text",
+      "en": "Services",
+      "km": "សេវាកម្ម",
+      "def": "មានទទួលធ្វើម្ហូបក្នុងពិធីមង្គលការ បុណ្យ ពិធីជប់លៀងផ្សេងៗ"
+    },
+    {
+      "k": "addr",
+      "g": "biz",
+      "t": "text",
+      "en": "Address",
+      "km": "អាស័យដ្ឋាន",
+      "def": "អាស័យដ្ឋានៈ ភូមិបឹងធំខាងលិច ឃុំអង្គសុរភី ស្រុកកំពង់ត្រាច ខេត្តកំពត"
+    },
+    {
+      "k": "slogan",
+      "g": "biz",
+      "t": "text",
+      "en": "Slogan",
+      "km": "ពាក្យស្លោក",
+      "def": "“ម្ហូបឆ្ងាញ់   មានអនាម័យ   សុខភាពល្អ   និង   សុភមង្គល”"
+    },
+    {
+      "k": "tel",
+      "g": "biz",
+      "t": "text",
+      "en": "Phone",
+      "km": "លេខទូរស័ព្ទ",
+      "def": "Tel : 012 79 56 19 | 071 628 7777"
+    }
+  ],
+  "slots": [
+    {
+      "k": "name",
+      "x": 209.75,
+      "y": 80.6,
+      "size": 23.5,
+      "font": "title",
+      "align": "center",
+      "maxw": 240,
+      "color": "rainbow",
+      "colors": [
+        "#e8262b",
+        "#f07d1a",
+        "#1e9b45",
+        "#1d6fd1",
+        "#c4289e"
+      ]
+    },
+    {
+      "k": "svc",
+      "x": 209.75,
+      "y": 152.3,
+      "size": 14.5,
+      "font": "text",
+      "align": "center",
+      "maxw": 345,
+      "color": "#003399"
+    },
+    {
+      "k": "addr",
+      "x": 209.75,
+      "y": 182.1,
+      "size": 12.5,
+      "font": "text",
+      "align": "center",
+      "maxw": 345,
+      "color": "#003399"
+    },
+    {
+      "k": "slogan",
+      "x": 209.75,
+      "y": 211.4,
+      "size": 13.5,
+      "font": "text",
+      "align": "center",
+      "maxw": 345,
+      "color": "#009933"
+    },
+    {
+      "k": "tel",
+      "x": 209.75,
+      "y": 246.6,
+      "size": 18,
+      "font": "latin",
+      "align": "center",
+      "maxw": 340,
+      "color": "#009933"
+    },
+    {
+      "k": "menu",
+      "t": "list",
+      "x": 89.5,
+      "gap": 24.2,
+      "y": 290.9,
+      "step": 18.1,
+      "size": 15.0,
+      "minstep": 13.6,
+      "maxy": 474,
+      "font": "menu",
+      "align": "left",
+      "maxw": 300,
+      "color": "#003399",
+      "num": "km"
+    },
+    {
+      "k": "closing",
+      "x": 239.9,
+      "y": 516.4,
+      "size": 16,
+      "font": "title",
+      "align": "left",
+      "maxw": 140,
+      "color": "#ff0000"
+    },
+    {
+      "k": "date",
+      "t": "date",
+      "x": 95.9,
+      "y": 557.8,
+      "size": 24.5,
+      "font": "latin",
+      "align": "left",
+      "maxw": 200,
+      "color": "#009933",
+      "format": "dd-mm-yyyy"
+    }
+  ]
+}

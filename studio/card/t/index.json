@@ -1,3 +1,26 @@
 [
-  {"id": "khovsieng-gold", "title": "Gold frame", "client": "ចុងភៅខូវ ស៊ាង", "thumb": "thumb.jpg"}
+  {
+    "id": "khovsieng-floral",
+    "title": "Khmer floral frame",
+    "client": "ចុងភៅខូវ ស៊ាង",
+    "thumb": "thumb.jpg"
+  },
+  {
+    "id": "khovsieng-gold",
+    "title": "Gold frame",
+    "client": "ចុងភៅខូវ ស៊ាង",
+    "thumb": "thumb.jpg"
+  },
+  {
+    "id": "khovsieng-orange",
+    "title": "Orange frame",
+    "client": "ចុងភៅខូវ ស៊ាង",
+    "thumb": "thumb.jpg"
+  },
+  {
+    "id": "khovsieng-coral",
+    "title": "Coral frame",
+    "client": "ចុងភៅខូវ ស៊ាង",
+    "thumb": "thumb.jpg"
+  }
 ]
